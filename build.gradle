@@ -10,10 +10,28 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 repositories {
+	mavenLocal()
+	if (!project.hasProperty('omitSDCArtifactory')) {
+		maven { url 'http://artifactory-sdc.onsdigital.uk/artifactory/libs-release' }
+		maven { url 'http://artifactory-sdc.onsdigital.uk/artifactory/libs-snapshot' }
+	}
 	mavenCentral()
 }
 
 dependencies {
+	compile("uk.gov.ons.fwmt:fwmt-census-canonical:1.0.2-SNAPSHOT")
+	compile("uk.gov.ons.fwmt:fwmt-census-common:1.0.2-SNAPSHOT")
+//	compile("uk.gov.ons.fwmt:fwmt-census-events:1.0.0-SNAPSHOT")
+
+	compile('org.projectlombok:lombok')
+	annotationProcessor('org.projectlombok:lombok')
+	testAnnotationProcessor('org.projectlombok:lombok')
+
+	compile('org.springframework.retry:spring-retry')
+	compile('org.springframework:spring-aop')
+
+	compile('org.aspectj:aspectjweaver')
+
 	implementation 'org.springframework.boot:spring-boot-starter-amqp'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
