@@ -21,7 +21,7 @@ repositories {
 dependencies {
 	compile("uk.gov.ons.fwmt:fwmt-census-canonical:1.0.2-SNAPSHOT")
 	compile("uk.gov.ons.fwmt:fwmt-census-common:1.0.2-SNAPSHOT")
-//	compile("uk.gov.ons.fwmt:fwmt-census-events:1.0.0-SNAPSHOT")
+	compile("uk.gov.ons.fwmt:fwmt-census-events:1.0.0-SNAPSHOT")
 
 	compile('org.projectlombok:lombok')
 	annotationProcessor('org.projectlombok:lombok')
@@ -31,9 +31,11 @@ dependencies {
 	compile('org.springframework:spring-aop')
 
 	compile('org.aspectj:aspectjweaver')
-
-	implementation 'org.springframework.boot:spring-boot-starter-amqp'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+	
+	compile('org.springframework.boot:spring-boot-starter')
+	compile( 'org.springframework.boot:spring-boot-starter-amqp')
+	compile( 'org.springframework.boot:spring-boot-starter-web')
+	compile('org.springframework.boot:spring-boot-starter-actuator')
 	compileOnly 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
