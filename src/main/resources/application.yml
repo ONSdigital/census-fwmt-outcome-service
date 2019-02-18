@@ -1,6 +1,17 @@
 server:
   port: 9990
 
+spring:
+  application:
+    name: fwmt-census-feedback-service
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+  security:
+    user:
+      name: "user"
+      password: "password"
+
 rabbitmq:
   username: "guest"
   password: "guest"
@@ -10,3 +21,12 @@ rabbitmq:
   initialinterval: 5000
   multiplier: 3.0
   maxInterval: 45000
+
+logging:
+  level:
+    root: WARN
+    uk.gov.ons.fwmt: DEBUG
+  file: target/SpringErrors/spring.log
+  pattern:
+    console: "%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] [%X{CID}] %logger{1}::%M - %msg%n"
+    file: "%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] [%X{CID}] %logger{1}::%M - %msg%n"
