@@ -26,7 +26,5 @@ logging:
   level:
     root: WARN
     uk.gov.ons.fwmt: DEBUG
-  file: target/SpringErrors/spring.log
   pattern:
     console: "%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] [%X{CID}] %logger{1}::%M - %msg%n"
-    file: "%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] [%X{CID}] %logger{1}::%M - %msg%n"
