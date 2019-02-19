@@ -40,3 +40,30 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
+
+artifactory {
+	contextUrl = System.getenv('ARTIFACTORY_URL')
+	publish {
+		repository {
+			repoKey = 'libs-snapshot-local'
+			username = System.getenv('ARTIFACTORY_USERNAME')
+			password = System.getenv('ARTIFACTORY_PASSWORD')
+		}
+	}
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			groupId = group
+			artifactId = 'fwmt-census-feedback-service'
+			version = version
+
+			from components.java
+		}
+	}
+}
+
+artifactoryPublish {
+	publications('maven')
+}
