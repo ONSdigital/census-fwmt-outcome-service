@@ -24,6 +24,16 @@ repositories {
 	mavenCentral()
 }
 
+springBoot {
+	buildInfo {
+		properties {
+			additional = [
+					'Git-Commit': grgit.head().getAbbreviatedId(8)
+			]
+		}
+	}
+}
+
 dependencies {
 	compile("uk.gov.ons.fwmt:fwmt-census-canonical:1.0.2-SNAPSHOT")
 	compile("uk.gov.ons.fwmt:fwmt-census-common:1.0.2-SNAPSHOT")
