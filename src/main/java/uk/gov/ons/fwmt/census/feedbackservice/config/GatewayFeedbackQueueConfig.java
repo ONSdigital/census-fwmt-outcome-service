@@ -1,6 +1,8 @@
 package uk.gov.ons.fwmt.census.feedbackservice.config;
 
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -36,5 +38,14 @@ public class GatewayFeedbackQueueConfig {
     Binding binding = BindingBuilder.bind(gatewayFeedbackQueue).to(gatewayFeedbackExchange)
         .with(GATEWAY_FEEDBACK_ROUTING_KEY);
     return binding;
+  }
+
+  //Message Listener
+  @Bean
+  public SimpleMessageListenerContainer gatewayMessagerListener(
+      ConnectionFactory connectionFactory) {
+    SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+    container.setConnectionFactory(connectionFactory);
+    return container;
   }
 }
