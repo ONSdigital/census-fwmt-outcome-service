@@ -7,6 +7,7 @@ plugins {
 	id 'com.github.spotbugs' version '1.6.5'
 	id 'jacoco'
 	id 'java'
+	id 'org.ajoberstar.grgit' version '3.0.0'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -22,6 +23,16 @@ repositories {
 		maven { url 'http://artifactory-sdc.onsdigital.uk/artifactory/libs-snapshot' }
 	}
 	mavenCentral()
+}
+
+springBoot {
+	buildInfo {
+		properties {
+			additional = [
+					'Git-Commit': grgit.head().getAbbreviatedId(8)
+			]
+		}
+	}
 }
 
 dependencies {
