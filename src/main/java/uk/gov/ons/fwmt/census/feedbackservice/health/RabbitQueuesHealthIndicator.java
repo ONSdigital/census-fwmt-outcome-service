@@ -45,9 +45,9 @@ public class RabbitQueuesHealthIndicator extends AbstractHealthIndicator {
     builder.withDetail("accessible-queues", accessibleQueues);
 
     if (accessibleQueues.containsValue(false)) {
-      builder.up();
-    } else {
       builder.down();
+    } else {
+      builder.up();
     }
 
   }
