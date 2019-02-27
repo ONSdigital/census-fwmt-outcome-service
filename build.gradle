@@ -36,9 +36,9 @@ springBoot {
 }
 
 dependencies {
-	compile("uk.gov.ons.fwmt:fwmt-census-canonical:1.0.2-SNAPSHOT")
-	compile("uk.gov.ons.fwmt:fwmt-census-common:1.0.2-SNAPSHOT")
-	compile("uk.gov.ons.fwmt:fwmt-census-events:1.0.0-SNAPSHOT")
+	compile("uk.gov.ons.fwmt:census-fwmt-canonical:1.0.2-SNAPSHOT")
+	compile("uk.gov.ons.fwmt:census-fwmt-common:1.0.2-SNAPSHOT")
+	compile("uk.gov.ons.fwmt:census-fwmt-events:1.0.0-SNAPSHOT")
 
 	compile('org.projectlombok:lombok')
 	annotationProcessor('org.projectlombok:lombok')
@@ -73,7 +73,7 @@ publishing {
 	publications {
 		maven(MavenPublication) {
 			groupId = group
-			artifactId = 'fwmt-census-feedback-service'
+			artifactId = 'census-fwmt-feedback-service'
 			version = version
 
 			from components.java

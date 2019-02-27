@@ -22,7 +22,7 @@ public class BasicAuthenticationPoint extends BasicAuthenticationEntryPoint {
 
   @Override
   public void afterPropertiesSet() throws Exception {
-    setRealmName("fwmt-census-feedback-service");
+    setRealmName("census-fwmt-feedback-service");
     super.afterPropertiesSet();
   }
 }

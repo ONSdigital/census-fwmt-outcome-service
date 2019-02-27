@@ -3,4 +3,4 @@ pluginManagement {
 		gradlePluginPortal()
 	}
 }
-rootProject.name = 'fwmt-census-feedback-service'
+rootProject.name = 'census-fwmt-feedback-service'
