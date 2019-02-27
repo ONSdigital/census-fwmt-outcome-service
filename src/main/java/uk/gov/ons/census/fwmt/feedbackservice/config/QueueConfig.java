@@ -1,4 +1,4 @@
-package uk.gov.ons.fwmt.census.feedbackservice.config;
+package uk.gov.ons.census.fwmt.feedbackservice.config;
 
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.retry.RetryOperations;
 import org.springframework.retry.interceptor.RetryOperationsInterceptor;
-import uk.gov.ons.fwmt.census.common.retry.GatewayMessageRecover;
+import uk.gov.ons.census.fwmt.common.retry.GatewayMessageRecover;
 
 @Configuration
 public class QueueConfig {

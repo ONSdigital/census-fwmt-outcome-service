@@ -1,4 +1,4 @@
-package uk.gov.ons.fwmt.census.feedbackservice.health;
+package uk.gov.ons.census.fwmt.feedbackservice.health;
 
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.stereotype.Component;
-import uk.gov.ons.fwmt.census.feedbackservice.config.GatewayFeedbackQueueConfig;
+import uk.gov.ons.census.fwmt.feedbackservice.config.GatewayFeedbackQueueConfig;
 
 import java.util.Arrays;
 import java.util.List;

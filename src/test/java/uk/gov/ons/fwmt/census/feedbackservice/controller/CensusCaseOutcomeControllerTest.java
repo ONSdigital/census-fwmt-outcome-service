@@ -1,4 +1,4 @@
-package uk.gov.ons.fwmt.census.feedbackservice.controller;
+package uk.gov.ons.census.fwmt.feedbackservice.controller;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,8 +10,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.ons.fwmt.census.events.component.GatewayEventManager;
-import uk.gov.ons.fwmt.census.feedbackservice.service.FeedbackService;
+import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
+import uk.gov.ons.census.fwmt.feedbackservice.service.FeedbackService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

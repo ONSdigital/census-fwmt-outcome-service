@@ -1,4 +1,4 @@
-package uk.gov.ons.fwmt.census.feedbackservice.config;
+package uk.gov.ons.census.fwmt.feedbackservice.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

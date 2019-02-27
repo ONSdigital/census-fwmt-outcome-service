@@ -1,4 +1,4 @@
-package uk.gov.ons.fwmt.census.feedbackservice.config;
+package uk.gov.ons.census.fwmt.feedbackservice.config;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;

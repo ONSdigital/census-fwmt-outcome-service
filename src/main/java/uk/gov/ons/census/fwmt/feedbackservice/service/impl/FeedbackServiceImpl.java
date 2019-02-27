@@ -1,14 +1,14 @@
-package uk.gov.ons.fwmt.census.feedbackservice.service.impl;
+package uk.gov.ons.census.fwmt.feedbackservice.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.ons.fwmt.census.common.error.GatewayException;
-import uk.gov.ons.fwmt.census.events.component.GatewayEventManager;
-import uk.gov.ons.fwmt.census.feedbackservice.data.dto.CensusCaseOutcomeDTO;
-import uk.gov.ons.fwmt.census.feedbackservice.message.GatewayFeedbackProducer;
-import uk.gov.ons.fwmt.census.feedbackservice.service.FeedbackService;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
+import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
+import uk.gov.ons.census.fwmt.feedbackservice.data.dto.CensusCaseOutcomeDTO;
+import uk.gov.ons.census.fwmt.feedbackservice.message.GatewayFeedbackProducer;
+import uk.gov.ons.census.fwmt.feedbackservice.service.FeedbackService;
 
-import static uk.gov.ons.fwmt.census.feedbackservice.config.GatewayEventsConfig.COMET_OUTCOME_RECEIVED;
+import static uk.gov.ons.census.fwmt.feedbackservice.config.GatewayEventsConfig.COMET_OUTCOME_RECEIVED;
 
 @Service
 public class FeedbackServiceImpl implements FeedbackService {

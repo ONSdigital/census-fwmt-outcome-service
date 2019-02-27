@@ -1,4 +1,4 @@
-package uk.gov.ons.fwmt.census.feedbackservice;
+package uk.gov.ons.census.fwmt.feedbackservice;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

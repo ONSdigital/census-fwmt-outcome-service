@@ -1,8 +1,8 @@
-package uk.gov.ons.fwmt.census.feedbackservice.config;
+package uk.gov.ons.census.fwmt.feedbackservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import uk.gov.ons.fwmt.census.events.component.GatewayEventManager;
+import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
 @Configuration
 public class GatewayEventsConfig {
