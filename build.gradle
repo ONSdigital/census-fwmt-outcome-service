@@ -12,7 +12,7 @@ plugins {
 
 apply plugin: 'io.spring.dependency-management'
 
-group = 'uk.gov.ons.fwmt'
+group = 'uk.gov.ons.census.fwmt'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
