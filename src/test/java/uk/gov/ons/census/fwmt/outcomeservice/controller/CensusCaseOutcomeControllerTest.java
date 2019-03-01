@@ -1,4 +1,4 @@
-package uk.gov.ons.census.fwmt.feedbackservice.controller;
+package uk.gov.ons.census.fwmt.outcomeservice.controller;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
-import uk.gov.ons.census.fwmt.feedbackservice.service.FeedbackService;
+import uk.gov.ons.census.fwmt.outcomeservice.controller.CensusCaseOutcomeController;
+import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -23,7 +24,7 @@ public class CensusCaseOutcomeControllerTest {
   private CensusCaseOutcomeController censusCaseOutcomeController;
   
   @Mock
-  private FeedbackService feedbackService;
+  private OutcomeService outcomeService;
   
   @Mock
   private GatewayEventManager gatewayEventManager;

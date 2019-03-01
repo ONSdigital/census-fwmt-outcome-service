@@ -1,4 +1,4 @@
-package uk.gov.ons.census.fwmt.feedbackservice.config;
+package uk.gov.ons.census.fwmt.outcomeservice.config;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
@@ -22,7 +22,7 @@ public class BasicAuthenticationPoint extends BasicAuthenticationEntryPoint {
 
   @Override
   public void afterPropertiesSet() throws Exception {
-    setRealmName("census-fwmt-feedback-service");
+    setRealmName("census-fwmt-outcome-service");
     super.afterPropertiesSet();
   }
 }

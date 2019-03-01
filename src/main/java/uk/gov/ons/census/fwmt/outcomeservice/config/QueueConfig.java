@@ -1,4 +1,4 @@
-package uk.gov.ons.census.fwmt.feedbackservice.config;
+package uk.gov.ons.census.fwmt.outcomeservice.config;
 
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;

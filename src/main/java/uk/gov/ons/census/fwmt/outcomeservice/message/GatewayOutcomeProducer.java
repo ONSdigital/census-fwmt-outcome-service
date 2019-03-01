@@ -1,4 +1,4 @@
-package uk.gov.ons.census.fwmt.feedbackservice.message;
+package uk.gov.ons.census.fwmt.outcomeservice.message;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.feedbackservice.config.GatewayFeedbackQueueConfig;
-import uk.gov.ons.census.fwmt.feedbackservice.data.dto.CensusCaseOutcomeDTO;
+import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
+import uk.gov.ons.census.fwmt.outcomeservice.data.dto.CensusCaseOutcomeDTO;
 
 @Slf4j
 @Component
-public class GatewayFeedbackProducer {
+public class GatewayOutcomeProducer {
 
   @Autowired
   private ObjectMapper objectMapper;
@@ -26,7 +26,7 @@ public class GatewayFeedbackProducer {
     try {
       final String notification = objectMapper.writeValueAsString(censusCaseOutcomeDTO);
       log.info("Message sent to queue :{}", censusCaseOutcomeDTO.getCaseReference());
-      template.convertAndSend(GatewayFeedbackQueueConfig.GATEWAY_FEEDBACK_EXCHANGE, GatewayFeedbackQueueConfig.GATEWAY_FEEDBACK_ROUTING_KEY, notification);
+      template.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE, GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_ROUTING_KEY, notification);
     } catch (JsonProcessingException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Failed to process message into JSON.", e);
     }

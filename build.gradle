@@ -73,7 +73,7 @@ publishing {
 	publications {
 		maven(MavenPublication) {
 			groupId = group
-			artifactId = 'census-fwmt-feedback-service'
+			artifactId = 'census-fwmt-outcome-service'
 			version = version
 
 			from components.java

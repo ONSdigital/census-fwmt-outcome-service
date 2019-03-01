@@ -1,4 +1,4 @@
-package uk.gov.ons.census.fwmt.feedbackservice.rmproducer;
+package uk.gov.ons.census.fwmt.outcomeservice.rmproducer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,9 +9,9 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.feedbackservice.config.GatewayFeedbackQueueConfig;
-import uk.gov.ons.census.fwmt.feedbackservice.data.dto.CensusCaseOutcomeDTO;
-import uk.gov.ons.census.fwmt.feedbackservice.message.GatewayFeedbackProducer;
+import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
+import uk.gov.ons.census.fwmt.outcomeservice.data.dto.CensusCaseOutcomeDTO;
+import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 public class RMProducerTest {
 
   @InjectMocks
-  GatewayFeedbackProducer rmProducer;
+  GatewayOutcomeProducer rmProducer;
 
   @Mock
   RabbitTemplate template;
@@ -48,7 +48,7 @@ public class RMProducerTest {
 
     //Then
     verify(objectMapper).writeValueAsString(eq(censusCaseOutcomeDTO));
-    verify(template).convertAndSend(GatewayFeedbackQueueConfig.GATEWAY_FEEDBACK_EXCHANGE, GatewayFeedbackQueueConfig.GATEWAY_FEEDBACK_ROUTING_KEY, responseJson);
+    verify(template).convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE, GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_ROUTING_KEY, responseJson);
 
   }
 }

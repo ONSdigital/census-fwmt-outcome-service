@@ -1,4 +1,4 @@
-package uk.gov.ons.census.fwmt.feedbackservice.config;
+package uk.gov.ons.census.fwmt.outcomeservice.config;
 
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -9,34 +9,34 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class GatewayFeedbackQueueConfig {
+public class GatewayOutcomeQueueConfig {
   @Autowired
   private AmqpAdmin amqpAdmin;
     
-  public static final String GATEWAY_FEEDBACK_QUEUE = "Gateway.Feedback";
-  public static final String GATEWAY_FEEDBACK_EXCHANGE = "Gateway.Feedback.Exchange";
-  public static final String GATEWAY_FEEDBACK_ROUTING_KEY = "Gateway.Feedback.Request";
+  public static final String GATEWAY_OUTCOME_QUEUE = "Gateway.Outcome";
+  public static final String GATEWAY_OUTCOME_EXCHANGE = "Gateway.Outcome.Exchange";
+  public static final String GATEWAY_OUTCOME_ROUTING_KEY = "Gateway.Outcome.Request";
 
   // Queue
   @Bean
-  public Queue gatewayFeedbackQueue() {
-    Queue queue = QueueBuilder.durable(GATEWAY_FEEDBACK_QUEUE).build();
+  public Queue gatewayOutcomeQueue() {
+    Queue queue = QueueBuilder.durable(GATEWAY_OUTCOME_QUEUE).build();
     return queue;
   }
   
   //Exchange
   @Bean
-  public DirectExchange gatewayFeedbackExchange() {
-    DirectExchange directExchange = new DirectExchange(GATEWAY_FEEDBACK_EXCHANGE);
+  public DirectExchange gatewayOutcomeExchange() {
+    DirectExchange directExchange = new DirectExchange(GATEWAY_OUTCOME_EXCHANGE);
     return directExchange;
   }
 
   // Bindings
   @Bean
-  public Binding gatewayFeedbackBinding(@Qualifier("gatewayFeedbackQueue") Queue gatewayFeedbackQueue,
-      @Qualifier("gatewayFeedbackExchange") DirectExchange gatewayFeedbackExchange) {
-    Binding binding = BindingBuilder.bind(gatewayFeedbackQueue).to(gatewayFeedbackExchange)
-        .with(GATEWAY_FEEDBACK_ROUTING_KEY);
+  public Binding gatewayOutcomeBinding(@Qualifier("gatewayOutcomeQueue") Queue gatewayOutcomeQueue,
+      @Qualifier("gatewayOutcomeExchange") DirectExchange gatewayOutcomeExchange) {
+    Binding binding = BindingBuilder.bind(gatewayOutcomeQueue).to(gatewayOutcomeExchange)
+        .with(GATEWAY_OUTCOME_ROUTING_KEY);
     return binding;
   }
 
