@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: fwmt-census-feedback-service
+    name: census-fwmt-feedback-service
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false

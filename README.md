@@ -1,7 +1,7 @@
-[![Build Status](https://travis-ci.com/ONSdigital/fwmt-census-feedback-service.svg?branch=master)](https://travis-ci.com/ONSdigital/fwmt-census-feedback-service) [![codecov](https://codecov.io/gh/ONSdigital/fwmt-census-feedback-service/branch/master/graph/badge.svg)](https://codecov.io/gh/ONSdigital/fwmt-census-feedback-service) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1bad894364ed49f29a41193cf9e1e8ff)](https://www.codacy.com/app/ONSDigital_FWMT/fwmt-census-feedback-service?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ONSdigital/fwmt-census-feedback-service&amp;utm_campaign=Badge_Grade)
+[![Build Status](https://travis-ci.com/ONSdigital/census-fwmt-feedback-service.svg?branch=master)](https://travis-ci.com/ONSdigital/census-fwmt-feedback-service) [![codecov](https://codecov.io/gh/ONSdigital/census-fwmt-feedback-service/branch/master/graph/badge.svg)](https://codecov.io/gh/ONSdigital/census-fwmt-feedback-service) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1bad894364ed49f29a41193cf9e1e8ff)](https://www.codacy.com/app/ONSDigital_FWMT/census-fwmt-feedback-service?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ONSdigital/census-fwmt-feedback-service&amp;utm_campaign=Badge_Grade)
 
 
-# fwmt-census-feedback-service
+# census-fwmt-feedback-service
 This service is a gateway between Total Mobile's COMET interface and FWMT feedback service.
 
 It receives a JSON response from TM, transforms it into a FWMT Canonical and places the message onto the Gateway.Feedback RabbitMQ Queue

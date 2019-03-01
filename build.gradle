@@ -12,7 +12,7 @@ plugins {
 
 apply plugin: 'io.spring.dependency-management'
 
-group = 'uk.gov.ons.fwmt'
+group = 'uk.gov.ons.census.fwmt'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
@@ -36,9 +36,9 @@ springBoot {
 }
 
 dependencies {
-	compile("uk.gov.ons.fwmt:fwmt-census-canonical:1.0.2-SNAPSHOT")
-	compile("uk.gov.ons.fwmt:fwmt-census-common:1.0.2-SNAPSHOT")
-	compile("uk.gov.ons.fwmt:fwmt-census-events:1.0.0-SNAPSHOT")
+	compile("uk.gov.ons.census.fwmt:census-fwmt-canonical:1.0.2-SNAPSHOT")
+	compile("uk.gov.ons.census.fwmt:census-fwmt-common:1.0.2-SNAPSHOT")
+	compile("uk.gov.ons.census.fwmt:census-fwmt-events:1.0.0-SNAPSHOT")
 
 	compile('org.projectlombok:lombok')
 	annotationProcessor('org.projectlombok:lombok')
@@ -48,7 +48,7 @@ dependencies {
 	compile('org.springframework:spring-aop')
 
 	compile('org.aspectj:aspectjweaver')
-	
+
 	compile('org.springframework.boot:spring-boot-starter')
 	compile( 'org.springframework.boot:spring-boot-starter-amqp')
 	compile( 'org.springframework.boot:spring-boot-starter-web')
@@ -73,7 +73,7 @@ publishing {
 	publications {
 		maven(MavenPublication) {
 			groupId = group
-			artifactId = 'fwmt-census-feedback-service'
+			artifactId = 'census-fwmt-feedback-service'
 			version = version
 
 			from components.java
@@ -105,5 +105,3 @@ tasks.withType(SpotBugsTask) {
 		html.enabled = true
 	}
 }
-
-	

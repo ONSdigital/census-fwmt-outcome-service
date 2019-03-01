@@ -1,13 +1,13 @@
 
-package uk.gov.ons.fwmt.census.feedbackservice.config;
+package uk.gov.ons.census.fwmt.feedbackservice.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.support.RetryTemplate;
-import uk.gov.ons.fwmt.census.common.retry.DefaultListenerSupport;
-import uk.gov.ons.fwmt.census.common.retry.GatewayRetryPolicy;
+import uk.gov.ons.census.fwmt.common.retry.DefaultListenerSupport;
+import uk.gov.ons.census.fwmt.common.retry.GatewayRetryPolicy;
 
 @Configuration
 public class RabbitMQConfig {
