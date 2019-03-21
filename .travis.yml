@@ -7,7 +7,7 @@ before_install:
 install: true
 script:
 - |
-  if [[ $TRAVIS_COMMIT_MESSAGE != 'JENKINS SNAPSHOT UPDATE' ]]; then
+  if [[ $TRAVIS_COMMIT_MESSAGE != 'SNAPSHOT UPDATE' ]]; then
     ./gradlew build --info;
   fi
 env:
@@ -27,13 +27,25 @@ after_success:
 - bash <(curl -s https://codecov.io/bash)
 - |
   set -e
-  if [[ "$TRAVIS_BRANCH" = "master" ]] && [[ "$TRAVIS_PULL_REQUEST" = "false" ]] && [[ $TRAVIS_COMMIT_MESSAGE != "JENKINS SNAPSHOT UPDATE" ]]; then
+  if [[ "$TRAVIS_BRANCH" = "master" ]] && [[ "$TRAVIS_PULL_REQUEST" = "false" ]] && [[ $TRAVIS_COMMIT_MESSAGE != "SNAPSHOT UPDATE" ]]; then
     echo "$DOCKER_PASSWORD" | base64 --decode | docker login "$DOCKER_REGISTRY" --username "$DOCKER_USERNAME" --password-stdin
     docker build -t "$DOCKER_LOCATION"/census-rm-fwmtoutcomesvc -t "$DOCKER_LOCATION"/census-rm-fwmtoutcomesvc:census-rm-fwmtoutcomesvc-$TRAVIS_BUILD_NUMBER --build-arg jar=build/libs/census-fwmt-outcome-service-*.jar .
     docker push "$DOCKER_LOCATION"/census-rm-fwmtoutcomesvc
   fi
 - |
   set -e
-  if [[ "$TRAVIS_BRANCH" = "master" ]] && [[ "$TRAVIS_PULL_REQUEST" = "false" ]] && [[ $TRAVIS_COMMIT_MESSAGE != "JENKINS SNAPSHOT UPDATE" ]]; then
+  if [[ "$TRAVIS_BRANCH" = "master" ]] && [[ "$TRAVIS_PULL_REQUEST" = "false" ]] && [[ $TRAVIS_COMMIT_MESSAGE != "SNAPSHOT UPDATE" ]]; then
     ./gradlew artifactPublish
+  fi
+- |
+  set -e
+  if [[ "$TRAVIS_BRANCH" = "master" ]] && [[ "$TRAVIS_PULL_REQUEST" = "false" ]] && [[ $TRAVIS_COMMIT_MESSAGE != "SNAPSHOT UPDATE" ]]; then
+    git config --global user.email "$EMAIL"
+    git config --global user.name "$UNAME"
+    git checkout master
+    num=$(($(grep "version = .*\-SNAPSHOT" build.gradle | sed -e 's/^.*\.\([0-9]*\)-.*$/\1/')+1))
+    sed -ie "s/\(^version.*[0-9]*\.[0-9]*\.\)[0-9]*/\1${num}/" build.gradle
+    git add build.gradle
+    git commit -m "SNAPSHOT UPDATE"
+    git push https://$UNAME:$PASSWD@$REPO
   fi
