@@ -1,8 +1,8 @@
 package uk.gov.ons.census.fwmt.outcomeservice.service;
 
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Event;
+import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.OutcomeEvent;
 
 public interface OutcomeService {
-  void sendOutcome(Event caseOutcome) throws GatewayException;
+  void sendOutcome(OutcomeEvent caseOutcome) throws GatewayException;
 }

@@ -13,18 +13,27 @@ import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "event",
-    "payload"
+    "type",
+    "source",
+    "channel",
+    "dateTime",
+    "transactionId"
 })
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Event {
 
-  @JsonProperty("event")
-  private Event_ event;
-  @JsonProperty("payload")
-  private Payload payload;
+  @JsonProperty("type")
+  private String type;
+  @JsonProperty("source")
+  private String source;
+  @JsonProperty("channel")
+  private String channel;
+  @JsonProperty("dateTime")
+  private String dateTime;
+  @JsonProperty("transactionId")
+  private String transactionId;
   @JsonIgnore
   private Map<String, Object> additionalProperties = new HashMap<>();
 }

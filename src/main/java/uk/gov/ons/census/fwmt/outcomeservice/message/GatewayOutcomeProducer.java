@@ -9,7 +9,7 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Event;
+import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.OutcomeEvent;
 
 @Slf4j
 @Component
@@ -22,10 +22,10 @@ public class GatewayOutcomeProducer {
   private RabbitTemplate rabbitTemplate;
 
   @Retryable
-  public void send(Event event) throws GatewayException {
+  public void send(OutcomeEvent outcomeEvent) throws GatewayException {
     try {
-      final String notification = objectMapper.writeValueAsString(event);
-      log.info("Message sent to queue :{}", event.getEvent().getTransactionId());
+      final String notification = objectMapper.writeValueAsString(outcomeEvent);
+      log.info("Message sent to queue :{}", outcomeEvent.getEvent().getTransactionId());
       rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
           GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_ROUTING_KEY, notification);
     } catch (JsonProcessingException e) {
