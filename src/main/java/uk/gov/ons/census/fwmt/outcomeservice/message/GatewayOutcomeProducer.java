@@ -9,7 +9,7 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.CensusCaseOutcomeDTO;
+import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Event;
 
 @Slf4j
 @Component
@@ -19,14 +19,15 @@ public class GatewayOutcomeProducer {
   private ObjectMapper objectMapper;
 
   @Autowired
-  private RabbitTemplate template;
+  private RabbitTemplate rabbitTemplate;
 
   @Retryable
-  public void send(CensusCaseOutcomeDTO censusCaseOutcomeDTO) throws GatewayException {
+  public void send(Event event) throws GatewayException {
     try {
-      final String notification = objectMapper.writeValueAsString(censusCaseOutcomeDTO);
-      log.info("Message sent to queue :{}", censusCaseOutcomeDTO.getCaseReference());
-      template.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE, GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_ROUTING_KEY, notification);
+      final String notification = objectMapper.writeValueAsString(event);
+      log.info("Message sent to queue :{}", event.getEvent().getTransactionId());
+      rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
+          GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_ROUTING_KEY, notification);
     } catch (JsonProcessingException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Failed to process message into JSON.", e);
     }

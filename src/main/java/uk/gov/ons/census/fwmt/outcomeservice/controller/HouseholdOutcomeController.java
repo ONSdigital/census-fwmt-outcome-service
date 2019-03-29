@@ -6,18 +6,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.CensusCaseOutcomeDTO;
-import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
+import uk.gov.ons.census.fwmt.outcomeservice.data.dto.comet.HouseholdOutcome;
+import uk.gov.ons.census.fwmt.outcomeservice.service.impl.CometTranslationServiceImpl;
 
 @RestController
 @RequestMapping("/CensusCaseOutcome")
-public class CensusCaseOutcomeController {
+public class HouseholdOutcomeController {
 
   @Autowired
-  private OutcomeService outcomeService;
+  private CometTranslationServiceImpl cometTranslationService;
 
   @PostMapping(consumes = "application/json", produces = "application/json")
-  public void censusCaseOutcomeResponse(@RequestBody CensusCaseOutcomeDTO censusCaseOutcomeDTO) throws GatewayException {
-    outcomeService.sendOutcome(censusCaseOutcomeDTO);
+  public void censusCaseOutcomeResponse(@RequestBody HouseholdOutcome householdOutcome) throws GatewayException {
+    // translation of comet to RM
+    cometTranslationService.transformCometPayload(householdOutcome);
   }
 }
