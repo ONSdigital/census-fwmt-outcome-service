@@ -30,6 +30,7 @@ public class Event {
   private String source;
   @JsonProperty("channel")
   private String channel;
+  // "2011-08-12T20:17:46.384Z" example
   @JsonProperty("dateTime")
   private String dateTime;
   @JsonProperty("transactionId")

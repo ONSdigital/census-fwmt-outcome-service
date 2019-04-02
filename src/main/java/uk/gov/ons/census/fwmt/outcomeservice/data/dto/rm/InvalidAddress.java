@@ -30,7 +30,7 @@ public class InvalidAddress {
 
   public enum ReasonEnum {
 
-    DERELICT("reason");
+    DERELICT("derelict");
 
     private String reason;
 
