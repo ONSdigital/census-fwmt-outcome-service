@@ -2,14 +2,21 @@ package uk.gov.ons.census.fwmt.outcomeservice.service.impl;
 
 import org.springframework.stereotype.Service;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.comet.HouseholdOutcome;
+import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.InvalidAddress;
+import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.OutcomeEvent;
 import uk.gov.ons.census.fwmt.outcomeservice.service.CometTranslationService;
+
+import static uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.InvalidAddress.ReasonEnum.DERELICT;
 
 @Service
 public class CometTranslationServiceImpl implements CometTranslationService {
 
   public void transformCometPayload(HouseholdOutcome householdOutcome) {
 
-    String caseId = householdOutcome.getCaseId();
+    OutcomeEvent outcomeEvent = new OutcomeEvent();
+
+    // set the outcomeEvent CaseId
+    outcomeEvent.getPayload().getInvalidAddress().getCollectionCase().setId(householdOutcome.getCaseId());
 
     //Check the primary outcome type:
     // could use a switch statement dealing with strings and cases
@@ -23,9 +30,15 @@ public class CometTranslationServiceImpl implements CometTranslationService {
     //
     // contactMade
 
+    // Interrogate householdOutcome object for primary and secondary outcome
+    buildOutcome(householdOutcome, outcomeEvent);
+  }
+
+  private void buildOutcome(HouseholdOutcome householdOutcome,
+      OutcomeEvent outcomeEvent) {
     switch (householdOutcome.getPrimaryOutcome()) {
     case "No Valid Household":
-      getSecondaryNoValidHouseholdOutcome(householdOutcome);
+      getSecondaryNoValidHouseholdOutcome(householdOutcome, outcomeEvent);
       break;
     case "Contact Made":
       // code block
@@ -35,10 +48,11 @@ public class CometTranslationServiceImpl implements CometTranslationService {
     }
   }
 
-  private void getSecondaryNoValidHouseholdOutcome(HouseholdOutcome householdOutcome) {
+  private void getSecondaryNoValidHouseholdOutcome(HouseholdOutcome householdOutcome,
+      OutcomeEvent outcomeEvent) {
     switch (householdOutcome.getSecondaryOutcome()) {
     case "derelict":
-      // code block
+      outcomeEvent.getPayload().getInvalidAddress().setReason(DERELICT);
       break;
     case "demolished":
       // code block
