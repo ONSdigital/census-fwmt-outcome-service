@@ -1,41 +1,33 @@
 package uk.gov.ons.census.fwmt.outcomeservice.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.comet.HouseholdOutcome;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.InvalidAddress;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.OutcomeEvent;
 import uk.gov.ons.census.fwmt.outcomeservice.service.CometTranslationService;
+import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.InvalidAddress.ReasonEnum.DERELICT;
 
 @Service
 public class CometTranslationServiceImpl implements CometTranslationService {
 
-  public void transformCometPayload(HouseholdOutcome householdOutcome) {
+  @Autowired
+  private OutcomeService outcomeService;
+
+  public void transformCometPayload(HouseholdOutcome householdOutcome) throws GatewayException {
 
     OutcomeEvent outcomeEvent = new OutcomeEvent();
-
-    // set the outcomeEvent CaseId
     outcomeEvent.getPayload().getInvalidAddress().getCollectionCase().setId(householdOutcome.getCaseId());
 
-    //Check the primary outcome type:
-    // could use a switch statement dealing with strings and cases
-    // take into consideration other outcomes
-    // noValidHousehold
-    // if primaryOutcome = noValidHousehold
-    //    check secondaryOutcome
-    //      if secondaryOutcome = derelict
-    //      if secondaryOutcome = demolished
-    //      etc..
-    //
-    // contactMade
-
-    // Interrogate householdOutcome object for primary and secondary outcome
     buildOutcome(householdOutcome, outcomeEvent);
+
+    outcomeService.sendOutcome(outcomeEvent);
   }
 
   private void buildOutcome(HouseholdOutcome householdOutcome,
-      OutcomeEvent outcomeEvent) {
+      OutcomeEvent outcomeEvent) throws GatewayException {
     switch (householdOutcome.getPrimaryOutcome()) {
     case "No Valid Household":
       getSecondaryNoValidHouseholdOutcome(householdOutcome, outcomeEvent);
@@ -44,12 +36,12 @@ public class CometTranslationServiceImpl implements CometTranslationService {
       // code block
       break;
     default:
-      // code block
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "No primary outcome found: {}", householdOutcome.getPrimaryOutcome());
     }
   }
 
   private void getSecondaryNoValidHouseholdOutcome(HouseholdOutcome householdOutcome,
-      OutcomeEvent outcomeEvent) {
+      OutcomeEvent outcomeEvent) throws GatewayException {
     switch (householdOutcome.getSecondaryOutcome()) {
     case "derelict":
       outcomeEvent.getPayload().getInvalidAddress().setReason(DERELICT);
@@ -58,7 +50,7 @@ public class CometTranslationServiceImpl implements CometTranslationService {
       // code block
       break;
     default:
-      // code block
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "No secondary outcome found: {}", householdOutcome.getSecondaryOutcome());
     }
   }
 }
