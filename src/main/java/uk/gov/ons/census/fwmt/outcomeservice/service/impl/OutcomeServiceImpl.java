@@ -24,8 +24,11 @@ public class OutcomeServiceImpl implements OutcomeService {
 
   public void sendOutcome(OutcomeEvent outcomeEvent) throws GatewayException {
     gatewayEventManager
-        .triggerEvent(outcomeEvent.getEvent().getTransactionId(), COMET_OUTCOME_RECEIVED, LocalTime.now());
+        .triggerEvent(outcomeEvent.getPayload().getInvalidAddress().getCollectionCase().getId(), COMET_OUTCOME_RECEIVED,
+            LocalTime.now());
     gatewayOutcomeProducer.send(outcomeEvent);
-    gatewayEventManager.triggerEvent(outcomeEvent.getEvent().getTransactionId(), OUTCOME_SENT_RM, LocalTime.now());
+    gatewayEventManager
+        .triggerEvent(outcomeEvent.getPayload().getInvalidAddress().getCollectionCase().getId(), OUTCOME_SENT_RM,
+            LocalTime.now());
   }
 }
