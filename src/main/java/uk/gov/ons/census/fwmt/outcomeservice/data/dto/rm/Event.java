@@ -9,8 +9,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -33,9 +35,9 @@ public class Event {
   private String channel;
   // "2011-08-12T20:17:46.384Z" example
   @JsonProperty("dateTime")
-  private SimpleDateFormat dateTime;
+  private LocalDateTime dateTime;
   @JsonProperty("transactionId")
-  private String transactionId;
+  private UUID transactionId;
   @JsonIgnore
   private Map<String, Object> additionalProperties = new HashMap<>();
 }

@@ -22,20 +22,9 @@ import java.util.Map;
 public class InvalidAddress {
 
   @JsonProperty("reason")
-  private ReasonEnum reason;
+  private String reason;
   @JsonProperty("collectionCase")
   private CollectionCase collectionCase;
   @JsonIgnore
   private Map<String, Object> additionalProperties = new HashMap<>();
-
-  public enum ReasonEnum {
-
-    DERELICT("derelict");
-
-    private String reason;
-
-    ReasonEnum(String reason) {
-      this.reason = reason;
-    }
-  }
 }
