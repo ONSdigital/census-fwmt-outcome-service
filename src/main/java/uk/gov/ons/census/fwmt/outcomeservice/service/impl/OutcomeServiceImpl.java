@@ -3,22 +3,33 @@ package uk.gov.ons.census.fwmt.outcomeservice.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
+import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.comet.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.CollectionCase;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Event;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.InvalidAddress;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.OutcomeEvent;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Payload;
+import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
-import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeMessageService;
 
+import java.time.LocalTime;
 import java.util.UUID;
+
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_OUTCOME_RECEIVED;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT_RM;
 
 @Service
 public class OutcomeServiceImpl implements OutcomeService {
 
   @Autowired
-  private OutcomeMessageService outcomeMessageService;
+  private OutcomeService outcomeService;
+
+  @Autowired
+  private GatewayOutcomeProducer gatewayOutcomeProducer;
+
+  @Autowired
+  private GatewayEventManager gatewayEventManager;
 
   public void CreateHouseHoldOutComeEvent(HouseholdOutcome householdOutcome) throws GatewayException {
 
@@ -39,7 +50,17 @@ public class OutcomeServiceImpl implements OutcomeService {
     event.setTransactionId(UUID.fromString("c45de4dc-3c3b-11e9-b210-d663bd873d93"));
 
     outcomeEvent.setEvent(event);
-    outcomeMessageService.sendOutcome(outcomeEvent);
+    outcomeService.sendOutcome(outcomeEvent);
+  }
+
+  public void sendOutcome(OutcomeEvent outcomeEvent) throws GatewayException {
+    gatewayEventManager
+        .triggerEvent(outcomeEvent.getPayload().getInvalidAddress().getCollectionCase().getId(), COMET_OUTCOME_RECEIVED,
+            LocalTime.now());
+    gatewayOutcomeProducer.send(outcomeEvent);
+    gatewayEventManager
+        .triggerEvent(outcomeEvent.getPayload().getInvalidAddress().getCollectionCase().getId(), OUTCOME_SENT_RM,
+            LocalTime.now());
   }
 
   private void buildOutcome(HouseholdOutcome householdOutcome,
