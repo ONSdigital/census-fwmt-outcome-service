@@ -22,6 +22,7 @@ public class CollectionCase {
 
   @JsonProperty("id")
   private String id;
+  
   @JsonIgnore
   private Map<String, Object> additionalProperties = new HashMap<>();
 }

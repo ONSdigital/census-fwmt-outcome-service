@@ -26,8 +26,7 @@ public class GatewayOutcomeProducer {
     try {
       final String notification = objectMapper.writeValueAsString(outcomeEvent);
       log.info("Message sent to queue :{}", outcomeEvent.getEvent().getTransactionId());
-      rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
-          GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_ROUTING_KEY, notification);
+      rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE, GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_ROUTING_KEY, notification);
     } catch (JsonProcessingException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Failed to process message into JSON.", e);
     }

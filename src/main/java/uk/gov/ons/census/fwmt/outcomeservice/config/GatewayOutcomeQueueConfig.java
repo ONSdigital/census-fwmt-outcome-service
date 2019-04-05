@@ -18,9 +18,6 @@ public class GatewayOutcomeQueueConfig {
   public static final String GATEWAY_OUTCOME_QUEUE = "Gateway.Outcome";
   public static final String GATEWAY_OUTCOME_EXCHANGE = "Gateway.Outcome.Exchange";
   public static final String GATEWAY_OUTCOME_ROUTING_KEY = "Gateway.Outcome.Request";
-  // TODO is this still needed?
-  @Autowired
-  private AmqpAdmin amqpAdmin;
 
   // Queue
   @Bean

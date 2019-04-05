@@ -23,8 +23,10 @@ public class OutcomeEvent {
 
   @JsonProperty("event")
   private Event event;
+  
   @JsonProperty("payload")
   private Payload payload;
+  
   @JsonIgnore
   private Map<String, Object> additionalProperties = new HashMap<>();
 }

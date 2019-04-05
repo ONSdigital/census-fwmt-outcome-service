@@ -22,7 +22,7 @@ public class Payload {
 
   @JsonProperty("InvalidAddress")
   private InvalidAddress invalidAddress;
+  
   @JsonIgnore
   private Map<String, Object> additionalProperties = new HashMap<>();
-
 }

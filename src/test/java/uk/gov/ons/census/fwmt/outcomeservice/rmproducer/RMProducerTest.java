@@ -18,6 +18,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.UUID;
+
 @RunWith(MockitoJUnitRunner.class)
 public class RMProducerTest {
 
@@ -35,7 +37,7 @@ public class RMProducerTest {
     //Given
     OutcomeEvent outcomeEvent = new OutcomeEvent();
     Event event_ = new Event();
-    event_.setTransactionId("c45de4dc-3c3b-11e9-b210-d663bd873d93");
+    event_.setTransactionId(UUID.fromString("c45de4dc-3c3b-11e9-b210-d663bd873d93"));
     outcomeEvent.setEvent(event_);
 
     final String responseJson = "  {\n"

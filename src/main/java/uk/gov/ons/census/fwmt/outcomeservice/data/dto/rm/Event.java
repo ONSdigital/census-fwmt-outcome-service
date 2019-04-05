@@ -29,15 +29,20 @@ public class Event {
 
   @JsonProperty("type")
   private String type;
+  
   @JsonProperty("source")
   private String source;
+  
   @JsonProperty("channel")
   private String channel;
+  
   // "2011-08-12T20:17:46.384Z" example
   @JsonProperty("dateTime")
   private LocalDateTime dateTime;
+  
   @JsonProperty("transactionId")
   private UUID transactionId;
+  
   @JsonIgnore
   private Map<String, Object> additionalProperties = new HashMap<>();
 }

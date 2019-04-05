@@ -22,16 +22,18 @@ import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.O
 public class OutcomeServiceImpl implements OutcomeService {
 
   @Autowired
-  private OutcomeService outcomeService;
-
-  @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
 
   @Autowired
   private GatewayEventManager gatewayEventManager;
 
-  public void CreateHouseHoldOutComeEvent(HouseholdOutcome householdOutcome) throws GatewayException {
+  public void createHouseHoldOutcomeEvent(HouseholdOutcome householdOutcome) throws GatewayException {
+    OutcomeEvent outcomeEvent = newOutcomeEvent(householdOutcome);
+    gatewayOutcomeProducer.send(outcomeEvent);
+    gatewayEventManager.triggerEvent(outcomeEvent.getPayload().getInvalidAddress().getCollectionCase().getId(), OUTCOME_SENT_RM, LocalTime.now());
+  }
 
+  private OutcomeEvent newOutcomeEvent(HouseholdOutcome householdOutcome) throws GatewayException {
     OutcomeEvent outcomeEvent = new OutcomeEvent();
     Payload payload = new Payload();
     InvalidAddress invalidAddress = new InvalidAddress();
@@ -45,18 +47,10 @@ public class OutcomeServiceImpl implements OutcomeService {
     buildOutcome(householdOutcome, outcomeEvent);
 
     Event event = new Event();
-    // where does this come from?
-    event.setTransactionId(UUID.fromString("c45de4dc-3c3b-11e9-b210-d663bd873d93"));
+    event.setTransactionId(householdOutcome.getTransactionId());
 
     outcomeEvent.setEvent(event);
-    outcomeService.sendOutcome(outcomeEvent);
-  }
-
-  public void sendOutcome(OutcomeEvent outcomeEvent) throws GatewayException {
-    gatewayOutcomeProducer.send(outcomeEvent);
-    gatewayEventManager
-        .triggerEvent(outcomeEvent.getPayload().getInvalidAddress().getCollectionCase().getId(), OUTCOME_SENT_RM,
-            LocalTime.now());
+    return outcomeEvent;
   }
 
   private void buildOutcome(HouseholdOutcome householdOutcome,

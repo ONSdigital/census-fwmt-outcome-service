@@ -27,16 +27,22 @@ public class FulfillmentRequest {
 
   @JsonProperty("questionnaireType")
   private String questionnaireType;
+  
   @JsonProperty("deliveryFormat")
   private String deliveryFormat;
+  
   @JsonProperty("deliveryMethod")
   private String deliveryMethod;
+  
   @JsonProperty("questionnaireID")
   private String questionnaireID;
+  
   @JsonProperty("requesterName")
   private String requesterName;
+  
   @JsonProperty("requesterPhone")
   private String requesterPhone;
+  
   @JsonIgnore
   private Map<String, Object> additionalProperties = new HashMap<>();
 

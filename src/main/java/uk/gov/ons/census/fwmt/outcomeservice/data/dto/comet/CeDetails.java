@@ -25,13 +25,16 @@ public class CeDetails {
 
   @JsonProperty("establishmentName")
   private String establishmentName;
+
   @JsonProperty("managerName")
   private String managerName;
+  
   @JsonProperty("usualResidents")
   private Integer usualResidents;
+  
   @JsonProperty("mgrPhone")
   private String mgrPhone;
+  
   @JsonIgnore
   private Map<String, Object> additionalProperties = new HashMap<>();
-
 }

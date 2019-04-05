@@ -26,7 +26,7 @@ public class HouseholdOutcomeController {
 
   @PostMapping(consumes = "application/json", produces = "application/json")
   public void censusCaseOutcomeResponse(@RequestBody HouseholdOutcome householdOutcome) throws GatewayException {
-    cometTranslationService.CreateHouseHoldOutComeEvent(householdOutcome);
     gatewayEventManager.triggerEvent(householdOutcome.getCaseId(), COMET_OUTCOME_RECEIVED, LocalTime.now());
+    cometTranslationService.createHouseHoldOutcomeEvent(householdOutcome);
   }
 }

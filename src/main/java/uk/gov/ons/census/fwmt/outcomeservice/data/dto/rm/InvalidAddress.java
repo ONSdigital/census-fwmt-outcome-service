@@ -23,8 +23,10 @@ public class InvalidAddress {
 
   @JsonProperty("reason")
   private String reason;
+  
   @JsonProperty("collectionCase")
   private CollectionCase collectionCase;
+  
   @JsonIgnore
   private Map<String, Object> additionalProperties = new HashMap<>();
 }
