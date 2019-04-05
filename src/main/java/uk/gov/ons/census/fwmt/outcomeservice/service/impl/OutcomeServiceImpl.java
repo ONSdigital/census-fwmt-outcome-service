@@ -54,9 +54,6 @@ public class OutcomeServiceImpl implements OutcomeService {
   }
 
   public void sendOutcome(OutcomeEvent outcomeEvent) throws GatewayException {
-    gatewayEventManager
-        .triggerEvent(outcomeEvent.getPayload().getInvalidAddress().getCollectionCase().getId(), COMET_OUTCOME_RECEIVED,
-            LocalTime.now());
     gatewayOutcomeProducer.send(outcomeEvent);
     gatewayEventManager
         .triggerEvent(outcomeEvent.getPayload().getInvalidAddress().getCollectionCase().getId(), OUTCOME_SENT_RM,
