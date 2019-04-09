@@ -1,19 +1,18 @@
 package uk.gov.ons.census.fwmt.outcomeservice.data.dto.comet;
 
-import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -33,7 +32,7 @@ import lombok.NoArgsConstructor;
 public class HouseholdOutcome {
 
   @JsonProperty("eventDate")
-  private LocalTime eventDate;
+  private LocalDateTime eventDate;
 
   @JsonProperty("username")
   private String username;
