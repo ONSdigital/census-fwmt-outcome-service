@@ -8,7 +8,7 @@ import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 public class GatewayEventsConfig {
 
   public static final String COMET_OUTCOME_RECEIVED = "Comet - Case Outcome Received";
-  public static final String OUTCOME_SENT_RM = "OUTCOME - Case Outcome Sent";
+  public static final String OUTCOME_SENT_RM = "Outcome - Case Outcome Sent";
 
   @Bean
   public GatewayEventManager gatewayEventManager() {
