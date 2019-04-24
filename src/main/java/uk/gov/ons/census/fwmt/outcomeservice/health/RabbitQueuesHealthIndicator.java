@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class RabbitQueuesHealthIndicator extends AbstractHealthIndicator {
 
   private static List<String> QUEUES = Arrays.asList(
-      GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_QUEUE
+      GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_QUEUE
   );
 
   @Autowired
