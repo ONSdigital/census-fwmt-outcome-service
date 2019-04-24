@@ -61,7 +61,7 @@ public class RMProducerTest {
     when(objectMapper.writeValueAsString(eq(outcomeEvent))).thenReturn(responseJson);
 
     //When
-    rmProducer.send(outcomeEvent);
+    rmProducer.sendNonValidHouseholdOutcome(outcomeEvent);
 
     //Then
     verify(objectMapper).writeValueAsString(eq(outcomeEvent));

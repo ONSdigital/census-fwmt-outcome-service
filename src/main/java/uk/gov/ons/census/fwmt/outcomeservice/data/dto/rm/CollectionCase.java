@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -21,7 +22,7 @@ import java.util.Map;
 public class CollectionCase {
 
   @JsonProperty("id")
-  private String id;
+  private UUID id;
   
   @JsonIgnore
   private Map<String, Object> additionalProperties = new HashMap<>();

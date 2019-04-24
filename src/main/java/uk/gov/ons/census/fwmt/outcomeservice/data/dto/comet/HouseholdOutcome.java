@@ -38,7 +38,7 @@ public class HouseholdOutcome {
   private String username;
   
   @JsonProperty("caseId")
-  private String caseId;
+  private UUID caseId;
   
   @JsonProperty("caseReference")
   private String caseReference;

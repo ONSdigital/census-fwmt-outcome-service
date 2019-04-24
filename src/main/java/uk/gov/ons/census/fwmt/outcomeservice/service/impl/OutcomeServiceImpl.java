@@ -28,8 +28,18 @@ public class OutcomeServiceImpl implements OutcomeService {
 
   public void createHouseHoldOutcomeEvent(HouseholdOutcome householdOutcome) throws GatewayException {
     OutcomeEvent outcomeEvent = newOutcomeEvent(householdOutcome);
-    gatewayOutcomeProducer.send(outcomeEvent);
-    gatewayEventManager.triggerEvent(outcomeEvent.getPayload().getInvalidAddress().getCollectionCase().getId(), OUTCOME_SENT_RM, LocalTime.now());
+
+    // pass in routing key to send method instead and let one send method do the heavy lifting
+    if (householdOutcome.getPrimaryOutcome().equals("No Valid Household")) {
+      gatewayOutcomeProducer.sendNonValidHouseholdOutcome(outcomeEvent);
+
+    } else if (householdOutcome.getPrimaryOutcome().equals("Contact Made")) {
+      gatewayOutcomeProducer.sendTest(outcomeEvent);
+    }
+
+    gatewayEventManager
+        .triggerEvent(String.valueOf(outcomeEvent.getPayload().getInvalidAddress().getCollectionCase().getId()),
+            OUTCOME_SENT_RM, LocalTime.now());
   }
 
   private OutcomeEvent newOutcomeEvent(HouseholdOutcome householdOutcome) throws GatewayException {
@@ -59,10 +69,11 @@ public class OutcomeServiceImpl implements OutcomeService {
       getSecondaryNoValidHouseholdOutcome(householdOutcome, outcomeEvent);
       break;
     case "Contact Made":
-      // code block
+      outcomeEvent.getPayload().getInvalidAddress().setReason("Contact Made");
       break;
     default:
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "No primary outcome found: {}", householdOutcome.getPrimaryOutcome());
+      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "No primary outcome found: {}",
+          householdOutcome.getPrimaryOutcome());
     }
   }
 
@@ -91,7 +102,8 @@ public class OutcomeServiceImpl implements OutcomeService {
       outcomeEvent.getPayload().getInvalidAddress().setReason(householdOutcome.getSecondaryOutcome());
       break;
     default:
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "No noValidHousehold secondary outcome found: {}", householdOutcome.getSecondaryOutcome());
+      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "No noValidHousehold secondary outcome found: {}",
+          householdOutcome.getSecondaryOutcome());
     }
   }
 }
