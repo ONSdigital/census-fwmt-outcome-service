@@ -53,8 +53,8 @@ public class OutcomeEventFactory {
       getSecondaryContactMadeOutcome(householdOutcome, outcomeEvent);
       break;
     default:
-      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "No valid 'Primary' outcome found: ",
-          householdOutcome.getPrimaryOutcome());
+      throw new GatewayException(GatewayException.Fault.BAD_REQUEST,
+          "No valid 'Primary' outcome found: " + householdOutcome.getPrimaryOutcome());
     }
   }
 
@@ -91,7 +91,7 @@ public class OutcomeEventFactory {
       break;
     default:
       throw new GatewayException(GatewayException.Fault.BAD_REQUEST,
-          "No valid 'Non Valid Household' secondary outcome found: ", householdOutcome.getSecondaryOutcome());
+          "No valid 'Non Valid Household' secondary outcome found: " + householdOutcome.getSecondaryOutcome());
     }
   }
 }
