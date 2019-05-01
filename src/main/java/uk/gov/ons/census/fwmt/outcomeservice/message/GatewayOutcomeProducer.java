@@ -25,7 +25,7 @@ public class GatewayOutcomeProducer {
   public void sendAddressUpdate(OutcomeEvent outcomeEvent) throws GatewayException {
     try {
       final String notification = objectMapper.writeValueAsString(outcomeEvent);
-      log.info("Message sent to queue :{}", outcomeEvent.getEvent().getTransactionId());
+      log.info("Address Update message sent to queue :{}", outcomeEvent.getEvent().getTransactionId());
       rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
           GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY, notification);
     } catch (JsonProcessingException e) {
@@ -37,7 +37,7 @@ public class GatewayOutcomeProducer {
   public void sendRespondentRefusal(OutcomeEvent outcomeEvent) throws GatewayException {
     try {
       final String notification = objectMapper.writeValueAsString(outcomeEvent);
-      log.info("Message sent to queue :{}", outcomeEvent.getEvent().getTransactionId());
+      log.info("Respondent Refusal message sent to queue :{}", outcomeEvent.getEvent().getTransactionId());
       rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
           GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY, notification);
     } catch (JsonProcessingException e) {
