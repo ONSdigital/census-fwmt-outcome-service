@@ -61,11 +61,11 @@ public class RMProducerTest {
     when(objectMapper.writeValueAsString(eq(outcomeEvent))).thenReturn(responseJson);
 
     //When
-    rmProducer.send(outcomeEvent);
+    rmProducer.sendAddressUpdate(outcomeEvent);
 
     //Then
     verify(objectMapper).writeValueAsString(eq(outcomeEvent));
-    verify(template).convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE, GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_ROUTING_KEY, responseJson);
+    verify(template).convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE, GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY, responseJson);
 
   }
 }

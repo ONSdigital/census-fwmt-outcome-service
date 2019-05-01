@@ -23,6 +23,7 @@ import java.util.UUID;
     "primaryOutcome",
     "secondaryOutcome",
     "outcomeNote",
+    "transactionId",
     "ceDetails",
     "fulfillmentRequests"
 })
@@ -38,7 +39,7 @@ public class HouseholdOutcome {
   private String username;
   
   @JsonProperty("caseId")
-  private String caseId;
+  private UUID caseId;
   
   @JsonProperty("caseReference")
   private String caseReference;
@@ -57,7 +58,7 @@ public class HouseholdOutcome {
   
   @JsonProperty("ceDetails")
   private CeDetails ceDetails;
-  
+
   @JsonProperty("fulfillmentRequests")
   private List<FulfillmentRequest> fulfillmentRequests = null;
   

@@ -13,7 +13,7 @@ plugins {
 apply plugin: 'io.spring.dependency-management'
 
 group = 'uk.gov.ons.census.fwmt'
-version = '1.0.1-SNAPSHOT'
+version = '1.0.2-SNAPSHOT'
 sourceCompatibility = '11'
  
 repositories {
@@ -36,9 +36,9 @@ springBoot {
 }
 
 dependencies {
-	compile("uk.gov.ons.census.fwmt:census-fwmt-canonical:1.0.7-RELEASE")
-	compile("uk.gov.ons.census.fwmt:census-fwmt-common:1.0.8-RELEASE")
-	compile("uk.gov.ons.census.fwmt:census-fwmt-events:1.0.6-RELEASE")
+	compile('uk.gov.ons.census.fwmt:census-fwmt-canonical:1.0.7-RELEASE')
+	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.0.8-RELEASE')
+	compile('uk.gov.ons.census.fwmt:census-fwmt-events:1.0.6-RELEASE')
 	
 	compile('org.projectlombok:lombok')
 	annotationProcessor('org.projectlombok:lombok')
@@ -50,15 +50,15 @@ dependencies {
 	compile('org.aspectj:aspectjweaver')
 
 	compile('org.springframework.boot:spring-boot-starter')
-	compile( 'org.springframework.boot:spring-boot-starter-amqp')
-	compile( 'org.springframework.boot:spring-boot-starter-web')
+	compile('org.springframework.boot:spring-boot-starter-amqp')
+	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-actuator')
 	compile('org.springframework.boot:spring-boot-starter-security')
-	compileOnly 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	compileOnly('org.projectlombok:lombok')
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
 
-	compile 'io.springfox:springfox-swagger2:2.9.2'
-	compile 'io.springfox:springfox-swagger-ui:2.9.2'
+	compile('io.springfox:springfox-swagger2:2.9.2')
+	compile('io.springfox:springfox-swagger-ui:2.9.2')
 }
 
 artifactory {

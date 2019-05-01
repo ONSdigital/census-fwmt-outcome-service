@@ -13,15 +13,23 @@ import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "InvalidAddress"
+    "invalidAddress",
+    "refusal",
+    "contact"
 })
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Payload {
 
-  @JsonProperty("InvalidAddress")
+  @JsonProperty("invalidAddress")
   private InvalidAddress invalidAddress;
+
+  @JsonProperty("refusal")
+  private Refusal refusal;
+
+  @JsonProperty("contact")
+  private Contact contact;
   
   @JsonIgnore
   private Map<String, Object> additionalProperties = new HashMap<>();

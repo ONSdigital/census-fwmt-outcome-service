@@ -22,11 +22,24 @@ public class GatewayOutcomeProducer {
   private RabbitTemplate rabbitTemplate;
 
   @Retryable
-  public void send(OutcomeEvent outcomeEvent) throws GatewayException {
+  public void sendAddressUpdate(OutcomeEvent outcomeEvent) throws GatewayException {
     try {
       final String notification = objectMapper.writeValueAsString(outcomeEvent);
-      log.info("Message sent to queue :{}", outcomeEvent.getEvent().getTransactionId());
-      rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE, GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_ROUTING_KEY, notification);
+      log.info("Address Update message sent to queue :{}", outcomeEvent.getEvent().getTransactionId());
+      rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
+          GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY, notification);
+    } catch (JsonProcessingException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Failed to process message into JSON.", e);
+    }
+  }
+
+  @Retryable
+  public void sendRespondentRefusal(OutcomeEvent outcomeEvent) throws GatewayException {
+    try {
+      final String notification = objectMapper.writeValueAsString(outcomeEvent);
+      log.info("Respondent Refusal message sent to queue :{}", outcomeEvent.getEvent().getTransactionId());
+      rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
+          GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY, notification);
     } catch (JsonProcessingException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Failed to process message into JSON.", e);
     }

@@ -25,7 +25,7 @@ rabbitmq:
   hostname: "localhost"
   port: 5672
   virtualHost: "/"
-  initialinterval: 5000
+  initialInterval: 5000
   multiplier: 3.0
   maxInterval: 45000
 
