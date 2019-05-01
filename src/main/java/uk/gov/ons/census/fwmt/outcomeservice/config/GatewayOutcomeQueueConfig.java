@@ -16,6 +16,7 @@ public class GatewayOutcomeQueueConfig {
 
   // Queue names
   public static final String GATEWAY_ADDRESS_UPDATE_QUEUE = "Gateway.Address.Update";
+  public static final String GATEWAY_RESPONDENT_REFUSAL_QUEUE = "Gateway.Respondent.Refusal";
 
   // Exchange name
   public static final String GATEWAY_OUTCOME_EXCHANGE = "Gateway.OutcomeEvent.Exchange";
@@ -34,18 +35,15 @@ public class GatewayOutcomeQueueConfig {
   public static final String GATEWAY_SAMPLEUNIT_UPDATE_ROUTING_KEY = "event.sampleunit.update";
 
 
-  public static final String GATEWAY_TEST_HOUSEHOLD_ROUTING_KEY = "other.key.*";
-  public static final String GATEWAY_OUTCOME_TEST = "Gateway.Test";
-
-  // Queue
+  // Queues
   @Bean
   public Queue addressUpdateQueue() {
     return QueueBuilder.durable(GATEWAY_ADDRESS_UPDATE_QUEUE).build();
   }
 
   @Bean
-  Queue otherQueue() {
-    return QueueBuilder.durable(GATEWAY_OUTCOME_TEST).build();
+  Queue respondentRefusalQueue() {
+    return QueueBuilder.durable(GATEWAY_RESPONDENT_REFUSAL_QUEUE).build();
   }
 
   //Exchange
@@ -63,10 +61,10 @@ public class GatewayOutcomeQueueConfig {
   }
 
   @Bean
-  public Binding otherBinding(@Qualifier("otherQueue") Queue otherQueue,
+  public Binding respondentRefusalBinding(@Qualifier("respondentRefusalQueue") Queue otherQueue,
       @Qualifier("gatewayOutcomeExchange") TopicExchange gatewayOutcomeExchange) {
     return BindingBuilder.bind(otherQueue).to(gatewayOutcomeExchange)
-        .with(GATEWAY_TEST_HOUSEHOLD_ROUTING_KEY);
+        .with(GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
   }
 
   //Message Listener

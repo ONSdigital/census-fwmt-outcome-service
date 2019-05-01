@@ -22,7 +22,7 @@ public class GatewayOutcomeProducer {
   private RabbitTemplate rabbitTemplate;
 
   @Retryable
-  public void sendNonValidHouseholdOutcome(OutcomeEvent outcomeEvent) throws GatewayException {
+  public void sendAddressUpdate(OutcomeEvent outcomeEvent) throws GatewayException {
     try {
       final String notification = objectMapper.writeValueAsString(outcomeEvent);
       log.info("Message sent to queue :{}", outcomeEvent.getEvent().getTransactionId());
@@ -34,12 +34,12 @@ public class GatewayOutcomeProducer {
   }
 
   @Retryable
-  public void sendTest(OutcomeEvent outcomeEvent) throws GatewayException {
+  public void sendRespondentRefusal(OutcomeEvent outcomeEvent) throws GatewayException {
     try {
       final String notification = objectMapper.writeValueAsString(outcomeEvent);
       log.info("Message sent to queue :{}", outcomeEvent.getEvent().getTransactionId());
       rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
-          GatewayOutcomeQueueConfig.GATEWAY_TEST_HOUSEHOLD_ROUTING_KEY, notification);
+          GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY, notification);
     } catch (JsonProcessingException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Failed to process message into JSON.", e);
     }
