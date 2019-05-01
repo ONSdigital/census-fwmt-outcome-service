@@ -15,7 +15,7 @@ public class RabbitMQConfig {
   private double multiplier;
   private int maxInterval;
 
-  public RabbitMQConfig(@Value("${rabbitmq.initialinterval}") Integer initialInterval,
+  public RabbitMQConfig(@Value("${rabbitmq.initialInterval}") Integer initialInterval,
       @Value("${rabbitmq.multiplier}") Double multiplier,
       @Value("${rabbitmq.maxInterval}") Integer maxInterval) {
     this.initialInterval = initialInterval;

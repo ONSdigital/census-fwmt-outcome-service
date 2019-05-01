@@ -22,9 +22,9 @@ public class OutcomeEventFactory {
     OutcomeEvent outcomeEvent = new OutcomeEvent();
     Payload payload = new Payload();
     InvalidAddress invalidAddress = new InvalidAddress();
-    CollectionCase collectionCase = new CollectionCase();
     Refusal refusal = new Refusal();
     Contact contact = new Contact();
+    CollectionCase collectionCase = new CollectionCase();
 
     collectionCase.setId(householdOutcome.getCaseId());
     invalidAddress.setCollectionCase(collectionCase);

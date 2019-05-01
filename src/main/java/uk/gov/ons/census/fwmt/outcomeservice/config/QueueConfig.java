@@ -34,7 +34,7 @@ public class QueueConfig {
     this.virtualHost = virtualHost;
   }
 
-  public static CachingConnectionFactory createConnectionFactory(int port, String hostname, String virtualHost,
+  private static CachingConnectionFactory createConnectionFactory(int port, String hostname, String virtualHost,
       String password, String username) {
     CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(hostname, port);
 
