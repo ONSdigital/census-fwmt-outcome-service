@@ -16,7 +16,7 @@ import java.util.Map;
     "questionnaireType",
     "deliveryFormat",
     "deliveryMethod",
-    "questionnaireID",
+    "questionnaireId",
     "requesterName",
     "requesterPhone"
 })
@@ -34,8 +34,8 @@ public class FulfillmentRequest {
   @JsonProperty("deliveryMethod")
   private String deliveryMethod;
   
-  @JsonProperty("questionnaireID")
-  private String questionnaireID;
+  @JsonProperty("questionnaireId")
+  private String questionnaireId;
   
   @JsonProperty("requesterName")
   private String requesterName;

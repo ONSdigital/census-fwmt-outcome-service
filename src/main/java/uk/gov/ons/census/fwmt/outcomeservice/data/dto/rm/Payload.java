@@ -13,22 +13,22 @@ import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "InvalidAddress",
-    "Refusal",
-    "Contact"
+    "invalidAddress",
+    "refusal",
+    "contact"
 })
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Payload {
 
-  @JsonProperty("InvalidAddress")
+  @JsonProperty("invalidAddress")
   private InvalidAddress invalidAddress;
 
-  @JsonProperty("Refusal")
+  @JsonProperty("refusal")
   private Refusal refusal;
 
-  @JsonProperty("Contact")
+  @JsonProperty("contact")
   private Contact contact;
   
   @JsonIgnore
