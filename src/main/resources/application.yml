@@ -43,3 +43,52 @@ logging:
   pattern:
     console: "%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] [%X{CID}] %logger{1}::%M - %msg%n"
     file: "%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] [%X{CID}] %logger{1}::%M - %msg%n"
+
+fulfillmentRequestMapping:
+  householdPaperRequested:
+    english: "H1"
+      packCode: "P_OR_H1"
+    englishWelshHeader: "H2"
+      packCode: "P_OR_H2"
+    welshWelshHeader: "H2W"
+      packCode: "P_OR_H2W"
+    englishNiHeader: "H4"
+      packCode: "P_OR_H4"
+  householdUacRequested: "HUAC"
+    packCode: "UACHHT1"
+    englishWelshHeader:
+      packCode: "UACHHT2"
+    welshWelshHeader:
+      packCode: "UACHHT2W"
+    englishNiHeader:
+      packCode: "UACHHT4"
+  householdContinuationPaperRequested:
+    english: "HC1"
+      packCode: "P_OR_HC1"
+    englishWelshHeader: "HC2"
+      packCode: "P_OR_HC2"
+    welshWelshHeader: "HC2W"
+      packCode: "P_OR_HC2W"
+    englishNiHeader: "HC4"
+      packCode: "P_OR_HC4"
+  individualPaperRequested:
+    english: "I1"
+      packCode: "P_OR_I1"
+    englishWelshHeader: "I2"
+      packCode: "P_OR_I2"
+    welshWelshHeader: "I2W"
+      packCode: "P_OR_I2W"
+    englishNiHeader: "I4"
+      packCode: "P_OR_I4"
+  individualUacRequested: "IUAC"
+    packCode: "UACIT1"
+    englishWelshHeader:
+      packCode: "UACIT2"
+    welshWelshHeader:
+      packCode: "UACIT2W"
+    englishNiHeader:
+      packCode: "UACIT4"
+
+
+
+

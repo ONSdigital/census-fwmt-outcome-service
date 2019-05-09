@@ -6,6 +6,7 @@ import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.comet.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.OutcomeEvent;
+import uk.gov.ons.census.fwmt.outcomeservice.factory.FulfilmentRequestFactory;
 import uk.gov.ons.census.fwmt.outcomeservice.factory.OutcomeEventFactory;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
@@ -26,18 +27,34 @@ public class OutcomeServiceImpl implements OutcomeService {
   @Autowired
   private OutcomeEventFactory outcomeEventFactory;
 
+  @Autowired
+  private FulfilmentRequestFactory fulfilmentRequestFactory;
+
   public void createHouseHoldOutcomeEvent(HouseholdOutcome householdOutcome) throws GatewayException {
-    OutcomeEvent outcomeEvent = outcomeEventFactory.createOutcomeEvent(householdOutcome);
+    if (householdOutcome.getFulfillmentRequests().size() >= 1) {
 
-    if (outcomeEvent.getEvent().getType().equals("ADDRESS_NOT_VALID")) {
-      gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent);
+      OutcomeEvent[] processedFulfilmentRequests = fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
 
-    } else if (outcomeEvent.getEvent().getType().equals("REFUSAL_RECEIVED")) {
-      gatewayOutcomeProducer.sendRespondentRefusal(outcomeEvent);
+      for (OutcomeEvent outcomeEvent : processedFulfilmentRequests) {
+
+        gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent);
+
+      }
+
+    } else {
+
+      OutcomeEvent outcomeEvent = outcomeEventFactory.createOutcomeEvent(householdOutcome);
+
+      if (outcomeEvent.getEvent().getType().equals("ADDRESS_NOT_VALID")) {
+        gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent);
+
+      } else if (outcomeEvent.getEvent().getType().equals("REFUSAL_RECEIVED")) {
+        gatewayOutcomeProducer.sendRespondentRefusal(outcomeEvent);
+      }
+
+      gatewayEventManager
+          .triggerEvent(String.valueOf(outcomeEvent.getPayload().getInvalidAddress().getCollectionCase().getId()),
+              OUTCOME_SENT_RM, LocalTime.now());
     }
-
-    gatewayEventManager
-        .triggerEvent(String.valueOf(outcomeEvent.getPayload().getInvalidAddress().getCollectionCase().getId()),
-            OUTCOME_SENT_RM, LocalTime.now());
   }
 }

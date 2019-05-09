@@ -42,7 +42,7 @@ public class GatewayOutcomeQueueConfig {
   }
 
   @Bean
-  Queue respondentRefusalQueue() {
+  public Queue respondentRefusalQueue() {
     return QueueBuilder.durable(GATEWAY_RESPONDENT_REFUSAL_QUEUE).build();
   }
 

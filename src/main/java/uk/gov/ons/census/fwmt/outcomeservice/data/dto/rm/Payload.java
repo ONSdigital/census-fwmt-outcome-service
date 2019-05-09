@@ -15,6 +15,7 @@ import java.util.Map;
 @JsonPropertyOrder({
     "invalidAddress",
     "refusal",
+    "fulfilment",
     "contact"
 })
 @Data
@@ -27,6 +28,12 @@ public class Payload {
 
   @JsonProperty("refusal")
   private Refusal refusal;
+
+  @JsonProperty("uac")
+  private Uac uac;
+
+  @JsonProperty("fulfilment")
+  private Fulfilment fulfilment;
 
   @JsonProperty("contact")
   private Contact contact;
