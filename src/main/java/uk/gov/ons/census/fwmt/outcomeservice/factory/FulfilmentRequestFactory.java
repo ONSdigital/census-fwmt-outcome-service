@@ -97,7 +97,7 @@ public class FulfilmentRequestFactory {
       productCode = fulfilmentRequestMapping.getIndividualPaperRequestedEnglishNiHeaderPackCode();
     } else {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
-          "Failed to process message into JSON." + fulfillmentRequest.getQuestionnaireType());
+          "Failed to find valid Individual Paper Request " + fulfillmentRequest.getQuestionnaireType());
     }
     return productCode;
   }
@@ -119,7 +119,7 @@ public class FulfilmentRequestFactory {
       productCode = fulfilmentRequestMapping.getHouseholdPaperRequestedEnglishNiHeaderPackCode();
     } else {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
-          "Failed to process message into JSON." + fulfillmentRequest.getQuestionnaireType());
+          "Failed to find valid Paper Request " + fulfillmentRequest.getQuestionnaireType());
     }
     return productCode;
   }
@@ -137,7 +137,7 @@ public class FulfilmentRequestFactory {
       productCode = fulfilmentRequestMapping.getHouseholdContinuationPaperRequestedEnglishNiHeaderPackCode();
     } else {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
-          "Failed to process message into JSON." + fulfillmentRequest.getQuestionnaireType());
+          "Failed to find valid Household Continuation Request " + fulfillmentRequest.getQuestionnaireType());
     }
     return productCode;
   }
