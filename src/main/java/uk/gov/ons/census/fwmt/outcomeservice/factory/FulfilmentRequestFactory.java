@@ -80,8 +80,8 @@ public class FulfilmentRequestFactory {
     return outcomeEventList.toArray(new OutcomeEvent[0]);
   }
 
-  private String getIndividualPaperRequestProductCode(FulfillmentRequest fulfillmentRequest) {
-    String productCode = null;
+  private String getIndividualPaperRequestProductCode(FulfillmentRequest fulfillmentRequest) throws GatewayException {
+    String productCode;
 
     if (fulfillmentRequest.getQuestionnaireType()
         .equals(fulfilmentRequestMapping.getIndividualPaperRequestedEnglish())) {
@@ -95,6 +95,9 @@ public class FulfilmentRequestFactory {
     } else if (fulfillmentRequest.getQuestionnaireType()
         .equals(fulfilmentRequestMapping.getIndividualPaperRequestedEnglishNiHeader())) {
       productCode = fulfilmentRequestMapping.getIndividualPaperRequestedEnglishNiHeaderPackCode();
+    } else {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
+          "Failed to process message into JSON." + fulfillmentRequest.getQuestionnaireType());
     }
     return productCode;
   }
