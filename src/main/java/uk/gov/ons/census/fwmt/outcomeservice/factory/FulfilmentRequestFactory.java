@@ -58,11 +58,12 @@ public class FulfilmentRequestFactory {
 
         outcomeEventList.add(outcomeEvent);
         break;
-      case "Paper I Questionnaire by post" :
+      case "Paper I Questionnaire by post":
         outcomeEvent.getPayload().getFulfilment().getContact().setTitle("title");
         outcomeEvent.getPayload().getFulfilment().getContact().setForename(fulfillmentRequest.getRequesterName());
         outcomeEvent.getPayload().getFulfilment().getContact().setSurname("surname");
-        outcomeEvent.getPayload().getFulfilment().setProductCode(getIndividualPaperRequestProductCode(fulfillmentRequest));
+        outcomeEvent.getPayload().getFulfilment()
+            .setProductCode(getIndividualPaperRequestProductCode(fulfillmentRequest));
 
         outcomeEventList.add(outcomeEvent);
         break;
@@ -77,14 +78,17 @@ public class FulfilmentRequestFactory {
   private String getIndividualPaperRequestProductCode(FulfillmentRequest fulfillmentRequest) {
     String productCode = null;
 
-    if (fulfillmentRequest.getQuestionnaireType().equals(fulfilmentRequestMapping.getIndividualPaperRequestedEnglish())){
+    if (fulfillmentRequest.getQuestionnaireType()
+        .equals(fulfilmentRequestMapping.getIndividualPaperRequestedEnglish())) {
       productCode = fulfilmentRequestMapping.getIndividualPaperRequestedEnglishPackCode();
     } else if (fulfillmentRequest.getQuestionnaireType()
         .equals(fulfilmentRequestMapping.getIndividualPaperRequestedEnglishWelshHeader())) {
       productCode = fulfilmentRequestMapping.getIndividualPaperRequestedEnglishWelshHeaderPackCode();
-    } else if (fulfillmentRequest.getQuestionnaireType().equals(fulfilmentRequestMapping.getIndividualPaperRequestedWelshWelshHeader())) {
+    } else if (fulfillmentRequest.getQuestionnaireType()
+        .equals(fulfilmentRequestMapping.getIndividualPaperRequestedWelshWelshHeader())) {
       productCode = fulfilmentRequestMapping.getIndividualPaperRequestedWelshWelshHeaderPackCode();
-    } else if (fulfillmentRequest.getQuestionnaireType().equals(fulfilmentRequestMapping.getIndividualPaperRequestedEnglishNiHeader())) {
+    } else if (fulfillmentRequest.getQuestionnaireType()
+        .equals(fulfilmentRequestMapping.getIndividualPaperRequestedEnglishNiHeader())) {
       productCode = fulfilmentRequestMapping.getIndividualPaperRequestedEnglishNiHeaderPackCode();
     }
 
