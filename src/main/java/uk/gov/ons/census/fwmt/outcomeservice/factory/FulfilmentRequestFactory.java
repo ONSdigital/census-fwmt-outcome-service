@@ -48,20 +48,21 @@ public class FulfilmentRequestFactory {
       throws GatewayException {
     List<OutcomeEvent> outcomeEventList = new ArrayList<>();
     for (FulfillmentRequest fulfillmentRequest : householdOutcome.getFulfillmentRequests()) {
+
+      outcomeEvent.getPayload().getFulfilment().setCaseId(householdOutcome.getCaseId());
+
       switch (householdOutcome.getSecondaryOutcome()) {
       case "Paper H Questionnaire required by post":
       case "Paper HC Questionnaire required by post":
         outcomeEvent.getPayload().getFulfilment().setProductCode(getPaperRequestedProductCode(fulfillmentRequest));
 
-        outcomeEvent.getPayload().getFulfilment().setCaseId(householdOutcome.getCaseId());
-
+        outcomeEventList.add(outcomeEvent);
+        break;
+      case "Paper I Questionnaire by post" :
         outcomeEvent.getPayload().getFulfilment().getContact().setTitle("title");
-
         outcomeEvent.getPayload().getFulfilment().getContact().setForename(fulfillmentRequest.getRequesterName());
-
         outcomeEvent.getPayload().getFulfilment().getContact().setSurname("surname");
-
-        outcomeEvent.getPayload().getFulfilment().getContact().setTelNo(fulfillmentRequest.getRequesterPhone());
+        outcomeEvent.getPayload().getFulfilment().setProductCode(getIndividualPaperRequestProductCode(fulfillmentRequest));
 
         outcomeEventList.add(outcomeEvent);
         break;
@@ -71,6 +72,23 @@ public class FulfilmentRequestFactory {
       }
     }
     return outcomeEventList.toArray(new OutcomeEvent[0]);
+  }
+
+  private String getIndividualPaperRequestProductCode(FulfillmentRequest fulfillmentRequest) {
+    String productCode = null;
+
+    if (fulfillmentRequest.getQuestionnaireType().equals(fulfilmentRequestMapping.getIndividualPaperRequestedEnglish())){
+      productCode = fulfilmentRequestMapping.getIndividualPaperRequestedEnglishPackCode();
+    } else if (fulfillmentRequest.getQuestionnaireType()
+        .equals(fulfilmentRequestMapping.getIndividualPaperRequestedEnglishWelshHeader())) {
+      productCode = fulfilmentRequestMapping.getIndividualPaperRequestedEnglishWelshHeaderPackCode();
+    } else if (fulfillmentRequest.getQuestionnaireType().equals(fulfilmentRequestMapping.getIndividualPaperRequestedWelshWelshHeader())) {
+      productCode = fulfilmentRequestMapping.getIndividualPaperRequestedWelshWelshHeaderPackCode();
+    } else if (fulfillmentRequest.getQuestionnaireType().equals(fulfilmentRequestMapping.getIndividualPaperRequestedEnglishNiHeader())) {
+      productCode = fulfilmentRequestMapping.getIndividualPaperRequestedEnglishNiHeaderPackCode();
+    }
+
+    return productCode;
   }
 
   private String getPaperRequestedProductCode(FulfillmentRequest fulfillmentRequest) throws GatewayException {
