@@ -53,6 +53,11 @@ public class FulfilmentRequestFactory {
 
       switch (householdOutcome.getSecondaryOutcome()) {
       case "Paper H Questionnaire required by post":
+        outcomeEvent.getPayload().getFulfilment()
+            .setProductCode(getHouseholdContinuationProductCode(fulfillmentRequest));
+
+        outcomeEventList.add(outcomeEvent);
+        break;
       case "Paper HC Questionnaire required by post":
         outcomeEvent.getPayload().getFulfilment().setProductCode(getPaperRequestedProductCode(fulfillmentRequest));
 
@@ -91,7 +96,6 @@ public class FulfilmentRequestFactory {
         .equals(fulfilmentRequestMapping.getIndividualPaperRequestedEnglishNiHeader())) {
       productCode = fulfilmentRequestMapping.getIndividualPaperRequestedEnglishNiHeaderPackCode();
     }
-
     return productCode;
   }
 
@@ -110,7 +114,16 @@ public class FulfilmentRequestFactory {
     } else if (fulfillmentRequest.getQuestionnaireType().equals(
         fulfilmentRequestMapping.getHouseholdPaperRequestedEnglishNiHeader())) {
       productCode = fulfilmentRequestMapping.getHouseholdPaperRequestedEnglishNiHeaderPackCode();
-    } else if (fulfillmentRequest.getQuestionnaireType()
+    } else {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
+          "Failed to process message into JSON." + fulfillmentRequest.getQuestionnaireType());
+    }
+    return productCode;
+  }
+
+  private String getHouseholdContinuationProductCode(FulfillmentRequest fulfillmentRequest) throws GatewayException {
+    String productCode;
+    if (fulfillmentRequest.getQuestionnaireType()
         .equals(fulfilmentRequestMapping.getHouseholdContinuationPaperRequestedEnglishWelshHeader())) {
       productCode = fulfilmentRequestMapping.getHouseholdContinuationPaperRequestedEnglishWelshHeaderPackCode();
     } else if (fulfillmentRequest.getQuestionnaireType().equals(
