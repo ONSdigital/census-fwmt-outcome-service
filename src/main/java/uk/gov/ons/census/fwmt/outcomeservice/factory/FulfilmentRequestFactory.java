@@ -25,15 +25,16 @@ public class FulfilmentRequestFactory {
   public static Map<String, String> householdUacMap = new HashMap<>();
   public static Map<String, String> individualUacMap = new HashMap<>();
 
-  @Autowired
   private BuildFulfilmentRequestMaps buildFulfilmentRequestMaps;
 
-  public FulfilmentRequestFactory() {
-    buildFulfilmentRequestMaps.buildHouseholdPaperRequestMap();
-    buildFulfilmentRequestMaps.buildIndividualPaperRequestMap();
-    buildFulfilmentRequestMaps.buildHouseholdContinuationPaperRequestMap();
-    buildFulfilmentRequestMaps.buildHouseholdUacRequestMap();
-    buildFulfilmentRequestMaps.buildIndividualUacRequestMap();
+  public FulfilmentRequestFactory(
+      BuildFulfilmentRequestMaps buildFulfilmentRequestMaps) {
+    this.buildFulfilmentRequestMaps = buildFulfilmentRequestMaps;
+    this.buildFulfilmentRequestMaps.buildHouseholdPaperRequestMap();
+    this.buildFulfilmentRequestMaps.buildIndividualPaperRequestMap();
+    this.buildFulfilmentRequestMaps.buildHouseholdContinuationPaperRequestMap();
+    this.buildFulfilmentRequestMaps.buildHouseholdUacRequestMap();
+    this.buildFulfilmentRequestMaps.buildIndividualUacRequestMap();
   }
 
   public OutcomeEvent[] createFulfilmentEvents(HouseholdOutcome householdOutcome) throws GatewayException {
@@ -72,17 +73,30 @@ public class FulfilmentRequestFactory {
         getQuestionnaireByPost(outcomeEvent, outcomeEventList, fulfilmentRequest);
         break;
       case "UAC required by text":
-        getUacByText(outcomeEvent, fulfilmentRequest);
+        getUacByText(outcomeEvent, outcomeEventList, fulfilmentRequest);
+        break;
+      case "Paper H Questionnaire issued":
+      case "Will Complete":
+      case "Have Completed":
+      case "Collected completed Questionnaire":
+      case "Call back another time":
+      case "Holiday home":
+      case "Second residence":
+      case "Requested assistance":
+        outcomeEvent.getPayload().getUac().setCaseId(householdOutcome.getCaseId());
+        outcomeEvent.getPayload().getUac().setQuestionnaireId(fulfilmentRequest.getQuestionnaireId());
+
+        outcomeEventList.add(outcomeEvent);
         break;
       default:
-        throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
-            "Failed to find valid Secondary Outcome " + householdOutcome.getSecondaryOutcome());
+          throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
+              "Failed to find valid Secondary Outcome " + householdOutcome.getSecondaryOutcome());
+        }
       }
-    }
     return outcomeEventList.toArray(new OutcomeEvent[0]);
   }
 
-  private void getUacByText(OutcomeEvent outcomeEvent, FulfilmentRequest fulfilmentRequest) throws GatewayException {
+  private void getUacByText(OutcomeEvent outcomeEvent, List<OutcomeEvent> outcomeEventList, FulfilmentRequest fulfilmentRequest) throws GatewayException {
     if (householdUacMap.containsKey(fulfilmentRequest.getQuestionnaireType())) {
 
       outcomeEvent.getPayload().getFulfilment()
@@ -90,12 +104,16 @@ public class FulfilmentRequestFactory {
 
       outcomeEvent.getPayload().getFulfilment().getContact().setTelNo(fulfilmentRequest.getRequesterPhone());
 
+      outcomeEventList.add(outcomeEvent);
+
     } else if (individualUacMap.containsKey(fulfilmentRequest.getQuestionnaireType())) {
 
       outcomeEvent.getPayload().getFulfilment()
           .setProductCode(individualUacMap.get(fulfilmentRequest.getQuestionnaireType()));
 
       outcomeEvent.getPayload().getFulfilment().getContact().setTelNo(fulfilmentRequest.getRequesterPhone());
+
+      outcomeEventList.add(outcomeEvent);
 
     } else {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,

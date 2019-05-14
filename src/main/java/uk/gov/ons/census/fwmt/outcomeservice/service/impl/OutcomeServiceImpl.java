@@ -31,7 +31,7 @@ public class OutcomeServiceImpl implements OutcomeService {
   private FulfilmentRequestFactory fulfilmentRequestFactory;
 
   public void createHouseHoldOutcomeEvent(HouseholdOutcome householdOutcome) throws GatewayException {
-    if (householdOutcome.getFulfilmentRequests().size() >= 1) {
+    if (householdOutcome.getFulfilmentRequests().size() >= 1 && householdOutcome.getFulfilmentRequests() != null) {
 
       OutcomeEvent[] processedFulfilmentRequests = fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
 
@@ -42,7 +42,7 @@ public class OutcomeServiceImpl implements OutcomeService {
         }
       }
 
-    } else {
+    } else if (householdOutcome.getFulfilmentRequests() == null) {
 
       OutcomeEvent outcomeEvent = outcomeEventFactory.createOutcomeEvent(householdOutcome);
 
