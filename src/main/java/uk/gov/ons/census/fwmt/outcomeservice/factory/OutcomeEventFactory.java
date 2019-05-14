@@ -68,7 +68,6 @@ public class OutcomeEventFactory {
     case "Extraordinary Refusal":
       outcomeEvent.getEvent().setType("REFUSAL_RECEIVED");
       outcomeEvent.getPayload().getRefusal().setType(householdOutcome.getSecondaryOutcome());
-      outcomeEvent.getPayload().getRefusal().setReport(householdOutcome.getOutcomeNote());
       outcomeEvent.getPayload().getRefusal().setAgentId(householdOutcome.getUsername());
       outcomeEvent.getPayload().getRefusal().getCollectionCase().setId(householdOutcome.getCaseId());
       break;

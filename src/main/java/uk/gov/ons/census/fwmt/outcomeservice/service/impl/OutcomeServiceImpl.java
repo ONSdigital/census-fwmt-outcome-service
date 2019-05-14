@@ -31,14 +31,15 @@ public class OutcomeServiceImpl implements OutcomeService {
   private FulfilmentRequestFactory fulfilmentRequestFactory;
 
   public void createHouseHoldOutcomeEvent(HouseholdOutcome householdOutcome) throws GatewayException {
-    if (householdOutcome.getFulfillmentRequests().size() >= 1) {
+    if (householdOutcome.getFulfilmentRequests().size() >= 1) {
 
       OutcomeEvent[] processedFulfilmentRequests = fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
 
       for (OutcomeEvent outcomeEvent : processedFulfilmentRequests) {
 
-        gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent);
-
+        if (outcomeEvent.getEvent().getType().equals("FULFILMENT_REQUESTED")) {
+          gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent);
+        }
       }
 
     } else {

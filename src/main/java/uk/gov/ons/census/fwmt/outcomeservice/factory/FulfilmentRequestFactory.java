@@ -1,9 +1,9 @@
 package uk.gov.ons.census.fwmt.outcomeservice.factory;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.FulfilmentRequestMapping;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.comet.FulfillmentRequest;
+import uk.gov.ons.census.fwmt.outcomeservice.data.dto.comet.FulfilmentRequest;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.comet.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Contact;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Event;
@@ -12,12 +12,29 @@ import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.OutcomeEvent;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Payload;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class FulfilmentRequestFactory {
 
-  private FulfilmentRequestMapping fulfilmentRequestMapping = new FulfilmentRequestMapping();
+  public static Map<String, String> householdPaperMap = new HashMap<>();
+  public static Map<String, String> householdContinuationMap = new HashMap<>();
+  public static Map<String, String> householdIndividualMap = new HashMap<>();
+  public static Map<String, String> householdUacMap = new HashMap<>();
+  public static Map<String, String> individualUacMap = new HashMap<>();
+
+  @Autowired
+  private BuildFulfilmentRequestMaps buildFulfilmentRequestMaps;
+
+  public FulfilmentRequestFactory() {
+    buildFulfilmentRequestMaps.buildHouseholdPaperRequestMap();
+    buildFulfilmentRequestMaps.buildIndividualPaperRequestMap();
+    buildFulfilmentRequestMaps.buildHouseholdContinuationPaperRequestMap();
+    buildFulfilmentRequestMaps.buildHouseholdUacRequestMap();
+    buildFulfilmentRequestMaps.buildIndividualUacRequestMap();
+  }
 
   public OutcomeEvent[] createFulfilmentEvents(HouseholdOutcome householdOutcome) throws GatewayException {
     return newFulfilmentRequestList(householdOutcome);
@@ -37,6 +54,7 @@ public class FulfilmentRequestFactory {
     Event event = new Event();
     event.setSource("FIELDWORK_GATEWAY");
     event.setChannel("FIELD");
+    event.setType("FULFILMENT_REQUESTED");
     event.setTransactionId(householdOutcome.getTransactionId());
     event.setDateTime(householdOutcome.getEventDate());
     outcomeEvent.setEvent(event);
@@ -47,98 +65,74 @@ public class FulfilmentRequestFactory {
   private OutcomeEvent[] getFulfilmentRequest(HouseholdOutcome householdOutcome, OutcomeEvent outcomeEvent)
       throws GatewayException {
     List<OutcomeEvent> outcomeEventList = new ArrayList<>();
-    for (FulfillmentRequest fulfillmentRequest : householdOutcome.getFulfillmentRequests()) {
-
+    for (FulfilmentRequest fulfilmentRequest : householdOutcome.getFulfilmentRequests()) {
       outcomeEvent.getPayload().getFulfilment().setCaseId(householdOutcome.getCaseId());
-
       switch (householdOutcome.getSecondaryOutcome()) {
-      case "Paper H Questionnaire required by post":
-        outcomeEvent.getPayload().getFulfilment()
-            .setProductCode(getHouseholdContinuationProductCode(fulfillmentRequest));
-
-        outcomeEventList.add(outcomeEvent);
+      case "Paper Questionnaire required by post":
+        getQuestionnaireByPost(outcomeEvent, outcomeEventList, fulfilmentRequest);
         break;
-      case "Paper HC Questionnaire required by post":
-        outcomeEvent.getPayload().getFulfilment().setProductCode(getPaperRequestedProductCode(fulfillmentRequest));
-
-        outcomeEventList.add(outcomeEvent);
-        break;
-      case "Paper I Questionnaire by post":
-        outcomeEvent.getPayload().getFulfilment().getContact().setTitle("title");
-        outcomeEvent.getPayload().getFulfilment().getContact().setForename(fulfillmentRequest.getRequesterName());
-        outcomeEvent.getPayload().getFulfilment().getContact().setSurname("surname");
-        outcomeEvent.getPayload().getFulfilment()
-            .setProductCode(getIndividualPaperRequestProductCode(fulfillmentRequest));
-
-        outcomeEventList.add(outcomeEvent);
+      case "UAC required by text":
+        getUacByText(outcomeEvent, fulfilmentRequest);
         break;
       default:
         throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
-            "Failed to process message into JSON." + householdOutcome.getSecondaryOutcome());
+            "Failed to find valid Secondary Outcome " + householdOutcome.getSecondaryOutcome());
       }
     }
     return outcomeEventList.toArray(new OutcomeEvent[0]);
   }
 
-  private String getIndividualPaperRequestProductCode(FulfillmentRequest fulfillmentRequest) throws GatewayException {
-    String productCode;
+  private void getUacByText(OutcomeEvent outcomeEvent, FulfilmentRequest fulfilmentRequest) throws GatewayException {
+    if (householdUacMap.containsKey(fulfilmentRequest.getQuestionnaireType())) {
 
-    if (fulfillmentRequest.getQuestionnaireType()
-        .equals(fulfilmentRequestMapping.getIndividualPaperRequestedEnglish())) {
-      productCode = fulfilmentRequestMapping.getIndividualPaperRequestedEnglishPackCode();
-    } else if (fulfillmentRequest.getQuestionnaireType()
-        .equals(fulfilmentRequestMapping.getIndividualPaperRequestedEnglishWelshHeader())) {
-      productCode = fulfilmentRequestMapping.getIndividualPaperRequestedEnglishWelshHeaderPackCode();
-    } else if (fulfillmentRequest.getQuestionnaireType()
-        .equals(fulfilmentRequestMapping.getIndividualPaperRequestedWelshWelshHeader())) {
-      productCode = fulfilmentRequestMapping.getIndividualPaperRequestedWelshWelshHeaderPackCode();
-    } else if (fulfillmentRequest.getQuestionnaireType()
-        .equals(fulfilmentRequestMapping.getIndividualPaperRequestedEnglishNiHeader())) {
-      productCode = fulfilmentRequestMapping.getIndividualPaperRequestedEnglishNiHeaderPackCode();
+      outcomeEvent.getPayload().getFulfilment()
+          .setProductCode(householdUacMap.get(fulfilmentRequest.getQuestionnaireType()));
+
+      outcomeEvent.getPayload().getFulfilment().getContact().setTelNo(fulfilmentRequest.getRequesterPhone());
+
+    } else if (individualUacMap.containsKey(fulfilmentRequest.getQuestionnaireType())) {
+
+      outcomeEvent.getPayload().getFulfilment()
+          .setProductCode(individualUacMap.get(fulfilmentRequest.getQuestionnaireType()));
+
+      outcomeEvent.getPayload().getFulfilment().getContact().setTelNo(fulfilmentRequest.getRequesterPhone());
+
     } else {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
-          "Failed to find valid Individual Paper Request " + fulfillmentRequest.getQuestionnaireType());
+          "Failed to find valid Questionnaire Type " + fulfilmentRequest.getQuestionnaireType());
     }
-    return productCode;
   }
 
-  private String getPaperRequestedProductCode(FulfillmentRequest fulfillmentRequest) throws GatewayException {
-    String productCode;
+  private void getQuestionnaireByPost(OutcomeEvent outcomeEvent, List<OutcomeEvent> outcomeEventList,
+      FulfilmentRequest fulfilmentRequest) throws GatewayException {
 
-    if (fulfillmentRequest.getQuestionnaireType()
-        .equals(fulfilmentRequestMapping.getHouseholdPaperRequestedEnglish())) {
-      productCode = fulfilmentRequestMapping.getHouseholdPaperRequestedEnglishPackCode();
-    } else if (fulfillmentRequest.getQuestionnaireType().equals(
-        fulfilmentRequestMapping.getHouseholdPaperRequestedEnglishWelshHeader())) {
-      productCode = fulfilmentRequestMapping.getHouseholdPaperRequestedEnglishWelshHeaderPackCode();
-    } else if (fulfillmentRequest.getQuestionnaireType().equals(
-        fulfilmentRequestMapping.getHouseholdPaperRequestedWelshWelshHeader())) {
-      productCode = fulfilmentRequestMapping.getHouseholdPaperRequestedWelshWelshHeaderPackCode();
-    } else if (fulfillmentRequest.getQuestionnaireType().equals(
-        fulfilmentRequestMapping.getHouseholdPaperRequestedEnglishNiHeader())) {
-      productCode = fulfilmentRequestMapping.getHouseholdPaperRequestedEnglishNiHeaderPackCode();
+    if (householdPaperMap.containsKey(fulfilmentRequest.getQuestionnaireType())) {
+
+      outcomeEvent.getPayload().getFulfilment()
+          .setProductCode(householdPaperMap.get(fulfilmentRequest.getQuestionnaireType()));
+
+      outcomeEventList.add(outcomeEvent);
+    } else if (householdContinuationMap.containsKey(fulfilmentRequest.getQuestionnaireType())) {
+
+      outcomeEvent.getPayload().getFulfilment()
+          .setProductCode(householdContinuationMap.get(fulfilmentRequest.getQuestionnaireType()));
+
+      outcomeEventList.add(outcomeEvent);
+
+    } else if (householdIndividualMap.containsKey(fulfilmentRequest.getQuestionnaireType())) {
+
+      outcomeEvent.getPayload().getFulfilment()
+          .setProductCode(householdIndividualMap.get(fulfilmentRequest.getQuestionnaireType()));
+
+      outcomeEvent.getPayload().getFulfilment().getContact().setTitle(fulfilmentRequest.getRequesterTitle());
+      outcomeEvent.getPayload().getFulfilment().getContact().setForename(fulfilmentRequest.getRequesterForename());
+      outcomeEvent.getPayload().getFulfilment().getContact().setSurname(fulfilmentRequest.getRequesterSurname());
+
+      outcomeEventList.add(outcomeEvent);
+
     } else {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
-          "Failed to find valid Paper Request " + fulfillmentRequest.getQuestionnaireType());
+          "Failed to find valid Questionnaire Type " + fulfilmentRequest.getQuestionnaireType());
     }
-    return productCode;
-  }
-
-  private String getHouseholdContinuationProductCode(FulfillmentRequest fulfillmentRequest) throws GatewayException {
-    String productCode;
-    if (fulfillmentRequest.getQuestionnaireType()
-        .equals(fulfilmentRequestMapping.getHouseholdContinuationPaperRequestedEnglishWelshHeader())) {
-      productCode = fulfilmentRequestMapping.getHouseholdContinuationPaperRequestedEnglishWelshHeaderPackCode();
-    } else if (fulfillmentRequest.getQuestionnaireType().equals(
-        fulfilmentRequestMapping.getHouseholdContinuationPaperRequestedWelshWelshHeader())) {
-      productCode = fulfilmentRequestMapping.getHouseholdContinuationPaperRequestedWelshWelshHeaderPackCode();
-    } else if (fulfillmentRequest.getQuestionnaireType().equals(
-        fulfilmentRequestMapping.getHouseholdContinuationPaperRequestedEnglishNiHeader())) {
-      productCode = fulfilmentRequestMapping.getHouseholdContinuationPaperRequestedEnglishNiHeaderPackCode();
-    } else {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
-          "Failed to find valid Household Continuation Request " + fulfillmentRequest.getQuestionnaireType());
-    }
-    return productCode;
   }
 }

@@ -46,45 +46,67 @@ logging:
 
 fulfillmentRequestMapping:
   householdPaperRequested:
-    english: "H1"
+    english:
+      header: "H1"
       packCode: "P_OR_H1"
-    englishWelshHeader: "H2"
+    englishWelsh:
+      header: "H2"
       packCode: "P_OR_H2"
-    welshWelshHeader: "H2W"
+    welshWelsh:
+      header: "H2W"
       packCode: "P_OR_H2W"
-    englishNiHeader: "H4"
+    englishNi:
+      header: "H4"
       packCode: "P_OR_H4"
-  householdUacRequested: "HUAC"
-    packCode: "UACHHT1"
-    englishWelshHeader:
+  householdUacRequested:
+    english:
+      header: "HUAC"
+      packCode: "UACHHT1"
+    englishWelsh:
+      header: "HUAC"
       packCode: "UACHHT2"
-    welshWelshHeader:
+    welshWelsh:
+      header: "HUAC"
       packCode: "UACHHT2W"
-    englishNiHeader:
+    englishNi:
+      header: "HUAC"
       packCode: "UACHHT4"
   householdContinuationPaperRequested:
-    english: "HC1"
+    english:
+      header: "HC1"
       packCode: "P_OR_HC1"
-    englishWelshHeader: "HC2"
+    englishWelsh:
+      header: "HC2"
       packCode: "P_OR_HC2"
-    welshWelshHeader: "HC2W"
+    welshWelsh:
+      header: "HC2W"
       packCode: "P_OR_HC2W"
-    englishNiHeader: "HC4"
+    englishNi:
+      header: "HC4"
       packCode: "P_OR_HC4"
   individualPaperRequested:
-    english: "I1"
+    english:
+      header: "I1"
       packCode: "P_OR_I1"
-    englishWelshHeader: "I2"
+    englishWelsh:
+      header: "I2"
       packCode: "P_OR_I2"
-    welshWelshHeader: "I2W"
+    welshWelsh:
+      header: "I2W"
       packCode: "P_OR_I2W"
-    englishNiHeader: "I4"
+    englishNi:
+      header: "I4"
       packCode: "P_OR_I4"
-  individualUacRequested: "IUAC"
-    packCode: "UACIT1"
-    englishWelshHeader:
+  individualUacRequested:
+    english:
+      header: "IUAC"
+      packCode: "UACIT1"
+    englishWelsh:
+      header: "IUAC"
       packCode: "UACIT2"
-    welshWelshHeader:
+    welshWelsh:
+      header: "IUAC"
       packCode: "UACIT2W"
-    englishNiHeader:
+    englishNi:
+      header: "IUAC"
       packCode: "UACIT4"

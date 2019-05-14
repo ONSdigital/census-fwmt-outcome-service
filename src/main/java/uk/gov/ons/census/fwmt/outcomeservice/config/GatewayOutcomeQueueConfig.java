@@ -34,7 +34,6 @@ public class GatewayOutcomeQueueConfig {
   public static final String GATEWAY_CASE_APPOINTMENT_ROUTING_KEY = "event.case.appointment";
   public static final String GATEWAY_SAMPLEUNIT_UPDATE_ROUTING_KEY = "event.sampleunit.update";
 
-
   // Queues
   @Bean
   public Queue addressUpdateQueue() {

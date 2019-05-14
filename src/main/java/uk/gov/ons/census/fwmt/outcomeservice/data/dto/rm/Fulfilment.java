@@ -14,7 +14,6 @@ import java.util.UUID;
     "fulfilment",
     "productCode",
     "caseId",
-    "address",
     "contact"
 })
 @Data
@@ -27,9 +26,6 @@ public class Fulfilment {
 
   @JsonProperty("caseId")
   private UUID caseId;
-
-  @JsonProperty("address")
-  private Address address;
 
   @JsonProperty("contact")
   private Contact contact;
