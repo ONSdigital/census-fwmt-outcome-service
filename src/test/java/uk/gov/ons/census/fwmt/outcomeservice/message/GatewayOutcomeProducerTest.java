@@ -13,11 +13,11 @@ import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Event;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.OutcomeEvent;
 
+import java.util.UUID;
+
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.util.UUID;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GatewayOutcomeProducerTest {
@@ -69,7 +69,8 @@ public class GatewayOutcomeProducerTest {
 
     //Then
     verify(objectMapper).writeValueAsString(eq(outcomeEvent));
-    verify(rabbitTemplate).convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE, GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY, responseJson);
+    verify(rabbitTemplate).convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
+        GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY, responseJson);
 
   }
 
@@ -111,7 +112,8 @@ public class GatewayOutcomeProducerTest {
 
     //Then
     verify(objectMapper).writeValueAsString(eq(outcomeEvent));
-    verify(rabbitTemplate).convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE, GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY, responseJson);
+    verify(rabbitTemplate).convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
+        GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY, responseJson);
 
   }
 }

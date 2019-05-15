@@ -69,7 +69,6 @@ public class FulfilmentRequestFactory {
     Payload payload = new Payload();
     Uac uac = new Uac();
 
-
     uac.setCaseId(householdOutcome.getCaseId());
     payload.setUac(uac);
 
@@ -105,8 +104,7 @@ public class FulfilmentRequestFactory {
           outcomeEvent = buildFulfilmentPayload(householdOutcome);
           outcomeEventList.add(getUacByText(outcomeEvent, fulfillmentRequest));
         } else {
-          throw new GatewayException(GatewayException.Fault.BAD_REQUEST,
-              "Phone number not provided with Outcome");
+          throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Phone number not provided with Outcome");
         }
         break;
       case "Paper H Questionnaire issued":
@@ -123,9 +121,9 @@ public class FulfilmentRequestFactory {
         break;
       default:
         throw new GatewayException(GatewayException.Fault.BAD_REQUEST,
-              "Failed to find valid Secondary Outcome " + householdOutcome.getSecondaryOutcome());
-        }
+            "Failed to find valid Secondary Outcome " + householdOutcome.getSecondaryOutcome());
       }
+    }
     return outcomeEventList.toArray(new OutcomeEvent[0]);
   }
 
@@ -158,7 +156,8 @@ public class FulfilmentRequestFactory {
     return outcomeEvent;
   }
 
-  private OutcomeEvent getUacByText(OutcomeEvent outcomeEvent, FulfillmentRequest fulfillmentRequest) throws GatewayException {
+  private OutcomeEvent getUacByText(OutcomeEvent outcomeEvent, FulfillmentRequest fulfillmentRequest)
+      throws GatewayException {
     if (householdUacMap.containsKey(fulfillmentRequest.getQuestionnaireType())) {
 
       outcomeEvent.getPayload().getFulfillment()
