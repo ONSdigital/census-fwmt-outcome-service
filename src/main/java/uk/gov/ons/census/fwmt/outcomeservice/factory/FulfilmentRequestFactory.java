@@ -1,5 +1,6 @@
 package uk.gov.ons.census.fwmt.outcomeservice.factory;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.comet.FulfillmentRequest;
@@ -19,22 +20,20 @@ import java.util.Map;
 @Component
 public class FulfilmentRequestFactory {
 
-  public static Map<String, String> householdPaperMap = new HashMap<>();
-  public static Map<String, String> householdContinuationMap = new HashMap<>();
-  public static Map<String, String> householdIndividualMap = new HashMap<>();
-  public static Map<String, String> householdUacMap = new HashMap<>();
-  public static Map<String, String> individualUacMap = new HashMap<>();
+  // Do these need to be static?
+  static Map<String, String> householdPaperMap = new HashMap<>();
+  static Map<String, String> householdContinuationMap = new HashMap<>();
+  static Map<String, String> householdIndividualMap = new HashMap<>();
+  static Map<String, String> householdUacMap = new HashMap<>();
+  static Map<String, String> individualUacMap = new HashMap<>();
 
-  private BuildFulfilmentRequestMaps buildFulfilmentRequestMaps;
-
-  public FulfilmentRequestFactory(
-      BuildFulfilmentRequestMaps buildFulfilmentRequestMaps) {
-    this.buildFulfilmentRequestMaps = buildFulfilmentRequestMaps;
-    this.buildFulfilmentRequestMaps.buildHouseholdPaperRequestMap();
-    this.buildFulfilmentRequestMaps.buildIndividualPaperRequestMap();
-    this.buildFulfilmentRequestMaps.buildHouseholdContinuationPaperRequestMap();
-    this.buildFulfilmentRequestMaps.buildHouseholdUacRequestMap();
-    this.buildFulfilmentRequestMaps.buildIndividualUacRequestMap();
+  @Autowired
+  public FulfilmentRequestFactory(BuildFulfilmentRequestMaps buildFulfilmentRequestMaps) {
+    buildFulfilmentRequestMaps.buildHouseholdPaperRequestMap();
+    buildFulfilmentRequestMaps.buildIndividualPaperRequestMap();
+    buildFulfilmentRequestMaps.buildHouseholdContinuationPaperRequestMap();
+    buildFulfilmentRequestMaps.buildHouseholdUacRequestMap();
+    buildFulfilmentRequestMaps.buildIndividualUacRequestMap();
   }
 
   public OutcomeEvent[] createFulfilmentEvents(HouseholdOutcome householdOutcome) throws GatewayException {
@@ -93,6 +92,9 @@ public class FulfilmentRequestFactory {
       OutcomeEvent outcomeEvent;
       switch (householdOutcome.getSecondaryOutcome()) {
       case "Paper Questionnaire required by post":
+      case "Paper H Questionnaire required by post":
+      case "Paper HC Questionnaire required by post":
+      case "Paper I Questionnaire required by post":
         outcomeEvent = buildFulfilmentPayload(householdOutcome);
         outcomeEventList.add(getQuestionnaireByPost(outcomeEvent, fulfillmentRequest));
         break;

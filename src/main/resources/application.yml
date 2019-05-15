@@ -60,16 +60,16 @@ fulfillmentRequestMapping:
       packCode: "P_OR_H4"
   householdUacRequested:
     english:
-      header: "HUAC"
+      header: "HUAC1"
       packCode: "UACHHT1"
     englishWelsh:
-      header: "HUAC"
+      header: "HUAC2"
       packCode: "UACHHT2"
     welshWelsh:
-      header: "HUAC"
+      header: "HUAC2W"
       packCode: "UACHHT2W"
     englishNi:
-      header: "HUAC"
+      header: "HUAC4"
       packCode: "UACHHT4"
   householdContinuationPaperRequested:
     english:
@@ -99,14 +99,14 @@ fulfillmentRequestMapping:
       packCode: "P_OR_I4"
   individualUacRequested:
     english:
-      header: "IUAC"
+      header: "IUAC1"
       packCode: "UACIT1"
     englishWelsh:
-      header: "IUAC"
+      header: "IUAC2"
       packCode: "UACIT2"
     welshWelsh:
-      header: "IUAC"
+      header: "IUAC2W"
       packCode: "UACIT2W"
     englishNi:
-      header: "IUAC"
+      header: "IUAC4"
       packCode: "UACIT4"
