@@ -103,7 +103,7 @@ public class FulfilmentRequestFactory {
       case "Paper H Questionnaire issued":
       case "Will Complete":
       case "Have Completed":
-      case "Collected completed Questionnaire":
+      case "Collected completed questionnaire":
       case "Call back another time":
       case "Holiday home":
       case "Second residence":
