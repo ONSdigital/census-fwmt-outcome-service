@@ -86,7 +86,6 @@ public class FulfilmentRequestFactory {
     return outcomeEvent;
   }
 
-
   private OutcomeEvent[] getFulfilmentRequest(HouseholdOutcome householdOutcome)
       throws GatewayException {
     List<OutcomeEvent> outcomeEventList = new ArrayList<>();

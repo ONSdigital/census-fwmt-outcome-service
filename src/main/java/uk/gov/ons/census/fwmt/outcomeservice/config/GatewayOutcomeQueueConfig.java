@@ -17,13 +17,14 @@ public class GatewayOutcomeQueueConfig {
   // Queue names
   public static final String GATEWAY_ADDRESS_UPDATE_QUEUE = "Gateway.Address.Update";
   public static final String GATEWAY_RESPONDENT_REFUSAL_QUEUE = "Gateway.Respondent.Refusal";
+  public static final String GATEWAY_FULFILLMENT_REQUEST_QUEUE = "Gateway.Fulfillment.Request";
 
   // Exchange name
   public static final String GATEWAY_OUTCOME_EXCHANGE = "Gateway.OutcomeEvent.Exchange";
 
   // Routing keys
-  public static final String GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY = "event.fulfillment.request";
-  public static final String GATEWAY_FULFILMENT_CONFIRMED_ROUTING_KEY = "event.fulfillment.confirmed";
+  public static final String GATEWAY_FULFILLMENT_REQUEST_ROUTING_KEY = "event.fulfillment.request";
+  public static final String GATEWAY_FULFILLMENT_CONFIRMED_ROUTING_KEY = "event.fulfillment.confirmed";
   public static final String GATEWAY_RESPONSE_AUTHENTICATED_ROUTING_KEY = "event.response.authenticated";
   public static final String GATEWAY_RESPONSE_RECEIPT_ROUTING_KEY = "event.response.receipt";
   public static final String GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY = "event.respondent.refusal";
@@ -45,6 +46,11 @@ public class GatewayOutcomeQueueConfig {
     return QueueBuilder.durable(GATEWAY_RESPONDENT_REFUSAL_QUEUE).build();
   }
 
+  @Bean
+  public Queue fulfillmentRequestQueue() {
+    return QueueBuilder.durable(GATEWAY_FULFILLMENT_REQUEST_QUEUE).build();
+  }
+
   //Exchange
   @Bean
   public TopicExchange gatewayOutcomeExchange() {
@@ -64,6 +70,13 @@ public class GatewayOutcomeQueueConfig {
       @Qualifier("gatewayOutcomeExchange") TopicExchange gatewayOutcomeExchange) {
     return BindingBuilder.bind(otherQueue).to(gatewayOutcomeExchange)
         .with(GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
+  }
+
+  @Bean
+  public Binding fulfillmentRequestBinding(@Qualifier("fulfillmentRequestQueue") Queue otherQueue,
+      @Qualifier("gatewayOutcomeExchange") TopicExchange gatewayOutcomeExchange) {
+    return BindingBuilder.bind(otherQueue).to(gatewayOutcomeExchange)
+        .with(GATEWAY_FULFILLMENT_REQUEST_ROUTING_KEY);
   }
 
   //Message Listener
