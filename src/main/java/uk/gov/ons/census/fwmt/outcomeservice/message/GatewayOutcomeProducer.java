@@ -49,7 +49,7 @@ public class GatewayOutcomeProducer {
   public void sendFulfilmentRequest(OutcomeEvent outcomeEvent) throws GatewayException {
     try {
       final String notification = objectMapper.writeValueAsString(outcomeEvent);
-      log.info("Fulfilment Request message sent to queue :{}", outcomeEvent.getEvent().getTransactionId());
+      log.info("Fulfillment Request message sent to queue :{}", outcomeEvent.getEvent().getTransactionId());
       rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
           GatewayOutcomeQueueConfig.GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY, notification);
     } catch (JsonProcessingException e) {

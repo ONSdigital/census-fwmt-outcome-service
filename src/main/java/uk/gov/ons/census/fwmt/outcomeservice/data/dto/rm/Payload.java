@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @JsonPropertyOrder({
     "invalidAddress",
     "refusal",
-    "fulfilment",
+    "fulfillment",
     "contact"
 })
 @Data
@@ -28,8 +28,8 @@ public class Payload {
   @JsonProperty("uac")
   private Uac uac;
 
-  @JsonProperty("fulfilment")
-  private Fulfilment fulfilment;
+  @JsonProperty("fulfillment")
+  private Fulfillment fulfillment;
 
   @JsonProperty("contact")
   private Contact contact;

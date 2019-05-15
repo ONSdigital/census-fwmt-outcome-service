@@ -22,8 +22,8 @@ public class GatewayOutcomeQueueConfig {
   public static final String GATEWAY_OUTCOME_EXCHANGE = "Gateway.OutcomeEvent.Exchange";
 
   // Routing keys
-  public static final String GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY = "event.fulfilment.request";
-  public static final String GATEWAY_FULFILMENT_CONFIRMED_ROUTING_KEY = "event.fulfilment.confirmed";
+  public static final String GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY = "event.fulfillment.request";
+  public static final String GATEWAY_FULFILMENT_CONFIRMED_ROUTING_KEY = "event.fulfillment.confirmed";
   public static final String GATEWAY_RESPONSE_AUTHENTICATED_ROUTING_KEY = "event.response.authenticated";
   public static final String GATEWAY_RESPONSE_RECEIPT_ROUTING_KEY = "event.response.receipt";
   public static final String GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY = "event.respondent.refusal";

@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FulfilmentRequest {
+public class FulfillmentRequest {
 
   @JsonProperty("questionnaireType")
   private String questionnaireType;

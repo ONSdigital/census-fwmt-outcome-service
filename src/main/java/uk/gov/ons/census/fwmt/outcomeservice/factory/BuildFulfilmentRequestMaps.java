@@ -7,7 +7,7 @@ public class BuildFulfilmentRequestMaps {
 
   private FulfilmentRequestDTO fulfilmentRequestDTO = new FulfilmentRequestDTO();
 
-  void buildHouseholdPaperRequestMap() {
+  public void buildHouseholdPaperRequestMap() {
     FulfilmentRequestFactory.householdPaperMap
         .put(fulfilmentRequestDTO.getHouseholdPaperRequestedEnglish(),
             fulfilmentRequestDTO.getHouseholdPaperRequestedEnglishPackCode());
@@ -22,7 +22,7 @@ public class BuildFulfilmentRequestMaps {
             fulfilmentRequestDTO.getHouseholdPaperRequestedEnglishNiPackCode());
   }
 
-  void buildHouseholdContinuationPaperRequestMap() {
+  public void buildHouseholdContinuationPaperRequestMap() {
     FulfilmentRequestFactory.householdContinuationMap
         .put(fulfilmentRequestDTO.getHouseholdContinuationPaperRequestedEnglish(),
             fulfilmentRequestDTO.getHouseholdContinuationPaperRequestedEnglishPackCode());
@@ -38,7 +38,7 @@ public class BuildFulfilmentRequestMaps {
             fulfilmentRequestDTO.getHouseholdContinuationPaperRequestedEnglishNiPackCode());
   }
 
-  void buildIndividualPaperRequestMap() {
+  public void buildIndividualPaperRequestMap() {
     FulfilmentRequestFactory.householdIndividualMap
         .put(fulfilmentRequestDTO.getIndividualPaperRequestedEnglish(),
             fulfilmentRequestDTO.getIndividualPaperRequestedEnglishPackCode());
@@ -53,7 +53,7 @@ public class BuildFulfilmentRequestMaps {
             fulfilmentRequestDTO.getIndividualPaperRequestedEnglishNiPackCode());
   }
 
-  void buildHouseholdUacRequestMap() {
+  public void buildHouseholdUacRequestMap() {
     FulfilmentRequestFactory.householdUacMap
         .put(fulfilmentRequestDTO.getHouseholdUacRequestedEnglishHeader(),
             fulfilmentRequestDTO.getHouseholdUacRequestedEnglishPackCode());
@@ -68,7 +68,7 @@ public class BuildFulfilmentRequestMaps {
             fulfilmentRequestDTO.getHouseholdUacRequestedEnglishNiPackCode());
   }
 
-  void buildIndividualUacRequestMap() {
+  public void buildIndividualUacRequestMap() {
     FulfilmentRequestFactory.individualUacMap
         .put(fulfilmentRequestDTO.getIndividualUacRequestedEnglishHeader(),
             fulfilmentRequestDTO.getIndividualUacRequestedEnglishPackCode());

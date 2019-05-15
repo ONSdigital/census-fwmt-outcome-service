@@ -1,13 +1,12 @@
 package uk.gov.ons.census.fwmt.outcomeservice.factory;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.comet.FulfilmentRequest;
+import uk.gov.ons.census.fwmt.outcomeservice.data.dto.comet.FulfillmentRequest;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.comet.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Contact;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Event;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Fulfilment;
+import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Fulfillment;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.OutcomeEvent;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Payload;
 
@@ -44,11 +43,11 @@ public class FulfilmentRequestFactory {
   private OutcomeEvent[] newFulfilmentRequestList(HouseholdOutcome householdOutcome) throws GatewayException {
     OutcomeEvent outcomeEvent = new OutcomeEvent();
     Payload payload = new Payload();
-    Fulfilment fulfilment = new Fulfilment();
+    Fulfillment fulfillment = new Fulfillment();
     Contact contact = new Contact();
 
-    fulfilment.setContact(contact);
-    payload.setFulfilment(fulfilment);
+    fulfillment.setContact(contact);
+    payload.setFulfillment(fulfillment);
 
     outcomeEvent.setPayload(payload);
 
@@ -66,14 +65,14 @@ public class FulfilmentRequestFactory {
   private OutcomeEvent[] getFulfilmentRequest(HouseholdOutcome householdOutcome, OutcomeEvent outcomeEvent)
       throws GatewayException {
     List<OutcomeEvent> outcomeEventList = new ArrayList<>();
-    for (FulfilmentRequest fulfilmentRequest : householdOutcome.getFulfilmentRequests()) {
-      outcomeEvent.getPayload().getFulfilment().setCaseId(householdOutcome.getCaseId());
+    for (FulfillmentRequest fulfillmentRequest : householdOutcome.getFulfillmentRequests()) {
+      outcomeEvent.getPayload().getFulfillment().setCaseId(householdOutcome.getCaseId());
       switch (householdOutcome.getSecondaryOutcome()) {
       case "Paper Questionnaire required by post":
-        getQuestionnaireByPost(outcomeEvent, outcomeEventList, fulfilmentRequest);
+        getQuestionnaireByPost(outcomeEvent, outcomeEventList, fulfillmentRequest);
         break;
       case "UAC required by text":
-        getUacByText(outcomeEvent, outcomeEventList, fulfilmentRequest);
+        getUacByText(outcomeEvent, outcomeEventList, fulfillmentRequest);
         break;
       case "Paper H Questionnaire issued":
       case "Will Complete":
@@ -84,7 +83,7 @@ public class FulfilmentRequestFactory {
       case "Second residence":
       case "Requested assistance":
         outcomeEvent.getPayload().getUac().setCaseId(householdOutcome.getCaseId());
-        outcomeEvent.getPayload().getUac().setQuestionnaireId(fulfilmentRequest.getQuestionnaireId());
+        outcomeEvent.getPayload().getUac().setQuestionnaireId(fulfillmentRequest.getQuestionnaireId());
 
         outcomeEventList.add(outcomeEvent);
         break;
@@ -96,61 +95,61 @@ public class FulfilmentRequestFactory {
     return outcomeEventList.toArray(new OutcomeEvent[0]);
   }
 
-  private void getUacByText(OutcomeEvent outcomeEvent, List<OutcomeEvent> outcomeEventList, FulfilmentRequest fulfilmentRequest) throws GatewayException {
-    if (householdUacMap.containsKey(fulfilmentRequest.getQuestionnaireType())) {
+  private void getUacByText(OutcomeEvent outcomeEvent, List<OutcomeEvent> outcomeEventList, FulfillmentRequest fulfillmentRequest) throws GatewayException {
+    if (householdUacMap.containsKey(fulfillmentRequest.getQuestionnaireType())) {
 
-      outcomeEvent.getPayload().getFulfilment()
-          .setProductCode(householdUacMap.get(fulfilmentRequest.getQuestionnaireType()));
+      outcomeEvent.getPayload().getFulfillment()
+          .setProductCode(householdUacMap.get(fulfillmentRequest.getQuestionnaireType()));
 
-      outcomeEvent.getPayload().getFulfilment().getContact().setTelNo(fulfilmentRequest.getRequesterPhone());
+      outcomeEvent.getPayload().getFulfillment().getContact().setTelNo(fulfillmentRequest.getRequesterPhone());
 
       outcomeEventList.add(outcomeEvent);
 
-    } else if (individualUacMap.containsKey(fulfilmentRequest.getQuestionnaireType())) {
+    } else if (individualUacMap.containsKey(fulfillmentRequest.getQuestionnaireType())) {
 
-      outcomeEvent.getPayload().getFulfilment()
-          .setProductCode(individualUacMap.get(fulfilmentRequest.getQuestionnaireType()));
+      outcomeEvent.getPayload().getFulfillment()
+          .setProductCode(individualUacMap.get(fulfillmentRequest.getQuestionnaireType()));
 
-      outcomeEvent.getPayload().getFulfilment().getContact().setTelNo(fulfilmentRequest.getRequesterPhone());
+      outcomeEvent.getPayload().getFulfillment().getContact().setTelNo(fulfillmentRequest.getRequesterPhone());
 
       outcomeEventList.add(outcomeEvent);
 
     } else {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
-          "Failed to find valid Questionnaire Type " + fulfilmentRequest.getQuestionnaireType());
+          "Failed to find valid Questionnaire Type " + fulfillmentRequest.getQuestionnaireType());
     }
   }
 
   private void getQuestionnaireByPost(OutcomeEvent outcomeEvent, List<OutcomeEvent> outcomeEventList,
-      FulfilmentRequest fulfilmentRequest) throws GatewayException {
+      FulfillmentRequest fulfillmentRequest) throws GatewayException {
 
-    if (householdPaperMap.containsKey(fulfilmentRequest.getQuestionnaireType())) {
+    if (householdPaperMap.containsKey(fulfillmentRequest.getQuestionnaireType())) {
 
-      outcomeEvent.getPayload().getFulfilment()
-          .setProductCode(householdPaperMap.get(fulfilmentRequest.getQuestionnaireType()));
-
-      outcomeEventList.add(outcomeEvent);
-    } else if (householdContinuationMap.containsKey(fulfilmentRequest.getQuestionnaireType())) {
-
-      outcomeEvent.getPayload().getFulfilment()
-          .setProductCode(householdContinuationMap.get(fulfilmentRequest.getQuestionnaireType()));
+      outcomeEvent.getPayload().getFulfillment()
+          .setProductCode(householdPaperMap.get(fulfillmentRequest.getQuestionnaireType()));
 
       outcomeEventList.add(outcomeEvent);
+    } else if (householdContinuationMap.containsKey(fulfillmentRequest.getQuestionnaireType())) {
 
-    } else if (householdIndividualMap.containsKey(fulfilmentRequest.getQuestionnaireType())) {
+      outcomeEvent.getPayload().getFulfillment()
+          .setProductCode(householdContinuationMap.get(fulfillmentRequest.getQuestionnaireType()));
 
-      outcomeEvent.getPayload().getFulfilment()
-          .setProductCode(householdIndividualMap.get(fulfilmentRequest.getQuestionnaireType()));
+      outcomeEventList.add(outcomeEvent);
 
-      outcomeEvent.getPayload().getFulfilment().getContact().setTitle(fulfilmentRequest.getRequesterTitle());
-      outcomeEvent.getPayload().getFulfilment().getContact().setForename(fulfilmentRequest.getRequesterForename());
-      outcomeEvent.getPayload().getFulfilment().getContact().setSurname(fulfilmentRequest.getRequesterSurname());
+    } else if (householdIndividualMap.containsKey(fulfillmentRequest.getQuestionnaireType())) {
+
+      outcomeEvent.getPayload().getFulfillment()
+          .setProductCode(householdIndividualMap.get(fulfillmentRequest.getQuestionnaireType()));
+
+      outcomeEvent.getPayload().getFulfillment().getContact().setTitle(fulfillmentRequest.getRequesterTitle());
+      outcomeEvent.getPayload().getFulfillment().getContact().setForename(fulfillmentRequest.getRequesterForename());
+      outcomeEvent.getPayload().getFulfillment().getContact().setSurname(fulfillmentRequest.getRequesterSurname());
 
       outcomeEventList.add(outcomeEvent);
 
     } else {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
-          "Failed to find valid Questionnaire Type " + fulfilmentRequest.getQuestionnaireType());
+          "Failed to find valid Questionnaire Type " + fulfillmentRequest.getQuestionnaireType());
     }
   }
 }

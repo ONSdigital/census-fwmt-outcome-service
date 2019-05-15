@@ -31,19 +31,7 @@ public class OutcomeServiceImpl implements OutcomeService {
   private FulfilmentRequestFactory fulfilmentRequestFactory;
 
   public void createHouseHoldOutcomeEvent(HouseholdOutcome householdOutcome) throws GatewayException {
-    if (householdOutcome.getFulfilmentRequests().size() >= 1 && householdOutcome.getFulfilmentRequests() != null) {
-
-      OutcomeEvent[] processedFulfilmentRequests = fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
-
-      for (OutcomeEvent outcomeEvent : processedFulfilmentRequests) {
-
-        if (outcomeEvent.getEvent().getType().equals("FULFILMENT_REQUESTED")) {
-          gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent);
-        }
-      }
-
-    } else if (householdOutcome.getFulfilmentRequests() == null) {
-
+    if (householdOutcome.getFulfillmentRequests() == null) {
       OutcomeEvent outcomeEvent = outcomeEventFactory.createOutcomeEvent(householdOutcome);
 
       if (outcomeEvent.getEvent().getType().equals("ADDRESS_NOT_VALID")) {
@@ -56,6 +44,17 @@ public class OutcomeServiceImpl implements OutcomeService {
       gatewayEventManager
           .triggerEvent(String.valueOf(outcomeEvent.getPayload().getInvalidAddress().getCollectionCase().getId()),
               OUTCOME_SENT_RM, LocalTime.now());
+
+    } else if (!householdOutcome.getFulfillmentRequests().isEmpty()) {
+
+      OutcomeEvent[] processedFulfilmentRequests = fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
+
+      for (OutcomeEvent outcomeEvent : processedFulfilmentRequests) {
+
+        if (outcomeEvent.getEvent().getType().equals("FULFILMENT_REQUESTED")) {
+          gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent);
+        }
+      }
     }
   }
 }

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @JsonPropertyOrder({
     "event",
     "payload",
-    "fulfilment"
+    "fulfillment"
 })
 @Data
 @AllArgsConstructor

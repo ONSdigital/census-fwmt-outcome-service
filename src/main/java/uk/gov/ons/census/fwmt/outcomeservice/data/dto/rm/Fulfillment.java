@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "fulfilment",
+    "fulfillment",
     "productCode",
     "caseId",
     "contact"
@@ -19,7 +19,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Fulfilment {
+public class Fulfillment {
 
   @JsonProperty("productCode")
   private String productCode;
