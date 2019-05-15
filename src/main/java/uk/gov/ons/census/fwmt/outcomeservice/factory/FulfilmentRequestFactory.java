@@ -2,6 +2,7 @@ package uk.gov.ons.census.fwmt.outcomeservice.factory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.comet.FulfillmentRequest;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.comet.HouseholdOutcome;
@@ -98,9 +99,15 @@ public class FulfilmentRequestFactory {
         outcomeEvent = buildFulfilmentPayload(householdOutcome);
         outcomeEventList.add(getQuestionnaireByPost(outcomeEvent, fulfillmentRequest));
         break;
-      case "UAC required by text":
-        outcomeEvent = buildFulfilmentPayload(householdOutcome);
-        outcomeEventList.add(getUacByText(outcomeEvent, fulfillmentRequest));
+      case "HUAC required by text":
+      case "IUAC required by text":
+        if (!StringUtils.isEmpty(fulfillmentRequest.getRequesterPhone())) {
+          outcomeEvent = buildFulfilmentPayload(householdOutcome);
+          outcomeEventList.add(getUacByText(outcomeEvent, fulfillmentRequest));
+        } else {
+          throw new GatewayException(GatewayException.Fault.BAD_REQUEST,
+              "Phone number not provided with Outcome");
+        }
         break;
       case "Paper H Questionnaire issued":
       case "Will Complete":
@@ -115,15 +122,15 @@ public class FulfilmentRequestFactory {
         outcomeEventList.add(outcomeEvent);
         break;
       default:
-          throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
+        throw new GatewayException(GatewayException.Fault.BAD_REQUEST,
               "Failed to find valid Secondary Outcome " + householdOutcome.getSecondaryOutcome());
         }
       }
     return outcomeEventList.toArray(new OutcomeEvent[0]);
   }
 
-  private OutcomeEvent getQuestionnaireByPost(OutcomeEvent outcomeEvent,
-      FulfillmentRequest fulfillmentRequest) throws GatewayException {
+  private OutcomeEvent getQuestionnaireByPost(OutcomeEvent outcomeEvent, FulfillmentRequest fulfillmentRequest)
+      throws GatewayException {
 
     if (householdPaperMap.containsKey(fulfillmentRequest.getQuestionnaireType())) {
 
@@ -145,7 +152,7 @@ public class FulfilmentRequestFactory {
       outcomeEvent.getPayload().getFulfillment().getContact().setSurname(fulfillmentRequest.getRequesterSurname());
 
     } else {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
+      throw new GatewayException(GatewayException.Fault.BAD_REQUEST,
           "Failed to find valid Questionnaire Type " + fulfillmentRequest.getQuestionnaireType());
     }
     return outcomeEvent;
@@ -167,7 +174,7 @@ public class FulfilmentRequestFactory {
       outcomeEvent.getPayload().getFulfillment().getContact().setTelNo(fulfillmentRequest.getRequesterPhone());
 
     } else {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
+      throw new GatewayException(GatewayException.Fault.BAD_REQUEST,
           "Failed to find valid Questionnaire Type " + fulfillmentRequest.getQuestionnaireType());
     }
     return outcomeEvent;
