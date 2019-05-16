@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
     "invalidAddress",
     "refusal",
     "fulfillment",
+    "uac",
     "contact"
 })
 @Data

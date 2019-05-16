@@ -15,7 +15,7 @@ public class FulfilmentRequestDTO {
   // Fulfillment Request Mapping
   // Household Paper Requested
   @Value("${fulfillmentRequestMapping.householdPaperRequested.english.header}")
-  String householdPaperRequestedEnglish;
+  String householdPaperRequestedEnglishHeader;
 
   @Value("${fulfillmentRequestMapping.householdPaperRequested.english.packCode}")
   String householdPaperRequestedEnglishPackCode;

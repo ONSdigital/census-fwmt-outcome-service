@@ -14,7 +14,7 @@ public class BuildFulfilmentRequestMaps {
   }
 
   public void buildHouseholdPaperRequestMap() {
-    FulfilmentRequestFactory.householdPaperMap.put(fulfilmentRequestDTO.getHouseholdPaperRequestedEnglish(),
+    FulfilmentRequestFactory.householdPaperMap.put(fulfilmentRequestDTO.getHouseholdPaperRequestedEnglishHeader(),
         fulfilmentRequestDTO.getHouseholdPaperRequestedEnglishPackCode());
     FulfilmentRequestFactory.householdPaperMap.put(fulfilmentRequestDTO.getHouseholdPaperRequestedEnglishWelshHeader(),
         fulfilmentRequestDTO.getHouseholdPaperRequestedEnglishWelshPackCode());

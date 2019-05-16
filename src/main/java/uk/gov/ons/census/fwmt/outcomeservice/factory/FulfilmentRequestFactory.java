@@ -115,9 +115,13 @@ public class FulfilmentRequestFactory {
       case "Holiday home":
       case "Second residence":
       case "Requested assistance":
-        outcomeEvent = buildUacPayload(householdOutcome);
-        outcomeEvent.getPayload().getUac().setQuestionnaireId(fulfillmentRequest.getQuestionnaireId());
-        outcomeEventList.add(outcomeEvent);
+        if (!StringUtils.isEmpty(fulfillmentRequest.getQuestionnaireId())) {
+          outcomeEvent = buildUacPayload(householdOutcome);
+          outcomeEvent.getPayload().getUac().setQuestionnaireId(fulfillmentRequest.getQuestionnaireId());
+          outcomeEventList.add(outcomeEvent);
+        } else {
+          throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Questionnaire ID not provided with Outcome");
+        }
         break;
       default:
         throw new GatewayException(GatewayException.Fault.BAD_REQUEST,
@@ -145,9 +149,23 @@ public class FulfilmentRequestFactory {
       outcomeEvent.getPayload().getFulfillment()
           .setProductCode(householdIndividualMap.get(fulfillmentRequest.getQuestionnaireType()));
 
-      outcomeEvent.getPayload().getFulfillment().getContact().setTitle(fulfillmentRequest.getRequesterTitle());
-      outcomeEvent.getPayload().getFulfillment().getContact().setForename(fulfillmentRequest.getRequesterForename());
-      outcomeEvent.getPayload().getFulfillment().getContact().setSurname(fulfillmentRequest.getRequesterSurname());
+      if (!StringUtils.isEmpty(fulfillmentRequest.getRequesterTitle())) {
+        outcomeEvent.getPayload().getFulfillment().getContact().setTitle(fulfillmentRequest.getRequesterTitle());
+      } else {
+        throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Requester Title not provided with Outcome");
+      }
+
+      if (!StringUtils.isEmpty(fulfillmentRequest.getRequesterForename())) {
+        outcomeEvent.getPayload().getFulfillment().getContact().setForename(fulfillmentRequest.getRequesterForename());
+      } else {
+        throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Requester Forename not provided with Outcome");
+      }
+
+      if (!StringUtils.isEmpty(fulfillmentRequest.getRequesterSurname())) {
+        outcomeEvent.getPayload().getFulfillment().getContact().setSurname(fulfillmentRequest.getRequesterSurname());
+      } else {
+        throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Requester Surname not provided with Outcome");
+      }
 
     } else {
       throw new GatewayException(GatewayException.Fault.BAD_REQUEST,
@@ -159,23 +177,25 @@ public class FulfilmentRequestFactory {
   private OutcomeEvent getUacByText(OutcomeEvent outcomeEvent, FulfillmentRequest fulfillmentRequest)
       throws GatewayException {
     if (householdUacMap.containsKey(fulfillmentRequest.getQuestionnaireType())) {
-
-      outcomeEvent.getPayload().getFulfillment()
-          .setProductCode(householdUacMap.get(fulfillmentRequest.getQuestionnaireType()));
-
-      outcomeEvent.getPayload().getFulfillment().getContact().setTelNo(fulfillmentRequest.getRequesterPhone());
-
+      getRequesterPhone(outcomeEvent, fulfillmentRequest, householdUacMap);
     } else if (individualUacMap.containsKey(fulfillmentRequest.getQuestionnaireType())) {
-
-      outcomeEvent.getPayload().getFulfillment()
-          .setProductCode(individualUacMap.get(fulfillmentRequest.getQuestionnaireType()));
-
-      outcomeEvent.getPayload().getFulfillment().getContact().setTelNo(fulfillmentRequest.getRequesterPhone());
-
+      getRequesterPhone(outcomeEvent, fulfillmentRequest, individualUacMap);
     } else {
       throw new GatewayException(GatewayException.Fault.BAD_REQUEST,
           "Failed to find valid Questionnaire Type " + fulfillmentRequest.getQuestionnaireType());
     }
     return outcomeEvent;
+  }
+
+  private void getRequesterPhone(OutcomeEvent outcomeEvent, FulfillmentRequest fulfillmentRequest,
+      Map<String, String> householdUacMap) throws GatewayException {
+    outcomeEvent.getPayload().getFulfillment()
+        .setProductCode(householdUacMap.get(fulfillmentRequest.getQuestionnaireType()));
+
+    if (!StringUtils.isEmpty(fulfillmentRequest.getRequesterPhone())) {
+      outcomeEvent.getPayload().getFulfillment().getContact().setTelNo(fulfillmentRequest.getRequesterPhone());
+    } else {
+      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Requester Phone not provided with Outcome");
+    }
   }
 }
