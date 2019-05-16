@@ -21,7 +21,8 @@ import java.util.Map;
     "managerSurname",
     "usualResidents",
     "contactPhone",
-    "accessInfo"
+    "accessInfo",
+    "careCodes"
 })
 @Data
 @AllArgsConstructor
