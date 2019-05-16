@@ -59,23 +59,23 @@ public class GatewayOutcomeQueueConfig {
 
   // Bindings
   @Bean
-  public Binding addressUpdateBinding(@Qualifier("addressUpdateQueue") Queue gatewayOutcomeQueue,
+  public Binding addressUpdateBinding(@Qualifier("addressUpdateQueue") Queue addressUpdateQueue,
       @Qualifier("gatewayOutcomeExchange") TopicExchange gatewayOutcomeExchange) {
-    return BindingBuilder.bind(gatewayOutcomeQueue).to(gatewayOutcomeExchange)
+    return BindingBuilder.bind(addressUpdateQueue).to(gatewayOutcomeExchange)
         .with(GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
   }
 
   @Bean
-  public Binding respondentRefusalBinding(@Qualifier("respondentRefusalQueue") Queue otherQueue,
+  public Binding respondentRefusalBinding(@Qualifier("respondentRefusalQueue") Queue respondentRefusalQueue,
       @Qualifier("gatewayOutcomeExchange") TopicExchange gatewayOutcomeExchange) {
-    return BindingBuilder.bind(otherQueue).to(gatewayOutcomeExchange)
+    return BindingBuilder.bind(respondentRefusalQueue).to(gatewayOutcomeExchange)
         .with(GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
   }
 
   @Bean
-  public Binding fulfillmentRequestBinding(@Qualifier("fulfillmentRequestQueue") Queue otherQueue,
+  public Binding fulfillmentRequestBinding(@Qualifier("fulfillmentRequestQueue") Queue fulfillmentRequestQueue,
       @Qualifier("gatewayOutcomeExchange") TopicExchange gatewayOutcomeExchange) {
-    return BindingBuilder.bind(otherQueue).to(gatewayOutcomeExchange)
+    return BindingBuilder.bind(fulfillmentRequestQueue).to(gatewayOutcomeExchange)
         .with(GATEWAY_FULFILLMENT_REQUEST_ROUTING_KEY);
   }
 
