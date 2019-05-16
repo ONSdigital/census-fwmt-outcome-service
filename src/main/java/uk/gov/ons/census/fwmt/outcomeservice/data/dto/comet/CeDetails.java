@@ -9,14 +9,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "establishmentName",
-    "managerName",
+    "establishmentType",
+    "managerTitle",
+    "managerForename",
+    "managerSurname",
     "usualResidents",
-    "mgrPhone"
+    "contactPhone",
+    "accessInfo"
 })
 @Data
 @AllArgsConstructor
@@ -26,15 +31,28 @@ public class CeDetails {
   @JsonProperty("establishmentName")
   private String establishmentName;
 
-  @JsonProperty("managerName")
-  private String managerName;
+  @JsonProperty("establishmentType")
+  private String establishmentType;
+
+  @JsonProperty("managerTitle")
+  private String managerTitle;
+
+  @JsonProperty("managerForename")
+  private String managerForename;
+
+  @JsonProperty("managerSurname")
+  private String managerSurname;
 
   @JsonProperty("usualResidents")
   private Integer usualResidents;
 
-  @JsonProperty("mgrPhone")
-  private String mgrPhone;
+  @JsonProperty("contactPhone")
+  private String contactPhone;
 
-  @JsonIgnore
-  private Map<String, Object> additionalProperties = new HashMap<>();
+  @JsonProperty("accessInfo")
+  private String accessInfo;
+
+  @JsonProperty("careCodes")
+  private List<CareCode> careCodes = null;
+
 }
