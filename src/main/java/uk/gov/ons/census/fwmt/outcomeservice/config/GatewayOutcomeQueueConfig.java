@@ -17,13 +17,14 @@ public class GatewayOutcomeQueueConfig {
   // Queue names
   public static final String GATEWAY_ADDRESS_UPDATE_QUEUE = "Gateway.Address.Update";
   public static final String GATEWAY_RESPONDENT_REFUSAL_QUEUE = "Gateway.Respondent.Refusal";
+  public static final String GATEWAY_FULFILLMENT_REQUEST_QUEUE = "Gateway.Fulfillment.Request";
 
   // Exchange name
   public static final String GATEWAY_OUTCOME_EXCHANGE = "Gateway.OutcomeEvent.Exchange";
 
   // Routing keys
-  public static final String GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY = "event.fulfilment.request";
-  public static final String GATEWAY_FULFILMENT_CONFIRMED_ROUTING_KEY = "event.fulfilment.confirmed";
+  public static final String GATEWAY_FULFILLMENT_REQUEST_ROUTING_KEY = "event.fulfillment.request";
+  public static final String GATEWAY_FULFILLMENT_CONFIRMED_ROUTING_KEY = "event.fulfillment.confirmed";
   public static final String GATEWAY_RESPONSE_AUTHENTICATED_ROUTING_KEY = "event.response.authenticated";
   public static final String GATEWAY_RESPONSE_RECEIPT_ROUTING_KEY = "event.response.receipt";
   public static final String GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY = "event.respondent.refusal";
@@ -34,7 +35,6 @@ public class GatewayOutcomeQueueConfig {
   public static final String GATEWAY_CASE_APPOINTMENT_ROUTING_KEY = "event.case.appointment";
   public static final String GATEWAY_SAMPLEUNIT_UPDATE_ROUTING_KEY = "event.sampleunit.update";
 
-
   // Queues
   @Bean
   public Queue addressUpdateQueue() {
@@ -42,8 +42,13 @@ public class GatewayOutcomeQueueConfig {
   }
 
   @Bean
-  Queue respondentRefusalQueue() {
+  public Queue respondentRefusalQueue() {
     return QueueBuilder.durable(GATEWAY_RESPONDENT_REFUSAL_QUEUE).build();
+  }
+
+  @Bean
+  public Queue fulfillmentRequestQueue() {
+    return QueueBuilder.durable(GATEWAY_FULFILLMENT_REQUEST_QUEUE).build();
   }
 
   //Exchange
@@ -54,17 +59,24 @@ public class GatewayOutcomeQueueConfig {
 
   // Bindings
   @Bean
-  public Binding addressUpdateBinding(@Qualifier("addressUpdateQueue") Queue gatewayOutcomeQueue,
+  public Binding addressUpdateBinding(@Qualifier("addressUpdateQueue") Queue addressUpdateQueue,
       @Qualifier("gatewayOutcomeExchange") TopicExchange gatewayOutcomeExchange) {
-    return BindingBuilder.bind(gatewayOutcomeQueue).to(gatewayOutcomeExchange)
+    return BindingBuilder.bind(addressUpdateQueue).to(gatewayOutcomeExchange)
         .with(GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
   }
 
   @Bean
-  public Binding respondentRefusalBinding(@Qualifier("respondentRefusalQueue") Queue otherQueue,
+  public Binding respondentRefusalBinding(@Qualifier("respondentRefusalQueue") Queue respondentRefusalQueue,
       @Qualifier("gatewayOutcomeExchange") TopicExchange gatewayOutcomeExchange) {
-    return BindingBuilder.bind(otherQueue).to(gatewayOutcomeExchange)
+    return BindingBuilder.bind(respondentRefusalQueue).to(gatewayOutcomeExchange)
         .with(GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
+  }
+
+  @Bean
+  public Binding fulfillmentRequestBinding(@Qualifier("fulfillmentRequestQueue") Queue fulfillmentRequestQueue,
+      @Qualifier("gatewayOutcomeExchange") TopicExchange gatewayOutcomeExchange) {
+    return BindingBuilder.bind(fulfillmentRequestQueue).to(gatewayOutcomeExchange)
+        .with(GATEWAY_FULFILLMENT_REQUEST_ROUTING_KEY);
   }
 
   //Message Listener

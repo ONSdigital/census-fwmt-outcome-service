@@ -11,14 +11,18 @@ import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "id"
+    "questionnaireId",
+    "caseId"
 })
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CollectionCase {
+public class Uac {
 
-  @JsonProperty("id")
-  private UUID id;
+  @JsonProperty("questionnaireId")
+  private String questionnaireId;
+
+  @JsonProperty("caseId")
+  private UUID caseId;
 
 }

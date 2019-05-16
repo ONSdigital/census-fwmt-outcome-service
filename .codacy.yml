@@ -1,0 +1,4 @@
+exclude_paths:
+  - "**/test/**"  # ignore folders and all its contents
+  - "**/integration-test/**"  # ignore folders and all its contents
+

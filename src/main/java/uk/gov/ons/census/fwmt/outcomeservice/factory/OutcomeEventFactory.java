@@ -32,10 +32,14 @@ public class OutcomeEventFactory {
     payload.setContact(contact);
     payload.setRefusal(refusal);
     payload.setInvalidAddress(invalidAddress);
+
     outcomeEvent.setPayload(payload);
 
     Event event = new Event();
+    event.setSource("FIELDWORK_GATEWAY");
+    event.setChannel("FIELD");
     event.setTransactionId(householdOutcome.getTransactionId());
+    event.setDateTime(householdOutcome.getEventDate());
     outcomeEvent.setEvent(event);
 
     buildOutcome(householdOutcome, outcomeEvent);
@@ -43,8 +47,7 @@ public class OutcomeEventFactory {
     return outcomeEvent;
   }
 
-  private void buildOutcome(HouseholdOutcome householdOutcome,
-      OutcomeEvent outcomeEvent) throws GatewayException {
+  private void buildOutcome(HouseholdOutcome householdOutcome, OutcomeEvent outcomeEvent) throws GatewayException {
     switch (householdOutcome.getPrimaryOutcome()) {
     case "No Valid Household":
       getSecondaryNoValidHouseholdOutcome(householdOutcome, outcomeEvent);
@@ -65,10 +68,13 @@ public class OutcomeEventFactory {
     case "Extraordinary Refusal":
       outcomeEvent.getEvent().setType("REFUSAL_RECEIVED");
       outcomeEvent.getPayload().getRefusal().setType(householdOutcome.getSecondaryOutcome());
+      outcomeEvent.getPayload().getRefusal().setAgentId(householdOutcome.getUsername());
+      outcomeEvent.getPayload().getRefusal().getCollectionCase().setId(householdOutcome.getCaseId());
       break;
     case "Split Address":
       outcomeEvent.getEvent().setType("ADDRESS_NOT_VALID");
-      outcomeEvent.getPayload().getRefusal().setType(householdOutcome.getSecondaryOutcome());
+      outcomeEvent.getPayload().getInvalidAddress().setReason(householdOutcome.getSecondaryOutcome());
+      outcomeEvent.getPayload().getInvalidAddress().getCollectionCase().setId(householdOutcome.getCaseId());
       break;
     default:
       throw new GatewayException(GatewayException.Fault.BAD_REQUEST,
@@ -88,6 +94,7 @@ public class OutcomeEventFactory {
     case "Under Construction":
       outcomeEvent.getEvent().setType("ADDRESS_NOT_VALID");
       outcomeEvent.getPayload().getInvalidAddress().setReason(householdOutcome.getSecondaryOutcome());
+      outcomeEvent.getPayload().getInvalidAddress().getCollectionCase().setId(householdOutcome.getCaseId());
       break;
     default:
       throw new GatewayException(GatewayException.Fault.BAD_REQUEST,
