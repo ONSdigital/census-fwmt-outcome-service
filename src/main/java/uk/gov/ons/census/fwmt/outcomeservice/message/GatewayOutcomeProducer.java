@@ -7,9 +7,9 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
+import uk.gov.ons.census.fwmt.common.data.rm.OutcomeEvent;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.OutcomeEvent;
 
 @Slf4j
 @Component

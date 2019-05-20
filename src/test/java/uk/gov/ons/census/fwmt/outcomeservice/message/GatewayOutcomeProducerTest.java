@@ -8,10 +8,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import uk.gov.ons.census.fwmt.common.data.rm.Event;
+import uk.gov.ons.census.fwmt.common.data.rm.OutcomeEvent;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Event;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.OutcomeEvent;
 
 import java.util.UUID;
 

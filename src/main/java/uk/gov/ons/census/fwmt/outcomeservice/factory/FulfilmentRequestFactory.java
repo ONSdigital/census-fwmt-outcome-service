@@ -3,14 +3,15 @@ package uk.gov.ons.census.fwmt.outcomeservice.factory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.comet.FulfillmentRequest;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.comet.HouseholdOutcome;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Contact;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Event;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Fulfillment;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.OutcomeEvent;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Payload;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Uac;
+import uk.gov.ons.census.fwmt.common.data.comet.FulfillmentRequest;
+import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
+import uk.gov.ons.census.fwmt.common.data.rm.Contact;
+import uk.gov.ons.census.fwmt.common.data.rm.Event;
+import uk.gov.ons.census.fwmt.common.data.rm.Fulfillment;
+import uk.gov.ons.census.fwmt.common.data.rm.OutcomeEvent;
+import uk.gov.ons.census.fwmt.common.data.rm.Payload;
+import uk.gov.ons.census.fwmt.common.data.rm.Uac;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;

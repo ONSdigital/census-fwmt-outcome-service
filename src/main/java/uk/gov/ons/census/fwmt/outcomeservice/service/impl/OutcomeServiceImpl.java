@@ -2,10 +2,10 @@ package uk.gov.ons.census.fwmt.outcomeservice.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
+import uk.gov.ons.census.fwmt.common.data.rm.OutcomeEvent;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.comet.HouseholdOutcome;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.OutcomeEvent;
 import uk.gov.ons.census.fwmt.outcomeservice.factory.FulfilmentRequestFactory;
 import uk.gov.ons.census.fwmt.outcomeservice.factory.OutcomeEventFactory;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;

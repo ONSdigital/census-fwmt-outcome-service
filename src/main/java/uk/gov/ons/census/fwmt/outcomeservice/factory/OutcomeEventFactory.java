@@ -1,15 +1,15 @@
 package uk.gov.ons.census.fwmt.outcomeservice.factory;
 
 import org.springframework.stereotype.Component;
+import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
+import uk.gov.ons.census.fwmt.common.data.rm.CollectionCase;
+import uk.gov.ons.census.fwmt.common.data.rm.Contact;
+import uk.gov.ons.census.fwmt.common.data.rm.Event;
+import uk.gov.ons.census.fwmt.common.data.rm.InvalidAddress;
+import uk.gov.ons.census.fwmt.common.data.rm.OutcomeEvent;
+import uk.gov.ons.census.fwmt.common.data.rm.Payload;
+import uk.gov.ons.census.fwmt.common.data.rm.Refusal;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.comet.HouseholdOutcome;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.CollectionCase;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Contact;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Event;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.InvalidAddress;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.OutcomeEvent;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Payload;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Refusal;
 
 @Component
 public class OutcomeEventFactory {

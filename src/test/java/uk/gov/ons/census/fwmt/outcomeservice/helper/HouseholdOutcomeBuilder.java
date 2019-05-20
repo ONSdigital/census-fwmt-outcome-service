@@ -1,7 +1,7 @@
 package uk.gov.ons.census.fwmt.outcomeservice.helper;
 
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.comet.FulfillmentRequest;
-import uk.gov.ons.census.fwmt.outcomeservice.data.dto.comet.HouseholdOutcome;
+import uk.gov.ons.census.fwmt.common.data.comet.FulfillmentRequest;
+import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
