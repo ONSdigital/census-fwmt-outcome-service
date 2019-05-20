@@ -21,7 +21,6 @@ import java.util.Map;
 @Slf4j
 public class FulfilmentRequestFactory {
 
-  // Do these need to be static?
   static Map<String, String> householdPaperMap = new HashMap<>();
   static Map<String, String> householdContinuationMap = new HashMap<>();
   static Map<String, String> householdIndividualMap = new HashMap<>();
