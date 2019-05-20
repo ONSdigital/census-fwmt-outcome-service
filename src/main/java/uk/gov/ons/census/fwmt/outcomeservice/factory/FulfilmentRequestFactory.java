@@ -1,9 +1,8 @@
 package uk.gov.ons.census.fwmt.outcomeservice.factory;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.comet.FulfillmentRequest;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.comet.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.outcomeservice.data.dto.rm.Contact;
@@ -19,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
+@Slf4j
 public class FulfilmentRequestFactory {
 
   // Do these need to be static?
@@ -37,7 +37,7 @@ public class FulfilmentRequestFactory {
     buildFulfilmentRequestMaps.buildIndividualUacRequestMap();
   }
 
-  public OutcomeEvent[] createFulfilmentEvents(HouseholdOutcome householdOutcome) throws GatewayException {
+  public OutcomeEvent[] createFulfilmentEvents(HouseholdOutcome householdOutcome) {
     return getFulfilmentRequest(householdOutcome);
   }
 
@@ -85,8 +85,7 @@ public class FulfilmentRequestFactory {
     return outcomeEvent;
   }
 
-  private OutcomeEvent[] getFulfilmentRequest(HouseholdOutcome householdOutcome)
-      throws GatewayException {
+  private OutcomeEvent[] getFulfilmentRequest(HouseholdOutcome householdOutcome) {
     List<OutcomeEvent> outcomeEventList = new ArrayList<>();
     for (FulfillmentRequest fulfillmentRequest : householdOutcome.getFulfillmentRequests()) {
       OutcomeEvent outcomeEvent;
@@ -100,12 +99,8 @@ public class FulfilmentRequestFactory {
         break;
       case "HUAC required by text":
       case "IUAC required by text":
-        if (!StringUtils.isEmpty(fulfillmentRequest.getRequesterPhone())) {
-          outcomeEvent = buildFulfilmentPayload(householdOutcome);
-          outcomeEventList.add(getUacByText(outcomeEvent, fulfillmentRequest));
-        } else {
-          throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Phone number not provided with Outcome");
-        }
+        outcomeEvent = buildFulfilmentPayload(householdOutcome);
+        outcomeEventList.add(getUacByText(outcomeEvent, fulfillmentRequest));
         break;
       case "Paper H Questionnaire issued":
       case "Will Complete":
@@ -115,24 +110,19 @@ public class FulfilmentRequestFactory {
       case "Holiday home":
       case "Second residence":
       case "Requested assistance":
-        if (!StringUtils.isEmpty(fulfillmentRequest.getQuestionnaireId())) {
-          outcomeEvent = buildUacPayload(householdOutcome);
-          outcomeEvent.getPayload().getUac().setQuestionnaireId(fulfillmentRequest.getQuestionnaireId());
-          outcomeEventList.add(outcomeEvent);
-        } else {
-          throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Questionnaire ID not provided with Outcome");
-        }
+        outcomeEvent = buildUacPayload(householdOutcome);
+        outcomeEvent.getPayload().getUac().setQuestionnaireId(fulfillmentRequest.getQuestionnaireId());
+        outcomeEventList.add(outcomeEvent);
         break;
       default:
-        throw new GatewayException(GatewayException.Fault.BAD_REQUEST,
-            "Failed to find valid Secondary Outcome " + householdOutcome.getSecondaryOutcome());
+        log.error("Failed to find valid Secondary Outcome: ", householdOutcome.getSecondaryOutcome());
+        break;
       }
     }
     return outcomeEventList.toArray(new OutcomeEvent[0]);
   }
 
-  private OutcomeEvent getQuestionnaireByPost(OutcomeEvent outcomeEvent, FulfillmentRequest fulfillmentRequest)
-      throws GatewayException {
+  private OutcomeEvent getQuestionnaireByPost(OutcomeEvent outcomeEvent, FulfillmentRequest fulfillmentRequest) {
 
     if (householdPaperMap.containsKey(fulfillmentRequest.getQuestionnaireType())) {
 
@@ -149,53 +139,32 @@ public class FulfilmentRequestFactory {
       outcomeEvent.getPayload().getFulfillment()
           .setProductCode(householdIndividualMap.get(fulfillmentRequest.getQuestionnaireType()));
 
-      if (!StringUtils.isEmpty(fulfillmentRequest.getRequesterTitle())) {
-        outcomeEvent.getPayload().getFulfillment().getContact().setTitle(fulfillmentRequest.getRequesterTitle());
-      } else {
-        throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Requester Title not provided with Outcome");
-      }
-
-      if (!StringUtils.isEmpty(fulfillmentRequest.getRequesterForename())) {
-        outcomeEvent.getPayload().getFulfillment().getContact().setForename(fulfillmentRequest.getRequesterForename());
-      } else {
-        throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Requester Forename not provided with Outcome");
-      }
-
-      if (!StringUtils.isEmpty(fulfillmentRequest.getRequesterSurname())) {
-        outcomeEvent.getPayload().getFulfillment().getContact().setSurname(fulfillmentRequest.getRequesterSurname());
-      } else {
-        throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Requester Surname not provided with Outcome");
-      }
+      outcomeEvent.getPayload().getFulfillment().getContact().setTitle(fulfillmentRequest.getRequesterTitle());
+      outcomeEvent.getPayload().getFulfillment().getContact().setForename(fulfillmentRequest.getRequesterForename());
+      outcomeEvent.getPayload().getFulfillment().getContact().setSurname(fulfillmentRequest.getRequesterSurname());
 
     } else {
-      throw new GatewayException(GatewayException.Fault.BAD_REQUEST,
-          "Failed to find valid Questionnaire Type " + fulfillmentRequest.getQuestionnaireType());
+      log.error("Failed to find valid Questionnaire Type: ", fulfillmentRequest.getQuestionnaireType());
     }
     return outcomeEvent;
   }
 
-  private OutcomeEvent getUacByText(OutcomeEvent outcomeEvent, FulfillmentRequest fulfillmentRequest)
-      throws GatewayException {
+  private OutcomeEvent getUacByText(OutcomeEvent outcomeEvent, FulfillmentRequest fulfillmentRequest) {
     if (householdUacMap.containsKey(fulfillmentRequest.getQuestionnaireType())) {
       getRequesterPhone(outcomeEvent, fulfillmentRequest, householdUacMap);
     } else if (individualUacMap.containsKey(fulfillmentRequest.getQuestionnaireType())) {
       getRequesterPhone(outcomeEvent, fulfillmentRequest, individualUacMap);
     } else {
-      throw new GatewayException(GatewayException.Fault.BAD_REQUEST,
-          "Failed to find valid Questionnaire Type " + fulfillmentRequest.getQuestionnaireType());
+      log.error("Failed to find valid Questionnaire Type: ", fulfillmentRequest.getQuestionnaireType());
     }
     return outcomeEvent;
   }
 
   private void getRequesterPhone(OutcomeEvent outcomeEvent, FulfillmentRequest fulfillmentRequest,
-      Map<String, String> householdUacMap) throws GatewayException {
+      Map<String, String> householdUacMap) {
     outcomeEvent.getPayload().getFulfillment()
         .setProductCode(householdUacMap.get(fulfillmentRequest.getQuestionnaireType()));
 
-    if (!StringUtils.isEmpty(fulfillmentRequest.getRequesterPhone())) {
-      outcomeEvent.getPayload().getFulfillment().getContact().setTelNo(fulfillmentRequest.getRequesterPhone());
-    } else {
-      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Requester Phone not provided with Outcome");
-    }
+    outcomeEvent.getPayload().getFulfillment().getContact().setTelNo(fulfillmentRequest.getRequesterPhone());
   }
 }
