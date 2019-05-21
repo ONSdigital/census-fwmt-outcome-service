@@ -19,7 +19,6 @@ import java.time.LocalTime;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_OUTCOME_RECEIVED;
 
 @RestController
-@RequestMapping("/OutcomeController")
 @Api(value = "FWMT Census Outcome Service", description = "Operations pertaining to receiving outcomes from COMET")
 public class OutcomeController {
 
@@ -43,8 +42,8 @@ public class OutcomeController {
     cometTranslationService.createHouseHoldOutcomeEvent(householdOutcome);
   }
 
-  @PostMapping(value = "/ccsOutcome", consumes = "application/json", produces = "application/json")
-  public void ccsCaseOutcomeResponse(@RequestBody HouseholdOutcome householdOutcome) throws GatewayException {
+  @PostMapping(value = "/CCSOutcome", consumes = "application/json", produces = "application/json")
+  public void ccsCaseOutcomeResponse() {
     // ccs logic?
   }
 }
