@@ -1,13 +1,11 @@
 package uk.gov.ons.census.fwmt.outcomeservice.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
@@ -19,8 +17,8 @@ import java.time.LocalTime;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_OUTCOME_RECEIVED;
 
 @RestController
-@Api(value = "FWMT Census Outcome Service", description = "Operations pertaining to receiving outcomes from COMET")
-public class OutcomeController {
+@Import({springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration.class})
+public class OutcomeController implements OutcomeApi {
 
   @Autowired
   private OutcomeServiceImpl cometTranslationService;
@@ -28,22 +26,13 @@ public class OutcomeController {
   @Autowired
   private GatewayEventManager gatewayEventManager;
 
-  @ApiOperation(value = "Post an outcome to the FWMT Gateway")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "Outcome successfully received"),
-      @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
-      @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-      @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
-  })
-  @PostMapping(value = "/HouseholdOutcome", consumes = "application/json", produces = "application/json")
-  public void householdCaseOutcomeResponse(@RequestBody HouseholdOutcome householdOutcome) throws GatewayException {
+  public ResponseEntity<HouseholdOutcome> householdCaseOutcomeResponse(@PathVariable String caseId,
+      @RequestBody HouseholdOutcome householdOutcome)
+      throws GatewayException {
     gatewayEventManager
-        .triggerEvent(String.valueOf(householdOutcome.getCaseId()), COMET_OUTCOME_RECEIVED, LocalTime.now());
+        .triggerEvent(String.valueOf(caseId), COMET_OUTCOME_RECEIVED, LocalTime.now());
     cometTranslationService.createHouseHoldOutcomeEvent(householdOutcome);
-  }
 
-  @PostMapping(value = "/CCSOutcome", consumes = "application/json", produces = "application/json")
-  public void ccsCaseOutcomeResponse() {
-    // ccs logic?
+    return new ResponseEntity<>(householdOutcome, HttpStatus.ACCEPTED);
   }
 }
