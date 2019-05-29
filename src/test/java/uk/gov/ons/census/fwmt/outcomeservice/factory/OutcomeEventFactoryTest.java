@@ -3,6 +3,7 @@ package uk.gov.ons.census.fwmt.outcomeservice.factory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
@@ -17,7 +18,10 @@ import static org.junit.Assert.assertEquals;
 public class OutcomeEventFactoryTest {
 
   @InjectMocks
-  OutcomeEventFactory outcomeEventFactory = new OutcomeEventFactory();
+  OutcomeEventFactory outcomeEventFactory;
+
+  @Mock
+  private BuildSecondaryOutcomeMaps buildSecondaryOutcomeMaps;
 
   @Test
   public void createContactMadeRefusalTest () throws GatewayException {

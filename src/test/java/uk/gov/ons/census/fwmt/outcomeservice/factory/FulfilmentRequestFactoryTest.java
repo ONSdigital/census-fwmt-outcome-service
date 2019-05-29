@@ -3,11 +3,11 @@ package uk.gov.ons.census.fwmt.outcomeservice.factory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.data.rm.OutcomeEvent;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.outcomeservice.helper.HouseholdOutcomeBuilder;
 
 import static org.junit.Assert.assertEquals;
@@ -19,11 +19,8 @@ public class FulfilmentRequestFactoryTest {
   @InjectMocks
   FulfilmentRequestFactory fulfilmentRequestFactory;
 
-  @Mock
-  BuildFulfilmentRequestMaps buildFulfilmentRequestMaps;
-
   @Test
-  public void createFulfillmentRequestsForPaperHTest() {
+  public void createFulfillmentRequestsForPaperHTest() throws GatewayException {
     // Given
     String productCode = "P_OR_H1";
     HouseholdOutcomeBuilder householdOutcomeBuilder = new HouseholdOutcomeBuilder();
@@ -40,7 +37,7 @@ public class FulfilmentRequestFactoryTest {
   }
 
   @Test
-  public void createFulfillmentRequestsForPaperHCTest() {
+  public void createFulfillmentRequestsForPaperHCTest() throws GatewayException {
     // Given
     String productCode = "P_OR_HC1";
     HouseholdOutcomeBuilder householdOutcomeBuilder = new HouseholdOutcomeBuilder();
@@ -57,7 +54,7 @@ public class FulfilmentRequestFactoryTest {
   }
 
   @Test
-  public void createFulfillmentRequestsForPaperITest() {
+  public void createFulfillmentRequestsForPaperITest() throws GatewayException {
     // Given
     String productCode = "P_OR_I1";
     HouseholdOutcomeBuilder householdOutcomeBuilder = new HouseholdOutcomeBuilder();
@@ -74,7 +71,7 @@ public class FulfilmentRequestFactoryTest {
   }
 
   @Test
-  public void createFulfillmentRequestsForPaperIncorrectQuestionnaireTypeTest() {
+  public void createFulfillmentRequestsForPaperIncorrectQuestionnaireTypeTest() throws GatewayException {
     // Given
     HouseholdOutcomeBuilder householdOutcomeBuilder = new HouseholdOutcomeBuilder();
     householdOutcomeBuilder.createHouseholdOutcomeForPaperWithIncorrectQuestionnaireType();
@@ -86,7 +83,7 @@ public class FulfilmentRequestFactoryTest {
   }
 
   @Test
-  public void createFulfillmentRequestsForHUACTextBackTest() {
+  public void createFulfillmentRequestsForHUACTextBackTest() throws GatewayException {
     // Given
     String productCode = "UACHHT1";
     HouseholdOutcomeBuilder householdOutcomeBuilder = new HouseholdOutcomeBuilder();
@@ -103,7 +100,7 @@ public class FulfilmentRequestFactoryTest {
   }
 
   @Test
-  public void createFulfillmentRequestsForIUACTextBackTest() {
+  public void createFulfillmentRequestsForIUACTextBackTest() throws GatewayException {
     // Given
     String productCode = "UACIT1";
     HouseholdOutcomeBuilder householdOutcomeBuilder = new HouseholdOutcomeBuilder();
@@ -120,7 +117,7 @@ public class FulfilmentRequestFactoryTest {
   }
 
   @Test
-  public void createFulfillmentRequestsForIUACTextBackNoNumberTest() {
+  public void createFulfillmentRequestsForIUACTextBackNoNumberTest() throws GatewayException {
     // Given
     HouseholdOutcomeBuilder householdOutcomeBuilder = new HouseholdOutcomeBuilder();
     householdOutcomeBuilder.createHouseholdOutcomeForIUACTextBackWithNoNumber();
@@ -132,7 +129,7 @@ public class FulfilmentRequestFactoryTest {
   }
 
   @Test
-  public void createFulfillmentRequestsForIUACTextBackWithIncorrectQuestionnaireTypeTest() {
+  public void createFulfillmentRequestsForIUACTextBackWithIncorrectQuestionnaireTypeTest() throws GatewayException {
     // Given
     HouseholdOutcomeBuilder householdOutcomeBuilder = new HouseholdOutcomeBuilder();
     householdOutcomeBuilder.createHouseholdOutcomeForIUACTextBackWithIncorrectQuestionnaireType();
@@ -144,7 +141,7 @@ public class FulfilmentRequestFactoryTest {
   }
 
   @Test
-  public void createFulfillmentRequestsForWillCompleteTest() {
+  public void createFulfillmentRequestsForWillCompleteTest() throws GatewayException {
     // Given
     HouseholdOutcomeBuilder householdOutcomeBuilder = new HouseholdOutcomeBuilder();
     householdOutcomeBuilder.createHouseholdOutcomeForWillComplete();
@@ -160,7 +157,7 @@ public class FulfilmentRequestFactoryTest {
   }
 
   @Test
-  public void createFulfillmentRequestsWithNoSecondaryRequestTest() {
+  public void createFulfillmentRequestsWithNoSecondaryRequestTest() throws GatewayException {
     // Given
     HouseholdOutcomeBuilder householdOutcomeBuilder = new HouseholdOutcomeBuilder();
     householdOutcomeBuilder.createHouseholdOutcomeWithNoSecondaryRequest();

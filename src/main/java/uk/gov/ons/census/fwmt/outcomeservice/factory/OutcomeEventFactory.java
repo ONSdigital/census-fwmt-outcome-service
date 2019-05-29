@@ -1,5 +1,6 @@
 package uk.gov.ons.census.fwmt.outcomeservice.factory;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.data.rm.CollectionCase;
@@ -11,8 +12,18 @@ import uk.gov.ons.census.fwmt.common.data.rm.Payload;
 import uk.gov.ons.census.fwmt.common.data.rm.Refusal;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Component
 public class OutcomeEventFactory {
+
+  static Map<String, String> noValidHouseholdOutcomeMap = new HashMap<>();
+
+  @Autowired
+  public OutcomeEventFactory(BuildSecondaryOutcomeMaps buildSecondaryOutcomeMaps) {
+    buildSecondaryOutcomeMaps.buildSecondaryOutcomeMap();
+  }
 
   public OutcomeEvent createOutcomeEvent(HouseholdOutcome householdOutcome) throws GatewayException {
     return newOutcomeEvent(householdOutcome);
@@ -67,13 +78,15 @@ public class OutcomeEventFactory {
     case "Hard Refusal":
     case "Extraordinary Refusal":
       outcomeEvent.getEvent().setType("REFUSAL_RECEIVED");
-      outcomeEvent.getPayload().getRefusal().setType(householdOutcome.getSecondaryOutcome());
+      outcomeEvent.getPayload().getRefusal()
+          .setType(noValidHouseholdOutcomeMap.get(householdOutcome.getSecondaryOutcome()));
       outcomeEvent.getPayload().getRefusal().setAgentId(householdOutcome.getUsername());
       outcomeEvent.getPayload().getRefusal().getCollectionCase().setId(householdOutcome.getCaseId());
       break;
     case "Split Address":
       outcomeEvent.getEvent().setType("ADDRESS_NOT_VALID");
-      outcomeEvent.getPayload().getInvalidAddress().setReason(householdOutcome.getSecondaryOutcome());
+      outcomeEvent.getPayload().getInvalidAddress()
+          .setReason(noValidHouseholdOutcomeMap.get(householdOutcome.getSecondaryOutcome()));
       outcomeEvent.getPayload().getInvalidAddress().getCollectionCase().setId(householdOutcome.getCaseId());
       break;
     default:
@@ -93,7 +106,8 @@ public class OutcomeEventFactory {
     case "Duplicate":
     case "Under Construction":
       outcomeEvent.getEvent().setType("ADDRESS_NOT_VALID");
-      outcomeEvent.getPayload().getInvalidAddress().setReason(householdOutcome.getSecondaryOutcome());
+      outcomeEvent.getPayload().getInvalidAddress()
+          .setReason(noValidHouseholdOutcomeMap.get(householdOutcome.getSecondaryOutcome()));
       outcomeEvent.getPayload().getInvalidAddress().getCollectionCase().setId(householdOutcome.getCaseId());
       break;
     default:
