@@ -110,7 +110,7 @@ public class FulfilmentRequestFactory {
         outcomeEventList.add(outcomeEvent);
         break;
       default:
-        log.error("Failed to find valid Secondary Outcome: ", householdOutcome.getSecondaryOutcome());
+        log.error("Failed to find valid Secondary Outcome: {}", householdOutcome.getSecondaryOutcome());
         break;
       }
     }
@@ -127,9 +127,9 @@ public class FulfilmentRequestFactory {
       outcomeEvent.getPayload().getFulfillment().getContact().setForename(fulfillmentRequest.getRequesterForename());
       outcomeEvent.getPayload().getFulfillment().getContact().setSurname(fulfillmentRequest.getRequesterSurname());
 
-      outcomeEvent.getPayload().getFulfillment().setProductCode(product.getFieldQuestionnaireCode());
+      outcomeEvent.getPayload().getFulfillment().setProductCode(product.getFulfilmentCode());
     } else {
-      outcomeEvent.getPayload().getFulfillment().setProductCode(product.getFieldQuestionnaireCode());
+      outcomeEvent.getPayload().getFulfillment().setProductCode(product.getFulfilmentCode());
     }
 
     return outcomeEvent;
@@ -140,7 +140,7 @@ public class FulfilmentRequestFactory {
     Product product = getPackCodeFromQuestionnaireType(fulfillmentRequest);
 
     outcomeEvent.getPayload().getFulfillment()
-        .setProductCode(product.getFieldQuestionnaireCode());
+        .setProductCode(product.getFulfilmentCode());
 
     outcomeEvent.getPayload().getFulfillment().getContact().setTelNo(fulfillmentRequest.getRequesterPhone());
 
