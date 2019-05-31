@@ -11,31 +11,25 @@ import uk.gov.ons.census.fwmt.common.data.rm.Fulfillment;
 import uk.gov.ons.census.fwmt.common.data.rm.OutcomeEvent;
 import uk.gov.ons.census.fwmt.common.data.rm.Payload;
 import uk.gov.ons.census.fwmt.common.data.rm.Uac;
+import uk.gov.ons.ctp.common.error.CTPException;
+import uk.gov.ons.ctp.integration.common.product.ProductReference;
+import uk.gov.ons.ctp.integration.common.product.model.Product;
 
-
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
+
+import static uk.gov.ons.ctp.integration.common.product.model.Product.CaseType.HI;
+import static uk.gov.ons.ctp.integration.common.product.model.Product.RequestChannel.FIELD;
 
 @Component
 @Slf4j
 public class FulfilmentRequestFactory {
 
-  static Map<String, String> householdPaperMap = new HashMap<>();
-  static Map<String, String> householdContinuationMap = new HashMap<>();
-  static Map<String, String> householdIndividualMap = new HashMap<>();
-  static Map<String, String> householdUacMap = new HashMap<>();
-  static Map<String, String> individualUacMap = new HashMap<>();
-
   @Autowired
-  public FulfilmentRequestFactory(BuildFulfilmentRequestMaps buildFulfilmentRequestMaps) {
-    buildFulfilmentRequestMaps.buildHouseholdPaperRequestMap();
-    buildFulfilmentRequestMaps.buildIndividualPaperRequestMap();
-    buildFulfilmentRequestMaps.buildHouseholdContinuationPaperRequestMap();
-    buildFulfilmentRequestMaps.buildHouseholdUacRequestMap();
-    buildFulfilmentRequestMaps.buildIndividualUacRequestMap();
-  }
+  private ProductReference productReference;
 
   public OutcomeEvent[] createFulfilmentEvents(HouseholdOutcome householdOutcome) {
     return getFulfilmentRequest(householdOutcome);
@@ -99,9 +93,11 @@ public class FulfilmentRequestFactory {
         break;
       case "HUAC required by text":
       case "IUAC required by text":
+      case "UAC required by text":
         outcomeEvent = buildFulfilmentPayload(householdOutcome);
         outcomeEventList.add(getUacByText(outcomeEvent, fulfillmentRequest));
         break;
+      case "Paper Questionnaire issued":
       case "Paper H Questionnaire issued":
       case "Will Complete":
       case "Have Completed":
@@ -115,7 +111,7 @@ public class FulfilmentRequestFactory {
         outcomeEventList.add(outcomeEvent);
         break;
       default:
-        log.error("Failed to find valid Secondary Outcome: ", householdOutcome.getSecondaryOutcome());
+        log.error("Failed to find valid Secondary Outcome: {}", householdOutcome.getSecondaryOutcome());
         break;
       }
     }
@@ -124,47 +120,46 @@ public class FulfilmentRequestFactory {
 
   private OutcomeEvent getQuestionnaireByPost(OutcomeEvent outcomeEvent, FulfillmentRequest fulfillmentRequest) {
 
-    if (householdPaperMap.containsKey(fulfillmentRequest.getQuestionnaireType())) {
+    Product product = getPackCodeFromQuestionnaireType(fulfillmentRequest);
 
-      outcomeEvent.getPayload().getFulfillment()
-          .setProductCode(householdPaperMap.get(fulfillmentRequest.getQuestionnaireType()));
-
-    } else if (householdContinuationMap.containsKey(fulfillmentRequest.getQuestionnaireType())) {
-
-      outcomeEvent.getPayload().getFulfillment()
-          .setProductCode(householdContinuationMap.get(fulfillmentRequest.getQuestionnaireType()));
-
-    } else if (householdIndividualMap.containsKey(fulfillmentRequest.getQuestionnaireType())) {
-
-      outcomeEvent.getPayload().getFulfillment()
-          .setProductCode(householdIndividualMap.get(fulfillmentRequest.getQuestionnaireType()));
-
+    if (product.getCaseType().equals(HI)) {
       outcomeEvent.getPayload().getFulfillment().getContact().setTitle(fulfillmentRequest.getRequesterTitle());
       outcomeEvent.getPayload().getFulfillment().getContact().setForename(fulfillmentRequest.getRequesterForename());
       outcomeEvent.getPayload().getFulfillment().getContact().setSurname(fulfillmentRequest.getRequesterSurname());
 
+      outcomeEvent.getPayload().getFulfillment().setProductCode(product.getFulfilmentCode());
     } else {
-      log.error("Failed to find valid Questionnaire Type: ", fulfillmentRequest.getQuestionnaireType());
+      outcomeEvent.getPayload().getFulfillment().setProductCode(product.getFulfilmentCode());
     }
+
     return outcomeEvent;
   }
 
   private OutcomeEvent getUacByText(OutcomeEvent outcomeEvent, FulfillmentRequest fulfillmentRequest) {
-    if (householdUacMap.containsKey(fulfillmentRequest.getQuestionnaireType())) {
-      getRequesterPhone(outcomeEvent, fulfillmentRequest, householdUacMap);
-    } else if (individualUacMap.containsKey(fulfillmentRequest.getQuestionnaireType())) {
-      getRequesterPhone(outcomeEvent, fulfillmentRequest, individualUacMap);
-    } else {
-      log.error("Failed to find valid Questionnaire Type: ", fulfillmentRequest.getQuestionnaireType());
-    }
+    Product product = getPackCodeFromQuestionnaireType(fulfillmentRequest);
+
+    outcomeEvent.getPayload().getFulfillment()
+        .setProductCode(product.getFulfilmentCode());
+
+    outcomeEvent.getPayload().getFulfillment().getContact().setTelNo(fulfillmentRequest.getRequesterPhone());
+
     return outcomeEvent;
   }
 
-  private void getRequesterPhone(OutcomeEvent outcomeEvent, FulfillmentRequest fulfillmentRequest,
-      Map<String, String> householdUacMap) {
-    outcomeEvent.getPayload().getFulfillment()
-        .setProductCode(householdUacMap.get(fulfillmentRequest.getQuestionnaireType()));
+  @Nonnull
+  private Product getPackCodeFromQuestionnaireType(FulfillmentRequest fulfillmentRequest) {
+    Product product = new Product();
+    List<Product.RequestChannel> requestChannels = Collections.singletonList(FIELD);
 
-    outcomeEvent.getPayload().getFulfillment().getContact().setTelNo(fulfillmentRequest.getRequesterPhone());
+    product.setRequestChannels(requestChannels);
+    product.setFieldQuestionnaireCode(fulfillmentRequest.getQuestionnaireType());
+
+    List<Product> productList = null;
+    try {
+      productList = productReference.searchProducts(product);
+    } catch (CTPException e) {
+      log.error("unable to find valid Products {}", e);
+    }
+      return Objects.requireNonNull(productList).get(0);
   }
 }

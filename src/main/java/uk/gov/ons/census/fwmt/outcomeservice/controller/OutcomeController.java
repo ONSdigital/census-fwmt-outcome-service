@@ -1,9 +1,11 @@
 package uk.gov.ons.census.fwmt.outcomeservice.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
@@ -15,8 +17,8 @@ import java.time.LocalTime;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_OUTCOME_RECEIVED;
 
 @RestController
-@RequestMapping("/OutcomeController")
-public class OutcomeController {
+@Import({springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration.class})
+public class OutcomeController implements OutcomeApi {
 
   @Autowired
   private OutcomeServiceImpl cometTranslationService;
@@ -24,15 +26,12 @@ public class OutcomeController {
   @Autowired
   private GatewayEventManager gatewayEventManager;
 
-  @PostMapping(value = "/HouseholdOutcome", consumes = "application/json", produces = "application/json")
-  public void householdCaseOutcomeResponse(@RequestBody HouseholdOutcome householdOutcome) throws GatewayException {
+  public ResponseEntity<HouseholdOutcome> householdCaseOutcomeResponse(@PathVariable String caseId,
+      @RequestBody HouseholdOutcome householdOutcome) throws GatewayException {
     gatewayEventManager
-        .triggerEvent(String.valueOf(householdOutcome.getCaseId()), COMET_OUTCOME_RECEIVED, LocalTime.now());
+        .triggerEvent(caseId, COMET_OUTCOME_RECEIVED, LocalTime.now());
     cometTranslationService.createHouseHoldOutcomeEvent(householdOutcome);
-  }
 
-  @PostMapping(value = "/ccsOutcome", consumes = "application/json", produces = "application/json")
-  public void ccsCaseOutcomeResponse(@RequestBody HouseholdOutcome householdOutcome) throws GatewayException {
-    // ccs logic?
+    return new ResponseEntity<>(householdOutcome, HttpStatus.ACCEPTED);
   }
 }
