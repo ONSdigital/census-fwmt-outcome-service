@@ -11,14 +11,15 @@ import uk.gov.ons.census.fwmt.common.data.rm.Fulfillment;
 import uk.gov.ons.census.fwmt.common.data.rm.OutcomeEvent;
 import uk.gov.ons.census.fwmt.common.data.rm.Payload;
 import uk.gov.ons.census.fwmt.common.data.rm.Uac;
-import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.ctp.common.error.CTPException;
 import uk.gov.ons.ctp.integration.common.product.ProductReference;
 import uk.gov.ons.ctp.integration.common.product.model.Product;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static uk.gov.ons.ctp.integration.common.product.model.Product.CaseType.HI;
 import static uk.gov.ons.ctp.integration.common.product.model.Product.RequestChannel.FIELD;
@@ -30,7 +31,7 @@ public class FulfilmentRequestFactory {
   @Autowired
   private ProductReference productReference;
 
-  public OutcomeEvent[] createFulfilmentEvents(HouseholdOutcome householdOutcome) throws GatewayException {
+  public OutcomeEvent[] createFulfilmentEvents(HouseholdOutcome householdOutcome) {
     return getFulfilmentRequest(householdOutcome);
   }
 
@@ -78,7 +79,7 @@ public class FulfilmentRequestFactory {
     return outcomeEvent;
   }
 
-  private OutcomeEvent[] getFulfilmentRequest(HouseholdOutcome householdOutcome) throws GatewayException {
+  private OutcomeEvent[] getFulfilmentRequest(HouseholdOutcome householdOutcome) {
     List<OutcomeEvent> outcomeEventList = new ArrayList<>();
     for (FulfillmentRequest fulfillmentRequest : householdOutcome.getFulfillmentRequests()) {
       OutcomeEvent outcomeEvent;
@@ -117,8 +118,7 @@ public class FulfilmentRequestFactory {
     return outcomeEventList.toArray(new OutcomeEvent[0]);
   }
 
-  private OutcomeEvent getQuestionnaireByPost(OutcomeEvent outcomeEvent, FulfillmentRequest fulfillmentRequest)
-      throws GatewayException {
+  private OutcomeEvent getQuestionnaireByPost(OutcomeEvent outcomeEvent, FulfillmentRequest fulfillmentRequest) {
 
     Product product = getPackCodeFromQuestionnaireType(fulfillmentRequest);
 
@@ -135,8 +135,7 @@ public class FulfilmentRequestFactory {
     return outcomeEvent;
   }
 
-  private OutcomeEvent getUacByText(OutcomeEvent outcomeEvent, FulfillmentRequest fulfillmentRequest)
-      throws GatewayException {
+  private OutcomeEvent getUacByText(OutcomeEvent outcomeEvent, FulfillmentRequest fulfillmentRequest) {
     Product product = getPackCodeFromQuestionnaireType(fulfillmentRequest);
 
     outcomeEvent.getPayload().getFulfillment()
@@ -147,21 +146,20 @@ public class FulfilmentRequestFactory {
     return outcomeEvent;
   }
 
-  private Product getPackCodeFromQuestionnaireType(FulfillmentRequest fulfillmentRequest) throws GatewayException {
+  @Nonnull
+  private Product getPackCodeFromQuestionnaireType(FulfillmentRequest fulfillmentRequest) {
     Product product = new Product();
     List<Product.RequestChannel> requestChannels = Collections.singletonList(FIELD);
 
     product.setRequestChannels(requestChannels);
     product.setFieldQuestionnaireCode(fulfillmentRequest.getQuestionnaireType());
 
-    List<Product> productList;
+    List<Product> productList = null;
     try {
       productList = productReference.searchProducts(product);
     } catch (CTPException e) {
-      throw new GatewayException(GatewayException.Fault.BAD_REQUEST,
-          "CTPException: Unable to find product: " + e);
+      log.error("unable to find valid Products {}", e);
     }
-    return productList.get(0);
+      return Objects.requireNonNull(productList).get(0);
   }
-
 }
