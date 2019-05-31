@@ -27,10 +27,9 @@ public class OutcomeController implements OutcomeApi {
   private GatewayEventManager gatewayEventManager;
 
   public ResponseEntity<HouseholdOutcome> householdCaseOutcomeResponse(@PathVariable String caseId,
-      @RequestBody HouseholdOutcome householdOutcome)
-      throws GatewayException {
+      @RequestBody HouseholdOutcome householdOutcome) throws GatewayException {
     gatewayEventManager
-        .triggerEvent(String.valueOf(caseId), COMET_OUTCOME_RECEIVED, LocalTime.now());
+        .triggerEvent(caseId, COMET_OUTCOME_RECEIVED, LocalTime.now());
     cometTranslationService.createHouseHoldOutcomeEvent(householdOutcome);
 
     return new ResponseEntity<>(householdOutcome, HttpStatus.ACCEPTED);
