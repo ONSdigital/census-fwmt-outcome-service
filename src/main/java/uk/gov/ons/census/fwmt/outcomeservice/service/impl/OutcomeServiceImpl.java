@@ -34,7 +34,8 @@ public class OutcomeServiceImpl implements OutcomeService {
     if (householdOutcome.getFulfillmentRequests() == null) {
       OutcomeEvent outcomeEvent = outcomeEventFactory.createOutcomeEvent(householdOutcome);
 
-      if (outcomeEvent.getEvent().getType().equals("ADDRESS_NOT_VALID")) {
+      if (outcomeEvent.getEvent().getType().equals("ADDRESS_NOT_VALID") || outcomeEvent.getEvent().getType()
+          .equals("ADDRESS_TYPE_CHANGED")) {
         gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent);
 
       } else if (outcomeEvent.getEvent().getType().equals("REFUSAL_RECEIVED")) {

@@ -14,6 +14,8 @@ public class BuildSecondaryOutcomeMaps {
     OutcomeEventFactory.noValidHouseholdOutcomeMap.put("Non-residential", "NON_RESIDENTIAL");
     OutcomeEventFactory.noValidHouseholdOutcomeMap.put("Duplicate", "DUPLICATE");
     OutcomeEventFactory.noValidHouseholdOutcomeMap.put("Under Construction", "UNDER_CONSTRUCTION");
+    OutcomeEventFactory.noValidHouseholdOutcomeMap.put("Property is a CE - no contact made", "PROPERTY_IS_CE_NO_CONTACT_MADE");
+    OutcomeEventFactory.noValidHouseholdOutcomeMap.put("Property is a CE - Contact made", "PROPERTY_IS_CE_CONTACT_MADE");
 
     // Contact Made
     OutcomeEventFactory.noValidHouseholdOutcomeMap.put("Split Address", "SPLIT_ADDRESS");
