@@ -53,6 +53,7 @@ public class OutcomeServiceImpl implements OutcomeService {
       for (OutcomeEvent outcomeEvent : processedFulfilmentRequests) {
         if (outcomeEvent.getEvent().getType().equals("FULFILMENT_REQUESTED"))
           gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent);
+
         if (outcomeEvent.getEvent().getType().equals("QUESTIONNAIRE_LINKED"))
           gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent);
       }

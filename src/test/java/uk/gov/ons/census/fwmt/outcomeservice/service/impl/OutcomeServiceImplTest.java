@@ -44,11 +44,14 @@ public class OutcomeServiceImplTest {
   @Mock
   private FulfilmentRequestFactory fulfilmentRequestFactory;
 
+  @Mock
+  private HouseholdOutcome householdOutcome;
+
   @Test
   public void createHouseHoldOutcomeEvent() throws GatewayException {
     String productCode = "P_OR_H1";
-    List<OutcomeEvent> outcomeEventList = new ArrayList<>();
     HouseholdOutcome householdOutcome = new HouseholdOutcomeBuilder().createHouseholdOutcomeForPaperH();
+    List<OutcomeEvent> outcomeEventList = new ArrayList<>();
 
     OutcomeEvent outcomeEvent = new OutcomeEvent();
     Payload payload = new Payload();
@@ -69,16 +72,13 @@ public class OutcomeServiceImplTest {
     event.setDateTime(householdOutcome.getEventDate());
     outcomeEvent.setEvent(event);
 
-    //Product product = getPackCodeFromQuestionnaireType(fulfillmentRequest);
+    outcomeEventList.add(outcomeEvent);
 
-//
-//    Mockito.when(outcomeEventFactory.createOutcomeEvent(any(HouseholdOutcome.class))).thenReturn(outcomeEvent);
-//
-//    outcomeServiceImpl.createHouseHoldOutcomeEvent(householdOutcome);
-//
-//    Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(OUTCOME_SENT_RM), any());
+    Mockito.when(fulfilmentRequestFactory.createFulfilmentEvents(any(HouseholdOutcome.class))).thenReturn(outcomeEventList.toArray(new OutcomeEvent[0]));
 
-   // Mockito.verify(gatewayOutcomeProducer).sendFulfilmentRequest(outcomeEvents);
+    outcomeServiceImpl.createHouseHoldOutcomeEvent(householdOutcome);
+
+    Mockito.verify(gatewayOutcomeProducer).sendFulfilmentRequest(outcomeEvent);
   }
 
   @Test
