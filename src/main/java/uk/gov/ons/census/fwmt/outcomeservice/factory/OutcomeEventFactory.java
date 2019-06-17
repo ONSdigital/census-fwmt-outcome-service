@@ -129,8 +129,6 @@ public class OutcomeEventFactory {
 
   private void setCEOutcomeEvent(HouseholdOutcome householdOutcome, OutcomeEvent outcomeEvent) {
     outcomeEvent.getEvent().setType("ADDRESS_TYPE_CHANGED");
-    outcomeEvent.getPayload().getInvalidAddress()
-        .setReason(noValidHouseholdOutcomeMap.get(householdOutcome.getSecondaryOutcome()));
     outcomeEvent.getPayload().getCollectionCase().setId(householdOutcome.getCaseId());
     outcomeEvent.getPayload().getCollectionCase().getAddress().setAddressType("CE");
     outcomeEvent.getPayload().getCollectionCase().getAddress()
