@@ -1,5 +1,6 @@
 package uk.gov.ons.census.fwmt.outcomeservice.helper;
 
+import uk.gov.ons.census.fwmt.common.data.comet.CeDetails;
 import uk.gov.ons.census.fwmt.common.data.comet.FulfillmentRequest;
 import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
 
@@ -337,6 +338,51 @@ public class HouseholdOutcomeBuilder {
     householdOutcome.setPrimaryOutcome("IncorrectPrimaryOutcome");
     householdOutcome.setSecondaryOutcome("Will Complete");
     householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
+
+    return householdOutcome;
+  }
+
+  public HouseholdOutcome createCENoValidAddressContactMade() {
+
+    HouseholdOutcome householdOutcome = new HouseholdOutcome();
+    CeDetails ceDetails = new CeDetails();
+
+    ceDetails.setEstablishmentName("Test house");
+    ceDetails.setEstablishmentType("Test");
+    ceDetails.setManagerTitle("Mr");
+    ceDetails.setManagerForename("John");
+    ceDetails.setManagerSurname("Smith");
+    ceDetails.setContactPhone("07123456789");
+    ceDetails.setUsualResidents(5);
+
+    householdOutcome.setEventDate(LocalDateTime.parse("2007-12-03T10:15:30"));
+    householdOutcome.setUsername("Username");
+    householdOutcome.setCaseId(UUID.fromString("6c9b1177-3e03-4060-b6db-f6a8456292ef"));
+    householdOutcome.setCaseReference("caseReference");
+    householdOutcome.setPrimaryOutcome("No Valid Household");
+    householdOutcome.setSecondaryOutcome("Property is a CE - Contact made");
+    householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
+    householdOutcome.setCeDetails(ceDetails);
+
+    return householdOutcome;
+  }
+
+  public HouseholdOutcome createCENoValidAddressNoContactMade() {
+
+    HouseholdOutcome householdOutcome = new HouseholdOutcome();
+    CeDetails ceDetails = new CeDetails();
+
+    ceDetails.setEstablishmentName("Test house");
+    ceDetails.setEstablishmentType("Test");
+
+    householdOutcome.setEventDate(LocalDateTime.parse("2007-12-03T10:15:30"));
+    householdOutcome.setUsername("Username");
+    householdOutcome.setCaseId(UUID.fromString("6c9b1177-3e03-4060-b6db-f6a8456292ef"));
+    householdOutcome.setCaseReference("caseReference");
+    householdOutcome.setPrimaryOutcome("No Valid Household");
+    householdOutcome.setSecondaryOutcome("Property is a CE - no contact made");
+    householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
+    householdOutcome.setCeDetails(ceDetails);
 
     return householdOutcome;
   }
