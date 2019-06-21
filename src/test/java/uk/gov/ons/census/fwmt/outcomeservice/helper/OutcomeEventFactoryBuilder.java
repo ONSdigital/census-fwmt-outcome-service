@@ -1,5 +1,11 @@
 package uk.gov.ons.census.fwmt.outcomeservice.helper;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.data.rm.CollectionCase;
 import uk.gov.ons.census.fwmt.common.data.rm.Contact;
@@ -8,19 +14,13 @@ import uk.gov.ons.census.fwmt.common.data.rm.InvalidAddress;
 import uk.gov.ons.census.fwmt.common.data.rm.OutcomeEvent;
 import uk.gov.ons.census.fwmt.common.data.rm.Payload;
 import uk.gov.ons.census.fwmt.common.data.rm.Refusal;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import uk.gov.ons.census.fwmt.outcomeservice.service.impl.OutcomeServiceImpl;
 
 public class OutcomeEventFactoryBuilder {
 
   static Map<String, String> noValidHouseholdOutcomeMap = new HashMap<>();
 
-  public OutcomeEvent createOutcomeEventForHousehold(HouseholdOutcome householdOutcome) {
+  public static OutcomeEvent createOutcomeEventForHousehold(HouseholdOutcome householdOutcome) {
     OutcomeEvent outcomeEvent = new OutcomeEvent();
     Payload payload = new Payload();
     InvalidAddress invalidAddress = new InvalidAddress();
@@ -52,7 +52,7 @@ public class OutcomeEventFactoryBuilder {
     return outcomeEvent;
   }
 
-  public OutcomeEvent createOutcomeEventForHouseholdRefusal(HouseholdOutcome householdOutcome) {
+  public static OutcomeEvent createOutcomeEventForHouseholdRefusal(HouseholdOutcome householdOutcome) {
     OutcomeEvent outcomeEvent = new OutcomeEvent();
     Payload payload = new Payload();
     InvalidAddress invalidAddress = new InvalidAddress();
@@ -82,5 +82,16 @@ public class OutcomeEventFactoryBuilder {
     outcomeEvent.getPayload().getInvalidAddress().getCollectionCase().setId(householdOutcome.getCaseId());
 
     return outcomeEvent;
+  }
+  
+  public static void main(String[] args) throws JsonProcessingException {
+  ObjectMapper mapper = new ObjectMapper();  
+    HouseholdOutcome householdOutcome = new HouseholdOutcomeBuilder().createContactMadeHouseholdHardRefusal();
+    OutcomeServiceImpl.createOutcomeEventText(householdOutcome);
+    
+//    OutcomeEvent createOutcomeEventForHouseholdRefusal = createOutcomeEventForHouseholdRefusal(householdOutcome);
+//    String ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(createOutcomeEventForHouseholdRefusal);
+//    System.out.println(ho);
+
   }
 }
