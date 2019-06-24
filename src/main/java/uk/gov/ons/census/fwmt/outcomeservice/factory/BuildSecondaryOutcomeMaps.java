@@ -7,17 +7,17 @@ public class BuildSecondaryOutcomeMaps {
 
   public void buildSecondaryOutcomeMap() {
     // Non Valid Household
-    OutcomeEventFactory.noValidHouseholdOutcomeMap.put("Derelict", "DERELICT");
-    OutcomeEventFactory.noValidHouseholdOutcomeMap.put("Demolished", "DEMOLISHED");
-    OutcomeEventFactory.noValidHouseholdOutcomeMap.put("Can't Find", "CANT_FIND");
-    OutcomeEventFactory.noValidHouseholdOutcomeMap.put("Unaddressable Object", "UNADDRESSABLE_OBJECT");
-    OutcomeEventFactory.noValidHouseholdOutcomeMap.put("Non-residential", "NON_RESIDENTIAL");
-    OutcomeEventFactory.noValidHouseholdOutcomeMap.put("Duplicate", "DUPLICATE");
-    OutcomeEventFactory.noValidHouseholdOutcomeMap.put("Under Construction", "UNDER_CONSTRUCTION");
+    OutcomeEventFactory.secondaryOutcomeMap.put("Derelict", "DERELICT");
+    OutcomeEventFactory.secondaryOutcomeMap.put("Demolished", "DEMOLISHED");
+    OutcomeEventFactory.secondaryOutcomeMap.put("Can't Find", "CANT_FIND");
+    OutcomeEventFactory.secondaryOutcomeMap.put("Unaddressable Object", "UNADDRESSABLE_OBJECT");
+    OutcomeEventFactory.secondaryOutcomeMap.put("Non-residential", "NON_RESIDENTIAL");
+    OutcomeEventFactory.secondaryOutcomeMap.put("Duplicate", "DUPLICATE");
+    OutcomeEventFactory.secondaryOutcomeMap.put("Under Construction", "UNDER_CONSTRUCTION");
 
     // Contact Made
-    OutcomeEventFactory.noValidHouseholdOutcomeMap.put("Split Address", "SPLIT_ADDRESS");
-    OutcomeEventFactory.noValidHouseholdOutcomeMap.put("Hard Refusal", "HARD_REFUSAL");
-    OutcomeEventFactory.noValidHouseholdOutcomeMap.put("Extraordinary Refusal", "EXTRAORDINARY_REFUSAL");
+    OutcomeEventFactory.secondaryOutcomeMap.put("Split Address", "SPLIT_ADDRESS");
+    OutcomeEventFactory.secondaryOutcomeMap.put("Hard Refusal", "HARD_REFUSAL");
+    OutcomeEventFactory.secondaryOutcomeMap.put("Extraordinary Refusal", "EXTRAORDINARY_REFUSAL");
   }
 }
