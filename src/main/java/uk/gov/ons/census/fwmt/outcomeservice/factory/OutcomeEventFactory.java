@@ -9,11 +9,8 @@ import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import java.util.HashMap;
 import java.util.Map;
 
-
-
 @Component
 public class OutcomeEventFactory {
-
 
   static Map<String, String> secondaryOutcomeMap = new HashMap<>();
 
@@ -40,11 +37,10 @@ public class OutcomeEventFactory {
       throw new GatewayException(GatewayException.Fault.BAD_REQUEST,
           "No valid 'Primary' outcome found: " + householdOutcome.getPrimaryOutcome());
     }
-
     return outcomeEvent;
   }
 
-  private String buildRefusalOutcome(HouseholdOutcome householdOutcome) throws GatewayException {
+  private String buildRefusalOutcome(HouseholdOutcome householdOutcome) {
     String outcomeEvent;
     Map<String, Object> root = new HashMap<>();
     root.put("householdOutcome", householdOutcome);
@@ -54,7 +50,7 @@ public class OutcomeEventFactory {
     return outcomeEvent;
   }
 
-  private String buildAddressNotValidOutcome(HouseholdOutcome householdOutcome) throws GatewayException {
+  private String buildAddressNotValidOutcome(HouseholdOutcome householdOutcome) {
     String outcomeEvent;
     Map<String, Object> root = new HashMap<>();
     root.put("householdOutcome", householdOutcome);

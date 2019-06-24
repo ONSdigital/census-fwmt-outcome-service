@@ -1,16 +1,9 @@
 package uk.gov.ons.census.fwmt.outcomeservice.service.impl;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT_RM;
-
-import java.io.IOException;
-import java.time.LocalTime;
-import java.util.List;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
@@ -18,6 +11,12 @@ import uk.gov.ons.census.fwmt.outcomeservice.factory.FulfilmentRequestFactory;
 import uk.gov.ons.census.fwmt.outcomeservice.factory.OutcomeEventFactory;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
+
+import java.io.IOException;
+import java.time.LocalTime;
+import java.util.List;
+
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT_RM;
 
 @Service
 public class OutcomeServiceImpl implements OutcomeService {
@@ -41,7 +40,6 @@ public class OutcomeServiceImpl implements OutcomeService {
 
     if (householdOutcome.getFulfillmentRequests() == null) {
       String outcomeEvent = outcomeEventFactory.createOutcomeEvent(householdOutcome);
-
 
       try {
         JsonNode rootNode = objectMapper.readTree(outcomeEvent);
@@ -86,7 +84,6 @@ public class OutcomeServiceImpl implements OutcomeService {
         } catch (IOException e) {
           e.printStackTrace();
         }
-
       }
     }
   }
