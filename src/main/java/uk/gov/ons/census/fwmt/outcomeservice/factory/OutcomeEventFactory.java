@@ -81,11 +81,14 @@ public class OutcomeEventFactory {
     Map<String, Object> root = new HashMap<>();
     root.put("householdOutcome", householdOutcome);
     root.put("estabType", "CE");
+    root.put("secondaryOutcome", householdOutcome.getSecondaryOutcome());
+
+    root.put("managerTitle", householdOutcome.getCeDetails().getManagerTitle());
 
     if (householdOutcome.getCeDetails().getUsualResidents() == null) {
-      root.put("usualSuspects", 0);
+      root.put("usualResidents", 0);
     } else {
-      root.put("usualSuspects", householdOutcome.getCeDetails().getUsualResidents());
+      root.put("usualResidents", householdOutcome.getCeDetails().getUsualResidents());
     }
 
     outcomeEvent = TemplateCreator.createOutcomeMessage("ADDRESS_TYPE_CHANGED", root);

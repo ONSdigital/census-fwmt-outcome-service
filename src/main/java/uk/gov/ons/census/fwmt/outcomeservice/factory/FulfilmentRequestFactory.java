@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
+import static uk.gov.ons.ctp.integration.common.product.model.Product.CaseType.HI;
 import static uk.gov.ons.ctp.integration.common.product.model.Product.RequestChannel.FIELD;
 
 @Component
@@ -29,11 +30,10 @@ public class FulfilmentRequestFactory {
 
   public List<String> createFulfilmentRequestEvent(HouseholdOutcome householdOutcome) {
     List<String> outcomeEvents = new ArrayList<>();
-
     for (FulfillmentRequest fulfillmentRequest : householdOutcome.getFulfillmentRequests()) {
       String event;
       if (isQuestionnaireLinked(fulfillmentRequest)){
-        event = createQuestionnaireLinkedEvent(householdOutcome);
+        event = createQuestionnaireLinkedEvent(householdOutcome, fulfillmentRequest);
         outcomeEvents.add(event);
       } else {
         switch (householdOutcome.getSecondaryOutcome()) {
@@ -64,9 +64,13 @@ public class FulfilmentRequestFactory {
     Map<String, Object> root = new HashMap<>();
     root.put("householdOutcome", householdOutcome);
     root.put("productCodeLookup",product.getFulfilmentCode());
-    if (product.getCaseType().equals(Product.CaseType.HI)){
-      root.put("generateIndividualCaseId", UUID.randomUUID());
-      root.put("grabContactNo", fulfillmentRequest.getRequesterPhone());
+
+    if (product.getCaseType().equals(HI)){
+      root.put("householdIndicator", 0);
+      root.put("individualCaseId", generateUUID());
+      root.put("telNo", fulfillmentRequest.getRequesterPhone());
+    } else {
+      root.put("householdIndicator", 1);
     }
 
     return TemplateCreator.createOutcomeMessage("FULFILMENT_REQUESTED",root);
@@ -77,22 +81,38 @@ public class FulfilmentRequestFactory {
     Map<String, Object> root = new HashMap<>();
     root.put("householdOutcome", householdOutcome);
     root.put("productCodeLookup",product.getFulfilmentCode());
-    if (product.getCaseType().equals(Product.CaseType.HI)){
-      root.put("generateIndividualCaseId", UUID.randomUUID());
-      root.put("individualContactDetails", fulfillmentRequest.getRequesterForename());
+
+    if (product.getCaseType().equals(HI)){
+      root.put("householdIndicator", 0);
+      root.put("individualCaseId", generateUUID());
+      root.put("title", fulfillmentRequest.getRequesterTitle());
+      root.put("forename", fulfillmentRequest.getRequesterForename());
+      root.put("surname", fulfillmentRequest.getRequesterSurname());
+      root.put("telNo", fulfillmentRequest.getRequesterPhone());
+    } else {
+      root.put("householdIndicator", 1);
+
     }
 
-    return TemplateCreator.createOutcomeMessage("FULFILMENT_REQUESTED",root);
+    return TemplateCreator.createOutcomeMessage("FULFILLMENT_REQUESTED",root);
   }
 
-  private String createQuestionnaireLinkedEvent(HouseholdOutcome householdOutcome) {
+  private String createQuestionnaireLinkedEvent(HouseholdOutcome householdOutcome,
+      FulfillmentRequest fulfillmentRequest) {
     Map<String, Object> root = new HashMap<>();
     root.put("householdOutcome", householdOutcome);
+    root.put("questionnaireId", fulfillmentRequest.getQuestionnaireId());
     return TemplateCreator.createOutcomeMessage("QUESTIONNAIRE_LINKED",root);
   }
 
   private boolean isQuestionnaireLinked(FulfillmentRequest fulfillmentRequest) {
     return (fulfillmentRequest.getQuestionnaireId()!=null);
+  }
+
+  private String generateUUID() {
+    String generatedUUID;
+    generatedUUID = String.valueOf(UUID.randomUUID());
+    return generatedUUID;
   }
 
   @Nonnull

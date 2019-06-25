@@ -1,20 +1,21 @@
 {
     "collectionCase" : {
     "id":"${householdOutcome.caseId}",
-    <#if usualSuspects gt 0 >
-    "numberOfResidents”:"${usualSuspects}",
+    <#if usualResidents gt 0>
+    "numberOfResidents”:"${usualResidents}",
     </#if>
     "address" : {
-        "addressType":"${householdOutcome.ceDetails.usualResidents}",
-        "estabType":"${estabType}",
+        "addressType":"${estabType}",
+        "estabType":"${householdOutcome.ceDetails.establishmentType}",
         "orgName":"${householdOutcome.ceDetails.establishmentName}",
     },
-    <#if householdOutcome.SecondaryOutcome = "Property is a CE - Contact made" >
+    <#if secondaryOutcome == "Property is a CE - Contact made">
     "contact" : {
-         "title":"${householdOutcome.ceDetails.managerTitle}",
-         "forename":"${householdOutcome.ceDetails.managerForename}",
-         "surname":"${householdOutcome.ceDetails.managerSurname}",
-         "telNo":"${householdOutcome.ceDetails.contactPhone}"
+        <#--needs to be added to acceptance test object then can uncomment test-->
+         <#--"title":"${householdOutcome.ceDetails.managerTitle}",-->
+         <#--"forename":"${householdOutcome.ceDetails.managerForename}",-->
+         <#--"surname":"${householdOutcome.ceDetails.managerSurname}",-->
+         <#--"telNo":"${householdOutcome.ceDetails.contactPhone}"-->
     }
     </#if>
 }

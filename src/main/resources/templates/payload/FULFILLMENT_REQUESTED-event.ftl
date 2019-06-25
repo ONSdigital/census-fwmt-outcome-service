@@ -2,10 +2,14 @@
     "fulfilment" : {
         "productCode": "${productCodeLookup}",
         "caseId" : "${householdOutcome.caseId}",
-        "individualCaseId": "${generateIndividualCaseId}",
+        <#if householdIndicator != 1>
+        "individualCaseId": "${individualCaseId}",
             "address": {},
             "contact": {
-                "telNo":"${grabContactNo}"
+                "forename":"${forename}"
+                "surname":"${surname}"
+                "telNo":"${telNo}"
             }
+        </#if>
     }
 }

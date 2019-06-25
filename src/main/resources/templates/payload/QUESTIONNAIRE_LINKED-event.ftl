@@ -1,6 +1,6 @@
 {
     "uac" : {
-        "questionnaireId":"${householdOutcome.questionnaireId}",
+        "questionnaireId":"${questionnaireId}",
         "caseId":"${householdOutcome.caseId}"
     }
 }
