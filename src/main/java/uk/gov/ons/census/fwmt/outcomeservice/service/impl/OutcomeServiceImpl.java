@@ -43,10 +43,10 @@ public class OutcomeServiceImpl implements OutcomeService {
 
       try {
         JsonNode rootNode = objectMapper.readTree(outcomeEvent);
-        JsonNode eventTypeNode = rootNode.get("Event").get("Type");
+        JsonNode eventTypeNode = rootNode.get("event").get("type");
         String eventType = eventTypeNode.asText();
 
-        JsonNode transactionIdNode = rootNode.get("transactionId");
+        JsonNode transactionIdNode = rootNode.get("event").get("transactionId");
         String transactionId = transactionIdNode.asText();
 
       if (eventType.equals("ADDRESS_NOT_VALID") || eventType.equals("ADDRESS_TYPE_CHANGED")) {
@@ -70,10 +70,10 @@ public class OutcomeServiceImpl implements OutcomeService {
       for (String outcomeEvent : processedFulfilmentRequests) {
         try {
           JsonNode rootNode = objectMapper.readTree(outcomeEvent);
-          JsonNode eventTypeNode = rootNode.get("Event").get("Type");
+          JsonNode eventTypeNode = rootNode.get("event").get("type");
           String eventType = eventTypeNode.asText();
 
-          JsonNode transactionIdNode = rootNode.get("transactionId");
+          JsonNode transactionIdNode = rootNode.get("event").get("transactionId");
           String transactionId = transactionIdNode.asText();
 
         if (eventType.equals("FULFILMENT_REQUESTED"))
