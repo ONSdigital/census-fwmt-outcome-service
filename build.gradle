@@ -62,8 +62,8 @@ dependencies {
 	compile('io.springfox:springfox-swagger-ui:2.9.2')
 	compile('io.springfox:springfox-bean-validators:2.9.2')
 
-// https://mvnrepository.com/artifact/org.freemarker/freemarker
-compile group: 'org.freemarker', name: 'freemarker', version: '2.3.28'
+	// https://mvnrepository.com/artifact/org.freemarker/freemarker
+	compile group: 'org.freemarker', name: 'freemarker', version: '2.3.28'
 
 	
 	compileOnly('org.projectlombok:lombok')
