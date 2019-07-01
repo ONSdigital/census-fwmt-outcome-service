@@ -64,7 +64,7 @@ public class OutcomeEventFactory {
 
   private void buildOutcome(HouseholdOutcome householdOutcome, OutcomeEvent outcomeEvent) throws GatewayException {
     switch (householdOutcome.getPrimaryOutcome()) {
-    case "No Valid Household":
+    case "Non Valid Household":
       getSecondaryNoValidHouseholdOutcome(householdOutcome, outcomeEvent);
       break;
     case "Contact Made":
