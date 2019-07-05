@@ -14,7 +14,7 @@ Requires RabbitMQ to start:
 
 	docker run --name rabbit -p 5671-5672:5671:5672 -p 15671-15672:15671-15672 -d rabbitmq:3.6-management
 
-To run:
+To run: 
 
     ./gradlew bootRun
 
