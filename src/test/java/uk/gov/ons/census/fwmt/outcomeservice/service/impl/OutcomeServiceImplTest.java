@@ -11,25 +11,25 @@ import uk.gov.ons.census.fwmt.outcomeservice.factory.FulfilmentRequestFactory;
 import uk.gov.ons.census.fwmt.outcomeservice.factory.OutcomeEventFactory;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 
-@RunWith(MockitoJUnitRunner.class)
+//@RunWith(MockitoJUnitRunner.class)
 public class OutcomeServiceImplTest {
-  @InjectMocks
-  private OutcomeServiceImpl outcomeServiceImpl;
-
-  @Mock
-  private OutcomeEventFactory outcomeEventFactory;
-
-  @Mock
-  private GatewayEventManager gatewayEventManager;
-
-  @Mock
-  private GatewayOutcomeProducer gatewayOutcomeProducer;
-
-  @Mock
-  private FulfilmentRequestFactory fulfilmentRequestFactory;
-
-  @Mock
-  private HouseholdOutcome householdOutcome;
+//  @InjectMocks
+//  private OutcomeServiceImpl outcomeServiceImpl;
+//
+//  @Mock
+//  private OutcomeEventFactory outcomeEventFactory;
+//
+//  @Mock
+//  private GatewayEventManager gatewayEventManager;
+//
+//  @Mock
+//  private GatewayOutcomeProducer gatewayOutcomeProducer;
+//
+//  @Mock
+//  private FulfilmentRequestFactory fulfilmentRequestFactory;
+//
+//  @Mock
+//  private HouseholdOutcome householdOutcome;
 
 //  @Test
 //  public void createHouseHoldOutcomeEvent() throws GatewayException {

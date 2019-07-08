@@ -19,17 +19,17 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+//@RunWith(MockitoJUnitRunner.class)
 public class GatewayOutcomeProducerTest {
 
-  @InjectMocks
-  GatewayOutcomeProducer gatewayOutcomeProducer;
-
-  @Mock
-  RabbitTemplate rabbitTemplate;
-
-  @Mock
-  ObjectMapper objectMapper;
+//  @InjectMocks
+//  GatewayOutcomeProducer gatewayOutcomeProducer;
+//
+//  @Mock
+//  RabbitTemplate rabbitTemplate;
+//
+//  @Mock
+//  ObjectMapper objectMapper;
 
 //  @Test
 //  public void sendAddressUpdateTest() throws JsonProcessingException, GatewayException {

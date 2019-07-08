@@ -23,15 +23,15 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static uk.gov.ons.ctp.integration.common.product.model.Product.RequestChannel.FIELD;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
 public class FulfilmentRequestFactoryTest {
 
-  @InjectMocks
-  private FulfilmentRequestFactory fulfilmentRequestFactory;
-
-  @Mock
-  private ProductReference productReference;
+//  @InjectMocks
+//  private FulfilmentRequestFactory fulfilmentRequestFactory;
+//
+//  @Mock
+//  private ProductReference productReference;
 
 //  @Test
 //  public void createFulfillmentRequestsForPaperHTest() throws GatewayException, CTPException {

@@ -15,15 +15,15 @@ import uk.gov.ons.ctp.common.error.CTPException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
 public class OutcomeEventFactoryTest {
 
-  @InjectMocks
-  private OutcomeEventFactory outcomeEventFactory;
-
-  @Mock
-  private BuildSecondaryOutcomeMaps buildSecondaryOutcomeMaps;
+//  @InjectMocks
+//  private OutcomeEventFactory outcomeEventFactory;
+//
+//  @Mock
+//  private BuildSecondaryOutcomeMaps buildSecondaryOutcomeMaps;
 
 //  @Test
 //  public void createContactMadeRefusalTest () throws GatewayException {
