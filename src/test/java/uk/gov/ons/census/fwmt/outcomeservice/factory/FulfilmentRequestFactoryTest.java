@@ -33,189 +33,189 @@ public class FulfilmentRequestFactoryTest {
   @Mock
   private ProductReference productReference;
 
-  @Test
-  public void createFulfillmentRequestsForPaperHTest() throws GatewayException, CTPException {
-    // Given
-    String productCode = "P_OR_H1";
-    HouseholdOutcome householdOutcome = new HouseholdOutcomeBuilder().createHouseholdOutcomeForPaperH();
-
-    List<Product> resultProductList = new ArrayList<>();
-    Product resultProduct = new Product();
-    resultProduct.setCaseType(Product.CaseType.HH);
-    resultProduct.setFulfilmentCode(productCode);
-    resultProductList.add(resultProduct);
-
-    Mockito.when(productReference.searchProducts(Mockito.any())).thenReturn(resultProductList);
-
-    // When
-    OutcomeEvent[] outcomeEvents = fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
-
-    // Then
-    assertEquals(householdOutcome.getCaseId(), outcomeEvents[0].getPayload().getFulfillment().getCaseId());
-    assertEquals(productCode, outcomeEvents[0].getPayload().getFulfillment().getProductCode());
-  }
-
-  @Test
-  public void createFulfillmentRequestsForPaperHCTest() throws GatewayException, CTPException {
-    // Given
-    String productCode = "P_OR_HC1";
-    HouseholdOutcome householdOutcome = new HouseholdOutcomeBuilder().createHouseholdOutcomeForPaperHC();
-
-    List<Product> resultProductList = new ArrayList<>();
-    Product resultProduct = new Product();
-    resultProduct.setCaseType(Product.CaseType.HH);
-    resultProduct.setFulfilmentCode(productCode);
-    resultProductList.add(resultProduct);
-
-    Mockito.when(productReference.searchProducts(Mockito.any())).thenReturn(resultProductList);
-
-    // When
-    OutcomeEvent[] outcomeEvents = fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
-
-    // Then
-    assertEquals(householdOutcome.getCaseId(), outcomeEvents[0].getPayload().getFulfillment().getCaseId());
-    assertEquals(productCode, outcomeEvents[0].getPayload().getFulfillment().getProductCode());
-  }
-
-  @Test
-  public void createFulfillmentRequestsForPaperITest() throws GatewayException, CTPException {
-    // Given
-    String productCode = "P_OR_I1";
-    HouseholdOutcome householdOutcome = new HouseholdOutcomeBuilder().createHouseholdOutcomeForPaperI();
-
-    List<Product> resultProductList = new ArrayList<>();
-    Product resultProduct = new Product();
-    resultProduct.setCaseType(Product.CaseType.HH);
-    resultProduct.setFulfilmentCode(productCode);
-    resultProductList.add(resultProduct);
-
-    Mockito.when(productReference.searchProducts(Mockito.any())).thenReturn(resultProductList);
-
-    // When
-    OutcomeEvent[] outcomeEvents = fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
-
-    // Then
-    assertEquals(householdOutcome.getCaseId(), outcomeEvents[0].getPayload().getFulfillment().getCaseId());
-    assertEquals(productCode, outcomeEvents[0].getPayload().getFulfillment().getProductCode());
-  }
-
-  @Test
-  public void createFulfillmentRequestsForPaperIncorrectQuestionnaireTypeTest() throws GatewayException, CTPException {
-    // Given
-    String productCode = "IncorrectTypeID";
-    HouseholdOutcome householdOutcome = new HouseholdOutcomeBuilder().createHouseholdOutcomeForPaperWithIncorrectQuestionnaireType();
-
-    List<Product> resultProductList = new ArrayList<>();
-    Product resultProduct = new Product();
-    resultProduct.setCaseType(Product.CaseType.HH);
-    resultProduct.setFulfilmentCode(productCode);
-    resultProductList.add(resultProduct);
-
-    Mockito.when(productReference.searchProducts(Mockito.any())).thenReturn(resultProductList);
-
-    // When
-    fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
-  }
-
-  @Test
-  public void createFulfillmentRequestsForHUACTextBackTest() throws GatewayException, CTPException {
-    // Given
-    String productCode = "UACHHT1";
-
-    HouseholdOutcome householdOutcome = new HouseholdOutcomeBuilder().createHouseholdOutcomeForHUACTextBack();
-
-    List<Product> resultProductList = new ArrayList<>();
-    Product resultProduct = new Product();
-    resultProduct.setFulfilmentCode(productCode);
-    resultProductList.add(resultProduct);
-
-    Mockito.when(productReference.searchProducts(Mockito.any())).thenReturn(resultProductList);
-
-    // When
-    OutcomeEvent[] outcomeEvents = fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
-
-    // Then
-    assertEquals(householdOutcome.getCaseId(), outcomeEvents[0].getPayload().getFulfillment().getCaseId());
-    assertEquals(productCode, outcomeEvents[0].getPayload().getFulfillment().getProductCode());
-  }
-
-  @Test
-  public void createFulfillmentRequestsForIUACTextBackTest() throws GatewayException, CTPException {
-    // Given
-    String productCode = "UACIT1";
-    HouseholdOutcome householdOutcome = new HouseholdOutcomeBuilder().createHouseholdOutcomeForIUACTextBack();
-
-    List<Product> resultProductList = new ArrayList<>();
-    Product resultProduct = new Product();
-    resultProduct.setFulfilmentCode(productCode);
-    resultProductList.add(resultProduct);
-
-    Mockito.when(productReference.searchProducts(Mockito.any())).thenReturn(resultProductList);
-
-    // When
-    OutcomeEvent[] outcomeEvents = fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
-
-    // Then
-    assertEquals(householdOutcome.getCaseId(), outcomeEvents[0].getPayload().getFulfillment().getCaseId());
-    assertEquals(productCode, outcomeEvents[0].getPayload().getFulfillment().getProductCode());
-  }
-
-  @Test
-  public void createFulfillmentRequestsForIUACTextBackNoNumberTest() throws GatewayException, CTPException {
-    // Given
-    String productCode = "IUAC1";
-    HouseholdOutcome householdOutcome = new HouseholdOutcomeBuilder().createHouseholdOutcomeForIUACTextBackWithNoNumber();
-
-    List<Product> resultProductList = new ArrayList<>();
-    Product resultProduct = new Product();
-    resultProduct.setFulfilmentCode(productCode);
-    resultProductList.add(resultProduct);
-
-    Mockito.when(productReference.searchProducts(Mockito.any())).thenReturn(resultProductList);
-
-    // When
-    fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
-  }
-
-  @Test
-  public void createFulfillmentRequestsForIUACTextBackWithIncorrectQuestionnaireTypeTest()
-      throws GatewayException, CTPException {
-    // Given
-    String productCode = "IncorrectTypeID";
-
-    HouseholdOutcome householdOutcome = new HouseholdOutcomeBuilder().createHouseholdOutcomeForIUACTextBackWithIncorrectQuestionnaireType();
-
-    List<Product> resultProductList = new ArrayList<>();
-    Product resultProduct = new Product();
-    resultProduct.setFulfilmentCode(productCode);
-    resultProductList.add(resultProduct);
-
-    Mockito.when(productReference.searchProducts(Mockito.any())).thenReturn(resultProductList);
-
-    // When
-    fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
-  }
-
-  @Test
-  public void createFulfillmentRequestsForWillCompleteTest() throws GatewayException {
-    // Given
-    HouseholdOutcome householdOutcome = new HouseholdOutcomeBuilder().createHouseholdOutcomeForWillComplete();
-
-    // When
-    OutcomeEvent[] outcomeEvents = fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
-
-    // Then
-    assertEquals(householdOutcome.getCaseId(), outcomeEvents[0].getPayload().getUac().getCaseId());
-    assertEquals(householdOutcome.getFulfillmentRequests().get(0).getQuestionnaireId(), outcomeEvents[0].getPayload().getUac().getQuestionnaireId());
-  }
-
-  @Test
-  public void createFulfillmentRequestsWithNoSecondaryRequestTest() throws GatewayException {
-    // Given
-    HouseholdOutcome householdOutcome = new HouseholdOutcomeBuilder().createHouseholdOutcomeWithNoSecondaryRequest();
-
-    // When
-    fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
-  }
+//  @Test
+//  public void createFulfillmentRequestsForPaperHTest() throws GatewayException, CTPException {
+//    // Given
+//    String productCode = "P_OR_H1";
+//    HouseholdOutcome householdOutcome = new HouseholdOutcomeBuilder().createHouseholdOutcomeForPaperH();
+//
+//    List<Product> resultProductList = new ArrayList<>();
+//    Product resultProduct = new Product();
+//    resultProduct.setCaseType(Product.CaseType.HH);
+//    resultProduct.setFulfilmentCode(productCode);
+//    resultProductList.add(resultProduct);
+//
+//    Mockito.when(productReference.searchProducts(Mockito.any())).thenReturn(resultProductList);
+//
+//    // When
+//    OutcomeEvent[] outcomeEvents = fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
+//
+//    // Then
+//    assertEquals(householdOutcome.getCaseId(), outcomeEvents[0].getPayload().getFulfillment().getCaseId());
+//    assertEquals(productCode, outcomeEvents[0].getPayload().getFulfillment().getProductCode());
+//  }
+//
+//  @Test
+//  public void createFulfillmentRequestsForPaperHCTest() throws GatewayException, CTPException {
+//    // Given
+//    String productCode = "P_OR_HC1";
+//    HouseholdOutcome householdOutcome = new HouseholdOutcomeBuilder().createHouseholdOutcomeForPaperHC();
+//
+//    List<Product> resultProductList = new ArrayList<>();
+//    Product resultProduct = new Product();
+//    resultProduct.setCaseType(Product.CaseType.HH);
+//    resultProduct.setFulfilmentCode(productCode);
+//    resultProductList.add(resultProduct);
+//
+//    Mockito.when(productReference.searchProducts(Mockito.any())).thenReturn(resultProductList);
+//
+//    // When
+//    OutcomeEvent[] outcomeEvents = fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
+//
+//    // Then
+//    assertEquals(householdOutcome.getCaseId(), outcomeEvents[0].getPayload().getFulfillment().getCaseId());
+//    assertEquals(productCode, outcomeEvents[0].getPayload().getFulfillment().getProductCode());
+//  }
+//
+//  @Test
+//  public void createFulfillmentRequestsForPaperITest() throws GatewayException, CTPException {
+//    // Given
+//    String productCode = "P_OR_I1";
+//    HouseholdOutcome householdOutcome = new HouseholdOutcomeBuilder().createHouseholdOutcomeForPaperI();
+//
+//    List<Product> resultProductList = new ArrayList<>();
+//    Product resultProduct = new Product();
+//    resultProduct.setCaseType(Product.CaseType.HH);
+//    resultProduct.setFulfilmentCode(productCode);
+//    resultProductList.add(resultProduct);
+//
+//    Mockito.when(productReference.searchProducts(Mockito.any())).thenReturn(resultProductList);
+//
+//    // When
+//    OutcomeEvent[] outcomeEvents = fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
+//
+//    // Then
+//    assertEquals(householdOutcome.getCaseId(), outcomeEvents[0].getPayload().getFulfillment().getCaseId());
+//    assertEquals(productCode, outcomeEvents[0].getPayload().getFulfillment().getProductCode());
+//  }
+//
+//  @Test
+//  public void createFulfillmentRequestsForPaperIncorrectQuestionnaireTypeTest() throws GatewayException, CTPException {
+//    // Given
+//    String productCode = "IncorrectTypeID";
+//    HouseholdOutcome householdOutcome = new HouseholdOutcomeBuilder().createHouseholdOutcomeForPaperWithIncorrectQuestionnaireType();
+//
+//    List<Product> resultProductList = new ArrayList<>();
+//    Product resultProduct = new Product();
+//    resultProduct.setCaseType(Product.CaseType.HH);
+//    resultProduct.setFulfilmentCode(productCode);
+//    resultProductList.add(resultProduct);
+//
+//    Mockito.when(productReference.searchProducts(Mockito.any())).thenReturn(resultProductList);
+//
+//    // When
+//    fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
+//  }
+//
+//  @Test
+//  public void createFulfillmentRequestsForHUACTextBackTest() throws GatewayException, CTPException {
+//    // Given
+//    String productCode = "UACHHT1";
+//
+//    HouseholdOutcome householdOutcome = new HouseholdOutcomeBuilder().createHouseholdOutcomeForHUACTextBack();
+//
+//    List<Product> resultProductList = new ArrayList<>();
+//    Product resultProduct = new Product();
+//    resultProduct.setFulfilmentCode(productCode);
+//    resultProductList.add(resultProduct);
+//
+//    Mockito.when(productReference.searchProducts(Mockito.any())).thenReturn(resultProductList);
+//
+//    // When
+//    OutcomeEvent[] outcomeEvents = fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
+//
+//    // Then
+//    assertEquals(householdOutcome.getCaseId(), outcomeEvents[0].getPayload().getFulfillment().getCaseId());
+//    assertEquals(productCode, outcomeEvents[0].getPayload().getFulfillment().getProductCode());
+//  }
+//
+//  @Test
+//  public void createFulfillmentRequestsForIUACTextBackTest() throws GatewayException, CTPException {
+//    // Given
+//    String productCode = "UACIT1";
+//    HouseholdOutcome householdOutcome = new HouseholdOutcomeBuilder().createHouseholdOutcomeForIUACTextBack();
+//
+//    List<Product> resultProductList = new ArrayList<>();
+//    Product resultProduct = new Product();
+//    resultProduct.setFulfilmentCode(productCode);
+//    resultProductList.add(resultProduct);
+//
+//    Mockito.when(productReference.searchProducts(Mockito.any())).thenReturn(resultProductList);
+//
+//    // When
+//    OutcomeEvent[] outcomeEvents = fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
+//
+//    // Then
+//    assertEquals(householdOutcome.getCaseId(), outcomeEvents[0].getPayload().getFulfillment().getCaseId());
+//    assertEquals(productCode, outcomeEvents[0].getPayload().getFulfillment().getProductCode());
+//  }
+//
+//  @Test
+//  public void createFulfillmentRequestsForIUACTextBackNoNumberTest() throws GatewayException, CTPException {
+//    // Given
+//    String productCode = "IUAC1";
+//    HouseholdOutcome householdOutcome = new HouseholdOutcomeBuilder().createHouseholdOutcomeForIUACTextBackWithNoNumber();
+//
+//    List<Product> resultProductList = new ArrayList<>();
+//    Product resultProduct = new Product();
+//    resultProduct.setFulfilmentCode(productCode);
+//    resultProductList.add(resultProduct);
+//
+//    Mockito.when(productReference.searchProducts(Mockito.any())).thenReturn(resultProductList);
+//
+//    // When
+//    fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
+//  }
+//
+//  @Test
+//  public void createFulfillmentRequestsForIUACTextBackWithIncorrectQuestionnaireTypeTest()
+//      throws GatewayException, CTPException {
+//    // Given
+//    String productCode = "IncorrectTypeID";
+//
+//    HouseholdOutcome householdOutcome = new HouseholdOutcomeBuilder().createHouseholdOutcomeForIUACTextBackWithIncorrectQuestionnaireType();
+//
+//    List<Product> resultProductList = new ArrayList<>();
+//    Product resultProduct = new Product();
+//    resultProduct.setFulfilmentCode(productCode);
+//    resultProductList.add(resultProduct);
+//
+//    Mockito.when(productReference.searchProducts(Mockito.any())).thenReturn(resultProductList);
+//
+//    // When
+//    fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
+//  }
+//
+//  @Test
+//  public void createFulfillmentRequestsForWillCompleteTest() throws GatewayException {
+//    // Given
+//    HouseholdOutcome householdOutcome = new HouseholdOutcomeBuilder().createHouseholdOutcomeForWillComplete();
+//
+//    // When
+//    OutcomeEvent[] outcomeEvents = fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
+//
+//    // Then
+//    assertEquals(householdOutcome.getCaseId(), outcomeEvents[0].getPayload().getUac().getCaseId());
+//    assertEquals(householdOutcome.getFulfillmentRequests().get(0).getQuestionnaireId(), outcomeEvents[0].getPayload().getUac().getQuestionnaireId());
+//  }
+//
+//  @Test
+//  public void createFulfillmentRequestsWithNoSecondaryRequestTest() throws GatewayException {
+//    // Given
+//    HouseholdOutcome householdOutcome = new HouseholdOutcomeBuilder().createHouseholdOutcomeWithNoSecondaryRequest();
+//
+//    // When
+//    fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
+//  }
 
 }
