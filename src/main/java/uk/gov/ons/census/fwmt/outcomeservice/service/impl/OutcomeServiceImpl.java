@@ -49,16 +49,14 @@ public class OutcomeServiceImpl implements OutcomeService {
         JsonNode transactionIdNode = rootNode.get("event").get("transactionId");
         String transactionId = transactionIdNode.asText();
 
-      if (eventType.equals("ADDRESS_NOT_VALID") || eventType.equals("ADDRESS_TYPE_CHANGED")) {
-        gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent, transactionId);
-
-      } else if (eventType.equals("REFUSAL_RECEIVED")) {
-        gatewayOutcomeProducer.sendRespondentRefusal(outcomeEvent, transactionId);
-      }
-
-      gatewayEventManager
-            .triggerEvent(String.valueOf(householdOutcome.getCaseId()),
-              OUTCOME_SENT_RM, LocalTime.now());
+        if (eventType.equals("ADDRESS_NOT_VALID") || eventType.equals("ADDRESS_TYPE_CHANGED")) {
+          gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent, transactionId);
+  
+        } else if (eventType.equals("REFUSAL_RECEIVED")) {
+          gatewayOutcomeProducer.sendRespondentRefusal(outcomeEvent, transactionId);
+        }
+  
+        gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()),OUTCOME_SENT_RM, LocalTime.now());
       } catch (IOException e) {
         e.printStackTrace();
       }

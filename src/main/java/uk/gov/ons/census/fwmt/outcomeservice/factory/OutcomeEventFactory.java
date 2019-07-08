@@ -21,10 +21,10 @@ public class OutcomeEventFactory {
   public String createOutcomeEvent(HouseholdOutcome householdOutcome) throws GatewayException {
     String outcomeEvent;
     switch (householdOutcome.getPrimaryOutcome()) {
-    case "No Valid Household":
+    case "Non-valid household":
       outcomeEvent = buildAddressNotValidOutcome(householdOutcome);
       break;
-    case "Contact Made":
+    case "Contact made":
       outcomeEvent = getContactMadeSecondaryOutcome(householdOutcome);
       break;
     default:
@@ -37,11 +37,11 @@ public class OutcomeEventFactory {
   private String getContactMadeSecondaryOutcome(HouseholdOutcome householdOutcome) throws GatewayException {
     String outcomeEvent;
     switch (householdOutcome.getSecondaryOutcome()) {
-    case "Split Address":
+    case "Split address":
       outcomeEvent = buildAddressNotValidOutcome(householdOutcome);
       break;
-    case "Hard Refusal":
-    case "Extraordinary Refusal":
+    case "Hard refusal":
+    case "Extraordinary refusal":
       outcomeEvent = buildRefusalOutcome(householdOutcome);
       break;
     default:
@@ -54,7 +54,7 @@ public class OutcomeEventFactory {
   private String buildAddressNotValidOutcome(HouseholdOutcome householdOutcome) {
     String outcomeEvent;
 
-    if (householdOutcome.getSecondaryOutcome().contains("Property is a CE")) {
+    if (householdOutcome.getSecondaryOutcome().startsWith("CE -")) {
       outcomeEvent = buildCEOutcome(householdOutcome);
     } else {
       Map<String, Object> root = new HashMap<>();

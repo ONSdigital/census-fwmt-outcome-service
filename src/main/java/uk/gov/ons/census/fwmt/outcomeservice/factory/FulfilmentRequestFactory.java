@@ -37,19 +37,30 @@ public class FulfilmentRequestFactory {
         outcomeEvents.add(event);
       } else {
         switch (householdOutcome.getSecondaryOutcome()) {
-        case "Paper Questionnaire required by post":
-        case "Paper H Questionnaire required by post":
-        case "Paper HC Questionnaire required by post":
-        case "Paper I Questionnaire required by post":
-          event = createQuestionnaireRequiredByPostEvent(householdOutcome, fulfillmentRequest);
-          outcomeEvents.add(event);
-          break;
+        case "Will complete":
+        case "Have completed":
+        case "Collect completed questionnaire":
+        case "Asked to call back another time":
+        case "Holiday home":
+        case "Second residence":
+        case "Requested assistance":
+//        case "Paper questionnaire required by post":
+        case "Paper H questionnaire issued on doorstep":
+        case "Paper H questionnaire required by post":
+        case "Paper HC questionnaire required by post":
+        case "Paper I questionnaire required by post":
         case "HUAC required by text":
         case "IUAC required by text":
         case "UAC required by text":
-          event = createUacRequiredByTextEvent(householdOutcome, fulfillmentRequest);
+          event = createQuestionnaireRequiredByPostEvent(householdOutcome, fulfillmentRequest);
           outcomeEvents.add(event);
           break;
+//        case "HUAC required by text":
+//        case "IUAC required by text":
+//        case "UAC required by text":
+//          event = createUacRequiredByTextEvent(householdOutcome, fulfillmentRequest);
+//          outcomeEvents.add(event);
+//          break;
         default:
           log.error("Failed to find valid Secondary Outcome: {}", householdOutcome.getSecondaryOutcome());
           break;
@@ -81,20 +92,17 @@ public class FulfilmentRequestFactory {
     Map<String, Object> root = new HashMap<>();
     root.put("householdOutcome", householdOutcome);
     root.put("productCodeLookup",product.getFulfilmentCode());
+    root.put("telNo", fulfillmentRequest.getRequesterPhone());
 
     if (product.getCaseType().equals(HI)){
       root.put("householdIndicator", 0);
       root.put("individualCaseId", generateUUID());
-      root.put("title", fulfillmentRequest.getRequesterTitle());
-      root.put("forename", fulfillmentRequest.getRequesterForename());
-      root.put("surname", fulfillmentRequest.getRequesterSurname());
-      root.put("telNo", fulfillmentRequest.getRequesterPhone());
     } else {
       root.put("householdIndicator", 1);
 
     }
 
-    return TemplateCreator.createOutcomeMessage("FULFILLMENT_REQUESTED",root);
+    return TemplateCreator.createOutcomeMessage("FULFILMENT_REQUESTED",root);
   }
 
   private String createQuestionnaireLinkedEvent(HouseholdOutcome householdOutcome,

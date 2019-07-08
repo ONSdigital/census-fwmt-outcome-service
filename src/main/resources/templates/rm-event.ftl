@@ -6,8 +6,8 @@
     "transactionId" : "${householdOutcome.transactionId}",
     "dateTime" : "${householdOutcome.eventDate}"
     }
-  },
-  "payload" : 
+  ,
+  "payload" : { 
 ${payload}
- 
+ }
 }

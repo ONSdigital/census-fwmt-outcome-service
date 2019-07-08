@@ -1,8 +1,8 @@
-{
+
   "refusal" : {
-    "type" : "${refusalType}",
-    "collectionCase" : {
-      "id" : "${householdOutcome.caseId}",
-    }
+     "type" : "${refusalType}"
+  },
+  "collectionCase" : {
+        "id" : "${householdOutcome.caseId}"
   }
-}
+

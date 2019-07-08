@@ -282,7 +282,7 @@ public class HouseholdOutcomeBuilder {
     householdOutcome.setCaseId(UUID.fromString("6c9b1177-3e03-4060-b6db-f6a8456292ef"));
     householdOutcome.setCaseReference("caseReference");
     householdOutcome.setPrimaryOutcome("Contact Made");
-    householdOutcome.setSecondaryOutcome("Split Address");
+    householdOutcome.setSecondaryOutcome("Split address");
     householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
 
     return householdOutcome;
