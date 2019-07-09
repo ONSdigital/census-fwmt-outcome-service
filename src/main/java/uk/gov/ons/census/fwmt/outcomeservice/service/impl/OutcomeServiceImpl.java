@@ -1,9 +1,10 @@
 package uk.gov.ons.census.fwmt.outcomeservice.service.impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
-import uk.gov.ons.census.fwmt.common.data.rm.OutcomeEvent;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.factory.FulfilmentRequestFactory;
@@ -11,7 +12,9 @@ import uk.gov.ons.census.fwmt.outcomeservice.factory.OutcomeEventFactory;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
 
+import java.io.IOException;
 import java.time.LocalTime;
+import java.util.List;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT_RM;
 
@@ -30,32 +33,55 @@ public class OutcomeServiceImpl implements OutcomeService {
   @Autowired
   private FulfilmentRequestFactory fulfilmentRequestFactory;
 
+  @Autowired
+  private ObjectMapper objectMapper;
+
   public void createHouseHoldOutcomeEvent(HouseholdOutcome householdOutcome) throws GatewayException {
+
     if (householdOutcome.getFulfillmentRequests() == null) {
-      OutcomeEvent outcomeEvent = outcomeEventFactory.createOutcomeEvent(householdOutcome);
+      String outcomeEvent = outcomeEventFactory.createOutcomeEvent(householdOutcome);
 
-      if (outcomeEvent.getEvent().getType().equals("ADDRESS_NOT_VALID") || outcomeEvent.getEvent().getType()
-          .equals("ADDRESS_TYPE_CHANGED")) {
-        gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent);
+      try {
+        JsonNode rootNode = objectMapper.readTree(outcomeEvent);
+        JsonNode eventTypeNode = rootNode.get("event").get("type");
+        String eventType = eventTypeNode.asText();
 
-      } else if (outcomeEvent.getEvent().getType().equals("REFUSAL_RECEIVED")) {
-        gatewayOutcomeProducer.sendRespondentRefusal(outcomeEvent);
+        JsonNode transactionIdNode = rootNode.get("event").get("transactionId");
+        String transactionId = transactionIdNode.asText();
+
+        if (eventType.equals("ADDRESS_NOT_VALID") || eventType.equals("ADDRESS_TYPE_CHANGED")) {
+          gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent, transactionId);
+  
+        } else if (eventType.equals("REFUSAL_RECEIVED")) {
+          gatewayOutcomeProducer.sendRespondentRefusal(outcomeEvent, transactionId);
+        }
+  
+        gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()),OUTCOME_SENT_RM, LocalTime.now());
+      } catch (IOException e) {
+        e.printStackTrace();
       }
-
-      gatewayEventManager
-          .triggerEvent(String.valueOf(outcomeEvent.getPayload().getInvalidAddress().getCollectionCase().getId()),
-              OUTCOME_SENT_RM, LocalTime.now());
 
     } else if (!householdOutcome.getFulfillmentRequests().isEmpty()) {
 
-      OutcomeEvent[] processedFulfilmentRequests = fulfilmentRequestFactory.createFulfilmentEvents(householdOutcome);
+      List<String> processedFulfilmentRequests = fulfilmentRequestFactory.createFulfilmentRequestEvent(householdOutcome);
 
-      for (OutcomeEvent outcomeEvent : processedFulfilmentRequests) {
-        if (outcomeEvent.getEvent().getType().equals("FULFILMENT_REQUESTED"))
-          gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent);
+      for (String outcomeEvent : processedFulfilmentRequests) {
+        try {
+          JsonNode rootNode = objectMapper.readTree(outcomeEvent);
+          JsonNode eventTypeNode = rootNode.get("event").get("type");
+          String eventType = eventTypeNode.asText();
 
-        if (outcomeEvent.getEvent().getType().equals("QUESTIONNAIRE_LINKED"))
-          gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent);
+          JsonNode transactionIdNode = rootNode.get("event").get("transactionId");
+          String transactionId = transactionIdNode.asText();
+
+        if (eventType.equals("FULFILMENT_REQUESTED"))
+          gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, transactionId);
+
+        if (eventType.equals("QUESTIONNAIRE_LINKED"))
+          gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, transactionId);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
       }
     }
   }

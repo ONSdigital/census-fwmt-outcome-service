@@ -5,12 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.data.comet.FulfillmentRequest;
 import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
-import uk.gov.ons.census.fwmt.common.data.rm.Contact;
-import uk.gov.ons.census.fwmt.common.data.rm.Event;
-import uk.gov.ons.census.fwmt.common.data.rm.Fulfillment;
-import uk.gov.ons.census.fwmt.common.data.rm.OutcomeEvent;
-import uk.gov.ons.census.fwmt.common.data.rm.Payload;
-import uk.gov.ons.census.fwmt.common.data.rm.Uac;
 import uk.gov.ons.ctp.common.error.CTPException;
 import uk.gov.ons.ctp.integration.common.product.ProductReference;
 import uk.gov.ons.ctp.integration.common.product.model.Product;
@@ -18,8 +12,11 @@ import uk.gov.ons.ctp.integration.common.product.model.Product;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 import static uk.gov.ons.ctp.integration.common.product.model.Product.CaseType.HI;
 import static uk.gov.ons.ctp.integration.common.product.model.Product.RequestChannel.FIELD;
@@ -31,123 +28,103 @@ public class FulfilmentRequestFactory {
   @Autowired
   private ProductReference productReference;
 
-  public OutcomeEvent[] createFulfilmentEvents(HouseholdOutcome householdOutcome) {
-    return getFulfilmentRequest(householdOutcome);
-  }
-
-  private OutcomeEvent buildFulfilmentPayload(HouseholdOutcome householdOutcome) {
-    OutcomeEvent outcomeEvent = new OutcomeEvent();
-    Payload payload = new Payload();
-    Fulfillment fulfillment = new Fulfillment();
-    Contact contact = new Contact();
-
-    fulfillment.setContact(contact);
-    fulfillment.setCaseId(householdOutcome.getCaseId());
-    payload.setFulfillment(fulfillment);
-
-    outcomeEvent.setPayload(payload);
-
-    Event event = new Event();
-    event.setType("FULFILMENT_REQUESTED");
-    event.setSource("FIELDWORK_GATEWAY");
-    event.setChannel("FIELD");
-    event.setTransactionId(householdOutcome.getTransactionId());
-    event.setDateTime(householdOutcome.getEventDate());
-    outcomeEvent.setEvent(event);
-
-    return outcomeEvent;
-  }
-
-  private OutcomeEvent buildUacPayload(HouseholdOutcome householdOutcome) {
-    OutcomeEvent outcomeEvent = new OutcomeEvent();
-    Payload payload = new Payload();
-    Uac uac = new Uac();
-
-    uac.setCaseId(householdOutcome.getCaseId());
-    payload.setUac(uac);
-
-    outcomeEvent.setPayload(payload);
-
-    Event event = new Event();
-    event.setType("QUESTIONNAIRE_LINKED");
-    event.setSource("FIELDWORK_GATEWAY");
-    event.setChannel("FIELD");
-    event.setTransactionId(householdOutcome.getTransactionId());
-    event.setDateTime(householdOutcome.getEventDate());
-    outcomeEvent.setEvent(event);
-
-    return outcomeEvent;
-  }
-
-  private OutcomeEvent[] getFulfilmentRequest(HouseholdOutcome householdOutcome) {
-    List<OutcomeEvent> outcomeEventList = new ArrayList<>();
+  public List<String> createFulfilmentRequestEvent(HouseholdOutcome householdOutcome) {
+    List<String> outcomeEvents = new ArrayList<>();
     for (FulfillmentRequest fulfillmentRequest : householdOutcome.getFulfillmentRequests()) {
-      OutcomeEvent outcomeEvent;
-      switch (householdOutcome.getSecondaryOutcome()) {
-      case "Paper Questionnaire required by post":
-      case "Paper H Questionnaire required by post":
-      case "Paper HC Questionnaire required by post":
-      case "Paper I Questionnaire required by post":
-        outcomeEvent = buildFulfilmentPayload(householdOutcome);
-        outcomeEventList.add(getQuestionnaireByPost(outcomeEvent, fulfillmentRequest));
-        break;
-      case "HUAC required by text":
-      case "IUAC required by text":
-      case "UAC required by text":
-        outcomeEvent = buildFulfilmentPayload(householdOutcome);
-        outcomeEventList.add(getUacByText(outcomeEvent, fulfillmentRequest));
-        break;
-      case "Paper Questionnaire issued":
-      case "Paper H Questionnaire issued":
-      case "Will Complete":
-      case "Have Completed":
-      case "Collected completed questionnaire":
-      case "Call back another time":
-      case "Holiday home":
-      case "Second residence":
-      case "Requested assistance":
-        outcomeEvent = buildUacPayload(householdOutcome);
-        outcomeEvent.getPayload().getUac().setQuestionnaireId(fulfillmentRequest.getQuestionnaireId());
-        outcomeEventList.add(outcomeEvent);
-        break;
-      default:
-        log.error("Failed to find valid Secondary Outcome: {}", householdOutcome.getSecondaryOutcome());
-        break;
+      String event;
+      if (isQuestionnaireLinked(fulfillmentRequest)){
+        event = createQuestionnaireLinkedEvent(householdOutcome, fulfillmentRequest);
+        outcomeEvents.add(event);
+      } else {
+        switch (householdOutcome.getSecondaryOutcome()) {
+        case "Will complete":
+        case "Have completed":
+        case "Collect completed questionnaire":
+        case "Asked to call back another time":
+        case "Holiday home":
+        case "Second residence":
+        case "Requested assistance":
+//        case "Paper questionnaire required by post":
+        case "Paper H questionnaire issued on doorstep":
+        case "Paper H questionnaire required by post":
+        case "Paper HC questionnaire required by post":
+        case "Paper I questionnaire required by post":
+        case "HUAC required by text":
+        case "IUAC required by text":
+        case "UAC required by text":
+          event = createQuestionnaireRequiredByPostEvent(householdOutcome, fulfillmentRequest);
+          outcomeEvents.add(event);
+          break;
+//        case "HUAC required by text":
+//        case "IUAC required by text":
+//        case "UAC required by text":
+//          event = createUacRequiredByTextEvent(householdOutcome, fulfillmentRequest);
+//          outcomeEvents.add(event);
+//          break;
+        default:
+          log.error("Failed to find valid Secondary Outcome: {}", householdOutcome.getSecondaryOutcome());
+          break;
+        }
       }
     }
-    return outcomeEventList.toArray(new OutcomeEvent[0]);
-  }
-
-  private OutcomeEvent getQuestionnaireByPost(OutcomeEvent outcomeEvent, FulfillmentRequest fulfillmentRequest) {
-
-    Product product = getPackCodeFromQuestionnaireType(fulfillmentRequest);
-
-    if (product.getCaseType().equals(HI)) {
-      outcomeEvent.getPayload().getFulfillment().getContact().setTitle(fulfillmentRequest.getRequesterTitle());
-      outcomeEvent.getPayload().getFulfillment().getContact().setForename(fulfillmentRequest.getRequesterForename());
-      outcomeEvent.getPayload().getFulfillment().getContact().setSurname(fulfillmentRequest.getRequesterSurname());
-
-      outcomeEvent.getPayload().getFulfillment().setProductCode(product.getFulfilmentCode());
-    } else {
-      outcomeEvent.getPayload().getFulfillment().setProductCode(product.getFulfilmentCode());
+    return outcomeEvents;
     }
 
-    return outcomeEvent;
+  private String createUacRequiredByTextEvent(HouseholdOutcome householdOutcome, FulfillmentRequest fulfillmentRequest) {
+    Product product = getProductFromQuestionnaireType(fulfillmentRequest);
+    Map<String, Object> root = new HashMap<>();
+    root.put("householdOutcome", householdOutcome);
+    root.put("productCodeLookup",product.getFulfilmentCode());
+
+    if (product.getCaseType().equals(HI)){
+      root.put("householdIndicator", 0);
+      root.put("individualCaseId", generateUUID());
+      root.put("telNo", fulfillmentRequest.getRequesterPhone());
+    } else {
+      root.put("householdIndicator", 1);
+    }
+
+    return TemplateCreator.createOutcomeMessage("FULFILMENT_REQUESTED",root);
   }
 
-  private OutcomeEvent getUacByText(OutcomeEvent outcomeEvent, FulfillmentRequest fulfillmentRequest) {
-    Product product = getPackCodeFromQuestionnaireType(fulfillmentRequest);
+  private String createQuestionnaireRequiredByPostEvent(HouseholdOutcome householdOutcome, FulfillmentRequest fulfillmentRequest) {
+    Product product = getProductFromQuestionnaireType(fulfillmentRequest);
+    Map<String, Object> root = new HashMap<>();
+    root.put("householdOutcome", householdOutcome);
+    root.put("productCodeLookup",product.getFulfilmentCode());
+    root.put("telNo", fulfillmentRequest.getRequesterPhone());
 
-    outcomeEvent.getPayload().getFulfillment()
-        .setProductCode(product.getFulfilmentCode());
+    if (product.getCaseType().equals(HI)){
+      root.put("householdIndicator", 0);
+      root.put("individualCaseId", generateUUID());
+    } else {
+      root.put("householdIndicator", 1);
 
-    outcomeEvent.getPayload().getFulfillment().getContact().setTelNo(fulfillmentRequest.getRequesterPhone());
+    }
 
-    return outcomeEvent;
+    return TemplateCreator.createOutcomeMessage("FULFILMENT_REQUESTED",root);
+  }
+
+  private String createQuestionnaireLinkedEvent(HouseholdOutcome householdOutcome,
+      FulfillmentRequest fulfillmentRequest) {
+    Map<String, Object> root = new HashMap<>();
+    root.put("householdOutcome", householdOutcome);
+    root.put("questionnaireId", fulfillmentRequest.getQuestionnaireId());
+    return TemplateCreator.createOutcomeMessage("QUESTIONNAIRE_LINKED",root);
+  }
+
+  private boolean isQuestionnaireLinked(FulfillmentRequest fulfillmentRequest) {
+    return (fulfillmentRequest.getQuestionnaireId()!=null);
+  }
+
+  private String generateUUID() {
+    String generatedUUID;
+    generatedUUID = String.valueOf(UUID.randomUUID());
+    return generatedUUID;
   }
 
   @Nonnull
-  private Product getPackCodeFromQuestionnaireType(FulfillmentRequest fulfillmentRequest) {
+  private Product getProductFromQuestionnaireType(FulfillmentRequest fulfillmentRequest) {
     Product product = new Product();
     List<Product.RequestChannel> requestChannels = Collections.singletonList(FIELD);
 

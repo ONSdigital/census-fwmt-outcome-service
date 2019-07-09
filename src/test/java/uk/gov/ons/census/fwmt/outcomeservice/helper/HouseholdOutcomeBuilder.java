@@ -1,17 +1,22 @@
 package uk.gov.ons.census.fwmt.outcomeservice.helper;
 
-import uk.gov.ons.census.fwmt.common.data.comet.CeDetails;
-import uk.gov.ons.census.fwmt.common.data.comet.FulfillmentRequest;
-import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
-
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import uk.gov.ons.census.fwmt.common.data.comet.CeDetails;
+import uk.gov.ons.census.fwmt.common.data.comet.FulfillmentRequest;
+import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
+
 public class HouseholdOutcomeBuilder {
 
-  public HouseholdOutcome createHouseholdOutcomeForPaperH() {
+  public static HouseholdOutcome createHouseholdOutcomeForPaperH() {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
@@ -35,7 +40,7 @@ public class HouseholdOutcomeBuilder {
     return householdOutcome;
   }
 
-  public HouseholdOutcome createHouseholdOutcomeForPaperHC() {
+  public static HouseholdOutcome createHouseholdOutcomeForPaperHC() {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
@@ -59,7 +64,7 @@ public class HouseholdOutcomeBuilder {
     return householdOutcome;
   }
 
-  public HouseholdOutcome createHouseholdOutcomeForPaperI() {
+  public static HouseholdOutcome createHouseholdOutcomeForPaperI() {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
@@ -83,7 +88,7 @@ public class HouseholdOutcomeBuilder {
     return householdOutcome;
   }
 
-  public HouseholdOutcome createHouseholdOutcomeForPaperWithIncorrectQuestionnaireType() {
+  public static HouseholdOutcome createHouseholdOutcomeForPaperWithIncorrectQuestionnaireType() {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
@@ -107,7 +112,7 @@ public class HouseholdOutcomeBuilder {
     return householdOutcome;
   }
 
-  public HouseholdOutcome createHouseholdOutcomeForHUACTextBack() {
+  public static HouseholdOutcome createHouseholdOutcomeForHUACTextBack() {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
@@ -132,7 +137,7 @@ public class HouseholdOutcomeBuilder {
     return householdOutcome;
   }
 
-  public HouseholdOutcome createHouseholdOutcomeForIUACTextBack() {
+  public static HouseholdOutcome createHouseholdOutcomeForIUACTextBack() {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
@@ -157,7 +162,7 @@ public class HouseholdOutcomeBuilder {
     return householdOutcome;
   }
 
-  public HouseholdOutcome createHouseholdOutcomeForIUACTextBackWithNoNumber() {
+  public static HouseholdOutcome createHouseholdOutcomeForIUACTextBackWithNoNumber() {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
@@ -182,7 +187,7 @@ public class HouseholdOutcomeBuilder {
     return householdOutcome;
   }
 
-  public HouseholdOutcome createHouseholdOutcomeForIUACTextBackWithIncorrectQuestionnaireType() {
+  public static HouseholdOutcome createHouseholdOutcomeForIUACTextBackWithIncorrectQuestionnaireType() {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
@@ -207,7 +212,7 @@ public class HouseholdOutcomeBuilder {
     return householdOutcome;
   }
 
-  public HouseholdOutcome createHouseholdOutcomeForWillComplete() {
+  public static HouseholdOutcome createHouseholdOutcomeForWillComplete() {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
@@ -230,7 +235,7 @@ public class HouseholdOutcomeBuilder {
     return householdOutcome;
   }
 
-  public HouseholdOutcome createHouseholdOutcomeWithNoSecondaryRequest() {
+  public static HouseholdOutcome createHouseholdOutcomeWithNoSecondaryRequest() {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
@@ -253,7 +258,7 @@ public class HouseholdOutcomeBuilder {
     return householdOutcome;
   }
 
-  public HouseholdOutcome createContactMadeHouseholdHardRefusal() {
+  public static HouseholdOutcome createContactMadeHouseholdHardRefusal() {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
@@ -267,7 +272,8 @@ public class HouseholdOutcomeBuilder {
 
     return householdOutcome;
   }
-  public HouseholdOutcome createContactMadeHouseholdSplitAddress() {
+
+  public static HouseholdOutcome createContactMadeHouseholdSplitAddress() {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
@@ -276,13 +282,13 @@ public class HouseholdOutcomeBuilder {
     householdOutcome.setCaseId(UUID.fromString("6c9b1177-3e03-4060-b6db-f6a8456292ef"));
     householdOutcome.setCaseReference("caseReference");
     householdOutcome.setPrimaryOutcome("Contact Made");
-    householdOutcome.setSecondaryOutcome("Split Address");
+    householdOutcome.setSecondaryOutcome("Split address");
     householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
 
     return householdOutcome;
   }
 
-  public HouseholdOutcome createContactMadeHouseholdIncorrectSecondaryRequest() {
+  public static HouseholdOutcome createContactMadeHouseholdIncorrectSecondaryRequest() {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
@@ -297,7 +303,7 @@ public class HouseholdOutcomeBuilder {
     return householdOutcome;
   }
 
-  public HouseholdOutcome createNoValidHouseholdDerelict() {
+  public static HouseholdOutcome createNoValidHouseholdDerelict() {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
@@ -312,7 +318,7 @@ public class HouseholdOutcomeBuilder {
     return householdOutcome;
   }
 
-  public HouseholdOutcome createNoValidHouseholdIncorrectSecondaryRequest() {
+  public static HouseholdOutcome createNoValidHouseholdIncorrectSecondaryRequest() {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
@@ -327,7 +333,7 @@ public class HouseholdOutcomeBuilder {
     return householdOutcome;
   }
 
-  public HouseholdOutcome createNoValidHouseholdIncorrectPrimaryRequest() {
+  public static HouseholdOutcome createNoValidHouseholdIncorrectPrimaryRequest() {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
@@ -342,7 +348,7 @@ public class HouseholdOutcomeBuilder {
     return householdOutcome;
   }
 
-  public HouseholdOutcome createCENoValidAddressContactMade() {
+  public static HouseholdOutcome createCENoValidAddressContactMade() {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
     CeDetails ceDetails = new CeDetails();
@@ -367,7 +373,7 @@ public class HouseholdOutcomeBuilder {
     return householdOutcome;
   }
 
-  public HouseholdOutcome createCENoValidAddressNoContactMade() {
+  public static HouseholdOutcome createCENoValidAddressNoContactMade() {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
     CeDetails ceDetails = new CeDetails();
@@ -386,4 +392,83 @@ public class HouseholdOutcomeBuilder {
 
     return householdOutcome;
   }
+  
+//  public static void main(String[] args) throws JsonGenerationException, JsonMappingException, IOException {
+//    ObjectMapper mapper = new ObjectMapper();  
+//    
+//    HouseholdOutcome householdOutcome1 = createHouseholdOutcomeForPaperH();
+//      String ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome1);
+//      System.out.println(ho);
+//      
+//      
+//      HouseholdOutcome householdOutcome2 = createHouseholdOutcomeForPaperHC();
+//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome2);
+//      System.out.println(ho);
+//      
+//      HouseholdOutcome householdOutcome3 = createHouseholdOutcomeForPaperI();
+//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome3);
+//      System.out.println(ho);
+//      
+//      HouseholdOutcome householdOutcome4 = createHouseholdOutcomeForPaperWithIncorrectQuestionnaireType();
+//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome4);
+//      System.out.println(ho);
+//      
+//      HouseholdOutcome householdOutcome5 = createHouseholdOutcomeForHUACTextBack();
+//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome5);
+//      System.out.println(ho);
+//      
+//      HouseholdOutcome householdOutcome6 = createHouseholdOutcomeForIUACTextBack();
+//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome6);
+//      System.out.println(ho);
+//      
+//      HouseholdOutcome householdOutcome7 = createHouseholdOutcomeForIUACTextBackWithNoNumber();
+//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome7);
+//      System.out.println(ho);
+//      
+//      HouseholdOutcome householdOutcome8 = createHouseholdOutcomeForIUACTextBackWithIncorrectQuestionnaireType();
+//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome8);
+//      System.out.println(ho);
+//      
+//      HouseholdOutcome householdOutcome9 = createHouseholdOutcomeForWillComplete();
+//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome9);
+//      System.out.println(ho);
+//      
+//      HouseholdOutcome householdOutcome10 = createHouseholdOutcomeWithNoSecondaryRequest();
+//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome10);
+//      System.out.println(ho);
+//      
+//      HouseholdOutcome householdOutcome11 = createContactMadeHouseholdHardRefusal();
+//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome11);
+//      System.out.println(ho);
+//      
+//      HouseholdOutcome householdOutcome12 = createContactMadeHouseholdSplitAddress();
+//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome12);
+//      System.out.println(ho);
+//      
+//      HouseholdOutcome householdOutcome13 = createContactMadeHouseholdIncorrectSecondaryRequest();
+//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome13);
+//      System.out.println(ho);
+//      
+//      HouseholdOutcome householdOutcome14 = createNoValidHouseholdDerelict();
+//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome14);
+//      System.out.println(ho);
+//      
+//      HouseholdOutcome householdOutcome15 = createNoValidHouseholdIncorrectSecondaryRequest();
+//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome15);
+//      System.out.println(ho);
+//      
+//      HouseholdOutcome householdOutcome16 = createNoValidHouseholdIncorrectPrimaryRequest();
+//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome16);
+//      System.out.println(ho);
+//      
+//      HouseholdOutcome householdOutcome17 = createCENoValidAddressContactMade();
+//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome17);
+//      System.out.println(ho);
+//      
+//      HouseholdOutcome householdOutcome18 = createCENoValidAddressNoContactMade();
+//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome18);
+//      System.out.println(ho);
+//      
+//  }
+  
 }
