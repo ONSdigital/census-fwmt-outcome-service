@@ -9,10 +9,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 
 @Api(value = "FWMT Census Outcome Service", description = "Operations pertaining to receiving outcomes from COMET")
+@RestController
+@RequestMapping("/OutcomeController")
 public interface OutcomeApi {
 
   @ApiOperation(value = "Post an outcome to the FWMT Gateway", response = HouseholdOutcome.class)

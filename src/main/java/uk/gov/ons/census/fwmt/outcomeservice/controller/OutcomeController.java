@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
@@ -27,7 +26,7 @@ public class OutcomeController implements OutcomeApi {
   private GatewayEventManager gatewayEventManager;
 
   public ResponseEntity<HouseholdOutcome> householdCaseOutcomeResponse(@PathVariable String caseId,
-      @RequestBody HouseholdOutcome householdOutcome) throws GatewayException {
+      HouseholdOutcome householdOutcome) throws GatewayException {
     gatewayEventManager.triggerEvent(caseId, COMET_OUTCOME_RECEIVED, LocalTime.now());
     cometTranslationService.createHouseHoldOutcomeEvent(householdOutcome);
 
