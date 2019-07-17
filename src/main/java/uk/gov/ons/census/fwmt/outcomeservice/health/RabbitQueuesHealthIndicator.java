@@ -20,7 +20,8 @@ public class RabbitQueuesHealthIndicator extends AbstractHealthIndicator {
 
   private static List<String> QUEUES = Arrays.asList(
       GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_QUEUE,
-      GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_QUEUE
+      GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_QUEUE,
+      GatewayOutcomeQueueConfig.GATEWAY_FULFILLMENT_REQUEST_QUEUE
   );
 
   @Autowired

@@ -1,10 +1,11 @@
-package uk.gov.ons.census.fwmt.outcomeservice.factory;
+package uk.gov.ons.census.fwmt.outcomeservice.template;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import org.springframework.stereotype.Component;
+import uk.gov.ons.census.fwmt.outcomeservice.enums.EventType;
 import uk.gov.ons.census.fwmt.outcomeservice.service.impl.OutcomeServiceImpl;
 
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.util.Map;
 @Component
 public class TemplateCreator {
 
-  public static String createOutcomeMessage(String eventName, Map<String, Object> root) {
+  public static String createOutcomeMessage(EventType eventType, Map<String, Object> root) {
     String outcomeMessage = "";
 
     try {
@@ -25,8 +26,7 @@ public class TemplateCreator {
       configuration.setLogTemplateExceptions(false);
       configuration.setWrapUncheckedExceptions(true);
 
-
-      Template temp = configuration.getTemplate("payload/" + eventName + "-event.ftl");
+      Template temp = configuration.getTemplate("payload/" + eventType + "-event.ftl");
       try (StringWriter out = new StringWriter(); StringWriter outcomeEventMessage = new StringWriter()) {
 
         temp.process(root, out);
@@ -35,13 +35,12 @@ public class TemplateCreator {
         String outcomePayload = out.toString();
 
         root.put("payload", outcomePayload);
-        root.put("eventType", eventName);
+        root.put("eventType", eventType);
         Template outcomeMessageTemplate = configuration.getTemplate("rm-event.ftl");
         outcomeMessageTemplate.process(root, outcomeEventMessage);
 
         outcomeEventMessage.flush();
         outcomeMessage = outcomeEventMessage.toString();
-        System.out.println(outcomeEventMessage.toString());
 
       } catch (TemplateException e) {
         // TODO Auto-generated catch block
@@ -52,7 +51,6 @@ public class TemplateCreator {
       e.printStackTrace();
     }
 
-    System.out.println(outcomeMessage);
     return outcomeMessage;
   }
 }

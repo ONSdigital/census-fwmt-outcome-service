@@ -1,9 +1,11 @@
-package uk.gov.ons.census.fwmt.outcomeservice.factory;
+package uk.gov.ons.census.fwmt.outcomeservice.enums;
 
-public enum EventTypes {
+public enum EventType {
+
   FULFILMENT_REQUESTED,
   QUESTIONNAIRE_LINKED,
   REFUSAL_RECEIVED,
   ADDRESS_NOT_VALID,
   ADDRESS_TYPE_CHANGED
+
 }

@@ -1,0 +1,28 @@
+package uk.gov.ons.census.fwmt.outcomeservice.converter;
+
+import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Component
+public class BuildSecondaryOutcomeMaps {
+  Map<String, String> buildSecondaryOutcomeMap() {
+    Map<String, String> secondaryOutcomeMap = new HashMap<>();
+
+    // Non Valid Household
+    secondaryOutcomeMap.put("Derelict", "DERELICT");
+    secondaryOutcomeMap.put("Demolished", "DEMOLISHED");
+    secondaryOutcomeMap.put("Cant find", "CANT_FIND");
+    secondaryOutcomeMap.put("Unaddressable Object", "UNADDRESSABLE_OBJECT");
+    secondaryOutcomeMap.put("Non-res", "NON_RESIDENTIAL");
+    secondaryOutcomeMap.put("Duplicate", "DUPLICATE");
+    secondaryOutcomeMap.put("Under Const", "UNDER_CONSTRUCTION");
+
+    // Contact Made
+    secondaryOutcomeMap.put("Split address", "SPLIT_ADDRESS");
+    secondaryOutcomeMap.put("Hard refusal", "HARD_REFUSAL");
+    secondaryOutcomeMap.put("Extraordinary refusal", "EXTRAORDINARY_REFUSAL");
+    return secondaryOutcomeMap;
+  }
+}
