@@ -2,8 +2,8 @@ package uk.gov.ons.census.fwmt.outcomeservice.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
-import uk.gov.ons.census.fwmt.common.error.GatewayException;
+import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
+import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
 
@@ -20,12 +20,25 @@ public class OutcomeServiceImpl implements OutcomeService {
   public void init() {
   }
 
-  public void createHouseHoldOutcomeEvent(HouseholdOutcome householdOutcome) throws GatewayException {
+  public void createHouseHoldOutcomeEvent(HouseholdOutcome householdOutcome) {
 
     for (OutcomeServiceProcessor converter : converters) {
       if (converter.isValid(householdOutcome)) {
         converter.processMessage(householdOutcome);
       }
     }
+  }
+
+  @Override
+  public <T> void ccsPropertyListingOutcomeEvent(T outcome) {
+
+
+
+
+  }
+
+  public void ccsPropertyListingOutcomeEvent(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
+
+
   }
 }

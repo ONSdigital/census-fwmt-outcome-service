@@ -2,8 +2,8 @@ package uk.gov.ons.census.fwmt.outcomeservice.converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.ons.census.fwmt.common.data.comet.FulfillmentRequest;
-import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
+import uk.gov.ons.census.fwmt.common.data.household.FulfillmentRequest;
+import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;

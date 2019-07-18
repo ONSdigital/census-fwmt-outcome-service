@@ -5,7 +5,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
+import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
+import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.service.impl.OutcomeServiceImpl;
@@ -24,6 +25,7 @@ public class OutcomeController implements OutcomeApi {
   @Autowired
   private GatewayEventManager gatewayEventManager;
 
+  @Override
   public ResponseEntity<HouseholdOutcome> householdCaseOutcomeResponse(
       HouseholdOutcome householdOutcome) throws GatewayException {
     gatewayEventManager
@@ -31,5 +33,17 @@ public class OutcomeController implements OutcomeApi {
     cometTranslationService.createHouseHoldOutcomeEvent(householdOutcome);
 
     return new ResponseEntity<>(householdOutcome, HttpStatus.ACCEPTED);
+  }
+
+  @Override
+  public ResponseEntity<CCSPropertyListingOutcome> ccsPropertyListingCaseOutcomeResponse(
+      CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException {
+
+    gatewayEventManager
+        .triggerEvent(String.valueOf(ccsPropertyListingOutcome.getCaseId()), COMET_OUTCOME_RECEIVED, LocalTime.now());
+    cometTranslationService.ccsPropertyListingOutcomeEvent(ccsPropertyListingOutcome);
+
+
+    return null;
   }
 }

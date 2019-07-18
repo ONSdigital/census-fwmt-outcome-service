@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
+import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
+import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 
 @Api(value = "FWMT Census Outcome Service", description = "Operations pertaining to receiving outcomes from COMET")
@@ -17,7 +18,7 @@ import uk.gov.ons.census.fwmt.common.error.GatewayException;
 @RequestMapping("/OutcomeController")
 public interface OutcomeApi {
 
-  @ApiOperation(value = "Post an outcome to the FWMT Gateway", response = HouseholdOutcome.class)
+  @ApiOperation(value = "Post a household survey outcome to the FWMT Gateway", response = HouseholdOutcome.class)
   @ApiResponses(value = {
       @ApiResponse(code = 202, message = "Case Outcome received", response = HouseholdOutcome.class)})
   @RequestMapping(value = "/HouseholdOutcome",
@@ -25,4 +26,13 @@ public interface OutcomeApi {
       method = RequestMethod.POST)
   ResponseEntity<HouseholdOutcome> householdCaseOutcomeResponse(
       @RequestBody HouseholdOutcome householdOutcome) throws GatewayException;
+
+  @ApiOperation(value = "Post a CCS survey outcome to the FWMT Gateway", response = HouseholdOutcome.class)
+  @ApiResponses(value = {
+      @ApiResponse(code = 202, message = "Case Outcome received", response = HouseholdOutcome.class)})
+  @RequestMapping(value = "/CCSPropertyListingOutcome",
+      produces = {"application/json"},
+      method = RequestMethod.POST)
+  ResponseEntity<CCSPropertyListingOutcome> ccsPropertyListingCaseOutcomeResponse(
+      @RequestBody CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException;
 }
