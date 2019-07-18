@@ -4,6 +4,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.outcomeservice.enums.EventType;
 import uk.gov.ons.census.fwmt.outcomeservice.service.impl.OutcomeServiceImpl;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Map;
 
+@Slf4j
 @Component
 public class TemplateCreator {
 
@@ -26,7 +28,7 @@ public class TemplateCreator {
       configuration.setLogTemplateExceptions(false);
       configuration.setWrapUncheckedExceptions(true);
 
-      Template temp = configuration.getTemplate("payload/" + eventType + "-event.ftl");
+      Template temp = configuration.getTemplate("payload/" + eventType.name() + "-event.ftl");
       try (StringWriter out = new StringWriter(); StringWriter outcomeEventMessage = new StringWriter()) {
 
         temp.process(root, out);
@@ -43,12 +45,10 @@ public class TemplateCreator {
         outcomeMessage = outcomeEventMessage.toString();
 
       } catch (TemplateException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        log.error("Error: ", e);
       }
     } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      log.error("Error: ", e);
     }
 
     return outcomeMessage;

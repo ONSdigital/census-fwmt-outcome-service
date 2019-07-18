@@ -31,7 +31,7 @@ public class AddressTypeChangedProcessor implements OutcomeServiceProcessor {
   public boolean isValid(HouseholdOutcome householdOutcome) {
     List<String> validSecondaryOutcomes = Arrays
         .asList("CE - No contact", "CE - Contact made");
-    return householdOutcome.getPrimaryOutcome().equals(String.valueOf(NON_VALID_HOUSEHOLD)) && validSecondaryOutcomes
+    return householdOutcome.getPrimaryOutcome().equals(NON_VALID_HOUSEHOLD.toString()) && validSecondaryOutcomes
         .contains(householdOutcome.getSecondaryOutcome());
   }
 

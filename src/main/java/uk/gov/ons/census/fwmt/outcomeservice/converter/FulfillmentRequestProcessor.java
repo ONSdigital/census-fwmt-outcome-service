@@ -25,7 +25,6 @@ import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT_RM;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.FULFILMENT_REQUESTED;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.QUESTIONNAIRE_LINKED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.CONTACT_MADE;
 import static uk.gov.ons.ctp.integration.common.product.model.Product.CaseType.HI;
 import static uk.gov.ons.ctp.integration.common.product.model.Product.RequestChannel.FIELD;
@@ -47,16 +46,14 @@ public class FulfillmentRequestProcessor implements OutcomeServiceProcessor {
   public boolean isValid(HouseholdOutcome householdOutcome) {
     List<String> invalidSecondaryOutcomes = Arrays
         .asList("Split address", "Hard refusal", "Extraordinary refusal");
-    return householdOutcome.getPrimaryOutcome().equals(String.valueOf(CONTACT_MADE)) && !invalidSecondaryOutcomes
+    return householdOutcome.getPrimaryOutcome().equals(CONTACT_MADE.toString()) && !invalidSecondaryOutcomes
         .contains(householdOutcome.getSecondaryOutcome());
   }
 
   @Override
   public void processMessage(HouseholdOutcome householdOutcome) {
     for (FulfillmentRequest fulfillmentRequest : householdOutcome.getFulfillmentRequests()) {
-      if (isQuestionnaireLinked(fulfillmentRequest)) {
-        createQuestionnaireLinkedEvent(householdOutcome, fulfillmentRequest);
-      } else {
+      if (!isQuestionnaireLinked(fulfillmentRequest)) {
         createQuestionnaireRequiredByPostEvent(householdOutcome, fulfillmentRequest);
         log.error("Failed to find valid Secondary Outcome: {}", householdOutcome.getSecondaryOutcome());
       }
@@ -74,16 +71,6 @@ public class FulfillmentRequestProcessor implements OutcomeServiceProcessor {
 
   private boolean isQuestionnaireLinked(FulfillmentRequest fulfillmentRequest) {
     return (fulfillmentRequest.getQuestionnaireId() != null);
-  }
-
-  private void createQuestionnaireLinkedEvent(HouseholdOutcome householdOutcome,
-      FulfillmentRequest fulfillmentRequest) {
-    Map<String, Object> root = new HashMap<>();
-    root.put("householdOutcome", householdOutcome);
-    root.put("questionnaireId", fulfillmentRequest.getQuestionnaireId());
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root);
-
-    sendToFulfillmentQueue(householdOutcome, outcomeEvent);
   }
 
   private void createQuestionnaireRequiredByPostEvent(HouseholdOutcome householdOutcome,

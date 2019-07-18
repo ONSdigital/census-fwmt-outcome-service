@@ -23,18 +23,11 @@ import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.NON_VA
 @Component
 public class AddressNotValidProcessor implements OutcomeServiceProcessor {
 
-  private Map<String, String> secondaryOutcomeMap;
-
   @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
 
   @Autowired
   private GatewayEventManager gatewayEventManager;
-
-  @Autowired
-  public AddressNotValidProcessor(BuildSecondaryOutcomeMaps buildSecondaryOutcomeMaps) {
-    this.secondaryOutcomeMap = buildSecondaryOutcomeMaps.buildSecondaryOutcomeMap();
-  }
 
   @Override
   public boolean isValid(HouseholdOutcome householdOutcome) {
@@ -45,7 +38,8 @@ public class AddressNotValidProcessor implements OutcomeServiceProcessor {
   public void processMessage(HouseholdOutcome householdOutcome) {
     Map<String, Object> root = new HashMap<>();
     root.put("householdOutcome", householdOutcome);
-    root.put("secondaryOutcome", secondaryOutcomeMap.get(householdOutcome.getSecondaryOutcome()));
+    root.put("secondaryOutcome",
+        BuildSecondaryOutcomeMaps.secondaryOutcomeMap.get(householdOutcome.getSecondaryOutcome()));
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_NOT_VALID, root);
 
@@ -61,13 +55,13 @@ public class AddressNotValidProcessor implements OutcomeServiceProcessor {
   private boolean isNonValidHousehold(HouseholdOutcome householdOutcome) {
     List<String> validSecondaryOutcomes = Arrays
         .asList("Derelict", "Demolished", "Cant find", "Unaddressable Object", "Non-res", "Duplicate", "Under Const");
-    return householdOutcome.getPrimaryOutcome().equals(String.valueOf(NON_VALID_HOUSEHOLD)) && validSecondaryOutcomes
+    return householdOutcome.getPrimaryOutcome().equals(NON_VALID_HOUSEHOLD.toString()) && validSecondaryOutcomes
         .contains(householdOutcome.getSecondaryOutcome());
   }
 
   private boolean isSplitAddress(HouseholdOutcome householdOutcome) {
     List<String> validSecondaryOutcomes = Collections.singletonList("Split address");
-    return householdOutcome.getPrimaryOutcome().equals(String.valueOf(CONTACT_MADE)) && validSecondaryOutcomes
+    return householdOutcome.getPrimaryOutcome().equals(CONTACT_MADE.toString()) && validSecondaryOutcomes
         .contains(householdOutcome.getSecondaryOutcome());
   }
 }

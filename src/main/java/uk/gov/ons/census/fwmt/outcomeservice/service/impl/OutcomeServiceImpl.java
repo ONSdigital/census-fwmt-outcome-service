@@ -25,7 +25,6 @@ public class OutcomeServiceImpl implements OutcomeService {
     for (OutcomeServiceProcessor converter : converters) {
       if (converter.isValid(householdOutcome)) {
         converter.processMessage(householdOutcome);
-        break;
       }
     }
   }

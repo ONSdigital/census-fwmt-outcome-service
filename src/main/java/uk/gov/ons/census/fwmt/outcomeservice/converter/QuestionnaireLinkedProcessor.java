@@ -2,6 +2,7 @@ package uk.gov.ons.census.fwmt.outcomeservice.converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.ons.census.fwmt.common.data.comet.FulfillmentRequest;
 import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
@@ -15,11 +16,11 @@ import java.util.List;
 import java.util.Map;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT_RM;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.REFUSAL_RECEIVED;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.QUESTIONNAIRE_LINKED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.CONTACT_MADE;
 
 @Component
-public class RefusalReceivedProcessor implements OutcomeServiceProcessor {
+public class QuestionnaireLinkedProcessor implements OutcomeServiceProcessor {
 
   @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
@@ -29,26 +30,37 @@ public class RefusalReceivedProcessor implements OutcomeServiceProcessor {
 
   @Override
   public boolean isValid(HouseholdOutcome householdOutcome) {
-    List<String> validSecondaryOutcomes = Arrays
-        .asList("Hard refusal", "Extraordinary refusal");
-    return householdOutcome.getPrimaryOutcome().equals(CONTACT_MADE.toString()) && validSecondaryOutcomes
+    List<String> invalidSecondaryOutcomes = Arrays
+        .asList("Split address", "Hard refusal", "Extraordinary refusal");
+    return householdOutcome.getPrimaryOutcome().equals(CONTACT_MADE.toString()) && !invalidSecondaryOutcomes
         .contains(householdOutcome.getSecondaryOutcome());
   }
 
   @Override
   public void processMessage(HouseholdOutcome householdOutcome) {
-    Map<String, Object> root = new HashMap<>();
-    root.put("householdOutcome", householdOutcome);
-    root.put("refusalType", BuildSecondaryOutcomeMaps.secondaryOutcomeMap.get(householdOutcome.getSecondaryOutcome()));
+    for (FulfillmentRequest fulfillmentRequest : householdOutcome.getFulfillmentRequests()) {
+      if (isQuestionnaireLinked(fulfillmentRequest)) {
+        Map<String, Object> root = new HashMap<>();
+        root.put("householdOutcome", householdOutcome);
+        root.put("questionnaireId", fulfillmentRequest.getQuestionnaireId());
+        String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root);
 
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root);
+        sendToFulfillmentQueue(householdOutcome, outcomeEvent);
+      }
+    }
+  }
 
+  private boolean isQuestionnaireLinked(FulfillmentRequest fulfillmentRequest) {
+    return (fulfillmentRequest.getQuestionnaireId() != null);
+  }
+
+  private void sendToFulfillmentQueue(HouseholdOutcome householdOutcome, String outcomeEvent) {
     try {
-
-      gatewayOutcomeProducer.sendRespondentRefusal(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
+      gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
       gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
     } catch (GatewayException e) {
       e.printStackTrace();
     }
   }
+
 }

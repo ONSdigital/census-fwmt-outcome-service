@@ -1,15 +1,14 @@
 package uk.gov.ons.census.fwmt.outcomeservice.converter;
 
-import org.springframework.stereotype.Component;
-
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
-public class BuildSecondaryOutcomeMaps {
-  Map<String, String> buildSecondaryOutcomeMap() {
-    Map<String, String> secondaryOutcomeMap = new HashMap<>();
 
+class BuildSecondaryOutcomeMaps {
+
+  static final Map<String, String> secondaryOutcomeMap = new HashMap<>();
+
+  {
     // Non Valid Household
     secondaryOutcomeMap.put("Derelict", "DERELICT");
     secondaryOutcomeMap.put("Demolished", "DEMOLISHED");
@@ -23,6 +22,6 @@ public class BuildSecondaryOutcomeMaps {
     secondaryOutcomeMap.put("Split address", "SPLIT_ADDRESS");
     secondaryOutcomeMap.put("Hard refusal", "HARD_REFUSAL");
     secondaryOutcomeMap.put("Extraordinary refusal", "EXTRAORDINARY_REFUSAL");
-    return secondaryOutcomeMap;
+
   }
 }
