@@ -3,7 +3,6 @@ package uk.gov.ons.census.fwmt.outcomeservice.converter;
 import java.util.HashMap;
 import java.util.Map;
 
-
 class BuildSecondaryOutcomeMaps {
 
   static final Map<String, String> secondaryOutcomeMap = new HashMap<>();
