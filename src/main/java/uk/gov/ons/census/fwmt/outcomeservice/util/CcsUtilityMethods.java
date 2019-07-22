@@ -31,10 +31,9 @@ public final class CcsUtilityMethods {
   }
 
   public static String getOrganisationName(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
-    if(!StringUtils.isEmpty(ccsPropertyListingOutcome.getCeDetails().getManagerName())) {
+    if (!StringUtils.isEmpty(ccsPropertyListingOutcome.getCeDetails().getManagerName())) {
       return ccsPropertyListingOutcome.getCeDetails().getManagerName();
     }
     return "";
   }
-
 }

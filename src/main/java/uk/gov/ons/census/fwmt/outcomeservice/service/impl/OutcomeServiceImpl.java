@@ -20,7 +20,6 @@ public class OutcomeServiceImpl implements OutcomeService {
   @Autowired
   private List<CcsOutcomeServiceProcessor> propertyListingConverters;
 
-
   @PostConstruct
   public void init() {
   }

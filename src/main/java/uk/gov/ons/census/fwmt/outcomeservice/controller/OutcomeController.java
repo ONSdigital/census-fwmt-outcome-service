@@ -39,7 +39,8 @@ public class OutcomeController implements OutcomeApi {
   public ResponseEntity<CCSPropertyListingOutcome> ccsPropertyListingCaseOutcomeResponse(
       CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException {
     gatewayEventManager
-        .triggerEvent(String.valueOf(ccsPropertyListingOutcome.getPropertyListingCaseId()), COMET_OUTCOME_RECEIVED, LocalTime.now());
+        .triggerEvent(String.valueOf(ccsPropertyListingOutcome.getPropertyListingCaseId()), COMET_OUTCOME_RECEIVED,
+            LocalTime.now());
     cometTranslationService.createPropertyListingOutcomeEvent(ccsPropertyListingOutcome);
 
     return new ResponseEntity<>(ccsPropertyListingOutcome, HttpStatus.ACCEPTED);

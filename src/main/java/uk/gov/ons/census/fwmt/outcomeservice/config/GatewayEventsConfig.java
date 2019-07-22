@@ -9,6 +9,7 @@ public class GatewayEventsConfig {
 
   public static final String COMET_OUTCOME_RECEIVED = "Comet - Case Outcome Received";
   public static final String OUTCOME_SENT_RM = "Outcome - Case Outcome Sent";
+  public static final String PROPERTY_LISTING_SENT = "Outcome - Property Listing sent";
 
   @Bean
   public GatewayEventManager gatewayEventManager() {

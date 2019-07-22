@@ -1,14 +1,20 @@
 package uk.gov.ons.census.fwmt.outcomeservice.converter;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
+import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
+import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.template.HouseholdTemplateCreator;
 
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROPERTY_LISTING_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.REFUSAL_RECEIVED;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressLevel;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressType;
@@ -16,6 +22,12 @@ import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getOr
 
 @Component
 public class CcsRefusalReceievedProcessor implements CcsOutcomeServiceProcessor {
+
+  @Autowired
+  private GatewayOutcomeProducer gatewayOutcomeProducer;
+
+  @Autowired
+  private GatewayEventManager gatewayEventManager;
 
   @Override
   public boolean isValid(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
@@ -31,8 +43,20 @@ public class CcsRefusalReceievedProcessor implements CcsOutcomeServiceProcessor 
     root.put("addressType", getAddressType(ccsPropertyListingOutcome));
     root.put("addressLevel", getAddressLevel(ccsPropertyListingOutcome));
     root.put("organisationName", getOrganisationName(ccsPropertyListingOutcome));
-    root.put("refusalType", BuildSecondaryOutcomeMaps.secondaryOutcomeMap.get(ccsPropertyListingOutcome.getSecondaryOutcome()));
+    root.put("refusalType",
+        BuildSecondaryOutcomeMaps.secondaryOutcomeMap.get(ccsPropertyListingOutcome.getSecondaryOutcome()));
 
     String outcomeEvent = HouseholdTemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root);
+
+    try {
+
+      gatewayOutcomeProducer
+          .sendRespondentRefusal(outcomeEvent, String.valueOf(ccsPropertyListingOutcome.getTransactionId()));
+      gatewayEventManager
+          .triggerEvent(String.valueOf(ccsPropertyListingOutcome.getPropertyListingCaseId()), PROPERTY_LISTING_SENT,
+              LocalTime.now());
+    } catch (GatewayException e) {
+      e.printStackTrace();
+    }
   }
 }
