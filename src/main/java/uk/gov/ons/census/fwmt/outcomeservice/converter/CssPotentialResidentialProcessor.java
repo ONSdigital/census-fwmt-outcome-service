@@ -4,23 +4,21 @@ import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.outcomeservice.template.HouseholdTemplateCreator;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.REFUSAL_RECEIVED;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.POTENTIAL_RESIDENTIAL;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressLevel;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressType;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getOrganisationName;
 
 @Component
-public class CcsRefusalReceievedProcessor implements CcsOutcomeServiceProcessor {
-
+public class CssPotentialResidentialProcessor implements CcsOutcomeServiceProcessor {
   @Override
   public boolean isValid(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
-    List<String> validSecondaryOutcomes = Arrays
-        .asList("Soft refusal", "Hard refusal", "Extraordinary refusal");
+    List<String> validSecondaryOutcomes = Collections.singletonList("Potential Residential");
     return validSecondaryOutcomes.contains(ccsPropertyListingOutcome.getSecondaryOutcome());
   }
 
@@ -31,8 +29,7 @@ public class CcsRefusalReceievedProcessor implements CcsOutcomeServiceProcessor 
     root.put("addressType", getAddressType(ccsPropertyListingOutcome));
     root.put("addressLevel", getAddressLevel(ccsPropertyListingOutcome));
     root.put("organisationName", getOrganisationName(ccsPropertyListingOutcome));
-    root.put("refusalType", BuildSecondaryOutcomeMaps.secondaryOutcomeMap.get(ccsPropertyListingOutcome.getSecondaryOutcome()));
 
-    String outcomeEvent = HouseholdTemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root);
+    String outcomeEvent = HouseholdTemplateCreator.createOutcomeMessage(POTENTIAL_RESIDENTIAL, root);
   }
 }

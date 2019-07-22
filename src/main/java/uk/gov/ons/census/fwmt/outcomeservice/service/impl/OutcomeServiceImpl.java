@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.CcsOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
 
@@ -14,31 +15,33 @@ import java.util.List;
 public class OutcomeServiceImpl implements OutcomeService {
 
   @Autowired
-  private List<OutcomeServiceProcessor> converters;
+  private List<OutcomeServiceProcessor> householdOutcomeConverters;
+
+  @Autowired
+  private List<CcsOutcomeServiceProcessor> propertyListingConverters;
+
 
   @PostConstruct
   public void init() {
   }
 
   public void createHouseHoldOutcomeEvent(HouseholdOutcome householdOutcome) {
-
-    for (OutcomeServiceProcessor converter : converters) {
+    for (OutcomeServiceProcessor converter : householdOutcomeConverters) {
       if (converter.isValid(householdOutcome)) {
         converter.processMessage(householdOutcome);
       }
     }
   }
 
-  @Override
-  public <T> void ccsPropertyListingOutcomeEvent(T outcome) {
-
-
-
-
+  public void createPropertyListingOutcomeEvent(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
+    for (CcsOutcomeServiceProcessor converter : propertyListingConverters) {
+      if (converter.isValid(ccsPropertyListingOutcome)) {
+        converter.processMessage(ccsPropertyListingOutcome);
+      }
+    }
   }
 
-  public void ccsPropertyListingOutcomeEvent(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
-
-
+  @Override
+  public <T> void ccsPropertyListingOutcomeEvent(T outcome) {
   }
 }

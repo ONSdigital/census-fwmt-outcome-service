@@ -34,4 +34,11 @@ public class GatewayOutcomeProducer {
     rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
         GatewayOutcomeQueueConfig.GATEWAY_FULFILLMENT_REQUEST_ROUTING_KEY, outcomeEvent);
   }
+
+  @Retryable
+  public void sendPropertyListing(String outcomeEvent, String transactionId) {
+    log.info("Property Listing message sent to queue :{}", transactionId);
+    rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
+        GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTYLISTING_ROUTING_KEY, outcomeEvent);
+  }
 }

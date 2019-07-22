@@ -7,7 +7,7 @@ import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
-import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
+import uk.gov.ons.census.fwmt.outcomeservice.template.HouseholdTemplateCreator;
 
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -43,7 +43,7 @@ public class RefusalReceivedProcessor implements OutcomeServiceProcessor {
     root.put("householdOutcome", householdOutcome);
     root.put("refusalType", BuildSecondaryOutcomeMaps.secondaryOutcomeMap.get(householdOutcome.getSecondaryOutcome()));
 
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root);
+    String outcomeEvent = HouseholdTemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root);
 
     try {
 

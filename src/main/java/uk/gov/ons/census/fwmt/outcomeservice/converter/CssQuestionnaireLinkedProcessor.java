@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 
 import uk.gov.ons.census.fwmt.common.data.ccs.FulfillmentRequest;
-import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
+import uk.gov.ons.census.fwmt.outcomeservice.template.HouseholdTemplateCreator;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.QUESTIONNAIRE_LINKED;
+import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressLevel;
+import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressType;
+import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getOrganisationName;
 
 @Component
 public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcessor{
@@ -30,28 +33,17 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
   public void processMessage(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
     if (isQuestionnaireLinked(ccsPropertyListingOutcome.getFulfillmentRequest())) {
       Map<String, Object> root = new HashMap<>();
-      root.put("surveyType", "CCS");
-      root.put("questionnaireCompleted", completedQuestionnaire(ccsPropertyListingOutcome));
-      root.put("agentId", ccsPropertyListingOutcome.getUsername());
-      root.put("householdOutcome", ccsPropertyListingOutcome);
-      root.put("questionnaireId", ccsPropertyListingOutcome.getFulfillmentRequest().getQuestionnaireId());
 
-      String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root);
+      root.put("ccsPropertyListingOutcome", ccsPropertyListingOutcome);
+      root.put("addressType", getAddressType(ccsPropertyListingOutcome));
+      root.put("addressLevel", getAddressLevel(ccsPropertyListingOutcome));
+      root.put("organisationName", getOrganisationName(ccsPropertyListingOutcome));
+
+      String outcomeEvent = HouseholdTemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root);
     }
   }
 
   private boolean isQuestionnaireLinked(FulfillmentRequest fulfillmentRequest) {
     return (fulfillmentRequest.getQuestionnaireId() != null);
-  }
-
-  private String completedQuestionnaire(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
-    if(ccsPropertyListingOutcome.getSecondaryOutcome().contains("full")){
-      return "full";
-
-    } else if(ccsPropertyListingOutcome.getSecondaryOutcome().contains("partial")){
-      return "partial";
-
-    }
-    return null;
   }
 }

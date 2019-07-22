@@ -6,7 +6,7 @@ import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
-import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
+import uk.gov.ons.census.fwmt.outcomeservice.template.HouseholdTemplateCreator;
 
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -41,7 +41,6 @@ public class AddressTypeChangedProcessor implements OutcomeServiceProcessor {
     root.put("householdOutcome", householdOutcome);
     root.put("estabType", "CE");
     root.put("secondaryOutcome", householdOutcome.getSecondaryOutcome());
-    root.put("managerTitle", householdOutcome.getCeDetails().getManagerTitle());
 
     if (householdOutcome.getCeDetails().getUsualResidents() == null) {
       root.put("usualResidents", 0);
@@ -49,7 +48,7 @@ public class AddressTypeChangedProcessor implements OutcomeServiceProcessor {
       root.put("usualResidents", householdOutcome.getCeDetails().getUsualResidents());
     }
 
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_TYPE_CHANGED, root);
+    String outcomeEvent = HouseholdTemplateCreator.createOutcomeMessage(ADDRESS_TYPE_CHANGED, root);
 
     try {
       gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));

@@ -22,5 +22,10 @@ class BuildSecondaryOutcomeMaps {
     secondaryOutcomeMap.put("Hard refusal", "HARD_REFUSAL");
     secondaryOutcomeMap.put("Extraordinary refusal", "EXTRAORDINARY_REFUSAL");
 
+    // CCS
+    secondaryOutcomeMap.put("Derelict/ uninhabitable", "DERELICT");
+    secondaryOutcomeMap.put("Under construction", "UNDER_CONSTRUCTION");
+    secondaryOutcomeMap.put("Non residential or business", "NON_RESIDENTIAL");
+    secondaryOutcomeMap.put("CE Out of scope", "CCS_CE_OUT_OF_SCOPE");
   }
 }

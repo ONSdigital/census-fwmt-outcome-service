@@ -8,7 +8,7 @@ import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
-import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
+import uk.gov.ons.census.fwmt.outcomeservice.template.HouseholdTemplateCreator;
 import uk.gov.ons.ctp.common.error.CTPException;
 import uk.gov.ons.ctp.integration.common.product.ProductReference;
 import uk.gov.ons.ctp.integration.common.product.model.Product;
@@ -88,7 +88,7 @@ public class FulfillmentRequestProcessor implements OutcomeServiceProcessor {
       root.put("householdIndicator", 1);
 
     }
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(FULFILMENT_REQUESTED, root);
+    String outcomeEvent = HouseholdTemplateCreator.createOutcomeMessage(FULFILMENT_REQUESTED, root);
 
     sendToFulfillmentQueue(householdOutcome, outcomeEvent);
   }

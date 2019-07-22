@@ -15,7 +15,7 @@ import java.util.Map;
 
 @Slf4j
 @Component
-public class TemplateCreator {
+public class PropertyListingTemplateCreator {
 
   public static String createOutcomeMessage(EventType eventType, Map<String, Object> root) {
     String outcomeMessage = "";
@@ -28,7 +28,7 @@ public class TemplateCreator {
       configuration.setLogTemplateExceptions(false);
       configuration.setWrapUncheckedExceptions(true);
 
-      Template temp = configuration.getTemplate("payload/" + eventType.name() + "-event.ftl");
+      Template temp = configuration.getTemplate("ccs/" + eventType.name() + "-event.ftl");
       try (StringWriter out = new StringWriter(); StringWriter outcomeEventMessage = new StringWriter()) {
 
         temp.process(root, out);
@@ -38,7 +38,7 @@ public class TemplateCreator {
 
         root.put("payload", outcomePayload);
         root.put("eventType", eventType);
-        Template outcomeMessageTemplate = configuration.getTemplate("rm-event.ftl");
+        Template outcomeMessageTemplate = configuration.getTemplate("rm-ccs-event.ftl");
         outcomeMessageTemplate.process(root, outcomeEventMessage);
 
         outcomeEventMessage.flush();

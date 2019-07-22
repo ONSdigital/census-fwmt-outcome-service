@@ -9,5 +9,7 @@ import uk.gov.ons.census.fwmt.common.error.GatewayException;
 public interface OutcomeService {
   void createHouseHoldOutcomeEvent(HouseholdOutcome householdOutcome) throws GatewayException;
 
+  void createPropertyListingOutcomeEvent(CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException;
+
   <T> void ccsPropertyListingOutcomeEvent(T outcome);
 }

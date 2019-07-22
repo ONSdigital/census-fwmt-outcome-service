@@ -5,7 +5,6 @@
 "contact": {
 "telNo":"${telNo}"
 }
-
 <#if householdIndicator != 1>
     ,
     "individualCaseId": "${individualCaseId}"

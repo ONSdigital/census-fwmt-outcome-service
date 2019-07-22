@@ -7,7 +7,7 @@ import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
-import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
+import uk.gov.ons.census.fwmt.outcomeservice.template.HouseholdTemplateCreator;
 
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -43,7 +43,7 @@ public class QuestionnaireLinkedProcessor implements OutcomeServiceProcessor {
         Map<String, Object> root = new HashMap<>();
         root.put("householdOutcome", householdOutcome);
         root.put("questionnaireId", fulfillmentRequest.getQuestionnaireId());
-        String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root);
+        String outcomeEvent = HouseholdTemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root);
 
         sendToFulfillmentQueue(householdOutcome, outcomeEvent);
       }
