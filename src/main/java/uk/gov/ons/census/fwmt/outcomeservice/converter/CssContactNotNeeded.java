@@ -49,7 +49,7 @@ public class CssContactNotNeeded implements CcsOutcomeServiceProcessor {
     try {
 
       gatewayOutcomeProducer
-          .sendRespondentRefusal(outcomeEvent, String.valueOf(ccsPropertyListingOutcome.getTransactionId()));
+          .sendPropertyListing(outcomeEvent, String.valueOf(ccsPropertyListingOutcome.getTransactionId()));
       gatewayEventManager
           .triggerEvent(String.valueOf(ccsPropertyListingOutcome.getPropertyListingCaseId()), PROPERTY_LISTING_SENT,
               LocalTime.now());
