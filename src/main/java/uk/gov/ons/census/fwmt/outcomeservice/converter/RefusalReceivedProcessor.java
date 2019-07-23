@@ -6,7 +6,7 @@ import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
-import uk.gov.ons.census.fwmt.outcomeservice.template.HouseholdTemplateCreator;
+import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -17,6 +17,7 @@ import java.util.Map;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT_RM;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.REFUSAL_RECEIVED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.CONTACT_MADE;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.household;
 
 @Component
 public class RefusalReceivedProcessor implements OutcomeServiceProcessor {
@@ -41,7 +42,7 @@ public class RefusalReceivedProcessor implements OutcomeServiceProcessor {
     root.put("householdOutcome", householdOutcome);
     root.put("refusalType", BuildSecondaryOutcomeMaps.secondaryOutcomeMap.get(householdOutcome.getSecondaryOutcome()));
 
-    String outcomeEvent = HouseholdTemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root);
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root, household);
 
     try {
 

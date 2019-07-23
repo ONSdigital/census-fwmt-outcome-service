@@ -7,7 +7,7 @@ import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
-import uk.gov.ons.census.fwmt.outcomeservice.template.HouseholdTemplateCreator;
+import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -18,6 +18,7 @@ import java.util.Map;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT_RM;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.QUESTIONNAIRE_LINKED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.CONTACT_MADE;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.household;
 
 @Component
 public class QuestionnaireLinkedProcessor implements OutcomeServiceProcessor {
@@ -43,7 +44,8 @@ public class QuestionnaireLinkedProcessor implements OutcomeServiceProcessor {
         Map<String, Object> root = new HashMap<>();
         root.put("householdOutcome", householdOutcome);
         root.put("questionnaireId", fulfillmentRequest.getQuestionnaireId());
-        String outcomeEvent = HouseholdTemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root);
+
+        String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, household);
 
         sendToFulfillmentQueue(householdOutcome, outcomeEvent);
       }

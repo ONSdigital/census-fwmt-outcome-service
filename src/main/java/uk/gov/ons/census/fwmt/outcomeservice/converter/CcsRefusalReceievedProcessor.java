@@ -6,7 +6,7 @@ import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
-import uk.gov.ons.census.fwmt.outcomeservice.template.HouseholdTemplateCreator;
+import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -16,6 +16,7 @@ import java.util.Map;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROPERTY_LISTING_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.REFUSAL_RECEIVED;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.ccs;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressLevel;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressType;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getOrganisationName;
@@ -46,7 +47,7 @@ public class CcsRefusalReceievedProcessor implements CcsOutcomeServiceProcessor 
     root.put("refusalType",
         BuildSecondaryOutcomeMaps.secondaryOutcomeMap.get(ccsPropertyListingOutcome.getSecondaryOutcome()));
 
-    String outcomeEvent = HouseholdTemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root);
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root, ccs);
 
     try {
 

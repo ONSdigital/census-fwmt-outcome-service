@@ -7,7 +7,7 @@ import uk.gov.ons.census.fwmt.common.data.ccs.FulfillmentRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
-import uk.gov.ons.census.fwmt.outcomeservice.template.HouseholdTemplateCreator;
+import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -17,6 +17,7 @@ import java.util.Map;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROPERTY_LISTING_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.QUESTIONNAIRE_LINKED;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.ccs;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressLevel;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressType;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getOrganisationName;
@@ -52,7 +53,7 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
       root.put("addressLevel", getAddressLevel(ccsPropertyListingOutcome));
       root.put("organisationName", getOrganisationName(ccsPropertyListingOutcome));
 
-      String outcomeEvent = HouseholdTemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root);
+      String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, ccs);
 
       try {
 

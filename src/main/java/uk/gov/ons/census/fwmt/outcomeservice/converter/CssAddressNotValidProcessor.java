@@ -6,7 +6,7 @@ import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
-import uk.gov.ons.census.fwmt.outcomeservice.template.HouseholdTemplateCreator;
+import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -16,6 +16,7 @@ import java.util.Map;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROPERTY_LISTING_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.ADDRESS_NOT_VALID;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.ccs;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressLevel;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressType;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getOrganisationName;
@@ -44,7 +45,7 @@ public class CssAddressNotValidProcessor implements CcsOutcomeServiceProcessor {
     root.put("secondaryOutcome",
         BuildSecondaryOutcomeMaps.secondaryOutcomeMap.get(ccsPropertyListingOutcome.getSecondaryOutcome()));
 
-    String outcomeEvent = HouseholdTemplateCreator.createOutcomeMessage(ADDRESS_NOT_VALID, root);
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_NOT_VALID, root, ccs);
 
     try {
 
