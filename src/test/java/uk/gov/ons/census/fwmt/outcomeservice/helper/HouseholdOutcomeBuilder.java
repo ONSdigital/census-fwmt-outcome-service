@@ -1,7 +1,5 @@
 package uk.gov.ons.census.fwmt.outcomeservice.helper;
 
-
-
 import uk.gov.ons.census.fwmt.common.data.household.CeDetails;
 import uk.gov.ons.census.fwmt.common.data.household.FulfillmentRequest;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;

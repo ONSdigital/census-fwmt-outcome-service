@@ -9,5 +9,5 @@ public interface OutcomeService {
 
   void createPropertyListingOutcomeEvent(CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException;
 
-  <T> void ccsPropertyListingOutcomeEvent(T outcome);
+  void createInterviewOutcomeEvent(HouseholdOutcome householdOutcome);
 }

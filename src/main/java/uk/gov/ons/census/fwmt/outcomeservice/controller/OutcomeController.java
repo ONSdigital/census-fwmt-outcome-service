@@ -26,10 +26,9 @@ public class OutcomeController implements OutcomeApi {
   private GatewayEventManager gatewayEventManager;
 
   @Override
-  public ResponseEntity<HouseholdOutcome> householdCaseOutcomeResponse(
+  public ResponseEntity<HouseholdOutcome> householdCaseOutcomeResponse(String caseId,
       HouseholdOutcome householdOutcome) throws GatewayException {
-    gatewayEventManager
-        .triggerEvent(String.valueOf(householdOutcome.getCaseId()), COMET_OUTCOME_RECEIVED, LocalTime.now());
+    gatewayEventManager.triggerEvent(caseId, COMET_OUTCOME_RECEIVED, LocalTime.now());
     cometTranslationService.createHouseHoldOutcomeEvent(householdOutcome);
 
     return new ResponseEntity<>(householdOutcome, HttpStatus.ACCEPTED);
@@ -44,5 +43,12 @@ public class OutcomeController implements OutcomeApi {
     cometTranslationService.createPropertyListingOutcomeEvent(ccsPropertyListingOutcome);
 
     return new ResponseEntity<>(ccsPropertyListingOutcome, HttpStatus.ACCEPTED);
+  }
+
+  @Override public ResponseEntity<HouseholdOutcome> ccsInterviewOutcome(String caseId,
+      HouseholdOutcome householdOutcome) throws GatewayException {
+    gatewayEventManager.triggerEvent(caseId, COMET_OUTCOME_RECEIVED, LocalTime.now());
+    cometTranslationService.createInterviewOutcomeEvent(householdOutcome);
+    return null;
   }
 }

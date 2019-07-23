@@ -1,4 +1,4 @@
-package uk.gov.ons.census.fwmt.outcomeservice.converter;
+package uk.gov.ons.census.fwmt.outcomeservice.converter.household;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +7,7 @@ import uk.gov.ons.census.fwmt.common.data.household.FulfillmentRequest;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 import uk.gov.ons.ctp.common.error.CTPException;
@@ -61,19 +62,6 @@ public class FulfillmentRequestProcessor implements OutcomeServiceProcessor {
     }
   }
 
-  private void sendToFulfillmentQueue(HouseholdOutcome householdOutcome, String outcomeEvent) {
-    try {
-      gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
-      gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
-    } catch (GatewayException e) {
-      e.printStackTrace();
-    }
-  }
-
-  private boolean isQuestionnaireLinked(FulfillmentRequest fulfillmentRequest) {
-    return (fulfillmentRequest.getQuestionnaireId() != null);
-  }
-
   private void createQuestionnaireRequiredByPostEvent(HouseholdOutcome householdOutcome,
       FulfillmentRequest fulfillmentRequest) {
     Product product = getProductFromQuestionnaireType(fulfillmentRequest);
@@ -94,10 +82,8 @@ public class FulfillmentRequestProcessor implements OutcomeServiceProcessor {
     sendToFulfillmentQueue(householdOutcome, outcomeEvent);
   }
 
-  private String generateUUID() {
-    String generatedUUID;
-    generatedUUID = String.valueOf(UUID.randomUUID());
-    return generatedUUID;
+  private boolean isQuestionnaireLinked(FulfillmentRequest fulfillmentRequest) {
+    return (fulfillmentRequest.getQuestionnaireId() != null);
   }
 
   @Nonnull
@@ -115,5 +101,20 @@ public class FulfillmentRequestProcessor implements OutcomeServiceProcessor {
       log.error("unable to find valid Products {}", e);
     }
     return Objects.requireNonNull(productList).get(0);
+  }
+
+  private String generateUUID() {
+    String generatedUUID;
+    generatedUUID = String.valueOf(UUID.randomUUID());
+    return generatedUUID;
+  }
+
+  private void sendToFulfillmentQueue(HouseholdOutcome householdOutcome, String outcomeEvent) {
+    try {
+      gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
+      gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
+    } catch (GatewayException e) {
+      e.printStackTrace();
+    }
   }
 }

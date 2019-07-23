@@ -6,6 +6,7 @@ import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.CcsOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.InterviewOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
 
 import javax.annotation.PostConstruct;
@@ -19,6 +20,9 @@ public class OutcomeServiceImpl implements OutcomeService {
 
   @Autowired
   private List<CcsOutcomeServiceProcessor> propertyListingConverters;
+
+  @Autowired
+  private List<InterviewOutcomeServiceProcessor> interviewOutcomeConverters;
 
   @PostConstruct
   public void init() {
@@ -41,6 +45,11 @@ public class OutcomeServiceImpl implements OutcomeService {
   }
 
   @Override
-  public <T> void ccsPropertyListingOutcomeEvent(T outcome) {
+  public void createInterviewOutcomeEvent(HouseholdOutcome householdOutcome) {
+    for (InterviewOutcomeServiceProcessor converter : interviewOutcomeConverters) {
+      if (converter.isValid(householdOutcome)) {
+        converter.processMessage(householdOutcome);
+      }
+    }
   }
 }
