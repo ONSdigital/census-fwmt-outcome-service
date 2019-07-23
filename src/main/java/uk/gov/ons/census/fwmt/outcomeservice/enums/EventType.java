@@ -12,4 +12,5 @@ public enum EventType {
   // CCS
   CONTACT_NOT_NEEDED,
   POTENTIAL_RESIDENTIAL,
+  COLLECT_CE_DETAILS
 }
