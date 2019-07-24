@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
@@ -36,12 +37,12 @@ public interface OutcomeApi {
   ResponseEntity<CCSPropertyListingOutcome> ccsPropertyListingCaseOutcomeResponse(
       @RequestBody CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException;
 
-  @ApiOperation(value = "Post a CCS Interview outcome to the FWMT Gateway", response = HouseholdOutcome.class)
+  @ApiOperation(value = "Post a CCS Interview outcome to the FWMT Gateway", response = CCSInterviewOutcome.class)
   @ApiResponses(value = {
-      @ApiResponse(code = 202, message = "Case Outcome received", response = HouseholdOutcome.class)})
+      @ApiResponse(code = 202, message = "Case Outcome received", response = CCSInterviewOutcome.class)})
   @RequestMapping(value = "/CCSInterviewOutcome/{caseId}",
       produces = {"application/json"},
       method = RequestMethod.POST)
-  ResponseEntity<HouseholdOutcome> ccsInterviewOutcome(
-      @PathVariable String caseId, @RequestBody HouseholdOutcome householdOutcome) throws GatewayException;
+  ResponseEntity<CCSInterviewOutcome> ccsInterviewOutcome(
+      @PathVariable String caseId, @RequestBody CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException;
 }

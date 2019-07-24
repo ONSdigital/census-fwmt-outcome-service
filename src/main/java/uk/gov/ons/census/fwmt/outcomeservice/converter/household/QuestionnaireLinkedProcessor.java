@@ -48,7 +48,12 @@ public class QuestionnaireLinkedProcessor implements OutcomeServiceProcessor {
 
         String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, household);
 
-        sendToFulfillmentQueue(householdOutcome, outcomeEvent);
+        try {
+          gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
+          gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
+        } catch (GatewayException e) {
+          e.printStackTrace();
+        }
       }
     }
   }
@@ -56,14 +61,4 @@ public class QuestionnaireLinkedProcessor implements OutcomeServiceProcessor {
   private boolean isQuestionnaireLinked(FulfillmentRequest fulfillmentRequest) {
     return (fulfillmentRequest.getQuestionnaireId() != null);
   }
-
-  private void sendToFulfillmentQueue(HouseholdOutcome householdOutcome, String outcomeEvent) {
-    try {
-      gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
-      gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
-    } catch (GatewayException e) {
-      e.printStackTrace();
-    }
-  }
-
 }

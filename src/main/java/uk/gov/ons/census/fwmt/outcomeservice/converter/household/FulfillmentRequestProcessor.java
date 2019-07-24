@@ -79,7 +79,12 @@ public class FulfillmentRequestProcessor implements OutcomeServiceProcessor {
     }
     String outcomeEvent = TemplateCreator.createOutcomeMessage(FULFILMENT_REQUESTED, root, household);
 
-    sendToFulfillmentQueue(householdOutcome, outcomeEvent);
+    try {
+      gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
+      gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
+    } catch (GatewayException e) {
+      e.printStackTrace();
+    }
   }
 
   private boolean isQuestionnaireLinked(FulfillmentRequest fulfillmentRequest) {
@@ -107,14 +112,5 @@ public class FulfillmentRequestProcessor implements OutcomeServiceProcessor {
     String generatedUUID;
     generatedUUID = String.valueOf(UUID.randomUUID());
     return generatedUUID;
-  }
-
-  private void sendToFulfillmentQueue(HouseholdOutcome householdOutcome, String outcomeEvent) {
-    try {
-      gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
-      gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
-    } catch (GatewayException e) {
-      e.printStackTrace();
-    }
   }
 }

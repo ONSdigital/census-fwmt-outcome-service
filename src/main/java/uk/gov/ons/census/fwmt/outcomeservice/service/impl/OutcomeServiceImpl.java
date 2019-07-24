@@ -2,6 +2,7 @@ package uk.gov.ons.census.fwmt.outcomeservice.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.CcsOutcomeServiceProcessor;
@@ -45,10 +46,10 @@ public class OutcomeServiceImpl implements OutcomeService {
   }
 
   @Override
-  public void createInterviewOutcomeEvent(HouseholdOutcome householdOutcome) {
+  public void createInterviewOutcomeEvent(CCSInterviewOutcome ccsInterviewOutcome) {
     for (InterviewOutcomeServiceProcessor converter : interviewOutcomeConverters) {
-      if (converter.isValid(householdOutcome)) {
-        converter.processMessage(householdOutcome);
+      if (converter.isValid(ccsInterviewOutcome)) {
+        converter.processMessage(ccsInterviewOutcome);
       }
     }
   }

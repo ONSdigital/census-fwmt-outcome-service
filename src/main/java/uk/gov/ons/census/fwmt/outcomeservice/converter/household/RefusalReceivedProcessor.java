@@ -47,7 +47,6 @@ public class RefusalReceivedProcessor implements OutcomeServiceProcessor {
     String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root, household);
 
     try {
-
       gatewayOutcomeProducer.sendRespondentRefusal(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
       gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
     } catch (GatewayException e) {

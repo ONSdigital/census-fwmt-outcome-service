@@ -40,7 +40,7 @@ public class CcsCollectCeDetailsProcessor implements CcsOutcomeServiceProcessor 
   @Override
   public void processMessage(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
     Map<String, Object> root = new HashMap<>();
-    root.put("householdOutcome", ccsPropertyListingOutcome);
+    root.put("ccsPropertyListingOutcome", ccsPropertyListingOutcome);
     root.put("addressType", getAddressType(ccsPropertyListingOutcome));
     root.put("addressLevel", getAddressLevel(ccsPropertyListingOutcome));
     root.put("organisationName", getOrganisationName(ccsPropertyListingOutcome));
@@ -48,7 +48,6 @@ public class CcsCollectCeDetailsProcessor implements CcsOutcomeServiceProcessor 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(COLLECT_CE_DETAILS, root, ccs);
 
     try {
-
       gatewayOutcomeProducer
           .sendPropertyListing(outcomeEvent, String.valueOf(ccsPropertyListingOutcome.getTransactionId()));
       gatewayEventManager

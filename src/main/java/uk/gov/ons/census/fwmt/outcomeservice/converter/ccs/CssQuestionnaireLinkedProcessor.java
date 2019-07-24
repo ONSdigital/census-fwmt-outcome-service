@@ -19,6 +19,7 @@ import java.util.Map;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROPERTY_LISTING_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.QUESTIONNAIRE_LINKED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.ccs;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.household;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressLevel;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressType;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getOrganisationName;
@@ -54,10 +55,9 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
       root.put("addressLevel", getAddressLevel(ccsPropertyListingOutcome));
       root.put("organisationName", getOrganisationName(ccsPropertyListingOutcome));
 
-      String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, ccs);
+      String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, household);
 
       try {
-
         gatewayOutcomeProducer
             .sendPropertyListing(outcomeEvent, String.valueOf(ccsPropertyListingOutcome.getTransactionId()));
         gatewayEventManager

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
@@ -45,10 +46,10 @@ public class OutcomeController implements OutcomeApi {
     return new ResponseEntity<>(ccsPropertyListingOutcome, HttpStatus.ACCEPTED);
   }
 
-  @Override public ResponseEntity<HouseholdOutcome> ccsInterviewOutcome(String caseId,
-      HouseholdOutcome householdOutcome) throws GatewayException {
+  @Override public ResponseEntity<CCSInterviewOutcome> ccsInterviewOutcome(String caseId,
+      CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException {
     gatewayEventManager.triggerEvent(caseId, COMET_OUTCOME_RECEIVED, LocalTime.now());
-    cometTranslationService.createInterviewOutcomeEvent(householdOutcome);
+    cometTranslationService.createInterviewOutcomeEvent(ccsInterviewOutcome);
     return null;
   }
 }
