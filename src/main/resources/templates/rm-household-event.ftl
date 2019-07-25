@@ -3,8 +3,8 @@
 "type" : "${eventType}",
 "source" : "FIELDWORK_GATEWAY",
 "channel" : "FIELD",
-"transactionId" : "${householdOutcome.transactionId}",
-"dateTime" : "${householdOutcome.eventDate}"
+"dateTime" : "${householdOutcome.eventDate}",
+"transactionId" : "${householdOutcome.transactionId}"
 }
 ,
 "payload" : {

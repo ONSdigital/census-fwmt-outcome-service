@@ -10,20 +10,18 @@ import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
 import java.time.LocalTime;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROPERTY_LISTING_SENT;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.ADDRESS_NOT_VALID;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.CCS_CE_OUT_OF_SCOPE;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.ccs;
-import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressLevel;
-import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressType;
-import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getOrganisationName;
+import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.*;
 
 @Component
-public class CssAddressNotValidProcessor implements CcsOutcomeServiceProcessor {
+public class CssCeOutOfScope implements CcsOutcomeServiceProcessor {
 
   @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
@@ -33,21 +31,19 @@ public class CssAddressNotValidProcessor implements CcsOutcomeServiceProcessor {
 
   @Override
   public boolean isValid(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
-    return isNonValidCcsPropertyListing(ccsPropertyListingOutcome);
+    List<String> validSecondaryOutcomes = Collections.singletonList("CE Out of scope");
+    return validSecondaryOutcomes.contains(ccsPropertyListingOutcome.getSecondaryOutcome());
   }
 
   @Override
   public void processMessage(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
-    CcsSecondaryOutcomeMap ccsSecondaryOutcomeMap = new CcsSecondaryOutcomeMap();
     Map<String, Object> root = new HashMap<>();
     root.put("ccsPropertyListingOutcome", ccsPropertyListingOutcome);
     root.put("addressType", getAddressType(ccsPropertyListingOutcome));
     root.put("addressLevel", getAddressLevel(ccsPropertyListingOutcome));
     root.put("organisationName", getOrganisationName(ccsPropertyListingOutcome));
-    root.put("secondaryOutcome",
-        ccsSecondaryOutcomeMap.ccsSecondaryOutcomeMap.get(ccsPropertyListingOutcome.getSecondaryOutcome()));
 
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_NOT_VALID, root, ccs);
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(CCS_CE_OUT_OF_SCOPE, root, ccs);
 
     try {
       gatewayOutcomeProducer
@@ -58,12 +54,5 @@ public class CssAddressNotValidProcessor implements CcsOutcomeServiceProcessor {
     } catch (GatewayException e) {
       e.printStackTrace();
     }
-  }
-
-  private boolean isNonValidCcsPropertyListing(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
-    List<String> validSecondaryOutcomes = Arrays
-        .asList("Derelict / uninhabitable", "Under construction", "Non residential /Business",
-            "CE Out of scope");
-    return validSecondaryOutcomes.contains(ccsPropertyListingOutcome.getSecondaryOutcome());
   }
 }

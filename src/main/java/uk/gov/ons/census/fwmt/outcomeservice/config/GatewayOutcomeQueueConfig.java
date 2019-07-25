@@ -18,7 +18,7 @@ public class GatewayOutcomeQueueConfig {
   public static final String GATEWAY_ADDRESS_UPDATE_QUEUE = "Gateway.Address.Update";
   public static final String GATEWAY_RESPONDENT_REFUSAL_QUEUE = "Gateway.Respondent.Refusal";
   public static final String GATEWAY_FULFILLMENT_REQUEST_QUEUE = "Gateway.Fulfillment.Request";
-  public static final String GATEWAY_CCS_PROPERTYLISTING_QUEUE = "Gateway.Css.Propertylisting";
+  public static final String GATEWAY_CCS_PROPERTYLISTING_QUEUE = "Gateway.Ccs.Propertylisting";
 
   // Exchange name
   public static final String GATEWAY_OUTCOME_EXCHANGE = "Gateway.OutcomeEvent.Exchange";
@@ -44,6 +44,11 @@ public class GatewayOutcomeQueueConfig {
   }
 
   @Bean
+  public Queue ccsPropertyListing() {
+    return QueueBuilder.durable(GATEWAY_CCS_PROPERTYLISTING_QUEUE).build();
+  }
+
+  @Bean
   public Queue respondentRefusalQueue() {
     return QueueBuilder.durable(GATEWAY_RESPONDENT_REFUSAL_QUEUE).build();
   }
@@ -65,6 +70,13 @@ public class GatewayOutcomeQueueConfig {
       @Qualifier("gatewayOutcomeExchange") TopicExchange gatewayOutcomeExchange) {
     return BindingBuilder.bind(addressUpdateQueue).to(gatewayOutcomeExchange)
         .with(GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
+  }
+
+  @Bean
+  public Binding ccsPropertyListingBinding(@Qualifier("ccsPropertyListing") Queue ccsPropertyListing,
+      @Qualifier("gatewayOutcomeExchange") TopicExchange gatewayOutcomeExchange) {
+    return BindingBuilder.bind(ccsPropertyListing).to(gatewayOutcomeExchange)
+            .with(GATEWAY_CCS_PROPERTYLISTING_ROUTING_KEY);
   }
 
   @Bean

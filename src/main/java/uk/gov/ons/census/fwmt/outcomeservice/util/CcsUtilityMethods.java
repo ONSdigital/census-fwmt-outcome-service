@@ -14,7 +14,7 @@ public final class CcsUtilityMethods {
     case "CE":
       return "CE";
 
-    case "Non residential or business":
+    case "Non residential / business":
       return "NR";
     }
     return "";
@@ -26,13 +26,17 @@ public final class CcsUtilityMethods {
       return "U";
     } else if (ccsPropertyListingOutcome.getPrimaryOutcome().equals("CE")) {
       return "E";
+    } else if (ccsPropertyListingOutcome.getPrimaryOutcome().equals("Non residential / business")) {
+      return "U";
     }
     return "";
   }
 
   public static String getOrganisationName(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
-    if (!StringUtils.isEmpty(ccsPropertyListingOutcome.getCeDetails().getManagerName())) {
-      return ccsPropertyListingOutcome.getCeDetails().getManagerName();
+    if (ccsPropertyListingOutcome.getCeDetails() != null) {
+      if (!StringUtils.isEmpty(ccsPropertyListingOutcome.getCeDetails().getManagerName())) {
+        return ccsPropertyListingOutcome.getCeDetails().getManagerName();
+      }
     }
     return "";
   }
