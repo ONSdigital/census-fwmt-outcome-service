@@ -34,13 +34,9 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
 
   @Override
   public boolean isValid(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
-    List<String> invalidSecondaryOutcomes = Arrays
-        .asList("Soft refusal", "Hard refusal", "Extraordinary refusal", "Contact not needed",
-            "Derelict /Uninhabitable", "Under construction", "Potential Residential");
     List<String> validSecondaryOutcomes = Arrays
         .asList("Complete on paper (full)", "Complete on paper (partial)");
-    return !invalidSecondaryOutcomes.contains(ccsPropertyListingOutcome.getSecondaryOutcome()) &&
-        validSecondaryOutcomes.contains(ccsPropertyListingOutcome.getSecondaryOutcome());
+    return validSecondaryOutcomes.contains(ccsPropertyListingOutcome.getSecondaryOutcome());
   }
 
   @Override
