@@ -7,8 +7,6 @@ class CcsSecondaryOutcomeMap {
 
   static final Map<String, String> ccsSecondaryOutcomeMap = new HashMap<>();
 
-  private CcsSecondaryOutcomeMap() {}
-
   {
     ccsSecondaryOutcomeMap.put("Derelict / uninhabitable", "DERELICT");
     ccsSecondaryOutcomeMap.put("Under construction", "UNDER_CONSTRUCTION");
@@ -18,5 +16,8 @@ class CcsSecondaryOutcomeMap {
     ccsSecondaryOutcomeMap.put("Soft refusal", "SOFT_REFUSAL");
     ccsSecondaryOutcomeMap.put("Extraordinary refusal", "EXTRAORDINARY_REFUSAL");
     ccsSecondaryOutcomeMap.put("Non residential /Business", "NON_RESIDENTIAL");
+  }
+
+  private CcsSecondaryOutcomeMap() {
   }
 }

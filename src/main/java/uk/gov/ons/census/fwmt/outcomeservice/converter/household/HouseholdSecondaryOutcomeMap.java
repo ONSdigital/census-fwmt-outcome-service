@@ -7,9 +7,6 @@ class HouseholdSecondaryOutcomeMap {
 
   static final Map<String, String> householdSecondaryOutcomeMap = new HashMap<>();
 
-  private HouseholdSecondaryOutcomeMap() {
-  }
-
   {
     // Non Valid Household
     householdSecondaryOutcomeMap.put("Derelict", "DERELICT");
@@ -24,5 +21,8 @@ class HouseholdSecondaryOutcomeMap {
     householdSecondaryOutcomeMap.put("Split address", "SPLIT_ADDRESS");
     householdSecondaryOutcomeMap.put("Hard refusal", "HARD_REFUSAL");
     householdSecondaryOutcomeMap.put("Extraordinary refusal", "EXTRAORDINARY_REFUSAL");
+  }
+
+  private HouseholdSecondaryOutcomeMap() {
   }
 }

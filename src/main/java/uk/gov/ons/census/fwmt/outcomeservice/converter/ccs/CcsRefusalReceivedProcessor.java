@@ -50,11 +50,10 @@ public class CcsRefusalReceivedProcessor implements CcsOutcomeServiceProcessor {
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root, ccs);
 
-
-      gatewayOutcomeProducer
-          .sendPropertyListing(outcomeEvent, String.valueOf(ccsPropertyListingOutcome.getTransactionId()));
-      gatewayEventManager
-          .triggerEvent(String.valueOf(ccsPropertyListingOutcome.getPropertyListingCaseId()), PROPERTY_LISTING_SENT,
-              LocalTime.now());
+    gatewayOutcomeProducer
+        .sendPropertyListing(outcomeEvent, String.valueOf(ccsPropertyListingOutcome.getTransactionId()));
+    gatewayEventManager
+        .triggerEvent(String.valueOf(ccsPropertyListingOutcome.getPropertyListingCaseId()), PROPERTY_LISTING_SENT,
+            LocalTime.now());
   }
 }

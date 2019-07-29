@@ -7,9 +7,6 @@ public class InterviewSecondaryOutcomeMap {
 
   static final Map<String, String> interviewSecondaryOutcomeMap = new HashMap<>();
 
-  private InterviewSecondaryOutcomeMap(){
-  }
-
   {
     // REFUSAL RECEIVED
     interviewSecondaryOutcomeMap.put("Extraordinary refusal", "EXTRAORDINARY_REFUSAL");
@@ -27,5 +24,8 @@ public class InterviewSecondaryOutcomeMap {
     interviewSecondaryOutcomeMap.put("Incorrect address", "CCS_INCORRECT_ADDRESS");
     interviewSecondaryOutcomeMap.put("CE out of scope", "CCS_CE_OUT_OF_SCOPE");
     interviewSecondaryOutcomeMap.put("Property is a household", "CCS_CE_CASE_IS_A_HOUSEHOLD");
+  }
+
+  private InterviewSecondaryOutcomeMap() {
   }
 }

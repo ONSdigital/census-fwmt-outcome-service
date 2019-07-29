@@ -18,7 +18,9 @@ import java.util.Map;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROPERTY_LISTING_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.NON_RESIDENTIAL;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.ccs;
-import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.*;
+import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressLevel;
+import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressType;
+import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getOrganisationName;
 
 @Component
 public class CssNonResidential implements CcsOutcomeServiceProcessor {
@@ -36,7 +38,7 @@ public class CssNonResidential implements CcsOutcomeServiceProcessor {
   }
 
   @Override
-  public void processMessage(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
+  public void processMessage(CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException {
     Map<String, Object> root = new HashMap<>();
     root.put("ccsPropertyListingOutcome", ccsPropertyListingOutcome);
     root.put("addressType", getAddressType(ccsPropertyListingOutcome));
@@ -45,14 +47,10 @@ public class CssNonResidential implements CcsOutcomeServiceProcessor {
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(NON_RESIDENTIAL, root, ccs);
 
-    try {
-      gatewayOutcomeProducer
-          .sendPropertyListing(outcomeEvent, String.valueOf(ccsPropertyListingOutcome.getTransactionId()));
-      gatewayEventManager
-          .triggerEvent(String.valueOf(ccsPropertyListingOutcome.getPropertyListingCaseId()), PROPERTY_LISTING_SENT,
-              LocalTime.now());
-    } catch (GatewayException e) {
-      e.printStackTrace();
-    }
+    gatewayOutcomeProducer
+        .sendPropertyListing(outcomeEvent, String.valueOf(ccsPropertyListingOutcome.getTransactionId()));
+    gatewayEventManager
+        .triggerEvent(String.valueOf(ccsPropertyListingOutcome.getPropertyListingCaseId()), PROPERTY_LISTING_SENT,
+            LocalTime.now());
   }
 }

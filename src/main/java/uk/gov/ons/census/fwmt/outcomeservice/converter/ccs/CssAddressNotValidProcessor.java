@@ -48,11 +48,11 @@ public class CssAddressNotValidProcessor implements CcsOutcomeServiceProcessor {
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_NOT_VALID, root, ccs);
 
-      gatewayOutcomeProducer
-          .sendPropertyListing(outcomeEvent, String.valueOf(ccsPropertyListingOutcome.getTransactionId()));
-      gatewayEventManager
-          .triggerEvent(String.valueOf(ccsPropertyListingOutcome.getPropertyListingCaseId()), PROPERTY_LISTING_SENT,
-              LocalTime.now());
+    gatewayOutcomeProducer
+        .sendPropertyListing(outcomeEvent, String.valueOf(ccsPropertyListingOutcome.getTransactionId()));
+    gatewayEventManager
+        .triggerEvent(String.valueOf(ccsPropertyListingOutcome.getPropertyListingCaseId()), PROPERTY_LISTING_SENT,
+            LocalTime.now());
   }
 
   private boolean isNonValidCcsPropertyListing(CCSPropertyListingOutcome ccsPropertyListingOutcome) {

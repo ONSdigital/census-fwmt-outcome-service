@@ -18,7 +18,9 @@ import java.util.Map;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROPERTY_LISTING_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.CCS_CE_OUT_OF_SCOPE;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.ccs;
-import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.*;
+import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressLevel;
+import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressType;
+import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getOrganisationName;
 
 @Component
 public class CssCeOutOfScope implements CcsOutcomeServiceProcessor {
@@ -36,7 +38,7 @@ public class CssCeOutOfScope implements CcsOutcomeServiceProcessor {
   }
 
   @Override
-  public void processMessage(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
+  public void processMessage(CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException {
     Map<String, Object> root = new HashMap<>();
     root.put("ccsPropertyListingOutcome", ccsPropertyListingOutcome);
     root.put("addressType", getAddressType(ccsPropertyListingOutcome));
@@ -45,14 +47,10 @@ public class CssCeOutOfScope implements CcsOutcomeServiceProcessor {
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(CCS_CE_OUT_OF_SCOPE, root, ccs);
 
-    try {
-      gatewayOutcomeProducer
-          .sendPropertyListing(outcomeEvent, String.valueOf(ccsPropertyListingOutcome.getTransactionId()));
-      gatewayEventManager
-          .triggerEvent(String.valueOf(ccsPropertyListingOutcome.getPropertyListingCaseId()), PROPERTY_LISTING_SENT,
-              LocalTime.now());
-    } catch (GatewayException e) {
-      e.printStackTrace();
-    }
+    gatewayOutcomeProducer
+        .sendPropertyListing(outcomeEvent, String.valueOf(ccsPropertyListingOutcome.getTransactionId()));
+    gatewayEventManager
+        .triggerEvent(String.valueOf(ccsPropertyListingOutcome.getPropertyListingCaseId()), PROPERTY_LISTING_SENT,
+            LocalTime.now());
   }
 }

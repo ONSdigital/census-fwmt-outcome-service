@@ -47,10 +47,10 @@ public class CssPotentialResidentialProcessor implements CcsOutcomeServiceProces
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(POTENTIAL_RESIDENTIAL, root, ccs);
 
-      gatewayOutcomeProducer
-          .sendPropertyListing(outcomeEvent, String.valueOf(ccsPropertyListingOutcome.getTransactionId()));
-      gatewayEventManager
-          .triggerEvent(String.valueOf(ccsPropertyListingOutcome.getPropertyListingCaseId()), PROPERTY_LISTING_SENT,
-              LocalTime.now());
+    gatewayOutcomeProducer
+        .sendPropertyListing(outcomeEvent, String.valueOf(ccsPropertyListingOutcome.getTransactionId()));
+    gatewayEventManager
+        .triggerEvent(String.valueOf(ccsPropertyListingOutcome.getPropertyListingCaseId()), PROPERTY_LISTING_SENT,
+            LocalTime.now());
   }
 }

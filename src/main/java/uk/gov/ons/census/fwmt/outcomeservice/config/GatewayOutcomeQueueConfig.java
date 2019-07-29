@@ -76,7 +76,7 @@ public class GatewayOutcomeQueueConfig {
   public Binding ccsPropertyListingBinding(@Qualifier("ccsPropertyListing") Queue ccsPropertyListing,
       @Qualifier("gatewayOutcomeExchange") TopicExchange gatewayOutcomeExchange) {
     return BindingBuilder.bind(ccsPropertyListing).to(gatewayOutcomeExchange)
-            .with(GATEWAY_CCS_PROPERTYLISTING_ROUTING_KEY);
+        .with(GATEWAY_CCS_PROPERTYLISTING_ROUTING_KEY);
   }
 
   @Bean
