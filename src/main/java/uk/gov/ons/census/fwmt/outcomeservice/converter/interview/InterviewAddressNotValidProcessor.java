@@ -50,7 +50,7 @@ public class InterviewAddressNotValidProcessor implements InterviewOutcomeServic
 
   private boolean isNonValid(CCSInterviewOutcome ccsInterviewOutcome) {
     List<String> validSecondaryOutcomes = Arrays
-        .asList("Derelict", "Demolished", "Property is a CE", "Unaddressable Object", "Non residential or business",
+        .asList("Derelict", "Demolished", "Property is a CE", "Non residential or business",
             "Duplicate", "Under construction", "Incorrect address", "Property is a household");
     return ccsInterviewOutcome.getPrimaryOutcome().equals(NOT_VALID.toString()) && validSecondaryOutcomes
         .contains(ccsInterviewOutcome.getSecondaryOutcome());
