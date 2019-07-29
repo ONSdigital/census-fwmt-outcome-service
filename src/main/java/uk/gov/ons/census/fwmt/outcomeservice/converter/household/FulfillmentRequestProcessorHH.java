@@ -7,7 +7,7 @@ import uk.gov.ons.census.fwmt.common.data.household.FulfillmentRequest;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.HHOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 import uk.gov.ons.ctp.common.error.CTPException;
@@ -33,7 +33,7 @@ import static uk.gov.ons.ctp.integration.common.product.model.Product.RequestCha
 
 @Slf4j
 @Component
-public class FulfillmentRequestProcessor implements OutcomeServiceProcessor {
+public class FulfillmentRequestProcessorHH implements HHOutcomeServiceProcessor {
 
   @Autowired
   private ProductReference productReference;
@@ -53,17 +53,16 @@ public class FulfillmentRequestProcessor implements OutcomeServiceProcessor {
   }
 
   @Override
-  public void processMessage(HouseholdOutcome householdOutcome) {
+  public void processMessage(HouseholdOutcome householdOutcome) throws GatewayException {
     for (FulfillmentRequest fulfillmentRequest : householdOutcome.getFulfillmentRequests()) {
       if (!isQuestionnaireLinked(fulfillmentRequest)) {
         createQuestionnaireRequiredByPostEvent(householdOutcome, fulfillmentRequest);
-        log.error("Failed to find valid Secondary Outcome: {}", householdOutcome.getSecondaryOutcome());
       }
     }
   }
 
   private void createQuestionnaireRequiredByPostEvent(HouseholdOutcome householdOutcome,
-      FulfillmentRequest fulfillmentRequest) {
+      FulfillmentRequest fulfillmentRequest) throws GatewayException {
     Product product = getProductFromQuestionnaireType(fulfillmentRequest);
     Map<String, Object> root = new HashMap<>();
     root.put("householdOutcome", householdOutcome);
@@ -79,12 +78,8 @@ public class FulfillmentRequestProcessor implements OutcomeServiceProcessor {
     }
     String outcomeEvent = TemplateCreator.createOutcomeMessage(FULFILMENT_REQUESTED, root, household);
 
-    try {
-      gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
-      gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
-    } catch (GatewayException e) {
-      e.printStackTrace();
-    }
+    gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
+    gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
   }
 
   private boolean isQuestionnaireLinked(FulfillmentRequest fulfillmentRequest) {

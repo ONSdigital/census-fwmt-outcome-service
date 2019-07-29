@@ -38,7 +38,7 @@ public class InterviewQuestionnaireLinkedProcessor implements InterviewOutcomeSe
   }
 
   @Override
-  public void processMessage(CCSInterviewOutcome ccsInterviewOutcome) {
+  public void processMessage(CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException{
     if (isQuestionnaireLinked(ccsInterviewOutcome.getFulfillmentRequest())) {
       Map<String, Object> root = new HashMap<>();
       root.put("ccsInterviewOutcome", ccsInterviewOutcome);
@@ -46,12 +46,8 @@ public class InterviewQuestionnaireLinkedProcessor implements InterviewOutcomeSe
 
       String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, interview);
 
-      try {
-        gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(ccsInterviewOutcome.getTransactionId()));
-        gatewayEventManager.triggerEvent(String.valueOf(ccsInterviewOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
-      } catch (GatewayException e) {
-        e.printStackTrace();
-      }
+      gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(ccsInterviewOutcome.getTransactionId()));
+      gatewayEventManager.triggerEvent(String.valueOf(ccsInterviewOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
     }
   }
 
@@ -61,14 +57,14 @@ public class InterviewQuestionnaireLinkedProcessor implements InterviewOutcomeSe
 
   private boolean isContactMade(CCSInterviewOutcome ccsInterviewOutcome) {
     List<String> validCompletion = Collections.singletonList("Left questionnaire on final visit");
-    return ccsInterviewOutcome.getPrimaryOutcome().equals(CONTACT_MADE.toString()) && validCompletion
+    return ccsInterviewOutcome.getPrimaryOutcome().equals(NO_CONTACT.toString()) && validCompletion
         .contains(ccsInterviewOutcome.getSecondaryOutcome());
   }
 
   private boolean isNoContact(CCSInterviewOutcome ccsInterviewOutcome) {
     List<String> validCompletion = Arrays.asList("Complete on paper (full)", "Complete on paper (partial)",
         "Left questionnaire on final visit");
-    return ccsInterviewOutcome.getPrimaryOutcome().equals(NO_CONTACT.toString()) && validCompletion
+    return ccsInterviewOutcome.getPrimaryOutcome().equals(CONTACT_MADE.toString()) && validCompletion
         .contains(ccsInterviewOutcome.getSecondaryOutcome());
   }
 }

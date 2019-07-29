@@ -6,7 +6,7 @@ import uk.gov.ons.census.fwmt.common.data.household.FulfillmentRequest;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.HHOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
@@ -22,7 +22,7 @@ import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.CONTAC
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.household;
 
 @Component
-public class QuestionnaireLinkedProcessor implements OutcomeServiceProcessor {
+public class QuestionnaireLinkedProcessorHH implements HHOutcomeServiceProcessor {
 
   @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
@@ -39,7 +39,7 @@ public class QuestionnaireLinkedProcessor implements OutcomeServiceProcessor {
   }
 
   @Override
-  public void processMessage(HouseholdOutcome householdOutcome) {
+  public void processMessage(HouseholdOutcome householdOutcome) throws GatewayException {
     for (FulfillmentRequest fulfillmentRequest : householdOutcome.getFulfillmentRequests()) {
       if (isQuestionnaireLinked(fulfillmentRequest)) {
         Map<String, Object> root = new HashMap<>();
@@ -48,12 +48,8 @@ public class QuestionnaireLinkedProcessor implements OutcomeServiceProcessor {
 
         String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, household);
 
-        try {
-          gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
-          gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
-        } catch (GatewayException e) {
-          e.printStackTrace();
-        }
+        gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
+        gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
       }
     }
   }

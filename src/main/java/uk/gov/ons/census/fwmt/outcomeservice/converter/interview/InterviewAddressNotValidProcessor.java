@@ -36,7 +36,7 @@ public class InterviewAddressNotValidProcessor implements InterviewOutcomeServic
   }
 
   @Override
-  public void processMessage(CCSInterviewOutcome ccsInterviewOutcome) {
+  public void processMessage(CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException {
     Map<String, Object> root = new HashMap<>();
     root.put("ccsInterviewOutcome", ccsInterviewOutcome);
     root.put("secondaryOutcome",
@@ -44,12 +44,8 @@ public class InterviewAddressNotValidProcessor implements InterviewOutcomeServic
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_NOT_VALID, root, household);
 
-    try {
-      gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent, String.valueOf(ccsInterviewOutcome.getTransactionId()));
-      gatewayEventManager.triggerEvent(String.valueOf(ccsInterviewOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
-    } catch (GatewayException e) {
-      e.printStackTrace();
-    }
+    gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent, String.valueOf(ccsInterviewOutcome.getTransactionId()));
+    gatewayEventManager.triggerEvent(String.valueOf(ccsInterviewOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
   }
 
   private boolean isNonValid(CCSInterviewOutcome ccsInterviewOutcome) {

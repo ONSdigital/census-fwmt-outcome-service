@@ -7,6 +7,9 @@ class HouseholdSecondaryOutcomeMap {
 
   static final Map<String, String> householdSecondaryOutcomeMap = new HashMap<>();
 
+  private HouseholdSecondaryOutcomeMap() {
+  }
+
   {
     // Non Valid Household
     householdSecondaryOutcomeMap.put("Derelict", "DERELICT");

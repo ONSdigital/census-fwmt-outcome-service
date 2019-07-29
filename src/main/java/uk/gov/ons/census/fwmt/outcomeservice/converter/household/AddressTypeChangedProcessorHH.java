@@ -1,11 +1,12 @@
 package uk.gov.ons.census.fwmt.outcomeservice.converter.household;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.integration.annotation.Gateway;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.HHOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
@@ -21,7 +22,7 @@ import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.NON_VA
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.household;
 
 @Component
-public class AddressTypeChangedProcessor implements OutcomeServiceProcessor {
+public class AddressTypeChangedProcessorHH implements HHOutcomeServiceProcessor {
 
   @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
@@ -38,7 +39,7 @@ public class AddressTypeChangedProcessor implements OutcomeServiceProcessor {
   }
 
   @Override
-  public void processMessage(HouseholdOutcome householdOutcome) {
+  public void processMessage(HouseholdOutcome householdOutcome) throws GatewayException {
     Map<String, Object> root = new HashMap<>();
     root.put("householdOutcome", householdOutcome);
     root.put("estabType", "CE");
@@ -52,11 +53,7 @@ public class AddressTypeChangedProcessor implements OutcomeServiceProcessor {
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_TYPE_CHANGED, root, household);
 
-    try {
-      gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
-      gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
-    } catch (GatewayException e) {
-      e.printStackTrace();
-    }
+    gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
+    gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
   }
 }

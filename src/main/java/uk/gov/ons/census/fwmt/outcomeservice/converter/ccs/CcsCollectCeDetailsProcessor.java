@@ -38,7 +38,7 @@ public class CcsCollectCeDetailsProcessor implements CcsOutcomeServiceProcessor 
   }
 
   @Override
-  public void processMessage(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
+  public void processMessage(CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException {
     Map<String, Object> root = new HashMap<>();
     root.put("ccsPropertyListingOutcome", ccsPropertyListingOutcome);
     root.put("addressType", getAddressType(ccsPropertyListingOutcome));
@@ -47,14 +47,11 @@ public class CcsCollectCeDetailsProcessor implements CcsOutcomeServiceProcessor 
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(COLLECT_CE_DETAILS, root, ccs);
 
-    try {
-      gatewayOutcomeProducer
+     gatewayOutcomeProducer
           .sendPropertyListing(outcomeEvent, String.valueOf(ccsPropertyListingOutcome.getTransactionId()));
       gatewayEventManager
           .triggerEvent(String.valueOf(ccsPropertyListingOutcome.getPropertyListingCaseId()), PROPERTY_LISTING_SENT,
               LocalTime.now());
-    } catch (GatewayException e) {
-      e.printStackTrace();
-    }
+
   }
 }

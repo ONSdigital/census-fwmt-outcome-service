@@ -7,6 +7,8 @@ class CcsSecondaryOutcomeMap {
 
   static final Map<String, String> ccsSecondaryOutcomeMap = new HashMap<>();
 
+  private CcsSecondaryOutcomeMap() {}
+
   {
     ccsSecondaryOutcomeMap.put("Derelict/ uninhabitable", "DERELICT");
     ccsSecondaryOutcomeMap.put("Under construction", "UNDER_CONSTRUCTION");

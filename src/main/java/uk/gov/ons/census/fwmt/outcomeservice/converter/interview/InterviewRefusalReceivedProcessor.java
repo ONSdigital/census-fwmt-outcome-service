@@ -37,7 +37,7 @@ public class InterviewRefusalReceivedProcessor implements InterviewOutcomeServic
   }
 
   @Override
-  public void processMessage(CCSInterviewOutcome ccsInterviewOutcome) {
+  public void processMessage(CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException {
     Map<String, Object> root = new HashMap<>();
     root.put("ccsInterviewOutcome", ccsInterviewOutcome);
     root.put("refusalType",
@@ -45,11 +45,7 @@ public class InterviewRefusalReceivedProcessor implements InterviewOutcomeServic
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root, interview);
 
-    try {
-      gatewayOutcomeProducer.sendRespondentRefusal(outcomeEvent, String.valueOf(ccsInterviewOutcome.getTransactionId()));
-      gatewayEventManager.triggerEvent(String.valueOf(ccsInterviewOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
-    } catch (GatewayException e) {
-      e.printStackTrace();
-    }
+    gatewayOutcomeProducer.sendRespondentRefusal(outcomeEvent, String.valueOf(ccsInterviewOutcome.getTransactionId()));
+    gatewayEventManager.triggerEvent(String.valueOf(ccsInterviewOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
   }
 }

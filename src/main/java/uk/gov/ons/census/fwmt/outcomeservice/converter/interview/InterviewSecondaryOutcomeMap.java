@@ -7,6 +7,9 @@ public class InterviewSecondaryOutcomeMap {
 
   static final Map<String, String> interviewSecondaryOutcomeMap = new HashMap<>();
 
+  private InterviewSecondaryOutcomeMap(){
+  }
+
   {
     // REFUSAL RECEIVED
     interviewSecondaryOutcomeMap.put("Extraordinary refusal", "EXTRAORDINARY_REFUSAL");

@@ -45,7 +45,7 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
   }
 
   @Override
-  public void processMessage(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
+  public void processMessage(CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException {
     if (isQuestionnaireLinked(ccsPropertyListingOutcome.getFulfillmentRequest())) {
       Map<String, Object> root = new HashMap<>();
 
@@ -57,15 +57,12 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
 
       String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, household);
 
-      try {
+
         gatewayOutcomeProducer
             .sendPropertyListing(outcomeEvent, String.valueOf(ccsPropertyListingOutcome.getTransactionId()));
         gatewayEventManager
             .triggerEvent(String.valueOf(ccsPropertyListingOutcome.getPropertyListingCaseId()), PROPERTY_LISTING_SENT,
                 LocalTime.now());
-      } catch (GatewayException e) {
-        e.printStackTrace();
-      }
     }
   }
 
