@@ -10,7 +10,7 @@ import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
-import uk.gov.ons.census.fwmt.outcomeservice.service.impl.OutcomeServiceImpl;
+import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
 
 import java.time.LocalTime;
 
@@ -23,7 +23,7 @@ import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.C
 public class OutcomeController implements OutcomeApi {
 
   @Autowired
-  private OutcomeServiceImpl cometTranslationService;
+  private OutcomeService outcomeService;
 
   @Autowired
   private GatewayEventManager gatewayEventManager;
@@ -32,7 +32,7 @@ public class OutcomeController implements OutcomeApi {
   public ResponseEntity<HouseholdOutcome> householdCaseOutcomeResponse(String caseId,
       HouseholdOutcome householdOutcome) throws GatewayException {
     gatewayEventManager.triggerEvent(caseId, COMET_HH_OUTCOME_RECEIVED, LocalTime.now());
-    cometTranslationService.createHouseHoldOutcomeEvent(householdOutcome);
+    outcomeService.createHouseHoldOutcomeEvent(householdOutcome);
 
     return new ResponseEntity<>(householdOutcome, HttpStatus.ACCEPTED);
   }
@@ -44,7 +44,7 @@ public class OutcomeController implements OutcomeApi {
         .triggerEvent(String.valueOf(ccsPropertyListingOutcome.getPropertyListingCaseId()),
             COMET_CCSPL_OUTCOME_RECEIVED,
             LocalTime.now());
-    cometTranslationService.createPropertyListingOutcomeEvent(ccsPropertyListingOutcome);
+    outcomeService.createPropertyListingOutcomeEvent(ccsPropertyListingOutcome);
 
     return new ResponseEntity<>(ccsPropertyListingOutcome, HttpStatus.ACCEPTED);
   }
@@ -52,7 +52,7 @@ public class OutcomeController implements OutcomeApi {
   @Override public ResponseEntity<CCSInterviewOutcome> ccsInterviewOutcome(String caseId,
       CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException {
     gatewayEventManager.triggerEvent(caseId, COMET_CCSSI_OUTCOME_RECEIVED, LocalTime.now());
-    cometTranslationService.createInterviewOutcomeEvent(ccsInterviewOutcome);
+    outcomeService.createInterviewOutcomeEvent(ccsInterviewOutcome);
     return null;
   }
 }
