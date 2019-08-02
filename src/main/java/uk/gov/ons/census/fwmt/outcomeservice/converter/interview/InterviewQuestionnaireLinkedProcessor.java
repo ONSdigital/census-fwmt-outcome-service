@@ -57,13 +57,13 @@ public class InterviewQuestionnaireLinkedProcessor implements InterviewOutcomeSe
     return (fulfillmentRequest.getQuestionnaireId() != null);
   }
 
-  private boolean isContactMade(CCSInterviewOutcome ccsInterviewOutcome) {
+  private boolean isNoContact(CCSInterviewOutcome ccsInterviewOutcome) {
     List<String> validCompletion = Collections.singletonList("Left questionnaire on final visit");
     return ccsInterviewOutcome.getPrimaryOutcome().equals(NO_CONTACT.toString()) && validCompletion
         .contains(ccsInterviewOutcome.getSecondaryOutcome());
   }
 
-  private boolean isNoContact(CCSInterviewOutcome ccsInterviewOutcome) {
+  private boolean isContactMade(CCSInterviewOutcome ccsInterviewOutcome) {
     List<String> validCompletion = Arrays.asList("Complete on paper (full)", "Complete on paper (partial)",
         "Left questionnaire on final visit");
     return ccsInterviewOutcome.getPrimaryOutcome().equals(CONTACT_MADE.toString()) && validCompletion

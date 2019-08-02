@@ -1,6 +1,10 @@
 package uk.gov.ons.census.fwmt.outcomeservice.config;
 
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.QueueBuilder;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -75,7 +79,7 @@ public class GatewayOutcomeQueueConfig {
   // Bindings
   @Bean
   public Binding respondentRefusalBinding(@Qualifier("respondentRefusalQueue") Queue respondentRefusalQueue,
-      @Qualifier("gatewayOutcomeExchange") TopicExchange gatewayOutcomeExchange) {
+                                          @Qualifier("gatewayOutcomeExchange") TopicExchange gatewayOutcomeExchange) {
     return BindingBuilder.bind(respondentRefusalQueue).to(gatewayOutcomeExchange)
             .with(GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
   }
