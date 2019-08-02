@@ -1,18 +1,13 @@
 package uk.gov.ons.census.fwmt.outcomeservice.helper;
 
-import java.io.IOException;
+import uk.gov.ons.census.fwmt.common.data.household.CeDetails;
+import uk.gov.ons.census.fwmt.common.data.household.FulfillmentRequest;
+import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import uk.gov.ons.census.fwmt.common.data.comet.CeDetails;
-import uk.gov.ons.census.fwmt.common.data.comet.FulfillmentRequest;
-import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
 
 public class HouseholdOutcomeBuilder {
 
@@ -392,83 +387,4 @@ public class HouseholdOutcomeBuilder {
 
     return householdOutcome;
   }
-  
-//  public static void main(String[] args) throws JsonGenerationException, JsonMappingException, IOException {
-//    ObjectMapper mapper = new ObjectMapper();  
-//    
-//    HouseholdOutcome householdOutcome1 = createHouseholdOutcomeForPaperH();
-//      String ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome1);
-//      System.out.println(ho);
-//      
-//      
-//      HouseholdOutcome householdOutcome2 = createHouseholdOutcomeForPaperHC();
-//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome2);
-//      System.out.println(ho);
-//      
-//      HouseholdOutcome householdOutcome3 = createHouseholdOutcomeForPaperI();
-//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome3);
-//      System.out.println(ho);
-//      
-//      HouseholdOutcome householdOutcome4 = createHouseholdOutcomeForPaperWithIncorrectQuestionnaireType();
-//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome4);
-//      System.out.println(ho);
-//      
-//      HouseholdOutcome householdOutcome5 = createHouseholdOutcomeForHUACTextBack();
-//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome5);
-//      System.out.println(ho);
-//      
-//      HouseholdOutcome householdOutcome6 = createHouseholdOutcomeForIUACTextBack();
-//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome6);
-//      System.out.println(ho);
-//      
-//      HouseholdOutcome householdOutcome7 = createHouseholdOutcomeForIUACTextBackWithNoNumber();
-//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome7);
-//      System.out.println(ho);
-//      
-//      HouseholdOutcome householdOutcome8 = createHouseholdOutcomeForIUACTextBackWithIncorrectQuestionnaireType();
-//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome8);
-//      System.out.println(ho);
-//      
-//      HouseholdOutcome householdOutcome9 = createHouseholdOutcomeForWillComplete();
-//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome9);
-//      System.out.println(ho);
-//      
-//      HouseholdOutcome householdOutcome10 = createHouseholdOutcomeWithNoSecondaryRequest();
-//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome10);
-//      System.out.println(ho);
-//      
-//      HouseholdOutcome householdOutcome11 = createContactMadeHouseholdHardRefusal();
-//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome11);
-//      System.out.println(ho);
-//      
-//      HouseholdOutcome householdOutcome12 = createContactMadeHouseholdSplitAddress();
-//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome12);
-//      System.out.println(ho);
-//      
-//      HouseholdOutcome householdOutcome13 = createContactMadeHouseholdIncorrectSecondaryRequest();
-//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome13);
-//      System.out.println(ho);
-//      
-//      HouseholdOutcome householdOutcome14 = createNoValidHouseholdDerelict();
-//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome14);
-//      System.out.println(ho);
-//      
-//      HouseholdOutcome householdOutcome15 = createNoValidHouseholdIncorrectSecondaryRequest();
-//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome15);
-//      System.out.println(ho);
-//      
-//      HouseholdOutcome householdOutcome16 = createNoValidHouseholdIncorrectPrimaryRequest();
-//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome16);
-//      System.out.println(ho);
-//      
-//      HouseholdOutcome householdOutcome17 = createCENoValidAddressContactMade();
-//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome17);
-//      System.out.println(ho);
-//      
-//      HouseholdOutcome householdOutcome18 = createCENoValidAddressNoContactMade();
-//      ho = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(householdOutcome18);
-//      System.out.println(ho);
-//      
-//  }
-  
 }

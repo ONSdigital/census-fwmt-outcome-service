@@ -1,86 +1,69 @@
 package uk.gov.ons.census.fwmt.outcomeservice.service.impl;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.ons.census.fwmt.common.data.comet.HouseholdOutcome;
+import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
+import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
+import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
-import uk.gov.ons.census.fwmt.outcomeservice.factory.FulfilmentRequestFactory;
-import uk.gov.ons.census.fwmt.outcomeservice.factory.OutcomeEventFactory;
-import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.CcsOutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.HHOutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.InterviewOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
 
-import java.io.IOException;
-import java.time.LocalTime;
+import javax.annotation.PostConstruct;
 import java.util.List;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT_RM;
-
+@Slf4j
 @Service
 public class OutcomeServiceImpl implements OutcomeService {
 
   @Autowired
-  private GatewayOutcomeProducer gatewayOutcomeProducer;
+  private List<HHOutcomeServiceProcessor> householdOutcomeConverters;
 
   @Autowired
-  private GatewayEventManager gatewayEventManager;
+  private List<CcsOutcomeServiceProcessor> propertyListingConverters;
 
   @Autowired
-  private OutcomeEventFactory outcomeEventFactory;
+  private List<InterviewOutcomeServiceProcessor> interviewOutcomeConverters;
 
-  @Autowired
-  private FulfilmentRequestFactory fulfilmentRequestFactory;
+  @PostConstruct
+  public void init() {
+  }
 
-  @Autowired
-  private ObjectMapper objectMapper;
-
-  public void createHouseHoldOutcomeEvent(HouseholdOutcome householdOutcome) throws GatewayException {
-
-    if (householdOutcome.getFulfillmentRequests() == null) {
-      String outcomeEvent = outcomeEventFactory.createOutcomeEvent(householdOutcome);
-
-      try {
-        JsonNode rootNode = objectMapper.readTree(outcomeEvent);
-        JsonNode eventTypeNode = rootNode.get("event").get("type");
-        String eventType = eventTypeNode.asText();
-
-        JsonNode transactionIdNode = rootNode.get("event").get("transactionId");
-        String transactionId = transactionIdNode.asText();
-
-        if (eventType.equals("ADDRESS_NOT_VALID") || eventType.equals("ADDRESS_TYPE_CHANGED")) {
-          gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent, transactionId);
-  
-        } else if (eventType.equals("REFUSAL_RECEIVED")) {
-          gatewayOutcomeProducer.sendRespondentRefusal(outcomeEvent, transactionId);
-        }
-  
-        gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()),OUTCOME_SENT_RM, LocalTime.now());
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-
-    } else if (!householdOutcome.getFulfillmentRequests().isEmpty()) {
-
-      List<String> processedFulfilmentRequests = fulfilmentRequestFactory.createFulfilmentRequestEvent(householdOutcome);
-
-      for (String outcomeEvent : processedFulfilmentRequests) {
+  public void createHouseHoldOutcomeEvent(HouseholdOutcome householdOutcome) {
+    for (HHOutcomeServiceProcessor converter : householdOutcomeConverters) {
+      if (converter.isValid(householdOutcome)) {
         try {
-          JsonNode rootNode = objectMapper.readTree(outcomeEvent);
-          JsonNode eventTypeNode = rootNode.get("event").get("type");
-          String eventType = eventTypeNode.asText();
+          converter.processMessage(householdOutcome);
+        } catch (GatewayException e) {
+          log.error("failed to convert outcome", e);
+        }
+      }
+    }
+  }
 
-          JsonNode transactionIdNode = rootNode.get("event").get("transactionId");
-          String transactionId = transactionIdNode.asText();
+  public void createPropertyListingOutcomeEvent(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
+    for (CcsOutcomeServiceProcessor converter : propertyListingConverters) {
+      if (converter.isValid(ccsPropertyListingOutcome)) {
+        try {
+          converter.processMessage(ccsPropertyListingOutcome);
+        } catch (GatewayException e) {
+          log.error("failed to convert outcome", e);
+        }
+      }
+    }
+  }
 
-        if (eventType.equals("FULFILMENT_REQUESTED"))
-          gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, transactionId);
-
-        if (eventType.equals("QUESTIONNAIRE_LINKED"))
-          gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, transactionId);
-        } catch (IOException e) {
-          e.printStackTrace();
+  @Override
+  public void createInterviewOutcomeEvent(CCSInterviewOutcome ccsInterviewOutcome) {
+    for (InterviewOutcomeServiceProcessor converter : interviewOutcomeConverters) {
+      if (converter.isValid(ccsInterviewOutcome)) {
+        try {
+          converter.processMessage(ccsInterviewOutcome);
+        } catch (GatewayException e) {
+          log.error("failed to convert outcome", e);
         }
       }
     }
