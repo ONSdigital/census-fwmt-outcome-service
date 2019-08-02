@@ -16,9 +16,12 @@
 <#if ccsPropertyListingOutcome.ceDetails??>
     "estabType":"${ccsPropertyListingOutcome.ceDetails.establishmentType}",
 <#else>
-    <#if addressLevel == "U">
+    <#if addressType == "HH" >
         "estabType":"Household",
+    <#elseif addressType == "NR" >
+        "estabType":"Non Residential",
     </#if>
+
 </#if>
 "addressLevel":"${addressLevel}",
 "organisationName":"${organisationName}",
@@ -29,8 +32,8 @@
 </#if>
 "townName":"${ccsPropertyListingOutcome.address.town}",
 "postcode":"${ccsPropertyListingOutcome.address.postCode}",
-"latitude":"${ccsPropertyListingOutcome.address.location.latitude}",
-"longitude":"${ccsPropertyListingOutcome.address.location.longitude}",
+"latitude":"${ccsPropertyListingOutcome.address.location.latitude?string["0.#######"]}",
+"longitude":"${ccsPropertyListingOutcome.address.location.longitude?string["0.#######"]}",
 "fieldcoordinatorId":"${ccsPropertyListingOutcome.coordinatorCode}",
 "fieldofficerId":"${ccsPropertyListingOutcome.fieldOfficerCode}"
 }

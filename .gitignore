@@ -19,6 +19,7 @@
 out/
 .gradle
 build
+target/
 
 #Eclipse files
 .metadata

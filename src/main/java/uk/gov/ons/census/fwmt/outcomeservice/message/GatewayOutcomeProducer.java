@@ -22,6 +22,12 @@ public class GatewayOutcomeProducer {
   }
 
   @Retryable
+  public void sendCcsIntQuestionnaire(String outcomeEvent, String transactionId) {
+    log.info("CCS linked Questionnaire message sent to queue :{}", transactionId);
+    rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
+            GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY, outcomeEvent);
+  }
+  @Retryable
   public void sendRespondentRefusal(String outcomeEvent, String transactionId) {
     log.info("Respondent Refusal message sent to queue :{}", transactionId);
     rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,

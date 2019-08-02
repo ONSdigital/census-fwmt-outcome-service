@@ -38,10 +38,11 @@ public class AddressNotValidProcessorHH implements HHOutcomeServiceProcessor {
 
   @Override
   public void processMessage(HouseholdOutcome householdOutcome) throws GatewayException {
+    HouseholdSecondaryOutcomeMap householdSecondaryOutcomeMap = new HouseholdSecondaryOutcomeMap();
     Map<String, Object> root = new HashMap<>();
     root.put("householdOutcome", householdOutcome);
     root.put("secondaryOutcome",
-        HouseholdSecondaryOutcomeMap.householdSecondaryOutcomeMap.get(householdOutcome.getSecondaryOutcome()));
+        householdSecondaryOutcomeMap.householdSecondaryOutcomeMap.get(householdOutcome.getSecondaryOutcome()));
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_NOT_VALID, root, household);
 

@@ -18,6 +18,6 @@ class CcsSecondaryOutcomeMap {
     ccsSecondaryOutcomeMap.put("Non residential /Business", "NON_RESIDENTIAL");
   }
 
-  private CcsSecondaryOutcomeMap() {
+  CcsSecondaryOutcomeMap() {
   }
 }

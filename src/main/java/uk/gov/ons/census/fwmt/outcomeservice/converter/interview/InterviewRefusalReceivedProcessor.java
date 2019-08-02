@@ -37,10 +37,11 @@ public class InterviewRefusalReceivedProcessor implements InterviewOutcomeServic
 
   @Override
   public void processMessage(CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException {
+    InterviewSecondaryOutcomeMap interviewSecondaryOutcomeMap = new InterviewSecondaryOutcomeMap();
     Map<String, Object> root = new HashMap<>();
     root.put("ccsInterviewOutcome", ccsInterviewOutcome);
     root.put("refusalType",
-        InterviewSecondaryOutcomeMap.interviewSecondaryOutcomeMap.get(ccsInterviewOutcome.getSecondaryOutcome()));
+            interviewSecondaryOutcomeMap.interviewSecondaryOutcomeMap.get(ccsInterviewOutcome.getSecondaryOutcome()));
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root, interview);
 

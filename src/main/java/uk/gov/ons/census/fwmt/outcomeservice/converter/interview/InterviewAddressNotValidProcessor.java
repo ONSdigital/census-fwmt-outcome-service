@@ -19,7 +19,7 @@ import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.O
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.ADDRESS_NOT_VALID;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.CONTACT_MADE;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.NOT_VALID;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.household;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.interview;
 
 @Component
 public class InterviewAddressNotValidProcessor implements InterviewOutcomeServiceProcessor {
@@ -37,12 +37,13 @@ public class InterviewAddressNotValidProcessor implements InterviewOutcomeServic
 
   @Override
   public void processMessage(CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException {
+    InterviewSecondaryOutcomeMap interviewSecondaryOutcomeMap = new InterviewSecondaryOutcomeMap();
     Map<String, Object> root = new HashMap<>();
     root.put("ccsInterviewOutcome", ccsInterviewOutcome);
     root.put("secondaryOutcome",
-        InterviewSecondaryOutcomeMap.interviewSecondaryOutcomeMap.get(ccsInterviewOutcome.getSecondaryOutcome()));
+            interviewSecondaryOutcomeMap.interviewSecondaryOutcomeMap.get(ccsInterviewOutcome.getSecondaryOutcome()));
 
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_NOT_VALID, root, household);
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_NOT_VALID, root, interview);
 
     gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent, String.valueOf(ccsInterviewOutcome.getTransactionId()));
     gatewayEventManager.triggerEvent(String.valueOf(ccsInterviewOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());

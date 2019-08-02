@@ -23,6 +23,6 @@ class HouseholdSecondaryOutcomeMap {
     householdSecondaryOutcomeMap.put("Extraordinary refusal", "EXTRAORDINARY_REFUSAL");
   }
 
-  private HouseholdSecondaryOutcomeMap() {
+  HouseholdSecondaryOutcomeMap() {
   }
 }

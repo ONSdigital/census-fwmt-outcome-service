@@ -26,6 +26,6 @@ public class InterviewSecondaryOutcomeMap {
     interviewSecondaryOutcomeMap.put("Property is a household", "CCS_CE_CASE_IS_A_HOUSEHOLD");
   }
 
-  private InterviewSecondaryOutcomeMap() {
+  InterviewSecondaryOutcomeMap() {
   }
 }

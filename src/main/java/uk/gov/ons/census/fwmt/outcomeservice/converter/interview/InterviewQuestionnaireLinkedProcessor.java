@@ -47,7 +47,7 @@ public class InterviewQuestionnaireLinkedProcessor implements InterviewOutcomeSe
       String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, interview);
 
       gatewayOutcomeProducer
-          .sendFulfilmentRequest(outcomeEvent, String.valueOf(ccsInterviewOutcome.getTransactionId()));
+          .sendCcsIntQuestionnaire(outcomeEvent, String.valueOf(ccsInterviewOutcome.getTransactionId()));
       gatewayEventManager
           .triggerEvent(String.valueOf(ccsInterviewOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
     }
