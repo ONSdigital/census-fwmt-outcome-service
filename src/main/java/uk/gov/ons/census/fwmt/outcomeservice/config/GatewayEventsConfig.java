@@ -17,7 +17,7 @@ public class GatewayEventsConfig {
   public GatewayEventManager gatewayEventManager() {
     GatewayEventManager gatewayEventManager = new GatewayEventManager();
     gatewayEventManager.addEventTypes(new String[] {COMET_HH_OUTCOME_RECEIVED, COMET_CCSSI_OUTCOME_RECEIVED,
-        COMET_CCSPL_OUTCOME_RECEIVED, OUTCOME_SENT_RM});
+        COMET_CCSPL_OUTCOME_RECEIVED, OUTCOME_SENT_RM, PROPERTY_LISTING_SENT});
     return gatewayEventManager;
   }
 }
