@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT_RM;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.HH_REFUSAL_RECEIVED_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.REFUSAL_RECEIVED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.CONTACT_MADE;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.household;
@@ -38,16 +38,15 @@ public class RefusalReceivedProcessorHH implements HHOutcomeServiceProcessor {
   }
 
   @Override
-  public void processMessage(HouseholdOutcome householdOutcome) throws GatewayException {
+  public void processMessage(HouseholdOutcome householdOutcome) {
     HouseholdSecondaryOutcomeMap householdSecondaryOutcomeMap = new HouseholdSecondaryOutcomeMap();
     Map<String, Object> root = new HashMap<>();
     root.put("householdOutcome", householdOutcome);
-    root.put("refusalType",
-        householdSecondaryOutcomeMap.householdSecondaryOutcomeMap.get(householdOutcome.getSecondaryOutcome()));
+    root.put("refusalType", householdSecondaryOutcomeMap.householdSecondaryOutcomeMap.get(householdOutcome.getSecondaryOutcome()));
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root, household);
 
     gatewayOutcomeProducer.sendRespondentRefusal(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
-    gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
+    gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), HH_REFUSAL_RECEIVED_OUTCOME_SENT);
   }
 }

@@ -1,24 +1,24 @@
 package uk.gov.ons.census.fwmt.outcomeservice.converter.household;
 
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.HH_ADDRESS_TYPE_CHANGED_OUTCOME_SENT;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.ADDRESS_TYPE_CHANGED;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.NON_VALID_HOUSEHOLD;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.household;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.HHOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
-
-import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT_RM;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.ADDRESS_TYPE_CHANGED;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.NON_VALID_HOUSEHOLD;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.household;
 
 @Component
 public class AddressTypeChangedProcessorHH implements HHOutcomeServiceProcessor {
@@ -38,7 +38,7 @@ public class AddressTypeChangedProcessorHH implements HHOutcomeServiceProcessor 
   }
 
   @Override
-  public void processMessage(HouseholdOutcome householdOutcome) throws GatewayException {
+  public void processMessage(HouseholdOutcome householdOutcome) {
     Map<String, Object> root = new HashMap<>();
     root.put("householdOutcome", householdOutcome);
     root.put("estabType", "CE");
@@ -53,6 +53,6 @@ public class AddressTypeChangedProcessorHH implements HHOutcomeServiceProcessor 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_TYPE_CHANGED, root, household);
 
     gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
-    gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
+    gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), HH_ADDRESS_TYPE_CHANGED_OUTCOME_SENT);
   }
 }

@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT_RM;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CCSI_QUESTIONNAIRE_LINKED_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.QUESTIONNAIRE_LINKED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.CONTACT_MADE;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.NO_CONTACT;
@@ -38,7 +38,7 @@ public class InterviewQuestionnaireLinkedProcessor implements InterviewOutcomeSe
   }
 
   @Override
-  public void processMessage(CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException {
+  public void processMessage(CCSInterviewOutcome ccsInterviewOutcome) {
     if (isQuestionnaireLinked(ccsInterviewOutcome.getFulfillmentRequest())) {
       Map<String, Object> root = new HashMap<>();
       root.put("ccsInterviewOutcome", ccsInterviewOutcome);
@@ -46,10 +46,8 @@ public class InterviewQuestionnaireLinkedProcessor implements InterviewOutcomeSe
 
       String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, interview);
 
-      gatewayOutcomeProducer
-          .sendCcsIntQuestionnaire(outcomeEvent, String.valueOf(ccsInterviewOutcome.getTransactionId()));
-      gatewayEventManager
-          .triggerEvent(String.valueOf(ccsInterviewOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
+      gatewayOutcomeProducer.sendCcsIntQuestionnaire(outcomeEvent, String.valueOf(ccsInterviewOutcome.getTransactionId()));
+      gatewayEventManager.triggerEvent(String.valueOf(ccsInterviewOutcome.getCaseId()), CCSI_QUESTIONNAIRE_LINKED_OUTCOME_SENT);
     }
   }
 

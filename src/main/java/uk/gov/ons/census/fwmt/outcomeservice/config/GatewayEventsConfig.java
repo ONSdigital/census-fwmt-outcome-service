@@ -3,21 +3,45 @@ package uk.gov.ons.census.fwmt.outcomeservice.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
+import uk.gov.ons.census.fwmt.outcomeservice.Application;
 
 @Configuration
 public class GatewayEventsConfig {
 
-  public static final String COMET_HH_OUTCOME_RECEIVED = "Comet - HH Case Outcome Received";
-  public static final String COMET_CCSSI_OUTCOME_RECEIVED = "Comet - CCSSI Case Outcome Received";
-  public static final String COMET_CCSPL_OUTCOME_RECEIVED = "Comet - CCSPL Case Outcome Received";
-  public static final String OUTCOME_SENT_RM = "Outcome - Case Outcome Sent";
-  public static final String PROPERTY_LISTING_SENT = "Outcome - Property Listing sent";
+  public static final String COMET_HH_OUTCOME_RECEIVED = "COMET_HH_OUTCOME_RECEIVED";
+  public static final String COMET_CCSSI_OUTCOME_RECEIVED = "COMET_CCSSI_OUTCOME_RECEIVED";
+  public static final String COMET_CCSPL_OUTCOME_RECEIVED = "COMET_CCSPL_OUTCOME_RECEIVED";
 
+  //PROPERTY_LISTING_SENT
+  public static final String CCSPL_COLLECT_CE_DETAILS_OUTCOME_SENT = "CCSPL_COLLECT_CE_DETAILS_OUTCOME_SENT";
+  public static final String CCSPL_REFUSAL_RECEIVED_OUTCOME_SENT = "CCSPL_REFUSAL_RECEIVED_OUTCOME_SENT";
+  public static final String CCSPL_ADDRESS_NOT_VALID_OUTCOME_SENT = "CCSPL_ADDRESS_NOT_VALID_OUTCOME_SENT";
+  public static final String CCSPL_CONTACT_NOT_NEEDED_OUTCOME_SENT = "CCSPL_CONTACT_NOT_NEEDED_OUTCOME_SENT";
+  public static final String CCSPL_NON_RESIDENTIAL_OUTCOME_SENT = "CCSPL_NON_RESIDENTIAL_OUTCOME_SENT";
+  public static final String CCSPL_POTENTIAL_RESIDENTIAL_OUTCOME_SENT = "CCSPL_POTENTIAL_RESIDENTIAL_OUTCOME_SENT";
+  public static final String CCSPL_QUESTIONNAIRE_LINKED_OUTCOME_SENT = "CCSPL_QUESTIONNAIRE_LINKED_OUTCOME_SENT";
+  
+  //OUTCOME_SENT_RM
+  public static final String HH_ADDRESS_NOT_VALID_OUTCOME_SENT = "HH_ADDRESS_NOT_VALID_OUTCOME_SENT";
+  public static final String HH_ADDRESS_TYPE_CHANGED_OUTCOME_SENT = "HH_ADDRESS_TYPE_CHANGED_OUTCOME_SENT";
+  public static final String HH_FULFILMENT_REQUESTED_OUTCOME_SENT = "HH_FULFILMENT_REQUESTED_OUTCOME_SENT";
+  public static final String HH_QUESTIONNAIRE_LINKED_OUTCOME_SENT = "HH_QUESTIONNAIRE_LINKED_OUTCOME_SENT";
+  public static final String HH_REFUSAL_RECEIVED_OUTCOME_SENT = "HH_REFUSAL_RECEIVED_OUTCOME_SENT";
+  
+  public static final String CCSI_ADDRESS_NOT_VALID_OUTCOME_SENT = "CCSI_ADDRESS_NOT_VALID_OUTCOME_SENT";
+  public static final String CCSI_QUESTIONNAIRE_LINKED_OUTCOME_SENT = "CCSI_QUESTIONNAIRE_LINKED_OUTCOME_SENT";
+  public static final String CCSI_REFUSAL_RECEIVED_OUTCOME_SENT = "CCSI_REFUSAL_RECEIVED_OUTCOME_SENT";
+  
+  
   @Bean
   public GatewayEventManager gatewayEventManager() {
     GatewayEventManager gatewayEventManager = new GatewayEventManager();
+    gatewayEventManager.setSource(Application.APPLICATION_NAME);
     gatewayEventManager.addEventTypes(new String[] {COMET_HH_OUTCOME_RECEIVED, COMET_CCSSI_OUTCOME_RECEIVED,
-        COMET_CCSPL_OUTCOME_RECEIVED, OUTCOME_SENT_RM});
+        COMET_CCSPL_OUTCOME_RECEIVED, CCSPL_COLLECT_CE_DETAILS_OUTCOME_SENT, CCSPL_REFUSAL_RECEIVED_OUTCOME_SENT, CCSPL_ADDRESS_NOT_VALID_OUTCOME_SENT,
+        CCSPL_CONTACT_NOT_NEEDED_OUTCOME_SENT, CCSPL_NON_RESIDENTIAL_OUTCOME_SENT, CCSPL_POTENTIAL_RESIDENTIAL_OUTCOME_SENT, CCSPL_QUESTIONNAIRE_LINKED_OUTCOME_SENT,
+        HH_ADDRESS_NOT_VALID_OUTCOME_SENT, HH_ADDRESS_TYPE_CHANGED_OUTCOME_SENT, HH_FULFILMENT_REQUESTED_OUTCOME_SENT, HH_QUESTIONNAIRE_LINKED_OUTCOME_SENT,
+        HH_REFUSAL_RECEIVED_OUTCOME_SENT, CCSI_ADDRESS_NOT_VALID_OUTCOME_SENT, CCSI_QUESTIONNAIRE_LINKED_OUTCOME_SENT, CCSI_REFUSAL_RECEIVED_OUTCOME_SENT});
     return gatewayEventManager;
   }
 }

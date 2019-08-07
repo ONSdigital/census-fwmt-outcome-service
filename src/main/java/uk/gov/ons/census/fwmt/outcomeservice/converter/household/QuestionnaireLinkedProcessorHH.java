@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT_RM;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.HH_QUESTIONNAIRE_LINKED_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.QUESTIONNAIRE_LINKED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.CONTACT_MADE;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.household;
@@ -39,7 +39,7 @@ public class QuestionnaireLinkedProcessorHH implements HHOutcomeServiceProcessor
   }
 
   @Override
-  public void processMessage(HouseholdOutcome householdOutcome) throws GatewayException {
+  public void processMessage(HouseholdOutcome householdOutcome) {
     for (FulfillmentRequest fulfillmentRequest : householdOutcome.getFulfillmentRequests()) {
       if (isQuestionnaireLinked(fulfillmentRequest)) {
         Map<String, Object> root = new HashMap<>();
@@ -49,8 +49,7 @@ public class QuestionnaireLinkedProcessorHH implements HHOutcomeServiceProcessor
         String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, household);
 
         gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
-        gatewayEventManager
-            .triggerEvent(String.valueOf(householdOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
+        gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), HH_QUESTIONNAIRE_LINKED_OUTCOME_SENT);
       }
     }
   }

@@ -6,5 +6,5 @@ import uk.gov.ons.census.fwmt.common.error.GatewayException;
 public interface HHOutcomeServiceProcessor {
   boolean isValid(HouseholdOutcome householdOutcome);
 
-  void processMessage(HouseholdOutcome householdOutcome) throws GatewayException;
+  void processMessage(HouseholdOutcome householdOutcome);
 }
