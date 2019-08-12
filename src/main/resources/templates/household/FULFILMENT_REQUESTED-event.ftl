@@ -3,7 +3,9 @@
 "caseId" : "${householdOutcome.caseId}",
 "address": {},
 "contact": {
+<#if telNo??>
 "telNo":"${telNo}"
+</#if>
 }
 <#if householdIndicator != 1>
     ,
