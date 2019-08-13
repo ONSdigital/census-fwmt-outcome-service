@@ -19,7 +19,7 @@ public class HouseholdOutcomeBuilder {
     FulfillmentRequest fulfillmentRequest = new FulfillmentRequest();
 
     //create fulfillment's here
-    fulfillmentRequest.setQuestionnaireId("QuestionnaireID");
+    fulfillmentRequest.setQuestionnaireID("QuestionnaireID");
     fulfillmentRequest.setQuestionnaireType("H1");
     fulfillmentRequestList.add(fulfillmentRequest);
 
@@ -43,7 +43,7 @@ public class HouseholdOutcomeBuilder {
     FulfillmentRequest fulfillmentRequest = new FulfillmentRequest();
 
     //create fulfillment's here
-    fulfillmentRequest.setQuestionnaireId("QuestionnaireID");
+    fulfillmentRequest.setQuestionnaireID("QuestionnaireID");
     fulfillmentRequest.setQuestionnaireType("HC1");
     fulfillmentRequestList.add(fulfillmentRequest);
 
@@ -67,7 +67,7 @@ public class HouseholdOutcomeBuilder {
     FulfillmentRequest fulfillmentRequest = new FulfillmentRequest();
 
     //create fulfillment's here
-    fulfillmentRequest.setQuestionnaireId("QuestionnaireID");
+    fulfillmentRequest.setQuestionnaireID("QuestionnaireID");
     fulfillmentRequest.setQuestionnaireType("I1");
     fulfillmentRequestList.add(fulfillmentRequest);
 
@@ -91,7 +91,7 @@ public class HouseholdOutcomeBuilder {
     FulfillmentRequest fulfillmentRequest = new FulfillmentRequest();
 
     //create fulfillment's here
-    fulfillmentRequest.setQuestionnaireId("QuestionnaireID");
+    fulfillmentRequest.setQuestionnaireID("QuestionnaireID");
     fulfillmentRequest.setQuestionnaireType("IncorrectTypeID");
     fulfillmentRequestList.add(fulfillmentRequest);
 
@@ -115,7 +115,7 @@ public class HouseholdOutcomeBuilder {
     FulfillmentRequest fulfillmentRequest = new FulfillmentRequest();
 
     //create fulfillment's here
-    fulfillmentRequest.setQuestionnaireId("QuestionnaireID");
+    fulfillmentRequest.setQuestionnaireID("QuestionnaireID");
     fulfillmentRequest.setQuestionnaireType("HUAC1");
     fulfillmentRequest.setRequesterPhone("07123456789");
     fulfillmentRequestList.add(fulfillmentRequest);
@@ -140,7 +140,7 @@ public class HouseholdOutcomeBuilder {
     FulfillmentRequest fulfillmentRequest = new FulfillmentRequest();
 
     //create fulfillment's here
-    fulfillmentRequest.setQuestionnaireId("QuestionnaireID");
+    fulfillmentRequest.setQuestionnaireID("QuestionnaireID");
     fulfillmentRequest.setQuestionnaireType("IUAC1");
     fulfillmentRequest.setRequesterPhone("07123456789");
     fulfillmentRequestList.add(fulfillmentRequest);
@@ -165,7 +165,7 @@ public class HouseholdOutcomeBuilder {
     FulfillmentRequest fulfillmentRequest = new FulfillmentRequest();
 
     //create fulfillment's here
-    fulfillmentRequest.setQuestionnaireId("QuestionnaireID");
+    fulfillmentRequest.setQuestionnaireID("QuestionnaireID");
     fulfillmentRequest.setQuestionnaireType("IUAC1");
     fulfillmentRequest.setRequesterPhone("");
     fulfillmentRequestList.add(fulfillmentRequest);
@@ -190,7 +190,7 @@ public class HouseholdOutcomeBuilder {
     FulfillmentRequest fulfillmentRequest = new FulfillmentRequest();
 
     //create fulfillment's here
-    fulfillmentRequest.setQuestionnaireId("QuestionnaireID");
+    fulfillmentRequest.setQuestionnaireID("QuestionnaireID");
     fulfillmentRequest.setQuestionnaireType("IncorrectTypeID");
     fulfillmentRequest.setRequesterPhone("07341667945");
     fulfillmentRequestList.add(fulfillmentRequest);
@@ -215,7 +215,7 @@ public class HouseholdOutcomeBuilder {
     FulfillmentRequest fulfillmentRequest = new FulfillmentRequest();
 
     //create fulfillment's here
-    fulfillmentRequest.setQuestionnaireId("QuestionnaireID");
+    fulfillmentRequest.setQuestionnaireID("QuestionnaireID");
     fulfillmentRequestList.add(fulfillmentRequest);
 
     householdOutcome.setEventDate(LocalDateTime.parse("2007-12-03T10:15:30"));
@@ -238,7 +238,7 @@ public class HouseholdOutcomeBuilder {
     FulfillmentRequest fulfillmentRequest = new FulfillmentRequest();
 
     //create fulfillment's here
-    fulfillmentRequest.setQuestionnaireId("QuestionnaireID");
+    fulfillmentRequest.setQuestionnaireID("QuestionnaireID");
     fulfillmentRequestList.add(fulfillmentRequest);
 
     householdOutcome.setEventDate(LocalDateTime.parse("2007-12-03T10:15:30"));
