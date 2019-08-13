@@ -37,7 +37,7 @@ springBoot {
 
 dependencies {
 	compile('uk.gov.ons.census.fwmt:census-fwmt-canonical:1.0.11-RELEASE')
-	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.0.24-RELEASE')
+	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.0.25-RELEASE')
 	compile('uk.gov.ons.census.fwmt:census-fwmt-events:1.0.6-RELEASE')
 	compile('uk.gov.ons.ctp.integration.common:product-reference:0.0.12')
 

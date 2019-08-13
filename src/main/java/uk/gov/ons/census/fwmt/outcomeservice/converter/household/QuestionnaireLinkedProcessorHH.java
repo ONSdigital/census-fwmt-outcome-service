@@ -44,7 +44,7 @@ public class QuestionnaireLinkedProcessorHH implements HHOutcomeServiceProcessor
       if (isQuestionnaireLinked(fulfillmentRequest)) {
         Map<String, Object> root = new HashMap<>();
         root.put("householdOutcome", householdOutcome);
-        root.put("questionnaireId", fulfillmentRequest.getQuestionnaireId());
+        root.put("questionnaireId", fulfillmentRequest.getQuestionnaireID());
 
         String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, household);
 
@@ -56,6 +56,6 @@ public class QuestionnaireLinkedProcessorHH implements HHOutcomeServiceProcessor
   }
 
   private boolean isQuestionnaireLinked(FulfillmentRequest fulfillmentRequest) {
-    return (fulfillmentRequest.getQuestionnaireId() != null);
+    return (fulfillmentRequest.getQuestionnaireID() != null);
   }
 }
