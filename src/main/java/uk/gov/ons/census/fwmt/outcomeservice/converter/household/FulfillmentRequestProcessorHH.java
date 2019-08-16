@@ -64,10 +64,12 @@ public class FulfillmentRequestProcessorHH implements HHOutcomeServiceProcessor 
   private void createQuestionnaireRequiredByPostEvent(HouseholdOutcome householdOutcome,
       FulfillmentRequest fulfillmentRequest) throws GatewayException {
     Product product = getProductFromQuestionnaireType(fulfillmentRequest);
+    String eventDateTime = householdOutcome.getEventDate().toString();
     Map<String, Object> root = new HashMap<>();
     root.put("householdOutcome", householdOutcome);
     root.put("productCodeLookup", product.getFulfilmentCode());
     root.put("telNo", fulfillmentRequest.getRequesterPhone());
+    root.put("eventDate", eventDateTime + "Z");
 
     if (product.getCaseType().equals(HI)) {
       root.put("householdIndicator", 0);

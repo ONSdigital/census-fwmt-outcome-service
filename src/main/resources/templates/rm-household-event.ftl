@@ -3,7 +3,7 @@
 "type" : "${eventType}",
 "source" : "FIELDWORK_GATEWAY",
 "channel" : "FIELD",
-"dateTime" : "${householdOutcome.eventDate}",
+"dateTime" : "${eventDate}",
 "transactionId" : "${householdOutcome.transactionId}"
 }
 ,

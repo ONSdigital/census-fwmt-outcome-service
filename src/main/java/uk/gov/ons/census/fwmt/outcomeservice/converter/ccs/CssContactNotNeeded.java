@@ -40,10 +40,12 @@ public class CssContactNotNeeded implements CcsOutcomeServiceProcessor {
   @Override
   public void processMessage(CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException {
     Map<String, Object> root = new HashMap<>();
+    String eventDateTime = ccsPropertyListingOutcome.getEventDate().toString();
     root.put("ccsPropertyListingOutcome", ccsPropertyListingOutcome);
     root.put("addressType", getAddressType(ccsPropertyListingOutcome));
     root.put("addressLevel", getAddressLevel(ccsPropertyListingOutcome));
     root.put("organisationName", getOrganisationName(ccsPropertyListingOutcome));
+    root.put("eventDate", eventDateTime + "Z");
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(CONTACT_NOT_NEEDED, root, ccs);
 

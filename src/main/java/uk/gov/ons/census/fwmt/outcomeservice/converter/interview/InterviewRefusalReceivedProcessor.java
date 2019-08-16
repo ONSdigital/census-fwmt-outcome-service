@@ -39,7 +39,9 @@ public class InterviewRefusalReceivedProcessor implements InterviewOutcomeServic
   public void processMessage(CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException {
     InterviewSecondaryOutcomeMap interviewSecondaryOutcomeMap = new InterviewSecondaryOutcomeMap();
     Map<String, Object> root = new HashMap<>();
+    String eventDateTime = ccsInterviewOutcome.getEventDate().toString();
     root.put("ccsInterviewOutcome", ccsInterviewOutcome);
+    root.put("eventDate", eventDateTime + "Z");
     root.put("refusalType",
             interviewSecondaryOutcomeMap.interviewSecondaryOutcomeMap.get(ccsInterviewOutcome.getSecondaryOutcome()));
 

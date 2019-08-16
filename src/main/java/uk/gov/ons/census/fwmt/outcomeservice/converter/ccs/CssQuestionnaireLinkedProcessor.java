@@ -43,12 +43,13 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
   public void processMessage(CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException {
     if (isQuestionnaireLinked(ccsPropertyListingOutcome.getFulfillmentRequest())) {
       Map<String, Object> root = new HashMap<>();
-
+      String eventDateTime = ccsPropertyListingOutcome.getEventDate().toString();
       root.put("ccsPropertyListingOutcome", ccsPropertyListingOutcome);
       root.put("questionnaireId", ccsPropertyListingOutcome.getFulfillmentRequest().getQuestionnaireId());
       root.put("addressType", getAddressType(ccsPropertyListingOutcome));
       root.put("addressLevel", getAddressLevel(ccsPropertyListingOutcome));
       root.put("organisationName", getOrganisationName(ccsPropertyListingOutcome));
+      root.put("eventDate", eventDateTime + "Z");
 
       String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, ccs);
 

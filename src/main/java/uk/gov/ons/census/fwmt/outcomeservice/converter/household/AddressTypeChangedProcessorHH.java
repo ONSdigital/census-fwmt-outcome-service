@@ -40,8 +40,10 @@ public class AddressTypeChangedProcessorHH implements HHOutcomeServiceProcessor 
   @Override
   public void processMessage(HouseholdOutcome householdOutcome) throws GatewayException {
     Map<String, Object> root = new HashMap<>();
+    String eventDateTime = householdOutcome.getEventDate().toString();
     root.put("householdOutcome", householdOutcome);
     root.put("estabType", "CE");
+    root.put("eventDate", eventDateTime + "Z");
     root.put("secondaryOutcome", householdOutcome.getSecondaryOutcome());
 
     if (householdOutcome.getCeDetails().getUsualResidents() == null) {

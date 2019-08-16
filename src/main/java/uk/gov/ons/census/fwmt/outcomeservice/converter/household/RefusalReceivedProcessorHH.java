@@ -9,6 +9,8 @@ import uk.gov.ons.census.fwmt.outcomeservice.converter.HHOutcomeServiceProcessor
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -41,7 +43,10 @@ public class RefusalReceivedProcessorHH implements HHOutcomeServiceProcessor {
   public void processMessage(HouseholdOutcome householdOutcome) throws GatewayException {
     HouseholdSecondaryOutcomeMap householdSecondaryOutcomeMap = new HouseholdSecondaryOutcomeMap();
     Map<String, Object> root = new HashMap<>();
+    String eventDateTime = householdOutcome.getEventDate().toString();
+
     root.put("householdOutcome", householdOutcome);
+    root.put("eventDate", eventDateTime + "Z");
     root.put("refusalType",
         householdSecondaryOutcomeMap.householdSecondaryOutcomeMap.get(householdOutcome.getSecondaryOutcome()));
 
@@ -50,4 +55,6 @@ public class RefusalReceivedProcessorHH implements HHOutcomeServiceProcessor {
     gatewayOutcomeProducer.sendRespondentRefusal(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
     gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), OUTCOME_SENT_RM, LocalTime.now());
   }
+
+
 }
