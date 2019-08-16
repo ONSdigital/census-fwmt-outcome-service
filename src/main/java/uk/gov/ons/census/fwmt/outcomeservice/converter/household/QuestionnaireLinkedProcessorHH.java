@@ -42,9 +42,12 @@ public class QuestionnaireLinkedProcessorHH implements HHOutcomeServiceProcessor
   public void processMessage(HouseholdOutcome householdOutcome) throws GatewayException {
     for (FulfillmentRequest fulfillmentRequest : householdOutcome.getFulfillmentRequests()) {
       if (isQuestionnaireLinked(fulfillmentRequest)) {
+        String eventDateTime = householdOutcome.getEventDate().toString();
+
         Map<String, Object> root = new HashMap<>();
         root.put("householdOutcome", householdOutcome);
         root.put("questionnaireId", fulfillmentRequest.getQuestionnaireID());
+        root.put("eventDate", eventDateTime + "Z");
 
         String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, household);
 

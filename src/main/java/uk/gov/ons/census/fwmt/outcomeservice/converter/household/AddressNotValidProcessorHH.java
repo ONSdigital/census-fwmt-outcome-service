@@ -39,8 +39,10 @@ public class AddressNotValidProcessorHH implements HHOutcomeServiceProcessor {
   @Override
   public void processMessage(HouseholdOutcome householdOutcome) throws GatewayException {
     HouseholdSecondaryOutcomeMap householdSecondaryOutcomeMap = new HouseholdSecondaryOutcomeMap();
+    String eventDateTime = householdOutcome.getEventDate().toString();
     Map<String, Object> root = new HashMap<>();
     root.put("householdOutcome", householdOutcome);
+    root.put("eventDate", eventDateTime + "Z");
     root.put("secondaryOutcome",
         householdSecondaryOutcomeMap.householdSecondaryOutcomeMap.get(householdOutcome.getSecondaryOutcome()));
 

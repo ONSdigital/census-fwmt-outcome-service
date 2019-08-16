@@ -3,7 +3,7 @@
 "type" : "${eventType}",
 "source" : "FIELDWORK_GATEWAY",
 "channel" : "FIELD",
-"dateTime" : "${ccsInterviewOutcome.eventDate}",
+"dateTime" : "${eventDate}",
 "transactionId" : "${ccsInterviewOutcome.transactionId}"
 },
 "payload" : {

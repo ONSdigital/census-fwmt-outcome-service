@@ -1,8 +1,7 @@
 "refusal" : {
-"type" : "${refusalType}"
-}
-,
+"type" : "${refusalType}",
 "collectionCase" : {
 "id" : "${ccsInterviewOutcome.caseId}"
+}
 }
 

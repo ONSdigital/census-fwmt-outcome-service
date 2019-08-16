@@ -41,11 +41,13 @@ public class CcsRefusalReceivedProcessor implements CcsOutcomeServiceProcessor {
   @Override
   public void processMessage(CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException {
     CcsSecondaryOutcomeMap ccsSecondaryOutcomeMap = new CcsSecondaryOutcomeMap();
+    String eventDateTime = ccsPropertyListingOutcome.getEventDate().toString();
     Map<String, Object> root = new HashMap<>();
     root.put("ccsPropertyListingOutcome", ccsPropertyListingOutcome);
     root.put("addressType", getAddressType(ccsPropertyListingOutcome));
     root.put("addressLevel", getAddressLevel(ccsPropertyListingOutcome));
     root.put("organisationName", getOrganisationName(ccsPropertyListingOutcome));
+    root.put("eventDate", eventDateTime + "Z");
     root.put("refusalType",
         ccsSecondaryOutcomeMap.ccsSecondaryOutcomeMap.get(ccsPropertyListingOutcome.getSecondaryOutcome()));
 
