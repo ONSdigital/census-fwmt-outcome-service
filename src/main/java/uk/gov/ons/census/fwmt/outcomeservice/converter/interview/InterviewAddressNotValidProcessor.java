@@ -1,6 +1,6 @@
 package uk.gov.ons.census.fwmt.outcomeservice.converter.interview;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CCSI_ADDRESS_NOT_VALID_OUTCOME_SENT;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CCSI_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.ADDRESS_NOT_VALID;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.CONTACT_MADE;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.NOT_VALID;
@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
-import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.InterviewOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
@@ -45,7 +44,7 @@ public class InterviewAddressNotValidProcessor implements InterviewOutcomeServic
     String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_NOT_VALID, root, interview);
 
     gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent, String.valueOf(ccsIOutcome.getTransactionId()));
-    gatewayEventManager.triggerEvent(String.valueOf(ccsIOutcome.getCaseId()), CCSI_ADDRESS_NOT_VALID_OUTCOME_SENT);
+    gatewayEventManager.triggerEvent(String.valueOf(ccsIOutcome.getCaseId()), CCSI_OUTCOME_SENT, new HashMap<>( Map.of("type", "CCSI_ADDRESS_NOT_VALID_OUTCOME_SENT")));
   }
 
   private boolean isNonValid(CCSInterviewOutcome ccsInterviewOutcome) {

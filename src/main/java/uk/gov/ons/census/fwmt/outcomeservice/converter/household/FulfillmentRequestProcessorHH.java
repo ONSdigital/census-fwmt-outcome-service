@@ -1,6 +1,6 @@
 package uk.gov.ons.census.fwmt.outcomeservice.converter.household;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.HH_FULFILMENT_REQUESTED_OUTCOME_SENT;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.HH_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.FULFILMENT_REQUESTED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.CONTACT_MADE;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.household;
@@ -23,7 +23,6 @@ import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.ons.census.fwmt.common.data.household.FulfillmentRequest;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
-import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.HHOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
@@ -80,7 +79,7 @@ public class FulfillmentRequestProcessorHH implements HHOutcomeServiceProcessor 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(FULFILMENT_REQUESTED, root, household);
 
     gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
-    gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), HH_FULFILMENT_REQUESTED_OUTCOME_SENT);
+    gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), HH_OUTCOME_SENT, new HashMap<>( Map.of("type", "HH_FULFILMENT_REQUESTED_OUTCOME_SENT")));
   }
 
   private boolean isQuestionnaireLinked(FulfillmentRequest fulfillmentRequest) {
