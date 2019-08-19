@@ -22,10 +22,8 @@ public class GatewayOutcomeProducer {
   @Autowired
   private RabbitTemplate rabbitTemplate;
 
-  private MessageConverter messageConverter;
-
   @Autowired
-  private ObjectMapper om;
+  private ObjectMapper objectMapper;
 
   @Retryable
   public void sendAddressUpdate(String outcomeEvent, String transactionId) throws GatewayException {
@@ -36,7 +34,7 @@ public class GatewayOutcomeProducer {
     log.info("Address Update message sent to queue :{}", transactionId);
 
     try {
-      Message message = messageConverter.toMessage(om.readTree(outcomeEvent), messageProperties);
+      Message message = messageConverter.toMessage(objectMapper.readTree(outcomeEvent), messageProperties);
 
       rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
               GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY, message);
@@ -54,7 +52,7 @@ public class GatewayOutcomeProducer {
     log.info("CCS linked Questionnaire message sent to queue :{}", transactionId);
 
     try {
-      Message message = messageConverter.toMessage(om.readTree(outcomeEvent), messageProperties);
+      Message message = messageConverter.toMessage(objectMapper.readTree(outcomeEvent), messageProperties);
 
       rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
               GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY, message);
@@ -71,7 +69,7 @@ public class GatewayOutcomeProducer {
     log.info("Respondent Refusal message sent to queue :{}", transactionId);
 
     try {
-      Message message = messageConverter.toMessage(om.readTree(outcomeEvent), messageProperties);
+      Message message = messageConverter.toMessage(objectMapper.readTree(outcomeEvent), messageProperties);
 
       rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
               GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY, message);
@@ -90,7 +88,7 @@ public class GatewayOutcomeProducer {
     log.info("Fulfillment Request message sent to queue :{}", transactionId);
 
     try {
-      Message message = messageConverter.toMessage(om.readTree(outcomeEvent), messageProperties);
+      Message message = messageConverter.toMessage(objectMapper.readTree(outcomeEvent), messageProperties);
 
       rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
               GatewayOutcomeQueueConfig.GATEWAY_FULFILLMENT_REQUEST_ROUTING_KEY, message);
@@ -108,7 +106,7 @@ public class GatewayOutcomeProducer {
     log.info("Property Listing message sent to queue :{}", transactionId);
 
     try {
-      Message message = messageConverter.toMessage(om.readTree(outcomeEvent), messageProperties);
+      Message message = messageConverter.toMessage(objectMapper.readTree(outcomeEvent), messageProperties);
 
       rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
               GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTYLISTING_ROUTING_KEY, message);

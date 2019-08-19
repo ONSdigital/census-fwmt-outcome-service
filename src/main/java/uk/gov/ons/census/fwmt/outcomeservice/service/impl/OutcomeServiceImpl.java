@@ -1,8 +1,13 @@
 package uk.gov.ons.census.fwmt.outcomeservice.service.impl;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
@@ -11,9 +16,6 @@ import uk.gov.ons.census.fwmt.outcomeservice.converter.CcsOutcomeServiceProcesso
 import uk.gov.ons.census.fwmt.outcomeservice.converter.HHOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.InterviewOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
-
-import javax.annotation.PostConstruct;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -37,7 +39,7 @@ public class OutcomeServiceImpl implements OutcomeService {
       if (converter.isValid(householdOutcome)) {
         try {
           converter.processMessage(householdOutcome);
-        } catch (GatewayException e) {
+        } catch (Exception e) {
           log.error("failed to convert outcome", e);
         }
       }
@@ -49,7 +51,7 @@ public class OutcomeServiceImpl implements OutcomeService {
       if (converter.isValid(ccsPropertyListingOutcome)) {
         try {
           converter.processMessage(ccsPropertyListingOutcome);
-        } catch (GatewayException e) {
+        } catch (Exception e) {
           log.error("failed to convert outcome", e);
         }
       }
@@ -62,7 +64,7 @@ public class OutcomeServiceImpl implements OutcomeService {
       if (converter.isValid(ccsInterviewOutcome)) {
         try {
           converter.processMessage(ccsInterviewOutcome);
-        } catch (GatewayException e) {
+        } catch (Exception e) {
           log.error("failed to convert outcome", e);
         }
       }
