@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.ccs.FulfillmentRequest;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.CcsOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
@@ -39,15 +40,17 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
   }
 
   @Override
-  public void processMessage(CCSPropertyListingOutcome ccsPLOutcome) {
+  public void processMessage(CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException{
     if (isQuestionnaireLinked(ccsPLOutcome.getFulfillmentRequest())) {
       Map<String, Object> root = new HashMap<>();
+      String eventDateTime = ccsPLOutcome.getEventDate().toString();
 
       root.put("ccsPropertyListingOutcome", ccsPLOutcome);
       root.put("questionnaireId", ccsPLOutcome.getFulfillmentRequest().getQuestionnaireId());
       root.put("addressType", getAddressType(ccsPLOutcome));
       root.put("addressLevel", getAddressLevel(ccsPLOutcome));
       root.put("organisationName", getOrganisationName(ccsPLOutcome));
+      root.put("eventDate", eventDateTime + "Z");
 
       String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, ccs);
 

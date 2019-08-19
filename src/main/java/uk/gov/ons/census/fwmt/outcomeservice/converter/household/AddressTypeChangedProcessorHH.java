@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.HHOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
@@ -37,10 +38,12 @@ public class AddressTypeChangedProcessorHH implements HHOutcomeServiceProcessor 
   }
 
   @Override
-  public void processMessage(HouseholdOutcome householdOutcome) {
+  public void processMessage(HouseholdOutcome householdOutcome) throws GatewayException{
     Map<String, Object> root = new HashMap<>();
+    String eventDateTime = householdOutcome.getEventDate().toString();
     root.put("householdOutcome", householdOutcome);
     root.put("estabType", "CE");
+    root.put("eventDate", eventDateTime + "Z");
     root.put("secondaryOutcome", householdOutcome.getSecondaryOutcome());
 
     if (householdOutcome.getCeDetails().getUsualResidents() == null) {

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.CcsOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
@@ -37,12 +38,14 @@ public class CssNonResidential implements CcsOutcomeServiceProcessor {
   }
 
   @Override
-  public void processMessage(CCSPropertyListingOutcome ccsPLOutcome) {
+  public void processMessage(CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException{
     Map<String, Object> root = new HashMap<>();
+    String eventDateTime = ccsPLOutcome.getEventDate().toString();
     root.put("ccsPropertyListingOutcome", ccsPLOutcome);
     root.put("addressType", getAddressType(ccsPLOutcome));
     root.put("addressLevel", getAddressLevel(ccsPLOutcome));
     root.put("organisationName", getOrganisationName(ccsPLOutcome));
+    root.put("eventDate", eventDateTime + "Z");
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(NON_RESIDENTIAL, root, ccs);
 

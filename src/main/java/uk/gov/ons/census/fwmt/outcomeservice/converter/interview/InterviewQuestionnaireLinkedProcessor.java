@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
 import uk.gov.ons.census.fwmt.common.data.ccs.FulfillmentRequest;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.InterviewOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
@@ -37,10 +38,12 @@ public class InterviewQuestionnaireLinkedProcessor implements InterviewOutcomeSe
   }
 
   @Override
-  public void processMessage(CCSInterviewOutcome ccsInterviewOutcome) {
+  public void processMessage(CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException{
     if (isQuestionnaireLinked(ccsInterviewOutcome.getFulfillmentRequest())) {
+      String eventDateTime = ccsInterviewOutcome.getEventDate().toString();
       Map<String, Object> root = new HashMap<>();
       root.put("ccsInterviewOutcome", ccsInterviewOutcome);
+      root.put("eventDate", eventDateTime + "Z");
       root.put("questionnaireId", ccsInterviewOutcome.getFulfillmentRequest().getQuestionnaireId());
 
       String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, interview);

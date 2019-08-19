@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.InterviewOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
@@ -35,11 +36,13 @@ public class InterviewAddressNotValidProcessor implements InterviewOutcomeServic
   }
 
   @Override
-  public void processMessage(CCSInterviewOutcome ccsIOutcome) {
+  public void processMessage(CCSInterviewOutcome ccsIOutcome) throws GatewayException{
     InterviewSecondaryOutcomeMap interviewSecondaryOutcomeMap = new InterviewSecondaryOutcomeMap();
+    String eventDateTime = ccsIOutcome.getEventDate().toString();
     Map<String, Object> root = new HashMap<>();
     root.put("ccsInterviewOutcome", ccsIOutcome);
     root.put("secondaryOutcome", interviewSecondaryOutcomeMap.interviewSecondaryOutcomeMap.get(ccsIOutcome.getSecondaryOutcome()));
+    root.put("eventDate", eventDateTime + "Z");
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_NOT_VALID, root, interview);
 

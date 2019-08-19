@@ -22,7 +22,7 @@ public interface OutcomeApi {
   @ApiOperation(value = "Post a household survey outcome to the FWMT Gateway", response = HouseholdOutcome.class)
   @ApiResponses(value = {
       @ApiResponse(code = 202, message = "Case Outcome received", response = HouseholdOutcome.class)})
-  @RequestMapping(value = "/HouseholdOutcome/{caseId}",
+  @RequestMapping(value = "/householdOutcome/{caseId}",
       produces = {"application/json"},
       method = RequestMethod.POST)
   ResponseEntity<HouseholdOutcome> householdCaseOutcomeResponse(

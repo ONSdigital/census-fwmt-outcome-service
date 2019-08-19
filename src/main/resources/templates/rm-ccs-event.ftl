@@ -3,7 +3,7 @@
 "type":"CCS_ADDRESS_LISTED",
 "source":"FIELDWORK_GATEWAY",
 "channel":"FIELD",
-"dateTime":"${ccsPropertyListingOutcome.eventDate}",
+"dateTime":"${eventDate}",
 "transactionId":"${ccsPropertyListingOutcome.transactionId}"
 },
 "payload":{

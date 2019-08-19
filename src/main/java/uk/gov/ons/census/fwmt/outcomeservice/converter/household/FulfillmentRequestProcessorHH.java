@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.ons.census.fwmt.common.data.household.FulfillmentRequest;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.HHOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
@@ -53,7 +54,7 @@ public class FulfillmentRequestProcessorHH implements HHOutcomeServiceProcessor 
   }
 
   @Override
-  public void processMessage(HouseholdOutcome householdOutcome) {
+  public void processMessage(HouseholdOutcome householdOutcome) throws GatewayException{
     for (FulfillmentRequest fulfillmentRequest : householdOutcome.getFulfillmentRequests()) {
       if (!isQuestionnaireLinked(fulfillmentRequest)) {
         createQuestionnaireRequiredByPostEvent(householdOutcome, fulfillmentRequest);
@@ -62,12 +63,14 @@ public class FulfillmentRequestProcessorHH implements HHOutcomeServiceProcessor 
   }
 
   private void createQuestionnaireRequiredByPostEvent(HouseholdOutcome householdOutcome,
-      FulfillmentRequest fulfillmentRequest) {
+      FulfillmentRequest fulfillmentRequest) throws GatewayException{
     Product product = getProductFromQuestionnaireType(fulfillmentRequest);
+    String eventDateTime = householdOutcome.getEventDate().toString();
     Map<String, Object> root = new HashMap<>();
     root.put("householdOutcome", householdOutcome);
     root.put("productCodeLookup", product.getFulfilmentCode());
     root.put("telNo", fulfillmentRequest.getRequesterPhone());
+    root.put("eventDate", eventDateTime + "Z");
 
     if (product.getCaseType().equals(HI)) {
       root.put("householdIndicator", 0);
@@ -83,7 +86,7 @@ public class FulfillmentRequestProcessorHH implements HHOutcomeServiceProcessor 
   }
 
   private boolean isQuestionnaireLinked(FulfillmentRequest fulfillmentRequest) {
-    return (fulfillmentRequest.getQuestionnaireId() != null);
+    return (fulfillmentRequest.getQuestionnaireID() != null);
   }
 
   @Nonnull

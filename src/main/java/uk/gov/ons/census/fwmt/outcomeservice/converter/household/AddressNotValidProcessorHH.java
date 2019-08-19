@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.HHOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
@@ -36,11 +37,13 @@ public class AddressNotValidProcessorHH implements HHOutcomeServiceProcessor {
   }
 
   @Override
-  public void processMessage(HouseholdOutcome householdOutcome) {
+  public void processMessage(HouseholdOutcome householdOutcome) throws GatewayException{
     HouseholdSecondaryOutcomeMap householdSecondaryOutcomeMap = new HouseholdSecondaryOutcomeMap();
+    String eventDateTime = householdOutcome.getEventDate().toString();
     Map<String, Object> root = new HashMap<>();
     root.put("householdOutcome", householdOutcome);
     root.put("secondaryOutcome", householdSecondaryOutcomeMap.householdSecondaryOutcomeMap.get(householdOutcome.getSecondaryOutcome()));
+    root.put("eventDate", eventDateTime + "Z");
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_NOT_VALID, root, household);
 

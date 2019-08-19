@@ -13,6 +13,7 @@ import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
 
 import java.time.LocalTime;
+import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_CCSPL_OUTCOME_RECEIVED;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_CCSSI_OUTCOME_RECEIVED;
@@ -31,6 +32,7 @@ public class OutcomeController implements OutcomeApi {
   @Override
   public ResponseEntity<HouseholdOutcome> householdCaseOutcomeResponse(String caseId, HouseholdOutcome householdOutcome) throws GatewayException{
     gatewayEventManager.triggerEvent(caseId, COMET_HH_OUTCOME_RECEIVED);
+    householdOutcome.setCaseId(UUID.fromString(caseId));
     outcomeService.createHouseHoldOutcomeEvent(householdOutcome);
 
     return new ResponseEntity<>(householdOutcome, HttpStatus.ACCEPTED);
