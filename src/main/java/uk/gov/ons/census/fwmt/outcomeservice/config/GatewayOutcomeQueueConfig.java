@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 public class GatewayOutcomeQueueConfig {
 
   // Exchange name
-  public static String GATEWAY_OUTCOME_EXCHANGE = "events";
+  public static final String GATEWAY_OUTCOME_EXCHANGE = "events";
 
   // Queue names
   public static final String FIELD_REFUSALS_QUEUE = "Field.refusals";
