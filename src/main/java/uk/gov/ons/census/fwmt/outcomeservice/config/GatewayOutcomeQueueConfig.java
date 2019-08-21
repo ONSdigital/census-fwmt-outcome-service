@@ -8,7 +8,6 @@ import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,15 +15,11 @@ import org.springframework.context.annotation.Configuration;
 public class GatewayOutcomeQueueConfig {
 
   // Exchange name
-  public static String GATEWAY_OUTCOME_EXCHANGE;
+  public static String GATEWAY_OUTCOME_EXCHANGE = "events";
 
   // Queue names
   public static final String FIELD_REFUSALS_QUEUE = "Field.refusals";
   public static final String TEMP_FIELD_OTHERS_QUEUE = "Field.other";
-
-  GatewayOutcomeQueueConfig(@Value("${rabbitmq.rmOutcomeExchange}") String GATEWAY_OUTCOME_EXCHANGE) {
-    GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE = GATEWAY_OUTCOME_EXCHANGE;
-  }
 
   // Routing keys
   // keys mentioned by Dave Mort
