@@ -28,7 +28,7 @@ rabbitmq:
   initialInterval: 5000
   multiplier: 3.0
   maxInterval: 45000
-  rmEventsExhange: "events"
+  rmOutcomeExchange: "events"
 
 logging:
   level:
