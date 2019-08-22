@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
-import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.CcsOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.HHOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.InterviewOutcomeServiceProcessor;
@@ -37,7 +36,7 @@ public class OutcomeServiceImpl implements OutcomeService {
       if (converter.isValid(householdOutcome)) {
         try {
           converter.processMessage(householdOutcome);
-        } catch (GatewayException e) {
+        } catch (Exception e) {
           log.error("failed to convert outcome", e);
         }
       }
@@ -49,7 +48,7 @@ public class OutcomeServiceImpl implements OutcomeService {
       if (converter.isValid(ccsPropertyListingOutcome)) {
         try {
           converter.processMessage(ccsPropertyListingOutcome);
-        } catch (GatewayException e) {
+        } catch (Exception e) {
           log.error("failed to convert outcome", e);
         }
       }
@@ -62,7 +61,7 @@ public class OutcomeServiceImpl implements OutcomeService {
       if (converter.isValid(ccsInterviewOutcome)) {
         try {
           converter.processMessage(ccsInterviewOutcome);
-        } catch (GatewayException e) {
+        } catch (Exception e) {
           log.error("failed to convert outcome", e);
         }
       }

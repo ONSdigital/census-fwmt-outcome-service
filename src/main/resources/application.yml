@@ -11,10 +11,6 @@ spring:
     user:
       name: "user"
       password: "password"
-  redis:
-    host: "localhost"
-    port: 6379
-    password: "password"
 
 management:
   # Place /info and /health in the root
@@ -36,7 +32,7 @@ rabbitmq:
 logging:
   level:
     root: WARN
-    uk.gov.ons.fwmt: INFO
+    uk.gov.ons.census.fwmt: INFO
     org.springframework.security: INFO
     org.springframework.web: INFO
     org.springframework.amqp: INFO
@@ -47,3 +43,8 @@ logging:
   pattern:
     console: "%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] [%X{CID}] %logger{1}::%M - %msg%n"
     file: "%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] [%X{CID}] %logger{1}::%M - %msg%n"
+
+redis:
+  host: "localhost"
+  port: 6379
+  password: "password"
