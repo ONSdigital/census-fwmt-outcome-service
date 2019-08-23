@@ -14,12 +14,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class GatewayOutcomeQueueConfig {
 
+  // Exchange name
+  public static final String GATEWAY_OUTCOME_EXCHANGE = "events";
+
   // Queue names
   public static final String FIELD_REFUSALS_QUEUE = "Field.refusals";
   public static final String TEMP_FIELD_OTHERS_QUEUE = "Field.other";
-
-  // Exchange name
-  public static final String GATEWAY_OUTCOME_EXCHANGE = "Gateway.OutcomeEvent.Exchange";
 
   // Routing keys
   // keys mentioned by Dave Mort
