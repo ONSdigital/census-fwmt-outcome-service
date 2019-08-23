@@ -38,7 +38,7 @@ public interface OutcomeApi {
       produces = {"application/json"},
       method = RequestMethod.POST)
   ResponseEntity<CCSPropertyListingOutcome> ccsPropertyListingCaseOutcomeResponse(
-      @RequestBody CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException, JsonProcessingException;
+      @RequestBody CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException;
 
   @ApiOperation(value = "Post a CCS Interview outcome to the FWMT Gateway", response = CCSInterviewOutcome.class)
   @ApiResponses(value = {

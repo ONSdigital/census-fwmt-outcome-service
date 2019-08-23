@@ -4,13 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.ons.census.fwmt.common.data.ccs.Address;
+import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingCached;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
-import uk.gov.ons.census.fwmt.common.data.ccs.CareCode;
-import uk.gov.ons.census.fwmt.common.data.ccs.CeDetails;
 import uk.gov.ons.census.fwmt.outcomeservice.service.JobCacheManager;
-
-import java.util.List;
 
 @Component
 public class CCSPLStore {
@@ -21,37 +17,25 @@ public class CCSPLStore {
   @Autowired
   private ObjectMapper objectMapper;
 
-  private List careCodeList;
+  public String cacheJob(String caseId, CCSPropertyListingOutcome ccsPLOutcome) throws JsonProcessingException {
 
-  public CCSPLOutcomeEntity cacheJob(String caseId, CCSPropertyListingOutcome ccsPLOutcome) throws JsonProcessingException {
+    CCSPropertyListingCached ccsPropertyListingCached = new CCSPropertyListingCached();
 
-    CCSPropertyListingOutcome ccsPLOutcomeToStore = new CCSPropertyListingOutcome();
-    CCSPLOutcomeEntity ccsOutcomeEntity = new CCSPLOutcomeEntity();
-
-    Address address = new Address();
-    CareCode careCode = new CareCode();
-    CeDetails ceDetails = new CeDetails();
-
-    address.setOa(ccsPLOutcome.getAddress().getOa());
-
-    ccsPLOutcomeToStore.setAddress(address);
+    ccsPropertyListingCached.setPrimaryOutcome(ccsPLOutcome.getPrimaryOutcome());
+    ccsPropertyListingCached.setSecondaryOutcome(ccsPLOutcome.getSecondaryOutcome());
+    ccsPropertyListingCached.setOa(ccsPLOutcome.getAddress().getOa());
     if (ccsPLOutcome.getCeDetails() != null) {
-      ceDetails.setManagerName(ccsPLOutcome.getCeDetails().getManagerName());
-      ceDetails.setUsualResidents(ccsPLOutcome.getCeDetails().getUsualResidents());
-      ceDetails.setBedspaces(ccsPLOutcome.getCeDetails().getBedspaces());
-      ceDetails.setContactPhone(ccsPLOutcome.getCeDetails().getContactPhone());
-      ccsPLOutcomeToStore.setCeDetails(ceDetails);
+      ccsPropertyListingCached.setManagerName(ccsPLOutcome.getCeDetails().getManagerName());
+      ccsPropertyListingCached.setUsualResidents(ccsPLOutcome.getCeDetails().getUsualResidents());
+      ccsPropertyListingCached.setBedspaces(ccsPLOutcome.getCeDetails().getBedspaces());
+      ccsPropertyListingCached.setContactPhone(ccsPLOutcome.getCeDetails().getContactPhone());
     }
-    ccsPLOutcomeToStore.setAccessInfo(ccsPLOutcome.getAccessInfo());
+    ccsPropertyListingCached.setAccessInfo(ccsPLOutcome.getAccessInfo());
+    ccsPropertyListingCached.setCareCodes(ccsPLOutcome.getCareCodes());
 
-    ccsPLOutcomeToStore.setCareCodes(ccsPLOutcome.getCareCodes());
+    String stringOutcome = objectMapper.writeValueAsString(ccsPropertyListingCached);
 
-    String stringOutcome = objectMapper.writeValueAsString(ccsPLOutcomeToStore);
-
-    ccsOutcomeEntity.setCaseId(caseId);
-    ccsOutcomeEntity.setCcsPropertyListingOutcome(stringOutcome);
-
-    return jobCacheManager.cacheCCSOutcome(ccsOutcomeEntity);
+    return jobCacheManager.cacheCCSOutcome(caseId, stringOutcome);
 
   }
 

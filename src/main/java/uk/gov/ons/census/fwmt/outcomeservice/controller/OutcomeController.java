@@ -1,7 +1,6 @@
 package uk.gov.ons.census.fwmt.outcomeservice.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
@@ -9,15 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
-import uk.gov.ons.census.fwmt.common.data.ccs.CareCode;
-import uk.gov.ons.census.fwmt.common.data.ccs.CeDetails;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.redis.CCSPLStore;
 import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
 
-import java.time.LocalTime;
 import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_CCSPL_OUTCOME_RECEIVED;
@@ -48,9 +44,14 @@ public class OutcomeController implements OutcomeApi {
 
   @Override
   public ResponseEntity<CCSPropertyListingOutcome> ccsPropertyListingCaseOutcomeResponse(
-      CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException, JsonProcessingException {
+      CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException {
 
-    ccsplStore.cacheJob(String.valueOf(ccsPLOutcome.getPropertyListingCaseId()), ccsPLOutcome);
+    try {
+      ccsplStore.cacheJob(String.valueOf(ccsPLOutcome.getPropertyListingCaseId()), ccsPLOutcome);
+    } catch (JsonProcessingException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Unable to cache CCS PL Outcome for caseId " + ccsPLOutcome.getPropertyListingCaseId());
+    }
+
 
     gatewayEventManager.triggerEvent(String.valueOf(ccsPLOutcome.getPropertyListingCaseId()), COMET_CCSPL_OUTCOME_RECEIVED);
     outcomeService.createPropertyListingOutcomeEvent(ccsPLOutcome);

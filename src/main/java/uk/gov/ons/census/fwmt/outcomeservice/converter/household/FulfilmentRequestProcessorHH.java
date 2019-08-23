@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
-import uk.gov.ons.census.fwmt.common.data.household.FulfillmentRequest;
+import uk.gov.ons.census.fwmt.common.data.household.FulfilmentRequest;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
@@ -34,7 +34,7 @@ import uk.gov.ons.ctp.integration.common.product.model.Product;
 
 @Slf4j
 @Component
-public class FulfillmentRequestProcessorHH implements HHOutcomeServiceProcessor {
+public class FulfilmentRequestProcessorHH implements HHOutcomeServiceProcessor {
 
   @Autowired
   private ProductReference productReference;
@@ -55,21 +55,21 @@ public class FulfillmentRequestProcessorHH implements HHOutcomeServiceProcessor 
 
   @Override
   public void processMessage(HouseholdOutcome householdOutcome) throws GatewayException{
-    for (FulfillmentRequest fulfillmentRequest : householdOutcome.getFulfillmentRequests()) {
-      if (!isQuestionnaireLinked(fulfillmentRequest)) {
-        createQuestionnaireRequiredByPostEvent(householdOutcome, fulfillmentRequest);
+    for (FulfilmentRequest fulfilmentRequest : householdOutcome.getFulfilmentRequests()) {
+      if (!isQuestionnaireLinked(fulfilmentRequest)) {
+        createQuestionnaireRequiredByPostEvent(householdOutcome, fulfilmentRequest);
       }
     }
   }
 
   private void createQuestionnaireRequiredByPostEvent(HouseholdOutcome householdOutcome,
-      FulfillmentRequest fulfillmentRequest) throws GatewayException{
-    Product product = getProductFromQuestionnaireType(fulfillmentRequest);
+      FulfilmentRequest fulfilmentRequest) throws GatewayException{
+    Product product = getProductFromQuestionnaireType(fulfilmentRequest);
     String eventDateTime = householdOutcome.getEventDate().toString();
     Map<String, Object> root = new HashMap<>();
     root.put("householdOutcome", householdOutcome);
     root.put("productCodeLookup", product.getFulfilmentCode());
-    root.put("telNo", fulfillmentRequest.getRequesterPhone());
+    root.put("telNo", fulfilmentRequest.getRequesterPhone());
     root.put("eventDate", eventDateTime + "Z");
 
     if (product.getCaseType().equals(HI)) {
@@ -85,17 +85,17 @@ public class FulfillmentRequestProcessorHH implements HHOutcomeServiceProcessor 
     gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), HH_OUTCOME_SENT, new HashMap<>( Map.of("type", "HH_FULFILMENT_REQUESTED_OUTCOME_SENT")));
   }
 
-  private boolean isQuestionnaireLinked(FulfillmentRequest fulfillmentRequest) {
-    return (fulfillmentRequest.getQuestionnaireID() != null);
+  private boolean isQuestionnaireLinked(FulfilmentRequest fulfilmentRequest) {
+    return (fulfilmentRequest.getQuestionnaireID() != null);
   }
 
   @Nonnull
-  private Product getProductFromQuestionnaireType(FulfillmentRequest fulfillmentRequest) {
+  private Product getProductFromQuestionnaireType(FulfilmentRequest fulfilmentRequest) {
     Product product = new Product();
     List<Product.RequestChannel> requestChannels = Collections.singletonList(FIELD);
 
     product.setRequestChannels(requestChannels);
-    product.setFieldQuestionnaireCode(fulfillmentRequest.getQuestionnaireType());
+    product.setFieldQuestionnaireCode(fulfilmentRequest.getQuestionnaireType());
 
     List<Product> productList = null;
     try {

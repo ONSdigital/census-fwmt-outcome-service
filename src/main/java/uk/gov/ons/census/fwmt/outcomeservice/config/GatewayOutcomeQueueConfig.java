@@ -25,7 +25,7 @@ public class GatewayOutcomeQueueConfig {
   // keys mentioned by Dave Mort
   public static final String GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY = "event.respondent.refusal";
   public static final String GATEWAY_ADDRESS_UPDATE_ROUTING_KEY = "event.case.address.update";
-  public static final String GATEWAY_FULFILLMENT_REQUEST_ROUTING_KEY = "event.fulfillment.request";
+  public static final String GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY = "event.fulfilment.request";
   public static final String GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY = "event.questionnaire.update";
   public static final String GATEWAY_CCS_PROPERTYLISTING_ROUTING_KEY = "event.ccs.propertylisting";
   public static final String GATEWAY_EVENT_FIELDCASE_UPDATE_ROUTING_KEY = "event.fieldcase.update";
@@ -33,7 +33,7 @@ public class GatewayOutcomeQueueConfig {
   public static final String GATEWAY_RESPONSE_AUTHENTICATION_ROUTING_KEY = "event.response.authentication";
 
   // keys unused but in RM data dictionary
-  public static final String GATEWAY_FULFILLMENT_CONFIRMED_ROUTING_KEY = "event.fulfillment.confirmed";
+  public static final String GATEWAY_FULFILMENT_CONFIRMED_ROUTING_KEY = "event.fulfilment.confirmed";
   public static final String GATEWAY_RESPONSE_RECEIPT_ROUTING_KEY = "event.response.receipt";
   public static final String GATEWAY_UAC_UPDATED_ROUTING_KEY = "event.uac.update";
   public static final String GATEWAY_CASE_UPDATE_ROUTING_KEY = "event.case.update";
@@ -66,7 +66,7 @@ public class GatewayOutcomeQueueConfig {
   }
 
   @Bean
-  public Queue fulfillmentRequestQueue() {
+  public Queue fulfilmentRequestQueue() {
     return QueueBuilder.durable(TEMP_FIELD_OTHERS_QUEUE).build();
   }
 
@@ -99,10 +99,10 @@ public class GatewayOutcomeQueueConfig {
   }
 
   @Bean
-  public Binding fulfillmentRequestBinding(@Qualifier("fulfillmentRequestQueue") Queue fulfillmentRequestQueue,
+  public Binding fulfilmentRequestBinding(@Qualifier("fulfilmentRequestQueue") Queue fulfilmentRequestQueue,
       @Qualifier("gatewayOutcomeExchange") TopicExchange gatewayOutcomeExchange) {
-    return BindingBuilder.bind(fulfillmentRequestQueue).to(gatewayOutcomeExchange)
-        .with(GATEWAY_FULFILLMENT_REQUEST_ROUTING_KEY);
+    return BindingBuilder.bind(fulfilmentRequestQueue).to(gatewayOutcomeExchange)
+        .with(GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY);
   }
 
   @Bean

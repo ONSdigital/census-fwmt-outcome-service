@@ -77,7 +77,7 @@ task genJaxb {
 dependencies {
 	compile('uk.gov.ons.census.fwmt:census-fwmt-canonical:1.0.11-RELEASE')
 	compile('uk.gov.ons.census.fwmt:census-fwmt-events:1.0.13-RELEASE')
-	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.0.28-RELEASE')
+	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.0.29-RELEASE')
 	compile('uk.gov.ons.ctp.integration.common:product-reference:0.0.12')
 
 	jaxb("javax.xml.bind:jaxb-api:2.3.0")

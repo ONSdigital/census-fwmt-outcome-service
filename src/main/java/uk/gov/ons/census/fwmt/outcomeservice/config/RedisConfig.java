@@ -16,16 +16,20 @@ public class RedisConfig {
 
   private String redisHostname;
   private int redisPort;
+  private int redisDB;
 
   public RedisConfig(@Value("${redis.host}") String redisHostname,
-      @Value("${redis.port}") int redisPort) {
-    this.redisHostname = "localhost";
+                     @Value("${redis.port}") int redisPort,
+                     @Value("${redis.database}") int redisDB) {
+    this.redisHostname = redisHostname;
     this.redisPort = redisPort;
+    this.redisDB = redisDB;
   }
 
   @Bean
   protected JedisConnectionFactory jedisConnectionFactory() {
     RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration(redisHostname, redisPort);
+    configuration.setDatabase(redisDB);
     JedisClientConfiguration jedisClientConfiguration = JedisClientConfiguration.builder().usePooling().build();
     JedisConnectionFactory factory = new JedisConnectionFactory(configuration, jedisClientConfiguration);
     factory.afterPropertiesSet();

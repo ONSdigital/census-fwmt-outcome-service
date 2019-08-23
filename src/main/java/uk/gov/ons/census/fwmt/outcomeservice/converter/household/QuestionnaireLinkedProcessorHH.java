@@ -57,7 +57,7 @@ public class QuestionnaireLinkedProcessorHH implements HHOutcomeServiceProcessor
     }
   }
 
-  private boolean isQuestionnaireLinked(FulfilmentRequest fulfillmentRequest) {
-    return (fulfillmentRequest.getQuestionnaireID() != null);
+  private boolean isQuestionnaireLinked(FulfilmentRequest fulfilmentRequest) {
+    return (fulfilmentRequest.getQuestionnaireID() != null);
   }
 }
