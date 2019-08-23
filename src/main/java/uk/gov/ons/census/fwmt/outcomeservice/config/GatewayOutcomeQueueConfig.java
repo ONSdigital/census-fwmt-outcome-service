@@ -25,7 +25,7 @@ public class GatewayOutcomeQueueConfig {
   // keys mentioned by Dave Mort
   public static final String GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY = "event.respondent.refusal";
   public static final String GATEWAY_ADDRESS_UPDATE_ROUTING_KEY = "event.case.address.update";
-  public static final String GATEWAY_FULFILLMENT_REQUEST_ROUTING_KEY = "event.fulfillment.request";
+  public static final String GATEWAY_FULFILLMENT_REQUEST_ROUTING_KEY = "event.fulfilment.request";
   public static final String GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY = "event.questionnaire.update";
   public static final String GATEWAY_CCS_PROPERTYLISTING_ROUTING_KEY = "event.ccs.propertylisting";
   public static final String GATEWAY_EVENT_FIELDCASE_UPDATE_ROUTING_KEY = "event.fieldcase.update";
