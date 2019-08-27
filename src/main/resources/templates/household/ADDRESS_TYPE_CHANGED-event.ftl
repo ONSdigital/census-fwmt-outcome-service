@@ -1,3 +1,4 @@
+"addressTypeChange" : {
 "collectionCase" : {
 "id":"${householdOutcome.caseId}",
 <#if usualResidents gt 0>
@@ -17,4 +18,5 @@
     "telNo":"${householdOutcome.ceDetails.contactPhone}"
     }
 </#if>
+}
 }
