@@ -1,5 +1,5 @@
-"fulfilment" : {
-"productCode": "${productCodeLookup}",
+"fulfilmentRequest" : {
+"fulfilmentCode": "${productCodeLookup}",
 "caseId" : "${householdOutcome.caseId}",
 "address": {},
 "contact": {
