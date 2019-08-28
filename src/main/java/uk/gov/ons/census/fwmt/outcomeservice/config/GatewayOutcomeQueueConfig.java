@@ -39,6 +39,7 @@ public class GatewayOutcomeQueueConfig {
   public static final String GATEWAY_CASE_UPDATE_ROUTING_KEY = "event.case.update";
   public static final String GATEWAY_SAMPLEUNIT_UPDATE_ROUTING_KEY = "event.sampleunit.update";
 
+
   // Queues
   @Bean
   public Queue respondentRefusalQueue() {
@@ -110,14 +111,5 @@ public class GatewayOutcomeQueueConfig {
       @Qualifier("gatewayOutcomeExchange") TopicExchange gatewayOutcomeExchange) {
     return BindingBuilder.bind(ccsPropertyListing).to(gatewayOutcomeExchange)
             .with(GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY);
-  }
-
-  //Message Listener
-  @Bean
-  public SimpleMessageListenerContainer gatewayMessageListener(
-      ConnectionFactory connectionFactory) {
-    SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-    container.setConnectionFactory(connectionFactory);
-    return container;
   }
 }
