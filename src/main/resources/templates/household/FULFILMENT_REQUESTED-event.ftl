@@ -10,7 +10,7 @@
     "forename":"${forename}"
 </#if>
 <#if surname??>
-"surname":"${surname}"
+    "surname":"${surname}"
 </#if>
 <#if telNo??>
     "telNo":"${telNo}"
