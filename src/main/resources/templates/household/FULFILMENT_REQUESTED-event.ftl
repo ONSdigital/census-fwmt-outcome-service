@@ -4,13 +4,13 @@
 "address": {},
 "contact": {
 <#if title??>
-    "title":"${title}"
+    "title":"${title}",
 </#if>
 <#if forename??>
-    "forename":"${forename}"
+    "forename":"${forename}",
 </#if>
 <#if surname??>
-    "surname":"${surname}"
+    "surname":"${surname}",
 </#if>
 <#if telNo??>
     "telNo":"${telNo}"
