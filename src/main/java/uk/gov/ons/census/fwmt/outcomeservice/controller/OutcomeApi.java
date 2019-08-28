@@ -1,6 +1,5 @@
 package uk.gov.ons.census.fwmt.outcomeservice.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -15,8 +14,6 @@ import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-
-import javax.xml.bind.JAXBException;
 
 @Api(value = "FWMT Census Outcome Service", description = "Operations pertaining to receiving outcomes from COMET")
 @RestController
