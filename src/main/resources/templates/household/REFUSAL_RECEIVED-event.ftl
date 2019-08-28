@@ -2,7 +2,7 @@
 "type" : "${refusalType}",
 "collectionCase" : {
 "id" : "${householdOutcome.caseId}"
-}
+},
 "contact": {
 <#if title??>
     "title":"${title}"

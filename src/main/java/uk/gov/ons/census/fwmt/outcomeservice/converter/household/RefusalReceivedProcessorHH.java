@@ -47,10 +47,12 @@ public class RefusalReceivedProcessorHH implements HHOutcomeServiceProcessor {
     root.put("refusalType", householdSecondaryOutcomeMap.householdSecondaryOutcomeMap.get(householdOutcome.getSecondaryOutcome()));
     root.put("eventDate", eventDateTime + "Z");
 
-    root.put("title",householdOutcome.getFulfillmentRequests().get(0).getRequesterTitle());
-    root.put("forename", householdOutcome.getFulfillmentRequests().get(0).getRequesterForename());
-    root.put("surname", householdOutcome.getFulfillmentRequests().get(0).getRequesterSurname());
-    root.put("telNo", householdOutcome.getFulfillmentRequests().get(0).getRequesterPhone());
+    if (householdOutcome.getFulfillmentRequests() != null) {
+      root.put("title", householdOutcome.getFulfillmentRequests().get(0).getRequesterTitle());
+      root.put("forename", householdOutcome.getFulfillmentRequests().get(0).getRequesterForename());
+      root.put("surname", householdOutcome.getFulfillmentRequests().get(0).getRequesterSurname());
+      root.put("telNo", householdOutcome.getFulfillmentRequests().get(0).getRequesterPhone());
+    }
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root, household);
 
