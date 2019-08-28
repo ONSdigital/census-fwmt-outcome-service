@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
-import uk.gov.ons.census.fwmt.common.data.ccs.FulfillmentRequest;
+import uk.gov.ons.census.fwmt.common.data.ccs.FulfilmentRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.CcsOutcomeServiceProcessor;
@@ -41,12 +41,12 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
 
   @Override
   public void processMessage(CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException{
-    if (isQuestionnaireLinked(ccsPLOutcome.getFulfillmentRequest())) {
+    if (isQuestionnaireLinked(ccsPLOutcome.getFulfilmentRequest())) {
       Map<String, Object> root = new HashMap<>();
       String eventDateTime = ccsPLOutcome.getEventDate().toString();
 
       root.put("ccsPropertyListingOutcome", ccsPLOutcome);
-      root.put("questionnaireId", ccsPLOutcome.getFulfillmentRequest().getQuestionnaireId());
+      root.put("questionnaireId", ccsPLOutcome.getFulfilmentRequest().getQuestionnaireId());
       root.put("addressType", getAddressType(ccsPLOutcome));
       root.put("addressLevel", getAddressLevel(ccsPLOutcome));
       root.put("organisationName", getOrganisationName(ccsPLOutcome));
@@ -59,7 +59,7 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
     }
   }
 
-  private boolean isQuestionnaireLinked(FulfillmentRequest fulfillmentRequest) {
-    return (fulfillmentRequest.getQuestionnaireId() != null);
+  private boolean isQuestionnaireLinked(FulfilmentRequest fulfilmentRequest) {
+    return (fulfilmentRequest.getQuestionnaireId() != null);
   }
 }

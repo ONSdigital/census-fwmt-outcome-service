@@ -85,13 +85,13 @@ public class GatewayOutcomeProducer {
     messageProperties.setContentType("application/json");
     MessageConverter messageConverter = new Jackson2JsonMessageConverter();
 
-    log.info("Fulfillment Request message sent to queue :{}", transactionId);
+    log.info("Fulfilment Request message sent to queue :{}", transactionId);
 
     try {
       Message message = messageConverter.toMessage(objectMapper.readTree(outcomeEvent), messageProperties);
 
       rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
-              GatewayOutcomeQueueConfig.GATEWAY_FULFILLMENT_REQUEST_ROUTING_KEY, message);
+              GatewayOutcomeQueueConfig.GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY, message);
     } catch (IOException e){
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Cannot process fulfilment request for transaction ID " + transactionId);
     }

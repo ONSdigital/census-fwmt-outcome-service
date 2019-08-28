@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
-import uk.gov.ons.census.fwmt.common.data.ccs.FulfillmentRequest;
+import uk.gov.ons.census.fwmt.common.data.ccs.FulfilmentRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.InterviewOutcomeServiceProcessor;
@@ -39,12 +39,12 @@ public class InterviewQuestionnaireLinkedProcessor implements InterviewOutcomeSe
 
   @Override
   public void processMessage(CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException{
-    if (isQuestionnaireLinked(ccsInterviewOutcome.getFulfillmentRequest())) {
+    if (isQuestionnaireLinked(ccsInterviewOutcome.getFulfilmentRequest())) {
       String eventDateTime = ccsInterviewOutcome.getEventDate().toString();
       Map<String, Object> root = new HashMap<>();
       root.put("ccsInterviewOutcome", ccsInterviewOutcome);
       root.put("eventDate", eventDateTime + "Z");
-      root.put("questionnaireId", ccsInterviewOutcome.getFulfillmentRequest().getQuestionnaireId());
+      root.put("questionnaireId", ccsInterviewOutcome.getFulfilmentRequest().getQuestionnaireId());
 
       String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, interview);
 
@@ -53,8 +53,8 @@ public class InterviewQuestionnaireLinkedProcessor implements InterviewOutcomeSe
     }
   }
 
-  private boolean isQuestionnaireLinked(FulfillmentRequest fulfillmentRequest) {
-    return (fulfillmentRequest.getQuestionnaireId() != null);
+  private boolean isQuestionnaireLinked(FulfilmentRequest fulfilmentRequest) {
+    return (fulfilmentRequest.getQuestionnaireId() != null);
   }
 
   private boolean isNoContact(CCSInterviewOutcome ccsInterviewOutcome) {

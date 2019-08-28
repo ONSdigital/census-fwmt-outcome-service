@@ -1,7 +1,7 @@
 package uk.gov.ons.census.fwmt.outcomeservice.helper;
 
 import uk.gov.ons.census.fwmt.common.data.household.CeDetails;
-import uk.gov.ons.census.fwmt.common.data.household.FulfillmentRequest;
+import uk.gov.ons.census.fwmt.common.data.household.FulfilmentRequest;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 
 import java.time.LocalDateTime;
@@ -15,13 +15,13 @@ public class HouseholdOutcomeBuilder {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
-    List<FulfillmentRequest> fulfillmentRequestList = new ArrayList<>();
-    FulfillmentRequest fulfillmentRequest = new FulfillmentRequest();
+    List<FulfilmentRequest> fulfilmentRequestList = new ArrayList<>();
+    FulfilmentRequest fulfilmentRequest = new FulfilmentRequest();
 
-    //create fulfillment's here
-    fulfillmentRequest.setQuestionnaireID("QuestionnaireID");
-    fulfillmentRequest.setQuestionnaireType("H1");
-    fulfillmentRequestList.add(fulfillmentRequest);
+    //create fulfilment's here
+    fulfilmentRequest.setQuestionnaireID("QuestionnaireID");
+    fulfilmentRequest.setQuestionnaireType("H1");
+    fulfilmentRequestList.add(fulfilmentRequest);
 
     householdOutcome.setEventDate(LocalDateTime.parse("2007-12-03T10:15:30"));
     householdOutcome.setUsername("Username");
@@ -30,7 +30,7 @@ public class HouseholdOutcomeBuilder {
     householdOutcome.setPrimaryOutcome("Contact Made");
     householdOutcome.setSecondaryOutcome("Paper H Questionnaire required by post");
     householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
-    householdOutcome.setFulfillmentRequests(fulfillmentRequestList);
+    householdOutcome.setFulfilmentRequests(fulfilmentRequestList);
 
     return householdOutcome;
   }
@@ -39,13 +39,13 @@ public class HouseholdOutcomeBuilder {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
-    List<FulfillmentRequest> fulfillmentRequestList = new ArrayList<>();
-    FulfillmentRequest fulfillmentRequest = new FulfillmentRequest();
+    List<FulfilmentRequest> fulfilmentRequestList = new ArrayList<>();
+    FulfilmentRequest fulfilmentRequest = new FulfilmentRequest();
 
-    //create fulfillment's here
-    fulfillmentRequest.setQuestionnaireID("QuestionnaireID");
-    fulfillmentRequest.setQuestionnaireType("HC1");
-    fulfillmentRequestList.add(fulfillmentRequest);
+    //create fulfilment's here
+    fulfilmentRequest.setQuestionnaireID("QuestionnaireID");
+    fulfilmentRequest.setQuestionnaireType("HC1");
+    fulfilmentRequestList.add(fulfilmentRequest);
 
     householdOutcome.setEventDate(LocalDateTime.parse("2007-12-03T10:15:30"));
     householdOutcome.setUsername("Username");
@@ -54,7 +54,7 @@ public class HouseholdOutcomeBuilder {
     householdOutcome.setPrimaryOutcome("Contact Made");
     householdOutcome.setSecondaryOutcome("Paper HC Questionnaire required by post");
     householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
-    householdOutcome.setFulfillmentRequests(fulfillmentRequestList);
+    householdOutcome.setFulfilmentRequests(fulfilmentRequestList);
 
     return householdOutcome;
   }
@@ -63,13 +63,13 @@ public class HouseholdOutcomeBuilder {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
-    List<FulfillmentRequest> fulfillmentRequestList = new ArrayList<>();
-    FulfillmentRequest fulfillmentRequest = new FulfillmentRequest();
+    List<FulfilmentRequest> fulfilmentRequestList = new ArrayList<>();
+    FulfilmentRequest fulfilmentRequest = new FulfilmentRequest();
 
-    //create fulfillment's here
-    fulfillmentRequest.setQuestionnaireID("QuestionnaireID");
-    fulfillmentRequest.setQuestionnaireType("I1");
-    fulfillmentRequestList.add(fulfillmentRequest);
+    //create fulfilment's here
+    fulfilmentRequest.setQuestionnaireID("QuestionnaireID");
+    fulfilmentRequest.setQuestionnaireType("I1");
+    fulfilmentRequestList.add(fulfilmentRequest);
 
     householdOutcome.setEventDate(LocalDateTime.parse("2007-12-03T10:15:30"));
     householdOutcome.setUsername("Username");
@@ -78,7 +78,7 @@ public class HouseholdOutcomeBuilder {
     householdOutcome.setPrimaryOutcome("Contact Made");
     householdOutcome.setSecondaryOutcome("Paper I Questionnaire required by post");
     householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
-    householdOutcome.setFulfillmentRequests(fulfillmentRequestList);
+    householdOutcome.setFulfilmentRequests(fulfilmentRequestList);
 
     return householdOutcome;
   }
@@ -87,13 +87,13 @@ public class HouseholdOutcomeBuilder {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
-    List<FulfillmentRequest> fulfillmentRequestList = new ArrayList<>();
-    FulfillmentRequest fulfillmentRequest = new FulfillmentRequest();
+    List<FulfilmentRequest> fulfilmentRequestList = new ArrayList<>();
+    FulfilmentRequest fulfilmentRequest = new FulfilmentRequest();
 
-    //create fulfillment's here
-    fulfillmentRequest.setQuestionnaireID("QuestionnaireID");
-    fulfillmentRequest.setQuestionnaireType("IncorrectTypeID");
-    fulfillmentRequestList.add(fulfillmentRequest);
+    //create fulfilment's here
+    fulfilmentRequest.setQuestionnaireID("QuestionnaireID");
+    fulfilmentRequest.setQuestionnaireType("IncorrectTypeID");
+    fulfilmentRequestList.add(fulfilmentRequest);
 
     householdOutcome.setEventDate(LocalDateTime.parse("2007-12-03T10:15:30"));
     householdOutcome.setUsername("Username");
@@ -102,7 +102,7 @@ public class HouseholdOutcomeBuilder {
     householdOutcome.setPrimaryOutcome("Contact Made");
     householdOutcome.setSecondaryOutcome("Paper I Questionnaire required by post");
     householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
-    householdOutcome.setFulfillmentRequests(fulfillmentRequestList);
+    householdOutcome.setFulfilmentRequests(fulfilmentRequestList);
 
     return householdOutcome;
   }
@@ -111,14 +111,14 @@ public class HouseholdOutcomeBuilder {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
-    List<FulfillmentRequest> fulfillmentRequestList = new ArrayList<>();
-    FulfillmentRequest fulfillmentRequest = new FulfillmentRequest();
+    List<FulfilmentRequest> fulfilmentRequestList = new ArrayList<>();
+    FulfilmentRequest fulfilmentRequest = new FulfilmentRequest();
 
-    //create fulfillment's here
-    fulfillmentRequest.setQuestionnaireID("QuestionnaireID");
-    fulfillmentRequest.setQuestionnaireType("HUAC1");
-    fulfillmentRequest.setRequesterPhone("07123456789");
-    fulfillmentRequestList.add(fulfillmentRequest);
+    //create fulfilment's here
+    fulfilmentRequest.setQuestionnaireID("QuestionnaireID");
+    fulfilmentRequest.setQuestionnaireType("HUAC1");
+    fulfilmentRequest.setRequesterPhone("07123456789");
+    fulfilmentRequestList.add(fulfilmentRequest);
 
     householdOutcome.setEventDate(LocalDateTime.parse("2007-12-03T10:15:30"));
     householdOutcome.setUsername("Username");
@@ -127,7 +127,7 @@ public class HouseholdOutcomeBuilder {
     householdOutcome.setPrimaryOutcome("Contact Made");
     householdOutcome.setSecondaryOutcome("HUAC required by text");
     householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
-    householdOutcome.setFulfillmentRequests(fulfillmentRequestList);
+    householdOutcome.setFulfilmentRequests(fulfilmentRequestList);
 
     return householdOutcome;
   }
@@ -136,14 +136,14 @@ public class HouseholdOutcomeBuilder {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
-    List<FulfillmentRequest> fulfillmentRequestList = new ArrayList<>();
-    FulfillmentRequest fulfillmentRequest = new FulfillmentRequest();
+    List<FulfilmentRequest> fulfilmentRequestList = new ArrayList<>();
+    FulfilmentRequest fulfilmentRequest = new FulfilmentRequest();
 
-    //create fulfillment's here
-    fulfillmentRequest.setQuestionnaireID("QuestionnaireID");
-    fulfillmentRequest.setQuestionnaireType("IUAC1");
-    fulfillmentRequest.setRequesterPhone("07123456789");
-    fulfillmentRequestList.add(fulfillmentRequest);
+    //create fulfilment's here
+    fulfilmentRequest.setQuestionnaireID("QuestionnaireID");
+    fulfilmentRequest.setQuestionnaireType("IUAC1");
+    fulfilmentRequest.setRequesterPhone("07123456789");
+    fulfilmentRequestList.add(fulfilmentRequest);
 
     householdOutcome.setEventDate(LocalDateTime.parse("2007-12-03T10:15:30"));
     householdOutcome.setUsername("Username");
@@ -152,7 +152,7 @@ public class HouseholdOutcomeBuilder {
     householdOutcome.setPrimaryOutcome("Contact Made");
     householdOutcome.setSecondaryOutcome("IUAC required by text");
     householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
-    householdOutcome.setFulfillmentRequests(fulfillmentRequestList);
+    householdOutcome.setFulfilmentRequests(fulfilmentRequestList);
 
     return householdOutcome;
   }
@@ -161,14 +161,14 @@ public class HouseholdOutcomeBuilder {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
-    List<FulfillmentRequest> fulfillmentRequestList = new ArrayList<>();
-    FulfillmentRequest fulfillmentRequest = new FulfillmentRequest();
+    List<FulfilmentRequest> fulfilmentRequestList = new ArrayList<>();
+    FulfilmentRequest fulfilmentRequest = new FulfilmentRequest();
 
-    //create fulfillment's here
-    fulfillmentRequest.setQuestionnaireID("QuestionnaireID");
-    fulfillmentRequest.setQuestionnaireType("IUAC1");
-    fulfillmentRequest.setRequesterPhone("");
-    fulfillmentRequestList.add(fulfillmentRequest);
+    //create fulfilment's here
+    fulfilmentRequest.setQuestionnaireID("QuestionnaireID");
+    fulfilmentRequest.setQuestionnaireType("IUAC1");
+    fulfilmentRequest.setRequesterPhone("");
+    fulfilmentRequestList.add(fulfilmentRequest);
 
     householdOutcome.setEventDate(LocalDateTime.parse("2007-12-03T10:15:30"));
     householdOutcome.setUsername("Username");
@@ -177,7 +177,7 @@ public class HouseholdOutcomeBuilder {
     householdOutcome.setPrimaryOutcome("Contact Made");
     householdOutcome.setSecondaryOutcome("IUAC required by text");
     householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
-    householdOutcome.setFulfillmentRequests(fulfillmentRequestList);
+    householdOutcome.setFulfilmentRequests(fulfilmentRequestList);
 
     return householdOutcome;
   }
@@ -186,14 +186,14 @@ public class HouseholdOutcomeBuilder {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
-    List<FulfillmentRequest> fulfillmentRequestList = new ArrayList<>();
-    FulfillmentRequest fulfillmentRequest = new FulfillmentRequest();
+    List<FulfilmentRequest> fulfilmentRequestList = new ArrayList<>();
+    FulfilmentRequest fulfilmentRequest = new FulfilmentRequest();
 
-    //create fulfillment's here
-    fulfillmentRequest.setQuestionnaireID("QuestionnaireID");
-    fulfillmentRequest.setQuestionnaireType("IncorrectTypeID");
-    fulfillmentRequest.setRequesterPhone("07341667945");
-    fulfillmentRequestList.add(fulfillmentRequest);
+    //create fulfilment's here
+    fulfilmentRequest.setQuestionnaireID("QuestionnaireID");
+    fulfilmentRequest.setQuestionnaireType("IncorrectTypeID");
+    fulfilmentRequest.setRequesterPhone("07341667945");
+    fulfilmentRequestList.add(fulfilmentRequest);
 
     householdOutcome.setEventDate(LocalDateTime.parse("2007-12-03T10:15:30"));
     householdOutcome.setUsername("Username");
@@ -202,7 +202,7 @@ public class HouseholdOutcomeBuilder {
     householdOutcome.setPrimaryOutcome("Contact Made");
     householdOutcome.setSecondaryOutcome("IUAC required by text");
     householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
-    householdOutcome.setFulfillmentRequests(fulfillmentRequestList);
+    householdOutcome.setFulfilmentRequests(fulfilmentRequestList);
 
     return householdOutcome;
   }
@@ -211,12 +211,12 @@ public class HouseholdOutcomeBuilder {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
-    List<FulfillmentRequest> fulfillmentRequestList = new ArrayList<>();
-    FulfillmentRequest fulfillmentRequest = new FulfillmentRequest();
+    List<FulfilmentRequest> fulfilmentRequestList = new ArrayList<>();
+    FulfilmentRequest fulfilmentRequest = new FulfilmentRequest();
 
-    //create fulfillment's here
-    fulfillmentRequest.setQuestionnaireID("QuestionnaireID");
-    fulfillmentRequestList.add(fulfillmentRequest);
+    //create fulfilment's here
+    fulfilmentRequest.setQuestionnaireID("QuestionnaireID");
+    fulfilmentRequestList.add(fulfilmentRequest);
 
     householdOutcome.setEventDate(LocalDateTime.parse("2007-12-03T10:15:30"));
     householdOutcome.setUsername("Username");
@@ -225,7 +225,7 @@ public class HouseholdOutcomeBuilder {
     householdOutcome.setPrimaryOutcome("Contact Made");
     householdOutcome.setSecondaryOutcome("Will Complete");
     householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
-    householdOutcome.setFulfillmentRequests(fulfillmentRequestList);
+    householdOutcome.setFulfilmentRequests(fulfilmentRequestList);
 
     return householdOutcome;
   }
@@ -234,12 +234,12 @@ public class HouseholdOutcomeBuilder {
 
     HouseholdOutcome householdOutcome = new HouseholdOutcome();
 
-    List<FulfillmentRequest> fulfillmentRequestList = new ArrayList<>();
-    FulfillmentRequest fulfillmentRequest = new FulfillmentRequest();
+    List<FulfilmentRequest> fulfilmentRequestList = new ArrayList<>();
+    FulfilmentRequest fulfilmentRequest = new FulfilmentRequest();
 
-    //create fulfillment's here
-    fulfillmentRequest.setQuestionnaireID("QuestionnaireID");
-    fulfillmentRequestList.add(fulfillmentRequest);
+    //create fulfilment's here
+    fulfilmentRequest.setQuestionnaireID("QuestionnaireID");
+    fulfilmentRequestList.add(fulfilmentRequest);
 
     householdOutcome.setEventDate(LocalDateTime.parse("2007-12-03T10:15:30"));
     householdOutcome.setUsername("Username");
@@ -248,7 +248,7 @@ public class HouseholdOutcomeBuilder {
     householdOutcome.setPrimaryOutcome("Contact Made");
     householdOutcome.setSecondaryOutcome("");
     householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
-    householdOutcome.setFulfillmentRequests(fulfillmentRequestList);
+    householdOutcome.setFulfilmentRequests(fulfilmentRequestList);
 
     return householdOutcome;
   }

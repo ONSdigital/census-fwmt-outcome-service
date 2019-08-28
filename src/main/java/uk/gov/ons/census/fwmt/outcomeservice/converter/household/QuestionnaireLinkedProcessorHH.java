@@ -13,7 +13,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import uk.gov.ons.census.fwmt.common.data.household.FulfillmentRequest;
+import uk.gov.ons.census.fwmt.common.data.household.FulfilmentRequest;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
@@ -40,13 +40,13 @@ public class QuestionnaireLinkedProcessorHH implements HHOutcomeServiceProcessor
 
   @Override
   public void processMessage(HouseholdOutcome householdOutcome) throws GatewayException{
-    for (FulfillmentRequest fulfillmentRequest : householdOutcome.getFulfillmentRequests()) {
-      if (isQuestionnaireLinked(fulfillmentRequest)) {
+    for (FulfilmentRequest fulfilmentRequest : householdOutcome.getFulfilmentRequests()) {
+      if (isQuestionnaireLinked(fulfilmentRequest)) {
         String eventDateTime = householdOutcome.getEventDate().toString();
 
         Map<String, Object> root = new HashMap<>();
         root.put("householdOutcome", householdOutcome);
-        root.put("questionnaireId", fulfillmentRequest.getQuestionnaireID());
+        root.put("questionnaireId", fulfilmentRequest.getQuestionnaireID());
         root.put("eventDate", eventDateTime + "Z");
 
         String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, household);
@@ -57,7 +57,7 @@ public class QuestionnaireLinkedProcessorHH implements HHOutcomeServiceProcessor
     }
   }
 
-  private boolean isQuestionnaireLinked(FulfillmentRequest fulfillmentRequest) {
-    return (fulfillmentRequest.getQuestionnaireID() != null);
+  private boolean isQuestionnaireLinked(FulfilmentRequest fulfilmentRequest) {
+    return (fulfilmentRequest.getQuestionnaireID() != null);
   }
 }

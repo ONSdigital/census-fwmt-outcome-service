@@ -14,13 +14,13 @@ public class GatewayEventsConfig {
 
   //PROPERTY_LISTING_SENT
   public static final String CCSPL_OUTCOME_SENT = "CCSPL_OUTCOME_SENT";
-  
+
   //OUTCOME_SENT_RM
   public static final String HH_OUTCOME_SENT = "HH_OUTCOME_SENT";
-  
+
   public static final String CCSI_OUTCOME_SENT = "CCSI_OUTCOME_SENT";
-  
-  
+
+
   @Bean
   public GatewayEventManager gatewayEventManager() {
     GatewayEventManager gatewayEventManager = new GatewayEventManager();
