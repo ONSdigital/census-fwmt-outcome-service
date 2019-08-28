@@ -46,33 +46,6 @@ task genJaxb {
 
 	outputs.dir classesDir
 
-	doLast() {
-		project.ant {
-			taskdef name: 'xjc', classname: 'com.sun.tools.xjc.XJCTask',
-					classpath: configurations.jaxb.asPath
-			mkdir(dir: sourcesDir)
-			mkdir(dir: classesDir)
-
-			xjc(destdir: sourcesDir) {
-				produces(dir: sourcesDir, includes: '**/*.java')
-				schema(dir: schema, includes: '**/*.xsd')
-			}
-
-			javac(destdir: classesDir, source: 1.8, target: 1.8, debug: true,
-					debugLevel: 'lines,vars,source',
-					classpath: configurations.jaxb.asPath) {
-				src(path: sourcesDir)
-				include(name: "**/*.java")
-				include(name: "*.java")
-			}
-
-			copy(todir: classesDir) {
-				fileset(dir: sourcesDir, erroronmissingdir: false) {
-					exclude(name: "**/*.java")
-				}
-			}
-		}
-	}
 }
 dependencies {
 	compile('uk.gov.ons.census.fwmt:census-fwmt-canonical:1.0.11-RELEASE')
@@ -80,15 +53,7 @@ dependencies {
 	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.0.29-RELEASE')
 	compile('uk.gov.ons.ctp.integration.common:product-reference:0.0.12')
 
-	jaxb("javax.xml.bind:jaxb-api:2.3.0")
-	jaxb("com.sun.xml.bind:jaxb-core:2.3.0.1")
-	jaxb("com.sun.xml.bind:jaxb-impl:2.3.1")
-	jaxb("com.sun.xml.bind:jaxb-xjc:2.3.1")
 	jaxb("javax.activation:activation:1.1.1")
-	compile("javax.xml.bind:jaxb-api:2.3.0")
-	compile("com.sun.xml.bind:jaxb-core:2.3.0.1")
-	compile("com.sun.xml.bind:jaxb-impl:2.3.1")
-	compile("com.sun.xml.bind:jaxb-xjc:2.3.1")
 	compile("javax.activation:activation:1.1.1")
 
 	compile('org.projectlombok:lombok')
