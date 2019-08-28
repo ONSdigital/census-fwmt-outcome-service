@@ -69,6 +69,9 @@ public class FulfillmentRequestProcessorHH implements HHOutcomeServiceProcessor 
     Map<String, Object> root = new HashMap<>();
     root.put("householdOutcome", householdOutcome);
     root.put("productCodeLookup", product.getFulfilmentCode());
+    root.put("title", fulfillmentRequest.getRequesterTitle());
+    root.put("forename", fulfillmentRequest.getRequesterForename());
+    root.put("surname", fulfillmentRequest.getRequesterSurname());
     root.put("telNo", fulfillmentRequest.getRequesterPhone());
     root.put("eventDate", eventDateTime + "Z");
 
