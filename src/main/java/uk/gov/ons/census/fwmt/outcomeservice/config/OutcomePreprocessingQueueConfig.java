@@ -77,7 +77,7 @@ public class OutcomePreprocessingQueueConfig {
 
   //Message Listener
   @Bean
-  public SimpleMessageListenerContainer gatewayActionsMessageListener(
+  public SimpleMessageListenerContainer outcomePreprocessorListener(
           @Qualifier("connectionFactory") ConnectionFactory connectionFactory,
           @Qualifier("outcomePreprocessorListenerAdapter") MessageListenerAdapter messageListenerAdapter,
           @Qualifier("interceptor") RetryOperationsInterceptor retryOperationsInterceptor) {

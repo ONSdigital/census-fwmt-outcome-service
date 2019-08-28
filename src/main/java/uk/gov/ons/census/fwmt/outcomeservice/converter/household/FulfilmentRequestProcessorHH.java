@@ -70,6 +70,10 @@ public class FulfilmentRequestProcessorHH implements HHOutcomeServiceProcessor {
     root.put("householdOutcome", householdOutcome);
     root.put("productCodeLookup", product.getFulfilmentCode());
     root.put("telNo", fulfilmentRequest.getRequesterPhone());
+    root.put("title", fulfilmentRequest.getRequesterTitle());
+    root.put("forename", fulfilmentRequest.getRequesterForename());
+    root.put("surname", fulfilmentRequest.getRequesterSurname());
+    root.put("telNo", fulfilmentRequest.getRequesterPhone());
     root.put("eventDate", eventDateTime + "Z");
 
     if (product.getCaseType().equals(HI)) {

@@ -2,7 +2,6 @@ package uk.gov.ons.census.fwmt.outcomeservice.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
@@ -45,9 +44,6 @@ public class OutcomeController implements OutcomeApi {
 
   @Autowired
   private ObjectMapper objectMapper;
-
-  @Autowired
-  SimpleMessageListenerContainer simpleMessageListenerContainer;
 
   @Override
   public ResponseEntity<HouseholdOutcome> householdCaseOutcomeResponse(String caseId, HouseholdOutcome householdOutcome) throws GatewayException{
