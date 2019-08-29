@@ -89,4 +89,5 @@ public class OutcomePreprocessingQueueConfig {
     container.setMessageListener(messageListenerAdapter);
     return container;
   }
+
 }

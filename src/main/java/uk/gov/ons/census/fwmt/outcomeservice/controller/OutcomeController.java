@@ -61,8 +61,6 @@ public class OutcomeController implements OutcomeApi {
               "Unable to move household outcome to pre-processing queue for case ID" + caseId);
     }
 
-//    outcomeService.createHouseHoldOutcomeEvent(householdOutcome);
-
     return new ResponseEntity<>(householdOutcome, HttpStatus.ACCEPTED);
   }
 
