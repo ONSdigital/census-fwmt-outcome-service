@@ -35,7 +35,7 @@ public class OutcomeController implements OutcomeApi {
   @Autowired
   private ObjectMapper objectMapper;
 
-  String outcomeType = null;
+  private String outcomeType = null;
 
   @Override
   public ResponseEntity<HouseholdOutcome> householdCaseOutcomeResponse(String caseId, HouseholdOutcome householdOutcome) throws GatewayException{
@@ -76,7 +76,7 @@ public class OutcomeController implements OutcomeApi {
     } catch (JsonProcessingException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Unable to cache CCS PL Outcome for caseId " + caseId);
     }
-
+    
     return new ResponseEntity<>(ccsPLOutcome, HttpStatus.ACCEPTED);
   }
 

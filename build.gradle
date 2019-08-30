@@ -13,7 +13,7 @@ plugins {
 apply plugin: 'io.spring.dependency-management'
 
 group = 'uk.gov.ons.census.fwmt'
-version = '1.0.29-SNAPSHOT'
+version = '1.0.30-SNAPSHOT'
 sourceCompatibility = '11'
  
 repositories {
@@ -79,16 +79,6 @@ dependencies {
 	compile('uk.gov.ons.census.fwmt:census-fwmt-events:1.0.13-RELEASE')
 	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.0.29-RELEASE')
 	compile('uk.gov.ons.ctp.integration.common:product-reference:0.0.12')
-
-	jaxb("javax.xml.bind:jaxb-api:2.3.0")
-	jaxb("com.sun.xml.bind:jaxb-core:2.3.0.1")
-	jaxb("com.sun.xml.bind:jaxb-impl:2.3.1")
-	jaxb("com.sun.xml.bind:jaxb-xjc:2.3.1")
-	jaxb("javax.activation:activation:1.1.1")
-	compile("javax.xml.bind:jaxb-api:2.3.0")
-	compile("com.sun.xml.bind:jaxb-core:2.3.0.1")
-	compile("com.sun.xml.bind:jaxb-impl:2.3.1")
-	compile("com.sun.xml.bind:jaxb-xjc:2.3.1")
 	compile("javax.activation:activation:1.1.1")
 
 	compile('org.projectlombok:lombok')
