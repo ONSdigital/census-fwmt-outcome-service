@@ -10,6 +10,7 @@ import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -28,9 +29,6 @@ public class OutcomePreprocessingQueueConfig {
 
   @Autowired
   private AmqpAdmin amqpAdmin;
-
-  @Autowired
-  private OutcomePreprocessingReceiver outcomePreprocessingReceiver;
 
   //Queues
   @Bean
@@ -68,26 +66,4 @@ public class OutcomePreprocessingQueueConfig {
     binding.setAdminsThatShouldDeclare(amqpAdmin);
     return binding;
   }
-
-  //Listener Adapter
-  @Bean
-  public MessageListenerAdapter outcomePreprocessorListenerAdapter(OutcomePreprocessingReceiver receiver) {
-    return new MessageListenerAdapter(receiver, "receiveMessage");
-  }
-
-  //Message Listener
-  @Bean
-  public SimpleMessageListenerContainer outcomePreprocessorListener(
-          @Qualifier("connectionFactory") ConnectionFactory connectionFactory,
-          @Qualifier("outcomePreprocessorListenerAdapter") MessageListenerAdapter messageListenerAdapter,
-          @Qualifier("interceptor") RetryOperationsInterceptor retryOperationsInterceptor) {
-    SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-    Advice[] adviceChain = {retryOperationsInterceptor};
-    container.setAdviceChain(adviceChain);
-    container.setConnectionFactory(connectionFactory);
-    container.setQueueNames(OUTCOME_PREPROCESSING_QUEUE);
-    container.setMessageListener(messageListenerAdapter);
-    return container;
-  }
-
 }

@@ -5,8 +5,6 @@ import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.core.TopicExchange;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -110,14 +108,5 @@ public class GatewayOutcomeQueueConfig {
       @Qualifier("gatewayOutcomeExchange") TopicExchange gatewayOutcomeExchange) {
     return BindingBuilder.bind(ccsPropertyListing).to(gatewayOutcomeExchange)
             .with(GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY);
-  }
-
-  //Message Listener
-  @Bean
-  public SimpleMessageListenerContainer gatewayMessageListener(
-      ConnectionFactory connectionFactory) {
-    SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-    container.setConnectionFactory(connectionFactory);
-    return container;
   }
 }

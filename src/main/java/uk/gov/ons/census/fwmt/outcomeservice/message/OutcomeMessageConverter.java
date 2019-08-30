@@ -12,7 +12,7 @@ import java.io.IOException;
 
 @Slf4j
 @Component
-public class MessageConverter {
+public class OutcomeMessageConverter {
 
   @Autowired
   private ObjectMapper mapper;
