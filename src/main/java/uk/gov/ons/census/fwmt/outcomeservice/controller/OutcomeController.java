@@ -14,6 +14,7 @@ import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.redis.CCSPLStore;
 import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
 
+import java.util.Map;
 import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_CCSPL_OUTCOME_RECEIVED;
@@ -35,7 +36,7 @@ public class OutcomeController implements OutcomeApi {
 
   @Override
   public ResponseEntity<HouseholdOutcome> householdCaseOutcomeResponse(String caseId, HouseholdOutcome householdOutcome) throws GatewayException{
-    gatewayEventManager.triggerEvent(caseId, COMET_HH_OUTCOME_RECEIVED);
+    gatewayEventManager.triggerEvent(caseId, COMET_HH_OUTCOME_RECEIVED, Map.of("transactionId", householdOutcome.getTransactionId().toString()));
     householdOutcome.setCaseId(UUID.fromString(caseId));
     outcomeService.createHouseHoldOutcomeEvent(householdOutcome);
 
@@ -53,14 +54,14 @@ public class OutcomeController implements OutcomeApi {
     }
 
 
-    gatewayEventManager.triggerEvent(String.valueOf(ccsPLOutcome.getPropertyListingCaseId()), COMET_CCSPL_OUTCOME_RECEIVED);
+    gatewayEventManager.triggerEvent(String.valueOf(ccsPLOutcome.getPropertyListingCaseId()), COMET_CCSPL_OUTCOME_RECEIVED, Map.of("transactionId", ccsPLOutcome.getTransactionId().toString()));
     outcomeService.createPropertyListingOutcomeEvent(ccsPLOutcome);
 
     return new ResponseEntity<>(ccsPLOutcome, HttpStatus.ACCEPTED);
   }
 
   @Override public ResponseEntity<CCSInterviewOutcome> ccsInterviewOutcome(String caseId, CCSInterviewOutcome ccsIOutcome) throws GatewayException {
-    gatewayEventManager.triggerEvent(caseId, COMET_CCSSI_OUTCOME_RECEIVED);
+    gatewayEventManager.triggerEvent(caseId, COMET_CCSSI_OUTCOME_RECEIVED, Map.of("transactionId", ccsIOutcome.getTransactionId().toString()));
     outcomeService.createInterviewOutcomeEvent(ccsIOutcome);
 
     return null;

@@ -55,6 +55,6 @@ public class AddressTypeChangedProcessorHH implements HHOutcomeServiceProcessor 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_TYPE_CHANGED, root, household);
 
     gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
-    gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), HH_OUTCOME_SENT, new HashMap<>( Map.of("type", "HH_ADDRESS_TYPE_CHANGED_OUTCOME_SENT")));
+    gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), HH_OUTCOME_SENT, Map.of("type", "HH_ADDRESS_TYPE_CHANGED_OUTCOME_SENT", "transactionId", householdOutcome.getTransactionId().toString()));
   }
 }
