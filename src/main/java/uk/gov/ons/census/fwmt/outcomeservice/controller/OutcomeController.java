@@ -76,7 +76,7 @@ public class OutcomeController implements OutcomeApi {
     } catch (JsonProcessingException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Unable to cache CCS PL Outcome for caseId " + caseId);
     }
-
+    
     return new ResponseEntity<>(ccsPLOutcome, HttpStatus.ACCEPTED);
   }
 
