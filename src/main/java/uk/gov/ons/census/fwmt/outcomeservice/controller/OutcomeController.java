@@ -1,10 +1,9 @@
 package uk.gov.ons.census.fwmt.outcomeservice.controller;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_HH_OUTCOME_RECEIVED;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_CCSPL_OUTCOME_RECEIVED;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_CCSSI_OUTCOME_RECEIVED;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_HH_OUTCOME_RECEIVED;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.FAILED_JSON_CONVERSION;
-
 
 import java.util.Map;
 import java.util.UUID;
@@ -24,7 +23,7 @@ import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.message.OutcomePreprocessingProducer;
-import uk.gov.ons.census.fwmt.outcomeservice.redis.CCSPLStore;;
+import uk.gov.ons.census.fwmt.outcomeservice.redis.CCSPLStore;
 
 @RestController
 @Import({springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration.class})
@@ -46,7 +45,6 @@ public class OutcomeController implements OutcomeApi {
 
   @Override
   public ResponseEntity<HouseholdOutcome> householdCaseOutcomeResponse(String caseId, HouseholdOutcome householdOutcome) throws GatewayException{
-
     gatewayEventManager.triggerEvent(caseId, COMET_HH_OUTCOME_RECEIVED, Map.of("transactionId", householdOutcome.getTransactionId().toString()));
     householdOutcome.setCaseId(UUID.fromString(caseId));
 
@@ -87,7 +85,6 @@ public class OutcomeController implements OutcomeApi {
     } catch (JsonProcessingException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Unable to cache CCS PL Outcome for caseId " + caseId);
     }
-    
     return new ResponseEntity<>(ccsPLOutcome, HttpStatus.ACCEPTED);
   }
 

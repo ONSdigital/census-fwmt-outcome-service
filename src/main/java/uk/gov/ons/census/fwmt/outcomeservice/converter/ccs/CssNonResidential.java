@@ -50,6 +50,6 @@ public class CssNonResidential implements CcsOutcomeServiceProcessor {
     String outcomeEvent = TemplateCreator.createOutcomeMessage(NON_RESIDENTIAL, root, ccs);
 
     gatewayOutcomeProducer.sendPropertyListing(outcomeEvent, String.valueOf(ccsPLOutcome.getTransactionId()));
-    gatewayEventManager.triggerEvent(String.valueOf(ccsPLOutcome.getPropertyListingCaseId()), CCSPL_OUTCOME_SENT, new HashMap<>( Map.of("type", "CCSPL_NON_RESIDENTIAL_OUTCOME_SENT")));
+    gatewayEventManager.triggerEvent(String.valueOf(ccsPLOutcome.getPropertyListingCaseId()), CCSPL_OUTCOME_SENT, Map.of("type", "CCSPL_NON_RESIDENTIAL_OUTCOME_SENT", "transactionId", ccsPLOutcome.getTransactionId().toString()));
   }
 }
