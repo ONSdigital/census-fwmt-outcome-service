@@ -75,6 +75,5 @@ public class OutcomePreprocessingReceiver {
       default:
         throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Cannot process message for case ID " + caseId.asText());
     }
-    log.info("Sending " + caseId.asText() + " job to TM");
   }
 }

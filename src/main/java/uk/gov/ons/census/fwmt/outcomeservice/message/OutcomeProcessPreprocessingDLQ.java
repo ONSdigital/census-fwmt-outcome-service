@@ -29,7 +29,6 @@ public class OutcomeProcessPreprocessingDLQ {
 
   @RabbitListener(id = "rabbitDLQ", queues = OUTCOME_PREPROCESSING_DLQ, autoStartup = "false")
   public void receiveMessage(Message message) throws GatewayException {
-    log.info("Received a message in Outcome queue");
     processStoredMessage(message);
   }
 
