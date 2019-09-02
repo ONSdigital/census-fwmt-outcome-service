@@ -98,6 +98,24 @@ public class GatewayOutcomeProducer {
   }
 
   @Retryable
+  public void sendQuestionnaireLinked(String outcomeEvent, String transactionId) throws GatewayException {
+    MessageProperties messageProperties = new MessageProperties();
+    messageProperties.setContentType("application/json");
+    MessageConverter messageConverter = new Jackson2JsonMessageConverter();
+
+    log.info("Questionnaire Linked message sent to queue :{}", transactionId);
+
+    try {
+      Message message = messageConverter.toMessage(objectMapper.readTree(outcomeEvent), messageProperties);
+
+      rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
+          GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY, message);
+    } catch (IOException e){
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Cannot process questionnaire linked for transaction ID " + transactionId);
+    }
+  }
+
+  @Retryable
   public void sendPropertyListing(String outcomeEvent, String transactionId) throws GatewayException {
     MessageProperties messageProperties = new MessageProperties();
     messageProperties.setContentType("application/json");
