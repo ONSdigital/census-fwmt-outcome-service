@@ -35,7 +35,7 @@ public class OutcomeController implements OutcomeApi {
   @Autowired
   private ObjectMapper objectMapper;
 
-  String outcomeType = null;
+  private String outcomeType = null;
 
   @Override
   public ResponseEntity<HouseholdOutcome> householdCaseOutcomeResponse(String caseId, HouseholdOutcome householdOutcome) throws GatewayException{

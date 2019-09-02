@@ -14,8 +14,9 @@ import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
-
 import java.io.IOException;
+
+import static uk.gov.ons.census.fwmt.outcomeservice.config.OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_QUEUE;
 
 @Slf4j
 @Component
@@ -30,7 +31,7 @@ public class OutcomePreprocessingReceiver {
   @Autowired
   private OutcomeMessageConverter outcomeMessageConverter;
 
-  @RabbitListener(queues = "Outcome.Preprocessing")
+  @RabbitListener(queues = OUTCOME_PREPROCESSING_QUEUE)
   public void receiveMessage(Message message) throws GatewayException {
     log.info("Received a message in Outcome queue");
     processStoredMessage(message);
