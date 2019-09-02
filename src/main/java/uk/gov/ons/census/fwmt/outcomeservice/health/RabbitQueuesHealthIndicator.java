@@ -8,6 +8,7 @@ import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
+import uk.gov.ons.census.fwmt.outcomeservice.config.OutcomePreprocessingQueueConfig;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +21,8 @@ public class RabbitQueuesHealthIndicator extends AbstractHealthIndicator {
 
   private static List<String> QUEUES = Arrays.asList(
       GatewayOutcomeQueueConfig.FIELD_REFUSALS_QUEUE,
-      GatewayOutcomeQueueConfig.TEMP_FIELD_OTHERS_QUEUE
+      GatewayOutcomeQueueConfig.TEMP_FIELD_OTHERS_QUEUE,
+      OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_QUEUE
   );
 
   @Autowired

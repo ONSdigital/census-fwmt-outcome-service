@@ -5,3 +5,4 @@
 "collectionCase" : {
 "id":"${ccsInterviewOutcome.caseId}"
 }
+}
