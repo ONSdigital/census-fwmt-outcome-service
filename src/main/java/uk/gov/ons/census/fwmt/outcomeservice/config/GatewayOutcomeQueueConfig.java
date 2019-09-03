@@ -70,6 +70,11 @@ public class GatewayOutcomeQueueConfig {
     return QueueBuilder.durable(TEMP_FIELD_OTHERS_QUEUE).build();
   }
 
+  @Bean
+  public Queue questionnaireLinkedQueue() {
+    return QueueBuilder.durable(TEMP_FIELD_OTHERS_QUEUE).build();
+  }
+
   //Exchange
   @Bean
   public TopicExchange gatewayOutcomeExchange() {
@@ -79,7 +84,7 @@ public class GatewayOutcomeQueueConfig {
   // Bindings
   @Bean
   public Binding respondentRefusalBinding(@Qualifier("respondentRefusalQueue") Queue respondentRefusalQueue,
-                                          @Qualifier("gatewayOutcomeExchange") TopicExchange gatewayOutcomeExchange) {
+       @Qualifier("gatewayOutcomeExchange") TopicExchange gatewayOutcomeExchange) {
     return BindingBuilder.bind(respondentRefusalQueue).to(gatewayOutcomeExchange)
             .with(GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
   }
@@ -92,17 +97,24 @@ public class GatewayOutcomeQueueConfig {
   }
 
   @Bean
-  public Binding ccsPropertyListingBinding(@Qualifier("ccsPropertyListing") Queue ccsPropertyListing,
-      @Qualifier("gatewayOutcomeExchange") TopicExchange gatewayOutcomeExchange) {
-    return BindingBuilder.bind(ccsPropertyListing).to(gatewayOutcomeExchange)
-        .with(GATEWAY_CCS_PROPERTYLISTING_ROUTING_KEY);
-  }
-
-  @Bean
   public Binding fulfilmentRequestBinding(@Qualifier("fulfilmentRequestQueue") Queue fulfilmentRequestQueue,
       @Qualifier("gatewayOutcomeExchange") TopicExchange gatewayOutcomeExchange) {
     return BindingBuilder.bind(fulfilmentRequestQueue).to(gatewayOutcomeExchange)
         .with(GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY);
+  }
+
+  @Bean
+  public Binding questionnaireLinkedBinding(@Qualifier("questionnaireLinkedQueue") Queue questionnaireLinkedQueue,
+      @Qualifier("gatewayOutcomeExchange") TopicExchange gatewayOutcomeExchange) {
+    return BindingBuilder.bind(questionnaireLinkedQueue).to(gatewayOutcomeExchange)
+        .with(GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY);
+  }
+
+  @Bean
+  public Binding ccsPropertyListingBinding(@Qualifier("ccsPropertyListing") Queue ccsPropertyListing,
+      @Qualifier("gatewayOutcomeExchange") TopicExchange gatewayOutcomeExchange) {
+    return BindingBuilder.bind(ccsPropertyListing).to(gatewayOutcomeExchange)
+        .with(GATEWAY_CCS_PROPERTYLISTING_ROUTING_KEY);
   }
 
   @Bean
