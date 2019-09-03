@@ -29,6 +29,7 @@ public class OutcomeProcessPreprocessingDLQ {
 
   @RabbitListener(id = "rabbitDLQ", queues = OUTCOME_PREPROCESSING_DLQ, autoStartup = "false")
   public void receiveMessage(Message message) throws GatewayException {
+    message.getMessageProperties().getXDeathHeader();
     processStoredMessage(message);
   }
 
