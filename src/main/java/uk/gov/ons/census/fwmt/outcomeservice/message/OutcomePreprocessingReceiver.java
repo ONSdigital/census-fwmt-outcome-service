@@ -3,10 +3,6 @@ package uk.gov.ons.census.fwmt.outcomeservice.message;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
@@ -18,8 +14,6 @@ import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import static uk.gov.ons.census.fwmt.outcomeservice.config.OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_QUEUE;
 
 @Slf4j
 @Component
@@ -34,7 +28,6 @@ public class OutcomePreprocessingReceiver {
   @Autowired
   private OutcomeMessageConverter outcomeMessageConverter;
 
-  @Retryable
   public void receiveMessage(HashMap message) throws GatewayException {
     log.info("Received a message in Outcome queue");
     processStoredMessage(message);
