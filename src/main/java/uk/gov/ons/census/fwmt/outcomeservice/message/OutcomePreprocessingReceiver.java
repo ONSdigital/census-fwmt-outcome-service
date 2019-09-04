@@ -3,11 +3,8 @@ package uk.gov.ons.census.fwmt.outcomeservice.message;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
@@ -15,8 +12,8 @@ import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
 import java.io.IOException;
-
-import static uk.gov.ons.census.fwmt.outcomeservice.config.OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_QUEUE;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -31,27 +28,28 @@ public class OutcomePreprocessingReceiver {
   @Autowired
   private OutcomeMessageConverter outcomeMessageConverter;
 
-  @RabbitListener(queues = OUTCOME_PREPROCESSING_QUEUE)
-  public void receiveMessage(Message message) throws GatewayException {
+  public void receiveMessage(HashMap message) throws GatewayException {
     log.info("Received a message in Outcome queue");
     processStoredMessage(message);
   }
 
-  private void processStoredMessage(Message actualMessage) throws GatewayException {
+  private void processStoredMessage(HashMap actualMessage) throws GatewayException {
     JsonNode actualMessageRootNode;
     String outcomeSurveyType;
     String processedMessage;
-    MessageConverter messageConverter = new Jackson2JsonMessageConverter();
 
-    processedMessage = messageConverter.fromMessage(actualMessage).toString();
+    Map<String, String> messageRemapped = new HashMap<>(actualMessage);
+
+    Map.Entry<String, String> entry = messageRemapped.entrySet().iterator().next();
+
+    outcomeSurveyType = entry.getKey();
+    processedMessage = entry.getValue();
 
     try {
       actualMessageRootNode = jsonObjectMapper.readTree(processedMessage);
     } catch (IOException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Cannot process message JSON");
     }
-
-    outcomeSurveyType = actualMessage.getMessageProperties().getHeaders().get("__OutcomeType__").toString();
 
     JsonNode caseId = actualMessageRootNode.path("caseId");
 

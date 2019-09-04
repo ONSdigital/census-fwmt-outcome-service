@@ -11,6 +11,9 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.outcomeservice.config.OutcomePreprocessingQueueConfig;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Slf4j
 @Component
 public class OutcomePreprocessingProducer {
@@ -20,14 +23,16 @@ public class OutcomePreprocessingProducer {
 
   @Retryable
   public void sendOutcomeToPreprocessingQueue(String outcomeMessage, String caseId, String outcomeType) {
+    Map map = new HashMap();
     MessageProperties messageProperties = new MessageProperties();
     messageProperties.setContentType("application/json");
-    messageProperties.setHeader("__OutcomeType__", outcomeType);
     MessageConverter messageConverter = new Jackson2JsonMessageConverter();
 
     log.info("Outcome message sent to pre-processing queue :{}", caseId);
 
-    Message message = messageConverter.toMessage(outcomeMessage, messageProperties);
+    map.put(outcomeType, outcomeMessage);
+
+    Message message = messageConverter.toMessage(map, messageProperties);
 
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
             OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, message);

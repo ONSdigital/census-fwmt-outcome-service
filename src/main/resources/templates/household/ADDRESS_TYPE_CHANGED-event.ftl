@@ -27,7 +27,7 @@
     <#else>
         "surname":null,
     </#if>
-    <#if householdOutcome.ceDetails.contactPhone>
+    <#if householdOutcome.ceDetails.contactPhone??>
         "telNo":"${householdOutcome.ceDetails.contactPhone}"
         <#else>
             "telNo":null

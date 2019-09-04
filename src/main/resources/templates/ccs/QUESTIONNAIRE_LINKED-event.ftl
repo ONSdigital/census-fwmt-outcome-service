@@ -1,5 +1,5 @@
 ,
 "uac" : {
-"questionnaireId":"${ccsPropertyListingOutcome.fulfilmentRequest.questionnaireId}"
+"questionnaireId":"${questionnaireId}"
 }
 

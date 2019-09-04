@@ -1,19 +1,13 @@
 package uk.gov.ons.census.fwmt.outcomeservice.message;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.outcomeservice.config.OutcomePreprocessingQueueConfig;
-
-import java.io.IOException;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_DLQ;
 
@@ -22,35 +16,26 @@ import static uk.gov.ons.census.fwmt.outcomeservice.config.OutcomePreprocessingQ
 public class OutcomeProcessPreprocessingDLQ {
 
   @Autowired
-  private ObjectMapper jsonObjectMapper;
-
-  @Autowired
   private RabbitTemplate rabbitTemplate;
 
-  @RabbitListener(id = "rabbitDLQ", queues = OUTCOME_PREPROCESSING_DLQ, autoStartup = "false")
-  public void receiveMessage(Message message) throws GatewayException {
-    processStoredMessage(message);
-  }
+  @Autowired
+  private AmqpAdmin amqpAdmin;
 
-  private void processStoredMessage(Message actualMessage) throws GatewayException {
-    JsonNode actualMessageRootNode;
-    String processedMessage;
-    MessageConverter messageConverter = new Jackson2JsonMessageConverter();
-
-    processedMessage = messageConverter.fromMessage(actualMessage).toString();
+  public void processDLQ() throws GatewayException {
+    int messageCount;
+    Message message;
 
     try {
-      actualMessageRootNode = jsonObjectMapper.readTree(processedMessage);
-    } catch (IOException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Cannot process message JSON");
+      messageCount = (int) amqpAdmin.getQueueProperties(OUTCOME_PREPROCESSING_DLQ).get("QUEUE_MESSAGE_COUNT");
+
+      for (int i = 0; i < messageCount; i++) {
+        message = rabbitTemplate.receive(OUTCOME_PREPROCESSING_DLQ);
+
+        rabbitTemplate.send(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
+                OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, message);
+      }
+    } catch (NullPointerException e) {
+      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "No messages in queue");
     }
-
-    JsonNode caseId = actualMessageRootNode.path("caseId");
-
-    rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
-            OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, actualMessage);
-
-    log.info("Moving " + caseId.asText() + " job from DLQ to preprocessing queue");
   }
-
 }
