@@ -55,7 +55,7 @@ public class FulfilmentRequestProcessorHH implements HHOutcomeServiceProcessor {
 
   @Override
   public void processMessage(HouseholdOutcome householdOutcome) throws GatewayException{
-    for (FulfilmentRequest fulfilmentRequest : householdOutcome.getFulfilmentRequests()) {
+    for (FulfilmentRequest fulfilmentRequest : householdOutcome.getFulfillmentRequests()) {
       if (!isQuestionnaireLinked(fulfilmentRequest)) {
         createQuestionnaireRequiredByPostEvent(householdOutcome, fulfilmentRequest);
       }

@@ -12,10 +12,26 @@
 <#if secondaryOutcome == "CE - Contact made">
     ,
     "contact" : {
-    "title":"${householdOutcome.ceDetails.managerTitle}",
-    "forename":"${householdOutcome.ceDetails.managerForename}",
-    "surname":"${householdOutcome.ceDetails.managerSurname}",
-    "telNo":"${householdOutcome.ceDetails.contactPhone}"
+    <#if householdOutcome.ceDetails.managerTitle??>
+        "title":"${householdOutcome.ceDetails.managerTitle}",
+    <#else>
+        "title":null,
+    </#if>
+    <#if householdOutcome.ceDetails.managerForename??>
+        "forename":"${householdOutcome.ceDetails.managerForename}",
+    <#else>
+        "forename":null,
+    </#if>
+    <#if householdOutcome.ceDetails.managerSurname??>
+        "surname":"${householdOutcome.ceDetails.managerSurname}",
+    <#else>
+        "surname":null,
+    </#if>
+    <#if householdOutcome.ceDetails.contactPhone>
+        "telNo":"${householdOutcome.ceDetails.contactPhone}"
+        <#else>
+            "telNo":null
+    </#if>
     }
 </#if>
 }
