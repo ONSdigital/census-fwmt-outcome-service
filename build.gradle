@@ -14,7 +14,7 @@ apply plugin: 'io.spring.dependency-management'
 
 group = 'uk.gov.ons.census.fwmt'
 
-version = '1.0.34-SNAPSHOT'
+version = '1.0.35-SNAPSHOT'
 
 sourceCompatibility = '11'
  
