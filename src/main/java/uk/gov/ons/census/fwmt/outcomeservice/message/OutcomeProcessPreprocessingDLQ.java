@@ -22,18 +22,20 @@ public class OutcomeProcessPreprocessingDLQ {
   private AmqpAdmin amqpAdmin;
 
   public void processDLQ() throws GatewayException {
-    int test;
+    int messageCount;
     Message message;
 
-    test = (int) amqpAdmin.getQueueProperties(OUTCOME_PREPROCESSING_DLQ).get("QUEUE_MESSAGE_COUNT");
+    try {
+      messageCount = (int) amqpAdmin.getQueueProperties(OUTCOME_PREPROCESSING_DLQ).get("QUEUE_MESSAGE_COUNT");
 
+      for (int i = 0; i < messageCount; i++) {
+        message = rabbitTemplate.receive(OUTCOME_PREPROCESSING_DLQ);
 
-    for(int i = 0; i < test; i++) {
-      message = rabbitTemplate.receive(OUTCOME_PREPROCESSING_DLQ);
-
-      rabbitTemplate.send(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
-              OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, message);
+        rabbitTemplate.send(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
+                OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, message);
+      }
+    } catch (NullPointerException e) {
+      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "No messages in queue");
     }
   }
-
 }
