@@ -30,7 +30,7 @@ public class HouseholdOutcomeBuilder {
     householdOutcome.setPrimaryOutcome("Contact Made");
     householdOutcome.setSecondaryOutcome("Paper H Questionnaire required by post");
     householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
-    householdOutcome.setFulfilmentRequests(fulfilmentRequestList);
+    householdOutcome.setFulfillmentRequests(fulfilmentRequestList);
 
     return householdOutcome;
   }
@@ -54,7 +54,7 @@ public class HouseholdOutcomeBuilder {
     householdOutcome.setPrimaryOutcome("Contact Made");
     householdOutcome.setSecondaryOutcome("Paper HC Questionnaire required by post");
     householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
-    householdOutcome.setFulfilmentRequests(fulfilmentRequestList);
+    householdOutcome.setFulfillmentRequests(fulfilmentRequestList);
 
     return householdOutcome;
   }
@@ -78,7 +78,7 @@ public class HouseholdOutcomeBuilder {
     householdOutcome.setPrimaryOutcome("Contact Made");
     householdOutcome.setSecondaryOutcome("Paper I Questionnaire required by post");
     householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
-    householdOutcome.setFulfilmentRequests(fulfilmentRequestList);
+    householdOutcome.setFulfillmentRequests(fulfilmentRequestList);
 
     return householdOutcome;
   }
@@ -102,7 +102,7 @@ public class HouseholdOutcomeBuilder {
     householdOutcome.setPrimaryOutcome("Contact Made");
     householdOutcome.setSecondaryOutcome("Paper I Questionnaire required by post");
     householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
-    householdOutcome.setFulfilmentRequests(fulfilmentRequestList);
+    householdOutcome.setFulfillmentRequests(fulfilmentRequestList);
 
     return householdOutcome;
   }
@@ -127,7 +127,7 @@ public class HouseholdOutcomeBuilder {
     householdOutcome.setPrimaryOutcome("Contact Made");
     householdOutcome.setSecondaryOutcome("HUAC required by text");
     householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
-    householdOutcome.setFulfilmentRequests(fulfilmentRequestList);
+    householdOutcome.setFulfillmentRequests(fulfilmentRequestList);
 
     return householdOutcome;
   }
@@ -152,7 +152,7 @@ public class HouseholdOutcomeBuilder {
     householdOutcome.setPrimaryOutcome("Contact Made");
     householdOutcome.setSecondaryOutcome("IUAC required by text");
     householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
-    householdOutcome.setFulfilmentRequests(fulfilmentRequestList);
+    householdOutcome.setFulfillmentRequests(fulfilmentRequestList);
 
     return householdOutcome;
   }
@@ -177,7 +177,7 @@ public class HouseholdOutcomeBuilder {
     householdOutcome.setPrimaryOutcome("Contact Made");
     householdOutcome.setSecondaryOutcome("IUAC required by text");
     householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
-    householdOutcome.setFulfilmentRequests(fulfilmentRequestList);
+    householdOutcome.setFulfillmentRequests(fulfilmentRequestList);
 
     return householdOutcome;
   }
@@ -202,7 +202,7 @@ public class HouseholdOutcomeBuilder {
     householdOutcome.setPrimaryOutcome("Contact Made");
     householdOutcome.setSecondaryOutcome("IUAC required by text");
     householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
-    householdOutcome.setFulfilmentRequests(fulfilmentRequestList);
+    householdOutcome.setFulfillmentRequests(fulfilmentRequestList);
 
     return householdOutcome;
   }
@@ -225,7 +225,7 @@ public class HouseholdOutcomeBuilder {
     householdOutcome.setPrimaryOutcome("Contact Made");
     householdOutcome.setSecondaryOutcome("Will Complete");
     householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
-    householdOutcome.setFulfilmentRequests(fulfilmentRequestList);
+    householdOutcome.setFulfillmentRequests(fulfilmentRequestList);
 
     return householdOutcome;
   }
@@ -248,7 +248,7 @@ public class HouseholdOutcomeBuilder {
     householdOutcome.setPrimaryOutcome("Contact Made");
     householdOutcome.setSecondaryOutcome("");
     householdOutcome.setTransactionId(UUID.fromString("45de4dc-3c3b-11e9-b210-d663bd873d93"));
-    householdOutcome.setFulfilmentRequests(fulfilmentRequestList);
+    householdOutcome.setFulfillmentRequests(fulfilmentRequestList);
 
     return householdOutcome;
   }
