@@ -17,7 +17,7 @@ public class GatewayOutcomeQueueConfig {
   public static final String TEMP_FIELD_OTHERS_QUEUE = "Field.other";
 
   // Exchange name
-  public static final String GATEWAY_OUTCOME_EXCHANGE = "Gateway.OutcomeEvent.Exchange";
+  public static final String GATEWAY_OUTCOME_EXCHANGE = "events";
 
   // Routing keys
   // keys mentioned by Dave Mort
