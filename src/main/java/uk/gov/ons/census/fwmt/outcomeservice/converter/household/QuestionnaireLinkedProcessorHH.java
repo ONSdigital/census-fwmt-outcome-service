@@ -52,7 +52,7 @@ public class QuestionnaireLinkedProcessorHH implements HHOutcomeServiceProcessor
         String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, household);
 
         gatewayOutcomeProducer.sendQuestionnaireLinked(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
-        gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), HH_OUTCOME_SENT,  Map.of("type", "HH_QUESTIONNAIRE_LINKED_OUTCOME_SENT", "transactionId", householdOutcome.getTransactionId().toString()));
+        gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), HH_OUTCOME_SENT,  "type", "HH_QUESTIONNAIRE_LINKED_OUTCOME_SENT", "transactionId", householdOutcome.getTransactionId().toString(), "Case Ref", householdOutcome.getCaseReference());
       }
     }
   }

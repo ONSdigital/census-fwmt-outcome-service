@@ -48,7 +48,7 @@ public class AddressNotValidProcessorHH implements HHOutcomeServiceProcessor {
     String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_NOT_VALID, root, household);
 
     gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
-    gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), HH_OUTCOME_SENT, Map.of("type", "HH_ADDRESS_NOT_VALID_OUTCOME_SENT", "transactionId", householdOutcome.getTransactionId().toString()));
+    gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), HH_OUTCOME_SENT, "type", "HH_ADDRESS_NOT_VALID_OUTCOME_SENT", "transactionId", householdOutcome.getTransactionId().toString(), "Case Ref", householdOutcome.getCaseReference());
   }
 
   private boolean isNonValidHousehold(HouseholdOutcome householdOutcome) {

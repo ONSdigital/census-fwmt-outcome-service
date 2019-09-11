@@ -45,7 +45,7 @@ public class OutcomeController implements OutcomeApi {
 
   @Override
   public ResponseEntity<HouseholdOutcome> householdCaseOutcomeResponse(String caseId, HouseholdOutcome householdOutcome) throws GatewayException{
-    gatewayEventManager.triggerEvent(caseId, COMET_HH_OUTCOME_RECEIVED, Map.of("transactionId", householdOutcome.getTransactionId().toString()));
+    gatewayEventManager.triggerEvent(caseId, COMET_HH_OUTCOME_RECEIVED, "transactionId", householdOutcome.getTransactionId().toString(), "Case Ref", householdOutcome.getCaseReference());
     householdOutcome.setCaseId(UUID.fromString(caseId));
 
     try {
@@ -54,7 +54,7 @@ public class OutcomeController implements OutcomeApi {
       outcomePreprocessingProducer.sendOutcomeToPreprocessingQueue(householdOutcomeToQueue, caseId, outcomeType);
     } catch (JsonProcessingException e) {
       String errorMessage = "Unable to move household outcome to pre-processing queue.";
-      gatewayEventManager.triggerErrorEvent(this.getClass(), e, errorMessage, caseId, FAILED_JSON_CONVERSION);
+      gatewayEventManager.triggerErrorEvent(this.getClass(), e, errorMessage, caseId, FAILED_JSON_CONVERSION, "Case Ref", householdOutcome.getCaseReference());
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
               errorMessage + " for case Id: " + caseId);
     }
@@ -65,9 +65,8 @@ public class OutcomeController implements OutcomeApi {
   @Override
   public ResponseEntity<CCSPropertyListingOutcome> ccsPropertyListingCaseOutcomeResponse(
       CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException {
-
     String caseId = ccsPLOutcome.getPropertyListingCaseId().toString();
-    gatewayEventManager.triggerEvent(caseId, COMET_CCSPL_OUTCOME_RECEIVED, Map.of("transactionId", ccsPLOutcome.getTransactionId().toString()));
+    gatewayEventManager.triggerEvent(caseId, COMET_CCSPL_OUTCOME_RECEIVED, "transactionId", ccsPLOutcome.getTransactionId().toString());
 
     try {
       String ccsPLOutcomeToQueue = objectMapper.writeValueAsString(ccsPLOutcome);
@@ -90,8 +89,7 @@ public class OutcomeController implements OutcomeApi {
 
   @Override
   public ResponseEntity<CCSInterviewOutcome> ccsInterviewOutcome(String caseId, CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException {
-
-    gatewayEventManager.triggerEvent(caseId, COMET_CCSSI_OUTCOME_RECEIVED, Map.of("transactionId", ccsInterviewOutcome.getTransactionId().toString()));
+    gatewayEventManager.triggerEvent(caseId, COMET_CCSSI_OUTCOME_RECEIVED, "transactionId", ccsInterviewOutcome.getTransactionId().toString(), "Case Ref", ccsInterviewOutcome.getCaseReference());
     
     try {
       String ccsInterviewOutcomeToQueue = objectMapper.writeValueAsString(ccsInterviewOutcome);
@@ -99,7 +97,7 @@ public class OutcomeController implements OutcomeApi {
       outcomePreprocessingProducer.sendOutcomeToPreprocessingQueue(ccsInterviewOutcomeToQueue, caseId, outcomeType);
     } catch (JsonProcessingException e) {
       String errorMessage = "Unable to move household outcome to pre-processing queue.";
-      gatewayEventManager.triggerErrorEvent(this.getClass(), e, errorMessage, caseId, FAILED_JSON_CONVERSION);
+      gatewayEventManager.triggerErrorEvent(this.getClass(), e, errorMessage, caseId, FAILED_JSON_CONVERSION, "Case Ref", ccsInterviewOutcome.getCaseReference());
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
               errorMessage + " for case Id: " + caseId);
     }

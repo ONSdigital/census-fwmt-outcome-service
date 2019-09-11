@@ -85,7 +85,7 @@ public class FulfilmentRequestProcessorHH implements HHOutcomeServiceProcessor {
     String outcomeEvent = TemplateCreator.createOutcomeMessage(FULFILMENT_REQUESTED, root, household);
 
     gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
-    gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), HH_OUTCOME_SENT, Map.of("type", "HH_FULFILMENT_REQUESTED_OUTCOME_SENT", "transactionId", householdOutcome.getTransactionId().toString()));
+    gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), HH_OUTCOME_SENT, "type", "HH_FULFILMENT_REQUESTED_OUTCOME_SENT", "transactionId", householdOutcome.getTransactionId().toString(), "Case Ref", householdOutcome.getCaseReference());
   }
 
   private boolean isQuestionnaireLinked(FulfilmentRequest fulfilmentRequest) {

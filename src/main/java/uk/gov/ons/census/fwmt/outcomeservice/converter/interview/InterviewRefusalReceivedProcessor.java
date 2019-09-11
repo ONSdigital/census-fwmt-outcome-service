@@ -47,6 +47,6 @@ public class InterviewRefusalReceivedProcessor implements InterviewOutcomeServic
     String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root, interview);
 
     gatewayOutcomeProducer.sendRespondentRefusal(outcomeEvent, String.valueOf(ccsIOutcome.getTransactionId()));
-    gatewayEventManager.triggerEvent(String.valueOf(ccsIOutcome.getCaseId()), CCSI_OUTCOME_SENT, Map.of("type", "CCSI_REFUSAL_RECEIVED_OUTCOME_SENT", "transactionId", ccsIOutcome.getTransactionId().toString()));
+    gatewayEventManager.triggerEvent(String.valueOf(ccsIOutcome.getCaseId()), CCSI_OUTCOME_SENT, "type", "CCSI_REFUSAL_RECEIVED_OUTCOME_SENT", "transactionId", ccsIOutcome.getTransactionId().toString(), "Case Ref", ccsIOutcome.getCaseReference());
   }
 }
