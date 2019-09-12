@@ -10,10 +10,12 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import redis.clients.jedis.JedisPool;
 
 @Configuration
 public class RedisConfig {
 
+  private JedisPool pool = null;
   private String redisHostname;
   private int redisPort;
   private int redisDB;
@@ -45,6 +47,12 @@ public class RedisConfig {
     redisTemplate.setValueSerializer(new JdkSerializationRedisSerializer());
     redisTemplate.setConnectionFactory(jedisConnectionFactory);
     return redisTemplate;
+  }
+
+  @Bean
+  public JedisPool jedisPool() {
+    pool = new JedisPool(redisHostname, redisPort);
+    return pool;
   }
 
 }
