@@ -7,7 +7,12 @@
 "address" : {
 "addressType":"${estabType}",
 "estabType":"${householdOutcome.ceDetails.establishmentType}",
-"orgName":"${householdOutcome.ceDetails.establishmentName}"
+<#if householdOutcome.ceDetails.establishmentName??>
+    "orgName":"${householdOutcome.ceDetails.establishmentName}"
+<#else>
+    "orgName":null
+</#if>
+
 }
 <#if secondaryOutcome == "CE - Contact made">
     ,
