@@ -1,5 +1,6 @@
 package uk.gov.ons.census.fwmt.outcomeservice.converter.household;
 
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.FAILED_FULFILMENT_REQUEST_IS_NULL;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.HH_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.QUESTIONNAIRE_LINKED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.CONTACT_MADE;
@@ -40,6 +41,10 @@ public class QuestionnaireLinkedProcessorHH implements HHOutcomeServiceProcessor
 
   @Override
   public void processMessage(HouseholdOutcome householdOutcome) throws GatewayException{
+    if (householdOutcome.getFulfillmentRequests()==null){
+      gatewayEventManager.triggerErrorEvent(this.getClass(), "Fulfilment Request is null", householdOutcome.getCaseReference(), FAILED_FULFILMENT_REQUEST_IS_NULL);
+      return;
+    }
     for (FulfilmentRequest fulfilmentRequest : householdOutcome.getFulfillmentRequests()) {
       if (isQuestionnaireLinked(fulfilmentRequest)) {
         String eventDateTime = householdOutcome.getEventDate().toString();
