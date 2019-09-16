@@ -22,6 +22,8 @@ public class GatewayEventsConfig {
 
   public static final String FAILED_JSON_CONVERSION = "FAILED_JSON_CONVERSION";
 
+  public static final String FAILED_FULFILMENT_REQUEST_IS_NULL = "FAILED_FULFILMENT_REQUEST_IS_NULL";
+
   
   
   @Bean
@@ -30,7 +32,7 @@ public class GatewayEventsConfig {
     gatewayEventManager.setSource(Application.APPLICATION_NAME);
     gatewayEventManager.addEventTypes(new String[] {COMET_HH_OUTCOME_RECEIVED, COMET_CCSSI_OUTCOME_RECEIVED,
         COMET_CCSPL_OUTCOME_RECEIVED, CCSPL_OUTCOME_SENT, HH_OUTCOME_SENT, CCSI_OUTCOME_SENT});
-    gatewayEventManager.addErrorEventTypes(new String[] {FAILED_JSON_CONVERSION});
+    gatewayEventManager.addErrorEventTypes(new String[] {FAILED_JSON_CONVERSION, FAILED_FULFILMENT_REQUEST_IS_NULL});
     
     return gatewayEventManager;
   }
