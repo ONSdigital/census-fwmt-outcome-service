@@ -12,6 +12,7 @@ import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 @Slf4j
 @Component
@@ -26,7 +27,7 @@ public class OutcomePreprocessingReceiver {
   @Autowired
   private OutcomeMessageConverter outcomeMessageConverter;
 
-  public void receiveMessage(GenericMessage message) throws GatewayException, IOException {
+  public void receiveMessage(GenericMessage message) throws GatewayException {
     log.info("Received a message in Outcome queue");
     processStoredMessage(message);
   }
@@ -38,7 +39,7 @@ public class OutcomePreprocessingReceiver {
     String processedMessage;
 
     byte[] genericMessage = (byte[]) actualMessage.getPayload();
-    processedMessage = new String(genericMessage);
+    processedMessage = new String(genericMessage, Charset.defaultCharset());
 
     try {
       actualMessageRootNode = jsonObjectMapper.readTree(processedMessage);
@@ -48,7 +49,13 @@ public class OutcomePreprocessingReceiver {
 
     caseId = actualMessageRootNode.path("caseId");
 
-    outcomeSurveyType = actualMessage.getHeaders().get("__OutcomeType__").toString();
+    try {
+      outcomeSurveyType = actualMessage.getHeaders().get("__OutcomeType__").toString();
+    } catch (NullPointerException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "__OutcomeType__ cannot be blankl");
+    }
+
+
 
     switch (outcomeSurveyType) {
       case "Household":
