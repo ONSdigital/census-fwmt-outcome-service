@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.retry.annotation.Retryable;
+import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
@@ -12,8 +12,7 @@ import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.charset.Charset;
 
 @Slf4j
 @Component
@@ -28,22 +27,19 @@ public class OutcomePreprocessingReceiver {
   @Autowired
   private OutcomeMessageConverter outcomeMessageConverter;
 
-  public void receiveMessage(HashMap message) throws GatewayException {
+  public void receiveMessage(GenericMessage message) throws GatewayException {
     log.info("Received a message in Outcome queue");
     processStoredMessage(message);
   }
 
-  private void processStoredMessage(HashMap actualMessage) throws GatewayException {
+  private void processStoredMessage(GenericMessage actualMessage) throws GatewayException {
     JsonNode actualMessageRootNode;
+    JsonNode caseId;
     String outcomeSurveyType;
     String processedMessage;
 
-    Map<String, String> messageRemapped = new HashMap<>(actualMessage);
-
-    Map.Entry<String, String> entry = messageRemapped.entrySet().iterator().next();
-
-    outcomeSurveyType = entry.getKey();
-    processedMessage = entry.getValue();
+    byte[] genericMessage = (byte[]) actualMessage.getPayload();
+    processedMessage = new String(genericMessage, Charset.defaultCharset());
 
     try {
       actualMessageRootNode = jsonObjectMapper.readTree(processedMessage);
@@ -51,7 +47,14 @@ public class OutcomePreprocessingReceiver {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Cannot process message JSON");
     }
 
-    JsonNode caseId = actualMessageRootNode.path("caseId");
+    caseId = actualMessageRootNode.path("caseId");
+
+    try {
+      outcomeSurveyType = actualMessage.getHeaders().get("__OutcomeType__").toString();
+    } catch (NullPointerException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "__OutcomeType__ cannot be blankl");
+    }
+
 
 
     switch (outcomeSurveyType) {

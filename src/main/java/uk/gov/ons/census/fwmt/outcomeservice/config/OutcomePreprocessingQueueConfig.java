@@ -10,7 +10,7 @@ import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.MessagingMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -82,7 +82,7 @@ public class OutcomePreprocessingQueueConfig {
           @Qualifier("interceptor") RetryOperationsInterceptor retryOperationsInterceptor) {
     SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
     Advice[] adviceChain = {retryOperationsInterceptor};
-    messageListenerAdapter.setMessageConverter(new Jackson2JsonMessageConverter());
+    messageListenerAdapter.setMessageConverter(new MessagingMessageConverter());
     container.setAdviceChain(adviceChain);
     container.setConnectionFactory(connectionFactory);
     container.setQueueNames(OUTCOME_PREPROCESSING_QUEUE);
