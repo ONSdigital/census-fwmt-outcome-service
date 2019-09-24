@@ -53,7 +53,7 @@ public class AddressNotValidProcessorHH implements HHOutcomeServiceProcessor {
 
   private boolean isNonValidHousehold(HouseholdOutcome householdOutcome) {
     List<String> validSecondaryOutcomes = Arrays
-        .asList("Derelict", "Demolished", "Cant find", "Unaddressable Object", "Non-res", "Duplicate", "Under Const");
+        .asList("Derelict", "Demolished", "Cant find", "Unaddressable Object", "Non-res", "Duplicate", "Under Const", "CE - No contact", "CE - Contact made");
     return householdOutcome.getPrimaryOutcome().equals(NON_VALID_HOUSEHOLD.toString()) && validSecondaryOutcomes
         .contains(householdOutcome.getSecondaryOutcome());
   }
