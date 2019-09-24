@@ -16,6 +16,8 @@ class HouseholdSecondaryOutcomeMap {
     householdSecondaryOutcomeMap.put("Non-res", "NON_RESIDENTIAL");
     householdSecondaryOutcomeMap.put("Duplicate", "DUPLICATE");
     householdSecondaryOutcomeMap.put("Under Const", "UNDER_CONSTRUCTION");
+    householdSecondaryOutcomeMap.put("CE - Contact made", "CE_CONTACT_MADE");
+    householdSecondaryOutcomeMap.put( "CE - No contact", "CE_NO_CONTACT_MADE");
 
     // Contact Made
     householdSecondaryOutcomeMap.put("Split address", "SPLIT_ADDRESS");
