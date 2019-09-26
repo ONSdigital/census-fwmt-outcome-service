@@ -9,7 +9,6 @@ public class GatewayOutcomeQueueConfig {
 
   // Queue names
   public static final String FIELD_REFUSALS_QUEUE = "Field.refusals";
-  public static final String TEMP_FIELD_OTHERS_QUEUE = "Field.other";
 
   // Exchange name
   public static final String GATEWAY_OUTCOME_EXCHANGE = "events";
