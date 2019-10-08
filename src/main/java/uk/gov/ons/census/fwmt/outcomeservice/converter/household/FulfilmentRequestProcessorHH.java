@@ -55,9 +55,10 @@ public class FulfilmentRequestProcessorHH implements HHOutcomeServiceProcessor {
   }
 
   @Override
-  public void processMessage(HouseholdOutcome householdOutcome) throws GatewayException{
-    if (householdOutcome.getFulfillmentRequests()==null){
-      gatewayEventManager.triggerErrorEvent(this.getClass(), "Fulfilment Request is null", householdOutcome.getCaseReference(), FAILED_FULFILMENT_REQUEST_IS_NULL);
+  public void processMessage(HouseholdOutcome householdOutcome) throws GatewayException {
+    if (householdOutcome.getFulfillmentRequests() == null) {
+      gatewayEventManager.triggerErrorEvent(this.getClass(), null, "Fulfilment Request is null", householdOutcome.getCaseReference(), FAILED_FULFILMENT_REQUEST_IS_NULL,
+          "Primary Outcome", householdOutcome.getPrimaryOutcome(), "Secondary Outcome", householdOutcome.getSecondaryOutcome());
       return;
     }
     for (FulfilmentRequest fulfilmentRequest : householdOutcome.getFulfillmentRequests()) {
@@ -68,7 +69,7 @@ public class FulfilmentRequestProcessorHH implements HHOutcomeServiceProcessor {
   }
 
   private void createQuestionnaireRequiredByPostEvent(HouseholdOutcome householdOutcome,
-      FulfilmentRequest fulfilmentRequest) throws GatewayException{
+      FulfilmentRequest fulfilmentRequest) throws GatewayException {
     Product product = getProductFromQuestionnaireType(fulfilmentRequest);
     String eventDateTime = householdOutcome.getEventDate().toString();
     Map<String, Object> root = new HashMap<>();
@@ -90,7 +91,8 @@ public class FulfilmentRequestProcessorHH implements HHOutcomeServiceProcessor {
     String outcomeEvent = TemplateCreator.createOutcomeMessage(FULFILMENT_REQUESTED, root, household);
 
     gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
-    gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), HH_OUTCOME_SENT, "type", "HH_FULFILMENT_REQUESTED_OUTCOME_SENT", "transactionId", householdOutcome.getTransactionId().toString(), "Case Ref", householdOutcome.getCaseReference());
+    gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), HH_OUTCOME_SENT, "type", "HH_FULFILMENT_REQUESTED_OUTCOME_SENT", "transactionId",
+        householdOutcome.getTransactionId().toString(), "Case Ref", householdOutcome.getCaseReference());
   }
 
   private boolean isQuestionnaireLinked(FulfilmentRequest fulfilmentRequest) {
