@@ -2,12 +2,14 @@ package uk.gov.ons.census.fwmt.outcomeservice.redis;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingCached;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.outcomeservice.service.JobCacheManager;
 
+@Slf4j
 @Component
 public class CCSPLStore {
 
@@ -17,10 +19,11 @@ public class CCSPLStore {
   @Autowired
   private ObjectMapper objectMapper;
 
-  public String cacheJob(String caseId, CCSPropertyListingOutcome ccsPLOutcome) throws JsonProcessingException {
+  public void cacheJob(String caseId, CCSPropertyListingOutcome ccsPLOutcome) throws JsonProcessingException {
 
     CCSPropertyListingCached ccsPropertyListingCached = new CCSPropertyListingCached();
 
+    ccsPropertyListingCached.setAllocatedOfficer(ccsPLOutcome.getUsername());
     ccsPropertyListingCached.setPrimaryOutcome(ccsPLOutcome.getPrimaryOutcome());
     ccsPropertyListingCached.setSecondaryOutcome(ccsPLOutcome.getSecondaryOutcome());
     ccsPropertyListingCached.setOa(ccsPLOutcome.getAddress().getOa());
@@ -35,8 +38,7 @@ public class CCSPLStore {
 
     String stringOutcome = objectMapper.writeValueAsString(ccsPropertyListingCached);
 
-    return jobCacheManager.cacheCCSOutcome(caseId, stringOutcome);
-
+    jobCacheManager.cacheCCSOutcome(caseId, stringOutcome);
+    log.info("Cached Property Listing Outcome: {}", ccsPLOutcome.getPropertyListingCaseId());
   }
-
 }

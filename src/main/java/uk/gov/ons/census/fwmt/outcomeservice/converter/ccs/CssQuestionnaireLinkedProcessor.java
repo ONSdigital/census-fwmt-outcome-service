@@ -44,7 +44,6 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
     if (isQuestionnaireLinked(ccsPLOutcome.getFulfillmentRequest())) {
       Map<String, Object> root = new HashMap<>();
       String eventDateTime = ccsPLOutcome.getEventDate().toString();
-
       root.put("ccsPropertyListingOutcome", ccsPLOutcome);
       root.put("questionnaireId", ccsPLOutcome.getFulfillmentRequest().getQuestionnaireId());
       root.put("addressType", getAddressType(ccsPLOutcome));

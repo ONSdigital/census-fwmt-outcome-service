@@ -39,7 +39,6 @@ public class CcsCollectCeDetailsProcessor implements CcsOutcomeServiceProcessor 
 
   @Override
   public void processMessage(CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException {
-//  public void processMessage(CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException {
     String eventDateTime = ccsPLOutcome.getEventDate().toString();
     Map<String, Object> root = new HashMap<>();
     root.put("ccsPropertyListingOutcome", ccsPLOutcome);

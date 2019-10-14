@@ -13,9 +13,7 @@ plugins {
 apply plugin: 'io.spring.dependency-management'
 
 group = 'uk.gov.ons.census.fwmt'
-
 version = '1.0.44-SNAPSHOT'
-
 sourceCompatibility = '11'
  
 repositories {
@@ -40,7 +38,7 @@ springBoot {
 dependencies {
 	compile('uk.gov.ons.census.fwmt:census-fwmt-canonical:1.0.11-RELEASE')
 	compile('uk.gov.ons.census.fwmt:census-fwmt-events:1.0.17-RELEASE')
-	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.0.31-RELEASE')
+	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.0.36-RELEASE')
 	compile('uk.gov.ons.ctp.integration.common:product-reference:0.0.12')
 
 	compile("javax.activation:activation:1.1.1")
@@ -70,13 +68,11 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.freemarker/freemarker
 	compile('org.freemarker:freemarker:2.3.28')
 
-	
 	compileOnly('org.projectlombok:lombok')
 	
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 
 	compile('org.eclipse.persistence:org.eclipse.persistence.moxy:2.5.0')
-
 }
 
 artifactory {

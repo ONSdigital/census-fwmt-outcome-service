@@ -6,13 +6,12 @@ import org.springframework.stereotype.Service;
 import uk.gov.ons.census.fwmt.outcomeservice.config.RedisUtil;
 import uk.gov.ons.census.fwmt.outcomeservice.service.JobCacheManager;
 
-
 @Slf4j
 @Service
 public class JobCacheManagerImpl implements JobCacheManager {
 
   @Autowired
-  private RedisUtil redisUtil;
+  private RedisUtil <String> redisUtil;
 
   @Override
   public String cacheCCSOutcome(String caseId, String outcome) {
