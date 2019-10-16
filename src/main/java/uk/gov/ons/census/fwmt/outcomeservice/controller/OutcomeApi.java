@@ -32,7 +32,7 @@ public interface OutcomeApi {
   @ApiOperation(value = "Post a CCS Property Listing outcome to the FWMT Gateway", response = CCSPropertyListingOutcome.class)
   @ApiResponses(value = {
       @ApiResponse(code = 202, message = "Case Outcome received", response = CCSPropertyListingOutcome.class)})
-  @RequestMapping(value = "/CCSPropertyListingOutcome",
+  @RequestMapping(value = "/ccsPropertyListingOutcome",
       produces = {"application/json"},
       method = RequestMethod.POST)
   ResponseEntity<CCSPropertyListingOutcome> ccsPropertyListingCaseOutcomeResponse(
@@ -41,7 +41,7 @@ public interface OutcomeApi {
   @ApiOperation(value = "Post a CCS Interview outcome to the FWMT Gateway", response = CCSInterviewOutcome.class)
   @ApiResponses(value = {
       @ApiResponse(code = 202, message = "Case Outcome received", response = CCSInterviewOutcome.class)})
-  @RequestMapping(value = "/CCSInterviewOutcome/{caseId}",
+  @RequestMapping(value = "/ccsInterviewOutcome/{caseId}",
       produces = {"application/json"},
       method = RequestMethod.POST)
   ResponseEntity<CCSInterviewOutcome> ccsInterviewOutcome(
