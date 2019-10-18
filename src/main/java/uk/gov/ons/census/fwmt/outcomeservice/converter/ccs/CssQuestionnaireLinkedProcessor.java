@@ -41,11 +41,11 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
 
   @Override
   public void processMessage(CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException{
-    if (isQuestionnaireLinked(ccsPLOutcome.getFulfillmentRequest())) {
+    if (isQuestionnaireLinked(ccsPLOutcome.getFulfillmentRequests())) {
       Map<String, Object> root = new HashMap<>();
       String eventDateTime = ccsPLOutcome.getEventDate().toString();
       root.put("ccsPropertyListingOutcome", ccsPLOutcome);
-      root.put("questionnaireId", ccsPLOutcome.getFulfillmentRequest().getQuestionnaireId());
+      root.put("questionnaireId", ccsPLOutcome.getFulfillmentRequests().getQuestionnaireId());
       root.put("addressType", getAddressType(ccsPLOutcome));
       root.put("addressLevel", getAddressLevel(ccsPLOutcome));
       root.put("organisationName", getOrganisationName(ccsPLOutcome));
