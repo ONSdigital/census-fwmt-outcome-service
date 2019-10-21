@@ -45,7 +45,7 @@ public class InterviewQuestionnaireLinkedProcessor implements InterviewOutcomeSe
       Map<String, Object> root = new HashMap<>();
       root.put("ccsInterviewOutcome", ccsInterviewOutcome);
       root.put("eventDate", eventDateTime + "Z");
-      root.put("questionnaireId", ccsInterviewOutcome.getFulfillmentRequests().get(0).getQuestionnaireId());
+      root.put("questionnaireId", ccsInterviewOutcome.getFulfillmentRequests().get(0).getQuestionnaireID());
 
       String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, interview);
 
@@ -61,7 +61,7 @@ public class InterviewQuestionnaireLinkedProcessor implements InterviewOutcomeSe
   }
 
   private boolean isQuestionnaireLinked(List<FulfillmentRequest> fulfillmentRequests) {
-    return (fulfillmentRequests.get(0).getQuestionnaireId() != null && fulfillmentRequests.size() == 1);
+    return (fulfillmentRequests.get(0).getQuestionnaireID() != null && fulfillmentRequests.size() == 1);
   }
 
   private boolean isNoContact(CCSInterviewOutcome ccsInterviewOutcome) {
