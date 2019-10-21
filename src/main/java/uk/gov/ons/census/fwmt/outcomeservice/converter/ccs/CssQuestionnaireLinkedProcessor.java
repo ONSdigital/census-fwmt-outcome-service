@@ -65,6 +65,6 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
   }
 
   private boolean isQuestionnaireLinked(List<FulfillmentRequest> fulfillmentRequests) {
-    return (fulfillmentRequests.get(0).getQuestionnaireID() != null && fulfillmentRequests.size() == 1);
+    return (fulfillmentRequests.size() == 1 && fulfillmentRequests.get(0).getQuestionnaireID() != null);
   }
 }
