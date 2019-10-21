@@ -46,7 +46,7 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
       Map<String, Object> root = new HashMap<>();
       String eventDateTime = ccsPLOutcome.getEventDate().toString();
       root.put("ccsPropertyListingOutcome", ccsPLOutcome);
-      root.put("questionnaireId", ccsPLOutcome.getFulfillmentRequests().get(0).getQuestionnaireId());
+      root.put("questionnaireId", ccsPLOutcome.getFulfillmentRequests().get(0).getQuestionnaireID());
       root.put("addressType", getAddressType(ccsPLOutcome));
       root.put("addressLevel", getAddressLevel(ccsPLOutcome));
       root.put("organisationName", getOrganisationName(ccsPLOutcome));
@@ -65,6 +65,6 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
   }
 
   private boolean isQuestionnaireLinked(List<FulfillmentRequest> fulfillmentRequests) {
-    return (fulfillmentRequests.get(0).getQuestionnaireId() != null && fulfillmentRequests.size() == 1);
+    return (fulfillmentRequests.get(0).getQuestionnaireID() != null && fulfillmentRequests.size() == 1);
   }
 }
