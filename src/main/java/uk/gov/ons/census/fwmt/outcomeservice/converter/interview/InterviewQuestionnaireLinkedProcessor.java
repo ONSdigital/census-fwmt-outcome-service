@@ -1,6 +1,7 @@
 package uk.gov.ons.census.fwmt.outcomeservice.converter.interview;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CCSI_OUTCOME_SENT;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CCS_FAILED_FULFILMENT_REQUEST_INVALID;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.QUESTIONNAIRE_LINKED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.CONTACT_MADE;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.NO_CONTACT;
@@ -44,17 +45,23 @@ public class InterviewQuestionnaireLinkedProcessor implements InterviewOutcomeSe
       Map<String, Object> root = new HashMap<>();
       root.put("ccsInterviewOutcome", ccsInterviewOutcome);
       root.put("eventDate", eventDateTime + "Z");
-      root.put("questionnaireId", ccsInterviewOutcome.getFulfillmentRequests().getQuestionnaireId());
+      root.put("questionnaireId", ccsInterviewOutcome.getFulfillmentRequests().get(0).getQuestionnaireId());
 
       String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, interview);
 
       gatewayOutcomeProducer.sendCcsIntQuestionnaire(outcomeEvent, String.valueOf(ccsInterviewOutcome.getTransactionId()));
-      gatewayEventManager.triggerEvent(String.valueOf(ccsInterviewOutcome.getCaseId()), CCSI_OUTCOME_SENT,  "type", "CCSI_QUESTIONNAIRE_LINKED_OUTCOME_SENT", "transactionId", ccsInterviewOutcome.getTransactionId().toString(), "Case Ref", ccsInterviewOutcome.getCaseReference());
+      gatewayEventManager.triggerEvent(String.valueOf(ccsInterviewOutcome.getCaseId()), CCSI_OUTCOME_SENT,
+          "type", "CCSI_QUESTIONNAIRE_LINKED_OUTCOME_SENT", "transactionId",
+          ccsInterviewOutcome.getTransactionId().toString(), "Case Ref", ccsInterviewOutcome.getCaseReference());
+    } else {
+      gatewayEventManager.triggerErrorEvent(this.getClass(), null, "Fulfilment Request size incorrect ",
+          ccsInterviewOutcome.getCaseReference(), CCS_FAILED_FULFILMENT_REQUEST_INVALID,
+          "Primary Outcome", ccsInterviewOutcome.getPrimaryOutcome(), "Secondary Outcome", ccsInterviewOutcome.getSecondaryOutcome());
     }
   }
 
-  private boolean isQuestionnaireLinked(FulfillmentRequest fulfillmentRequest) {
-    return (fulfillmentRequest.getQuestionnaireId() != null);
+  private boolean isQuestionnaireLinked(List<FulfillmentRequest> fulfillmentRequests) {
+    return (fulfillmentRequests.get(0).getQuestionnaireId() != null && fulfillmentRequests.size() == 1);
   }
 
   private boolean isNoContact(CCSInterviewOutcome ccsInterviewOutcome) {

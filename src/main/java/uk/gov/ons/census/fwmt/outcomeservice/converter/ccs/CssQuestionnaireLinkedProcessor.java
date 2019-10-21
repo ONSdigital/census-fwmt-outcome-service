@@ -1,6 +1,7 @@
 package uk.gov.ons.census.fwmt.outcomeservice.converter.ccs;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CCSPL_OUTCOME_SENT;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CCS_FAILED_FULFILMENT_REQUEST_INVALID;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.QUESTIONNAIRE_LINKED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.ccs;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressLevel;
@@ -45,7 +46,7 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
       Map<String, Object> root = new HashMap<>();
       String eventDateTime = ccsPLOutcome.getEventDate().toString();
       root.put("ccsPropertyListingOutcome", ccsPLOutcome);
-      root.put("questionnaireId", ccsPLOutcome.getFulfillmentRequests().getQuestionnaireId());
+      root.put("questionnaireId", ccsPLOutcome.getFulfillmentRequests().get(0).getQuestionnaireId());
       root.put("addressType", getAddressType(ccsPLOutcome));
       root.put("addressLevel", getAddressLevel(ccsPLOutcome));
       root.put("organisationName", getOrganisationName(ccsPLOutcome));
@@ -54,11 +55,16 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
       String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, ccs);
 
       gatewayOutcomeProducer.sendPropertyListing(outcomeEvent, String.valueOf(ccsPLOutcome.getTransactionId()));
-      gatewayEventManager.triggerEvent(String.valueOf(ccsPLOutcome.getPropertyListingCaseId()), CCSPL_OUTCOME_SENT, "type", "CCSPL_QUESTIONNAIRE_LINKED_OUTCOME_SENT", "transactionId", ccsPLOutcome.getTransactionId().toString());
+      gatewayEventManager.triggerEvent(String.valueOf(ccsPLOutcome.getPropertyListingCaseId()), CCSPL_OUTCOME_SENT,
+          "type", "CCSPL_QUESTIONNAIRE_LINKED_OUTCOME_SENT", "transactionId", ccsPLOutcome.getTransactionId().toString());
+    } else {
+      gatewayEventManager.triggerErrorEvent(this.getClass(), null, "Fulfilment Request size incorrect ",
+          ccsPLOutcome.getPropertyListingCaseReference(), CCS_FAILED_FULFILMENT_REQUEST_INVALID,
+          "Primary Outcome", ccsPLOutcome.getPrimaryOutcome(), "Secondary Outcome", ccsPLOutcome.getSecondaryOutcome());
     }
   }
 
-  private boolean isQuestionnaireLinked(FulfillmentRequest fulfillmentRequest) {
-    return (fulfillmentRequest.getQuestionnaireId() != null);
+  private boolean isQuestionnaireLinked(List<FulfillmentRequest> fulfillmentRequests) {
+    return (fulfillmentRequests.get(0).getQuestionnaireId() != null && fulfillmentRequests.size() == 1);
   }
 }
