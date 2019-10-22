@@ -61,7 +61,7 @@ public class InterviewQuestionnaireLinkedProcessor implements InterviewOutcomeSe
   }
 
   private boolean isQuestionnaireLinked(List<FulfillmentRequest> fulfillmentRequests) {
-    return (fulfillmentRequests.get(0).getQuestionnaireID() != null && fulfillmentRequests.size() == 1);
+    return (fulfillmentRequests.size() == 1 && fulfillmentRequests.get(0).getQuestionnaireID() != null);
   }
 
   private boolean isNoContact(CCSInterviewOutcome ccsInterviewOutcome) {
