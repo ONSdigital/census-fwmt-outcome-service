@@ -16,7 +16,6 @@ public class JobCacheManagerImpl implements JobCacheManager {
   @Override
   public String cacheCCSOutcome(String caseId, String outcome) {
     redisUtil.putValue(caseId, outcome);
-    log.info("Placed the following in cache: " +  outcome);
     return outcome;
   }
 }
