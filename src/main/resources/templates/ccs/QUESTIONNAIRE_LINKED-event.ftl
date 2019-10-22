@@ -1,5 +1,5 @@
 ,
 "uac" : {
-"questionnaireID":"${questionnaireId}"
+"questionnaireId":"${questionnaireId}"
 }
 
