@@ -30,9 +30,6 @@ public class OutcomeController implements OutcomeApi {
   private GatewayEventManager gatewayEventManager;
 
   @Autowired
-  private CCSPLStore ccsplStore;
-
-  @Autowired
   private OutcomePreprocessingProducer outcomePreprocessingProducer;
 
   @Autowired
@@ -82,13 +79,6 @@ public class OutcomeController implements OutcomeApi {
       gatewayEventManager.triggerErrorEvent(this.getClass(), e, errorMessage, caseId, FAILED_JSON_CONVERSION);
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
           errorMessage + " for case Id: " + caseId);
-    }
-
-    try {
-      ccsplStore.cacheJob(String.valueOf(ccsPLOutcome.getPropertyListingCaseId()), ccsPLOutcome);
-    } catch (JsonProcessingException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
-          "Unable to cache CCS PL Outcome for caseId " + caseId);
     }
     return new ResponseEntity<>(ccsPLOutcome, HttpStatus.ACCEPTED);
   }

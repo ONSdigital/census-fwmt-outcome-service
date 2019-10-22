@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,9 +39,12 @@ public class CssNonResidential implements CcsOutcomeServiceProcessor {
   }
 
   @Override
-  public void processMessage(CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException{
-    Map<String, Object> root = new HashMap<>();
+  public void processMessage(CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException {
+    UUID newRandomUUID = UUID.randomUUID();
+
     String eventDateTime = ccsPLOutcome.getEventDate().toString();
+    Map<String, Object> root = new HashMap<>();
+    root.put("generatedUuid", newRandomUUID);
     root.put("ccsPropertyListingOutcome", ccsPLOutcome);
     root.put("addressType", getAddressType(ccsPLOutcome));
     root.put("addressLevel", getAddressLevel(ccsPLOutcome));
@@ -50,6 +54,7 @@ public class CssNonResidential implements CcsOutcomeServiceProcessor {
     String outcomeEvent = TemplateCreator.createOutcomeMessage(NON_RESIDENTIAL, root, ccs);
 
     gatewayOutcomeProducer.sendPropertyListing(outcomeEvent, String.valueOf(ccsPLOutcome.getTransactionId()));
-    gatewayEventManager.triggerEvent(String.valueOf(ccsPLOutcome.getPropertyListingCaseId()), CCSPL_OUTCOME_SENT, "type", "CCSPL_NON_RESIDENTIAL_OUTCOME_SENT", "transactionId", ccsPLOutcome.getTransactionId().toString());
+    gatewayEventManager.triggerEvent(String.valueOf(ccsPLOutcome.getPropertyListingCaseId()), CCSPL_OUTCOME_SENT,
+        "type", "CCSPL_NON_RESIDENTIAL_OUTCOME_SENT", "transactionId", ccsPLOutcome.getTransactionId().toString());
   }
 }

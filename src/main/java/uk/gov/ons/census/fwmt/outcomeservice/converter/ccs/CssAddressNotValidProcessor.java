@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,10 +38,13 @@ public class CssAddressNotValidProcessor implements CcsOutcomeServiceProcessor {
   }
 
   @Override
-  public void processMessage(CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException{
+  public void processMessage(CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException {
+    UUID newRandomUUID = UUID.randomUUID();
+
     CcsSecondaryOutcomeMap ccsSecondaryOutcomeMap = new CcsSecondaryOutcomeMap();
     String eventDateTime = ccsPLOutcome.getEventDate().toString();
     Map<String, Object> root = new HashMap<>();
+    root.put("generatedUuid", newRandomUUID);
     root.put("ccsPropertyListingOutcome", ccsPLOutcome);
     root.put("addressType", getAddressType(ccsPLOutcome));
     root.put("addressLevel", getAddressLevel(ccsPLOutcome));
@@ -51,13 +55,13 @@ public class CssAddressNotValidProcessor implements CcsOutcomeServiceProcessor {
     String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_NOT_VALID, root, ccs);
 
     gatewayOutcomeProducer.sendPropertyListing(outcomeEvent, String.valueOf(ccsPLOutcome.getTransactionId()));
-    gatewayEventManager.triggerEvent(String.valueOf(ccsPLOutcome.getPropertyListingCaseId()), CCSPL_OUTCOME_SENT, "type", "CCSPL_ADDRESS_NOT_VALID_OUTCOME_SENT", "transactionId", ccsPLOutcome.getTransactionId().toString());
+    gatewayEventManager.triggerEvent(String.valueOf(ccsPLOutcome.getPropertyListingCaseId()), CCSPL_OUTCOME_SENT,
+        "type", "CCSPL_ADDRESS_NOT_VALID_OUTCOME_SENT", "transactionId", ccsPLOutcome.getTransactionId().toString());
   }
 
   private boolean isNonValidCcsPropertyListing(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
     List<String> validSecondaryOutcomes = Arrays
-        .asList("Derelict / uninhabitable", "Under construction", "Non residential / Business",
-            "CE Out of scope");
+        .asList("Derelict / uninhabitable", "Under construction", "Non residential / Business", "CE Out of scope");
     return validSecondaryOutcomes.contains(ccsPropertyListingOutcome.getSecondaryOutcome());
   }
 }

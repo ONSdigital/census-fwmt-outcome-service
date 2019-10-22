@@ -9,7 +9,7 @@
 "payload":{
 "CCSProperty":{
 "collectionCase":{
-"id":"${ccsPropertyListingOutcome.propertyListingCaseId}"
+"id":"${generatedUuid}"
 },
 "sampleUnit":{
 "addressType":"${addressType}",

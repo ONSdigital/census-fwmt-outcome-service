@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -46,7 +45,7 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
     if (isQuestionnaireLinked(ccsPLOutcome.getFulfillmentRequests())) {
       Map<String, Object> root = new HashMap<>();
       String eventDateTime = ccsPLOutcome.getEventDate().toString();
-      root.put("ccsPropertyListingOutcome", UUID.randomUUID());
+      root.put("ccsPropertyListingOutcome", ccsPLOutcome);
       root.put("questionnaireId", ccsPLOutcome.getFulfillmentRequests().get(0).getQuestionnaireID());
       root.put("addressType", getAddressType(ccsPLOutcome));
       root.put("addressLevel", getAddressLevel(ccsPLOutcome));
