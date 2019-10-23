@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,7 @@ import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.CcsOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
+import uk.gov.ons.census.fwmt.outcomeservice.service.JobCacheManager;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
 @Component
@@ -31,6 +33,9 @@ public class CssPotentialResidentialProcessor implements CcsOutcomeServiceProces
   @Autowired
   private GatewayEventManager gatewayEventManager;
 
+  @Autowired
+  private JobCacheManager jobCacheManager;
+
   @Override
   public boolean isValid(CCSPropertyListingOutcome ccsPLOutcome) {
     List<String> validSecondaryOutcomes = Collections.singletonList("Potential Residential");
@@ -38,9 +43,13 @@ public class CssPotentialResidentialProcessor implements CcsOutcomeServiceProces
   }
 
   @Override
-  public void processMessage(CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException{
+  public void processMessage(CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException {
+    UUID newRandomUUID = UUID.randomUUID();
+    jobCacheManager.cacheCCSOutcome(String.valueOf(newRandomUUID), ccsPLOutcome);
+
     String eventDateTime = ccsPLOutcome.getEventDate().toString();
     Map<String, Object> root = new HashMap<>();
+    root.put("generatedUuid", newRandomUUID);
     root.put("ccsPropertyListingOutcome", ccsPLOutcome);
     root.put("addressType", getAddressType(ccsPLOutcome));
     root.put("addressLevel", getAddressLevel(ccsPLOutcome));
@@ -50,6 +59,7 @@ public class CssPotentialResidentialProcessor implements CcsOutcomeServiceProces
     String outcomeEvent = TemplateCreator.createOutcomeMessage(POTENTIAL_RESIDENTIAL, root, ccs);
 
     gatewayOutcomeProducer.sendPropertyListing(outcomeEvent, String.valueOf(ccsPLOutcome.getTransactionId()));
-    gatewayEventManager.triggerEvent(String.valueOf(ccsPLOutcome.getPropertyListingCaseId()), CCSPL_OUTCOME_SENT, "type", "CCSPL_POTENTIAL_RESIDENTIAL_OUTCOME_SENT", "transactionId", ccsPLOutcome.getTransactionId().toString());
+    gatewayEventManager.triggerEvent(String.valueOf(ccsPLOutcome.getPropertyListingCaseId()), CCSPL_OUTCOME_SENT,
+        "type", "CCSPL_POTENTIAL_RESIDENTIAL_OUTCOME_SENT", "transactionId", ccsPLOutcome.getTransactionId().toString());
   }
 }

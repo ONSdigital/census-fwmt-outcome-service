@@ -13,7 +13,6 @@ import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.message.OutcomePreprocessingProducer;
-import uk.gov.ons.census.fwmt.outcomeservice.redis.CCSPLStore;
 
 import java.util.UUID;
 
@@ -28,9 +27,6 @@ public class OutcomeController implements OutcomeApi {
 
   @Autowired
   private GatewayEventManager gatewayEventManager;
-
-  @Autowired
-  private CCSPLStore ccsplStore;
 
   @Autowired
   private OutcomePreprocessingProducer outcomePreprocessingProducer;
@@ -82,13 +78,6 @@ public class OutcomeController implements OutcomeApi {
       gatewayEventManager.triggerErrorEvent(this.getClass(), e, errorMessage, caseId, FAILED_JSON_CONVERSION);
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
           errorMessage + " for case Id: " + caseId);
-    }
-
-    try {
-      ccsplStore.cacheJob(String.valueOf(ccsPLOutcome.getPropertyListingCaseId()), ccsPLOutcome);
-    } catch (JsonProcessingException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
-          "Unable to cache CCS PL Outcome for caseId " + caseId);
     }
     return new ResponseEntity<>(ccsPLOutcome, HttpStatus.ACCEPTED);
   }

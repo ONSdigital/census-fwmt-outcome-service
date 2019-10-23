@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -43,8 +44,11 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
   @Override
   public void processMessage(CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException{
     if (isQuestionnaireLinked(ccsPLOutcome.getFulfillmentRequests())) {
-      Map<String, Object> root = new HashMap<>();
+      UUID newRandomUUID = UUID.randomUUID();
+
       String eventDateTime = ccsPLOutcome.getEventDate().toString();
+      Map<String, Object> root = new HashMap<>();
+      root.put("generatedUuid", newRandomUUID);
       root.put("ccsPropertyListingOutcome", ccsPLOutcome);
       root.put("questionnaireId", ccsPLOutcome.getFulfillmentRequests().get(0).getQuestionnaireID());
       root.put("addressType", getAddressType(ccsPLOutcome));
