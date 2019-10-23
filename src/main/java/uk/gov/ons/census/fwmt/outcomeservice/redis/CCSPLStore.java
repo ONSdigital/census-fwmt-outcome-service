@@ -5,9 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingCached;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
+import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.service.JobCacheManager;
+
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CCSPL_CACHED_OUTCOME;
 
 @Slf4j
 @Component
@@ -19,26 +21,14 @@ public class CCSPLStore {
   @Autowired
   private ObjectMapper objectMapper;
 
+  @Autowired
+  private GatewayEventManager eventManager;
+
   public void cacheJob(String caseId, CCSPropertyListingOutcome ccsPLOutcome) throws JsonProcessingException {
 
-    CCSPropertyListingCached ccsPropertyListingCached = new CCSPropertyListingCached();
-
-    ccsPropertyListingCached.setAllocatedOfficer(ccsPLOutcome.getUsername());
-    ccsPropertyListingCached.setPrimaryOutcome(ccsPLOutcome.getPrimaryOutcome());
-    ccsPropertyListingCached.setSecondaryOutcome(ccsPLOutcome.getSecondaryOutcome());
-    ccsPropertyListingCached.setOa(ccsPLOutcome.getAddress().getOa());
-    if (ccsPLOutcome.getCeDetails() != null) {
-      ccsPropertyListingCached.setManagerName(ccsPLOutcome.getCeDetails().getManagerName());
-      ccsPropertyListingCached.setUsualResidents(ccsPLOutcome.getCeDetails().getUsualResidents());
-      ccsPropertyListingCached.setBedspaces(ccsPLOutcome.getCeDetails().getBedspaces());
-      ccsPropertyListingCached.setContactPhone(ccsPLOutcome.getCeDetails().getContactPhone());
-    }
-    ccsPropertyListingCached.setAccessInfo(ccsPLOutcome.getAccessInfo());
-    ccsPropertyListingCached.setCareCodes(ccsPLOutcome.getCareCodes());
-
-    String stringOutcome = objectMapper.writeValueAsString(ccsPropertyListingCached);
+    String stringOutcome = objectMapper.writeValueAsString(ccsPLOutcome);
 
     jobCacheManager.cacheCCSOutcome(caseId, stringOutcome);
-    log.info("Cached Property Listing Outcome: {}", ccsPLOutcome.getPropertyListingCaseId());
+    eventManager.triggerEvent(caseId,CCSPL_CACHED_OUTCOME);
   }
 }

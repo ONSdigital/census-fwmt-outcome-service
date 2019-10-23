@@ -12,7 +12,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +24,7 @@ import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.CcsOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
+import uk.gov.ons.census.fwmt.outcomeservice.redis.CCSPLStore;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
 @Component
@@ -43,8 +46,11 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
   @Override
   public void processMessage(CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException{
     if (isQuestionnaireLinked(ccsPLOutcome.getFulfillmentRequests())) {
-      Map<String, Object> root = new HashMap<>();
+      UUID newRandomUUID = UUID.randomUUID();
+
       String eventDateTime = ccsPLOutcome.getEventDate().toString();
+      Map<String, Object> root = new HashMap<>();
+      root.put("generatedUuid", newRandomUUID);
       root.put("ccsPropertyListingOutcome", ccsPLOutcome);
       root.put("questionnaireId", ccsPLOutcome.getFulfillmentRequests().get(0).getQuestionnaireID());
       root.put("addressType", getAddressType(ccsPLOutcome));

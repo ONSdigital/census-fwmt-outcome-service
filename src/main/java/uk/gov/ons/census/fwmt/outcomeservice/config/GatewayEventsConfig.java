@@ -14,6 +14,7 @@ public class GatewayEventsConfig {
 
   //PROPERTY_LISTING_SENT
   public static final String CCSPL_OUTCOME_SENT = "CCSPL_OUTCOME_SENT";
+  public static final String CCSPL_CACHED_OUTCOME = "Cached Property Listing Outcome:";
 
   //OUTCOME_SENT_RM
   public static final String HH_OUTCOME_SENT = "HH_OUTCOME_SENT";

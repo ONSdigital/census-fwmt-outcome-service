@@ -47,7 +47,7 @@ public class CssPotentialResidentialProcessor implements CcsOutcomeServiceProces
   public void processMessage(CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException {
     UUID newRandomUUID = UUID.randomUUID();
     try {
-      ccsplStore.cacheJob(String.valueOf(ccsPLOutcome.getPropertyListingCaseId()), ccsPLOutcome);
+      ccsplStore.cacheJob(String.valueOf(newRandomUUID), ccsPLOutcome);
     } catch (JsonProcessingException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
           "Unable to cache CCS PL Outcome for caseId " + newRandomUUID);
