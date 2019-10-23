@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +21,7 @@ import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.CcsOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
-import uk.gov.ons.census.fwmt.outcomeservice.redis.CCSPLStore;
+import uk.gov.ons.census.fwmt.outcomeservice.service.JobCacheManager;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
 @Component
@@ -35,7 +34,7 @@ public class CcsRefusalReceivedProcessor implements CcsOutcomeServiceProcessor {
   private GatewayEventManager gatewayEventManager;
 
   @Autowired
-  private CCSPLStore ccsplStore;
+  private JobCacheManager jobCacheManager;
 
   @Override
   public boolean isValid(CCSPropertyListingOutcome ccsPLOutcome) {
@@ -47,12 +46,7 @@ public class CcsRefusalReceivedProcessor implements CcsOutcomeServiceProcessor {
   public void processMessage(CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException {
     UUID newRandomUUID = UUID.randomUUID();
     if(ccsPLOutcome.getSecondaryOutcome().equals("Soft refusal")) {
-      try {
-        ccsplStore.cacheJob(String.valueOf(newRandomUUID), ccsPLOutcome);
-      } catch (JsonProcessingException e) {
-        throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
-            "Unable to cache CCS PL Outcome for caseId " + newRandomUUID);
-      }
+      jobCacheManager.cacheCCSOutcome(String.valueOf(newRandomUUID), ccsPLOutcome);
     }
 
     CcsSecondaryOutcomeMap ccsSecondaryOutcomeMap = new CcsSecondaryOutcomeMap();

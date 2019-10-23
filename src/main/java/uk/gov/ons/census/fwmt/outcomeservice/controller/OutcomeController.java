@@ -13,7 +13,6 @@ import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.message.OutcomePreprocessingProducer;
-import uk.gov.ons.census.fwmt.outcomeservice.redis.CCSPLStore;
 
 import java.util.UUID;
 

@@ -1,4 +1,4 @@
-package uk.gov.ons.census.fwmt.outcomeservice.redis;
+package uk.gov.ons.census.fwmt.outcomeservice.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

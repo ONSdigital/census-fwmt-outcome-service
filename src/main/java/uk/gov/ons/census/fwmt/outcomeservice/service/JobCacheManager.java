@@ -1,11 +1,8 @@
 package uk.gov.ons.census.fwmt.outcomeservice.service;
 
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import uk.gov.ons.census.fwmt.outcomeservice.redis.CCSPLOutcomeEntity;
+import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
 
 public interface JobCacheManager {
-
-  String cacheCCSOutcome(String caseId, String outcome) throws JsonProcessingException;
-
+  void cacheCCSOutcome(String caseId, CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException;
 }
