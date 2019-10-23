@@ -55,7 +55,7 @@ public class CssAddressNotValidProcessor implements CcsOutcomeServiceProcessor {
     String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_NOT_VALID, root, ccs);
 
     gatewayOutcomeProducer.sendPropertyListing(outcomeEvent, String.valueOf(ccsPLOutcome.getTransactionId()));
-    gatewayEventManager.triggerEvent(String.valueOf(ccsPLOutcome.getPropertyListingCaseId()), CCSPL_OUTCOME_SENT,
+    gatewayEventManager.triggerEvent(String.valueOf(newRandomUUID), CCSPL_OUTCOME_SENT,
         "type", "CCSPL_ADDRESS_NOT_VALID_OUTCOME_SENT", "transactionId", ccsPLOutcome.getTransactionId().toString());
   }
 

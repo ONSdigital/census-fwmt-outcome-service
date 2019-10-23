@@ -15,7 +15,7 @@ class CcsSecondaryOutcomeMap {
     ccsSecondaryOutcomeMap.put("Hard refusal", "HARD_REFUSAL");
     ccsSecondaryOutcomeMap.put("Soft refusal", "SOFT_REFUSAL");
     ccsSecondaryOutcomeMap.put("Extraordinary refusal", "EXTRAORDINARY_REFUSAL");
-    ccsSecondaryOutcomeMap.put("Non residential /Business", "NON_RESIDENTIAL");
+    ccsSecondaryOutcomeMap.put("Non-residential or business", "NON_RESIDENTIAL");
   }
 
   CcsSecondaryOutcomeMap() {

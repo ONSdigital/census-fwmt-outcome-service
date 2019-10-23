@@ -53,7 +53,7 @@ public class CssSoftRefusal implements CcsOutcomeServiceProcessor {
     String outcomeEvent = TemplateCreator.createOutcomeMessage(SOFT_REFUSAL, root, ccs);
 
     gatewayOutcomeProducer.sendPropertyListing(outcomeEvent, String.valueOf(ccsPLOutcome.getTransactionId()));
-    gatewayEventManager.triggerEvent(String.valueOf(ccsPLOutcome.getPropertyListingCaseId()), CCSPL_OUTCOME_SENT,
+    gatewayEventManager.triggerEvent(String.valueOf(newRandomUUID), CCSPL_OUTCOME_SENT,
         "type", "CCSPL_SOFT_REFUSAL_OUTCOME_SENT", "transactionId", ccsPLOutcome.getTransactionId().toString());
   }
 }
