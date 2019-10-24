@@ -23,6 +23,8 @@ public class RedisHealthLogging extends AbstractHealthIndicator {
   @Autowired
   private RedisConnectionFactory redisConnectionFactory;
 
+  private
+  RedisConnection connection;
 
   public RedisHealthLogging(@Qualifier("redisConnectionFactory") RedisConnectionFactory connectionFactory) {
     super("Redis health check failed");
@@ -33,13 +35,16 @@ public class RedisHealthLogging extends AbstractHealthIndicator {
   @Override
   protected void doHealthCheck(Health.Builder builder) {
     try {
-      RedisConnection connection = RedisConnectionUtils.getConnection(this.redisConnectionFactory);
+      connection = RedisConnectionUtils.getConnection(this.redisConnectionFactory);
       builder.up();
       gatewayEventManager.triggerEvent("<N/A>", REDIS_SERVICE_UP);
-      RedisConnectionUtils.releaseConnection(connection, this.redisConnectionFactory);
       return;
     } catch (Exception e) {
       builder.down().withDetail(e.getMessage(), Exception.class);
+    } finally {
+      if (connection != null) {
+        RedisConnectionUtils.releaseConnection(connection, this.redisConnectionFactory);
+      }
     }
     gatewayEventManager.triggerErrorEvent(this.getClass(), "Cannot reach Redis", "<NA>", REDIS_SERVICE_DOWN);
   }
