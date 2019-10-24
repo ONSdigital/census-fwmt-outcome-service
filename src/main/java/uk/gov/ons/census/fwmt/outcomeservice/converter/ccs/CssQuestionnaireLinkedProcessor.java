@@ -59,7 +59,7 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
       String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, ccs);
 
       gatewayOutcomeProducer.sendPropertyListing(outcomeEvent, String.valueOf(ccsPLOutcome.getTransactionId()));
-      gatewayEventManager.triggerEvent(String.valueOf(ccsPLOutcome.getPropertyListingCaseId()), CCSPL_OUTCOME_SENT,
+      gatewayEventManager.triggerEvent(String.valueOf(newRandomUUID), CCSPL_OUTCOME_SENT,
           "type", "CCSPL_QUESTIONNAIRE_LINKED_OUTCOME_SENT", "transactionId", ccsPLOutcome.getTransactionId().toString());
     } else {
       gatewayEventManager.triggerErrorEvent(this.getClass(), null, "Fulfilment Request size incorrect ",

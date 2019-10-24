@@ -59,7 +59,7 @@ public class CssContactNotNeeded implements CcsOutcomeServiceProcessor {
     String outcomeEvent = TemplateCreator.createOutcomeMessage(CONTACT_NOT_NEEDED, root, ccs);
 
     gatewayOutcomeProducer.sendPropertyListing(outcomeEvent, String.valueOf(ccsPLOutcome.getTransactionId()));
-    gatewayEventManager.triggerEvent(String.valueOf(ccsPLOutcome.getPropertyListingCaseId()), CCSPL_OUTCOME_SENT,
+    gatewayEventManager.triggerEvent(String.valueOf(newRandomUUID), CCSPL_OUTCOME_SENT,
         "type", "CCSPL_CONTACT_NOT_NEEDED_OUTCOME_SENT", "transactionId", ccsPLOutcome.getTransactionId().toString());
   }
 }
