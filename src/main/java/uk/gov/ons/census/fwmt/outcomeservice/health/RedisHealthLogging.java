@@ -23,8 +23,7 @@ public class RedisHealthLogging extends AbstractHealthIndicator {
   @Autowired
   private RedisConnectionFactory redisConnectionFactory;
 
-  private
-  RedisConnection connection;
+  private RedisConnection connection;
 
   public RedisHealthLogging(@Qualifier("redisConnectionFactory") RedisConnectionFactory connectionFactory) {
     super("Redis health check failed");
