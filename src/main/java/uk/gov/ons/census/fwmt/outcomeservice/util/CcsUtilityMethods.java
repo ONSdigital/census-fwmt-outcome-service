@@ -5,29 +5,34 @@ import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 
 public final class CcsUtilityMethods {
 
+  private final static String HOUSEHOLD = "Household";
+  private final static String NON_RES = "Non residential or business";
+  private final static String HH = "HH";
+  private final static String CE = "HH";
+  private final static String NR = "HH";
+  private final static String U = "U";
+  private final static String E = "E";
+
+
   public static String getAddressType(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
-
     switch (ccsPropertyListingOutcome.getPrimaryOutcome()) {
-    case "Household":
-      return "HH";
-
-    case "CE":
-      return "CE";
-
-    case "Non residential / business":
-      return "NR";
+    case HOUSEHOLD:
+      return HH;
+    case CE:
+      return CE;
+    case NON_RES:
+      return NR;
     }
     return "";
   }
 
   public static String getAddressLevel(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
-
-    if (ccsPropertyListingOutcome.getPrimaryOutcome().equals("Household")) {
-      return "U";
-    } else if (ccsPropertyListingOutcome.getPrimaryOutcome().equals("CE")) {
-      return "E";
-    } else if (ccsPropertyListingOutcome.getPrimaryOutcome().equals("Non residential / business")) {
-      return "U";
+    switch (ccsPropertyListingOutcome.getPrimaryOutcome()) {
+    case HOUSEHOLD:
+    case NON_RES:
+      return U;
+    case CE:
+      return E;
     }
     return "";
   }
