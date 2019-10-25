@@ -1,6 +1,5 @@
 [![Build Status](https://travis-ci.com/ONSdigital/census-fwmt-outcome-service.svg?branch=master)](https://travis-ci.com/ONSdigital/census-fwmt-outcome-service) [![codecov](https://codecov.io/gh/ONSdigital/census-fwmt-outcome-service/branch/master/graph/badge.svg)](https://codecov.io/gh/ONSdigital/census-fwmt-outcome-service) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1bad894364ed49f29a41193cf9e1e8ff)](https://www.codacy.com/app/ONSDigital_FWMT/census-fwmt-outcome-service?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ONSdigital/census-fwmt-outcome-service&amp;utm_campaign=Badge_Grade)
 
-
 # census-fwmt-outcome-service
 This service is a gateway between Total Mobile's COMET interface and FWMT outcome service.
 
