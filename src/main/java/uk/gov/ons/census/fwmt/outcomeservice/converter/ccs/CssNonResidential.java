@@ -34,7 +34,7 @@ public class CssNonResidential implements CcsOutcomeServiceProcessor {
 
   @Override
   public boolean isValid(CCSPropertyListingOutcome ccsPLOutcome) {
-    List<String> validSecondaryOutcomes = Collections.singletonList("Non residential / business");
+    List<String> validSecondaryOutcomes = Collections.singletonList("Non-residential or business");
     return validSecondaryOutcomes.contains(ccsPLOutcome.getSecondaryOutcome());
   }
 
