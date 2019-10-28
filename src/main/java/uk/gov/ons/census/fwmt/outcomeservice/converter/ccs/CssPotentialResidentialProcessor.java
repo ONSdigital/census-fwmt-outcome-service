@@ -38,7 +38,7 @@ public class CssPotentialResidentialProcessor implements CcsOutcomeServiceProces
 
   @Override
   public boolean isValid(CCSPropertyListingOutcome ccsPLOutcome) {
-    List<String> validSecondaryOutcomes = Collections.singletonList("Potential Residential");
+    List<String> validSecondaryOutcomes = Collections.singletonList("Potential residential");
     return validSecondaryOutcomes.contains(ccsPLOutcome.getSecondaryOutcome());
   }
 
