@@ -8,7 +8,7 @@ class CcsSecondaryOutcomeMap {
   static final Map<String, String> ccsSecondaryOutcomeMap = new HashMap<>();
 
   {
-    ccsSecondaryOutcomeMap.put("Derelict / uninhabitable", "DERELICT");
+    ccsSecondaryOutcomeMap.put("Derelict / Uninhabitable", "DERELICT");
     ccsSecondaryOutcomeMap.put("Under construction", "UNDER_CONSTRUCTION");
     ccsSecondaryOutcomeMap.put("Non residential or business", "NON_RESIDENTIAL");
     ccsSecondaryOutcomeMap.put("CE Out of scope", "CCS_CE_OUT_OF_SCOPE");
