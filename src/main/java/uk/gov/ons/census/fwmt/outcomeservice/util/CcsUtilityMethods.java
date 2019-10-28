@@ -8,8 +8,8 @@ public final class CcsUtilityMethods {
   private final static String HOUSEHOLD = "Household";
   private final static String NON_RES = "Non residential or business";
   private final static String HH = "HH";
-  private final static String CE = "HH";
-  private final static String NR = "HH";
+  private final static String CE = "CE";
+  private final static String NR = "NR";
   private final static String U = "U";
   private final static String E = "E";
 
