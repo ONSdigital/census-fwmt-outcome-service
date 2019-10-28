@@ -61,7 +61,8 @@ public class CssAddressNotValidProcessor implements CcsOutcomeServiceProcessor {
 
   private boolean isNonValidCcsPropertyListing(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
     List<String> validSecondaryOutcomes = Arrays
-        .asList("Derelict / Uninhabitable", "Under construction", "Non residential or business", "CE Out of scope");
+        .asList("Derelict / Uninhabitable", "Under construction", "Non residential or business", "CE Out of scope",
+            "Demolished");
     return validSecondaryOutcomes.contains(ccsPropertyListingOutcome.getSecondaryOutcome());
   }
 }
