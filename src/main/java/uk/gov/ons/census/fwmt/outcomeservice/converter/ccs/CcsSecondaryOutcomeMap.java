@@ -9,6 +9,7 @@ class CcsSecondaryOutcomeMap {
 
   {
     ccsSecondaryOutcomeMap.put("Derelict / Uninhabitable", "DERELICT");
+    ccsSecondaryOutcomeMap.put("Demolished", "DEMOLISHED");
     ccsSecondaryOutcomeMap.put("Under construction", "UNDER_CONSTRUCTION");
     ccsSecondaryOutcomeMap.put("Non residential or business", "NON_RESIDENTIAL");
     ccsSecondaryOutcomeMap.put("CE Out of scope", "CCS_CE_OUT_OF_SCOPE");
