@@ -13,13 +13,15 @@
 },
 "sampleUnit":{
 "addressType":"${addressType}",
-<#if ccsPropertyListingOutcome.ceDetails??>
+<#if ccsPropertyListingOutcome.ceDetails?? && ccsPropertyListingOutcome.ceDetails.establishmentType != "">
     "estabType":"${ccsPropertyListingOutcome.ceDetails.establishmentType}",
 <#else>
     <#if addressType == "HH" >
         "estabType":"Household",
     <#elseif addressType == "NR" >
         "estabType":"Non Residential",
+    <#elseif addressType == "CE" >
+        "estabType":"CE",
     </#if>
 
 </#if>
