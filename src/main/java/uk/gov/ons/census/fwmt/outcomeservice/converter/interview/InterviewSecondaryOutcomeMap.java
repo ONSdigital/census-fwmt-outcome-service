@@ -17,7 +17,7 @@ public class InterviewSecondaryOutcomeMap {
     interviewSecondaryOutcomeMap.put("Split address", "SPLIT_ADDRESS");
     interviewSecondaryOutcomeMap.put("Property is a CE", "CCS_HOUSEHOLD_CASE_IS_A_CE");
     interviewSecondaryOutcomeMap.put("Derelict", "DERELICT");
-    interviewSecondaryOutcomeMap.put("Non residential or business", "NON_RESIDENTIAL");
+    interviewSecondaryOutcomeMap.put("Non-residential or business", "NON_RESIDENTIAL");
     interviewSecondaryOutcomeMap.put("Demolished", "DEMOLISHED");
     interviewSecondaryOutcomeMap.put("Duplicate", "DUPLICATE");
     interviewSecondaryOutcomeMap.put("Under construction", "UNDER_CONSTRUCTION");
