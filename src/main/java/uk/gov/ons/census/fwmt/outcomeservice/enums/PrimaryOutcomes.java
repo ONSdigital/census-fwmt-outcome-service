@@ -4,7 +4,7 @@ public enum PrimaryOutcomes {
 
   NON_VALID_HOUSEHOLD("Non-valid household"),
   CONTACT_MADE("Contact made"),
-  NOT_VALID("Not valid"),
+  NOT_VALID("Not Valid"),
   NO_CONTACT("No contact");
 
   private String value;
