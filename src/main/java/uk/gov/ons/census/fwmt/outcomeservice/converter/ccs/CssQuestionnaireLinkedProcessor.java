@@ -2,6 +2,7 @@ package uk.gov.ons.census.fwmt.outcomeservice.converter.ccs;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CCSPL_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CCS_FAILED_FULFILMENT_REQUEST_INVALID;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.FAILED_FULFILMENT_REQUEST_ADDITIONAL_QID_IN_PROPERTY_LISTING;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.QUESTIONNAIRE_LINKED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.ccs;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressLevel;
@@ -42,33 +43,45 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
   }
 
   @Override
-  public void processMessage(CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException{
+  public void processMessage(CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException {
     if (isQuestionnaireLinked(ccsPLOutcome.getFulfillmentRequests())) {
-      UUID newRandomUUID = UUID.randomUUID();
+      int fulfillmentFound = 0;
+      for (FulfillmentRequest fulfillmentRequest: ccsPLOutcome.getFulfillmentRequests()) {
+        if(fulfillmentFound == 0) {
+          UUID newRandomUUID = UUID.randomUUID();
 
-      String eventDateTime = ccsPLOutcome.getEventDate().toString();
-      Map<String, Object> root = new HashMap<>();
-      root.put("generatedUuid", newRandomUUID);
-      root.put("ccsPropertyListingOutcome", ccsPLOutcome);
-      root.put("questionnaireId", ccsPLOutcome.getFulfillmentRequests().get(0).getQuestionnaireID());
-      root.put("addressType", getAddressType(ccsPLOutcome));
-      root.put("addressLevel", getAddressLevel(ccsPLOutcome));
-      root.put("organisationName", getOrganisationName(ccsPLOutcome));
-      root.put("eventDate", eventDateTime + "Z");
+          String eventDateTime = ccsPLOutcome.getEventDate().toString();
+          Map<String, Object> root = new HashMap<>();
+          root.put("generatedUuid", newRandomUUID);
+          root.put("ccsPropertyListingOutcome", ccsPLOutcome);
+          root.put("questionnaireId", fulfillmentRequest.getQuestionnaireID());
+          root.put("addressType", getAddressType(ccsPLOutcome));
+          root.put("addressLevel", getAddressLevel(ccsPLOutcome));
+          root.put("organisationName", getOrganisationName(ccsPLOutcome));
+          root.put("eventDate", eventDateTime + "Z");
 
-      String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, ccs);
+          String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, ccs);
 
-      gatewayOutcomeProducer.sendPropertyListing(outcomeEvent, String.valueOf(ccsPLOutcome.getTransactionId()));
-      gatewayEventManager.triggerEvent(String.valueOf(newRandomUUID), CCSPL_OUTCOME_SENT,
-          "type", "CCSPL_QUESTIONNAIRE_LINKED_OUTCOME_SENT", "transactionId", ccsPLOutcome.getTransactionId().toString());
+          gatewayOutcomeProducer.sendPropertyListing(outcomeEvent, String.valueOf(ccsPLOutcome.getTransactionId()));
+          gatewayEventManager.triggerEvent(String.valueOf(newRandomUUID), CCSPL_OUTCOME_SENT,
+              "type", "CCSPL_QUESTIONNAIRE_LINKED_OUTCOME_SENT", "transactionId",
+              ccsPLOutcome.getTransactionId().toString());
+
+        } else {
+          gatewayEventManager.triggerErrorEvent(this.getClass(), null, "Invalid number of Fulfillment",
+              ccsPLOutcome.getPropertyListingCaseReference(), FAILED_FULFILMENT_REQUEST_ADDITIONAL_QID_IN_PROPERTY_LISTING,
+              "Primary Outcome", ccsPLOutcome.getPrimaryOutcome(), "Secondary Outcome", ccsPLOutcome.getSecondaryOutcome());
+        }
+        fulfillmentFound++;
+      }
     } else {
-      gatewayEventManager.triggerErrorEvent(this.getClass(), null, "Fulfilment Request size incorrect ",
+      gatewayEventManager.triggerErrorEvent(this.getClass(), null, "Questionnaire ID is null",
           ccsPLOutcome.getPropertyListingCaseReference(), CCS_FAILED_FULFILMENT_REQUEST_INVALID,
           "Primary Outcome", ccsPLOutcome.getPrimaryOutcome(), "Secondary Outcome", ccsPLOutcome.getSecondaryOutcome());
     }
   }
 
   private boolean isQuestionnaireLinked(List<FulfillmentRequest> fulfillmentRequests) {
-    return (fulfillmentRequests.size() == 1 && fulfillmentRequests.get(0).getQuestionnaireID() != null);
+    return (fulfillmentRequests.size() > 0 && fulfillmentRequests.get(0).getQuestionnaireID() != null);
   }
 }
