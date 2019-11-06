@@ -70,7 +70,8 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
         } else {
           gatewayEventManager.triggerErrorEvent(this.getClass(), null, "Invalid number of Fulfillment",
               ccsPLOutcome.getPropertyListingCaseReference(), FAILED_FULFILMENT_REQUEST_ADDITIONAL_QID_IN_PROPERTY_LISTING,
-              "Primary Outcome", ccsPLOutcome.getPrimaryOutcome(), "Secondary Outcome", ccsPLOutcome.getSecondaryOutcome());
+              "Primary Outcome", ccsPLOutcome.getPrimaryOutcome(), "Secondary Outcome", ccsPLOutcome.getSecondaryOutcome(),
+              "Questionnaire ID", fulfillmentRequest.getQuestionnaireID());
         }
         fulfillmentFound++;
       }
