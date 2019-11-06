@@ -39,29 +39,31 @@ public class InterviewQuestionnaireLinkedProcessor implements InterviewOutcomeSe
   }
 
   @Override
-  public void processMessage(CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException{
+  public void processMessage(CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException {
     if (isQuestionnaireLinked(ccsInterviewOutcome.getFulfillmentRequests())) {
-      String eventDateTime = ccsInterviewOutcome.getEventDate().toString();
-      Map<String, Object> root = new HashMap<>();
-      root.put("ccsInterviewOutcome", ccsInterviewOutcome);
-      root.put("eventDate", eventDateTime + "Z");
-      root.put("questionnaireId", ccsInterviewOutcome.getFulfillmentRequests().get(0).getQuestionnaireID());
+      for (FulfillmentRequest fulfillment: ccsInterviewOutcome.getFulfillmentRequests()) {
+        String eventDateTime = ccsInterviewOutcome.getEventDate().toString();
+        Map<String, Object> root = new HashMap<>();
+        root.put("ccsInterviewOutcome", ccsInterviewOutcome);
+        root.put("eventDate", eventDateTime + "Z");
+        root.put("questionnaireId", fulfillment.getQuestionnaireID());
 
-      String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, interview);
+        String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, interview);
 
-      gatewayOutcomeProducer.sendCcsIntQuestionnaire(outcomeEvent, String.valueOf(ccsInterviewOutcome.getTransactionId()));
-      gatewayEventManager.triggerEvent(String.valueOf(ccsInterviewOutcome.getCaseId()), CCSI_OUTCOME_SENT,
-          "type", "CCSI_QUESTIONNAIRE_LINKED_OUTCOME_SENT", "transactionId",
-          ccsInterviewOutcome.getTransactionId().toString(), "Case Ref", ccsInterviewOutcome.getCaseReference());
+        gatewayOutcomeProducer.sendCcsIntQuestionnaire(outcomeEvent, String.valueOf(ccsInterviewOutcome.getTransactionId()));
+        gatewayEventManager.triggerEvent(String.valueOf(ccsInterviewOutcome.getCaseId()), CCSI_OUTCOME_SENT,
+            "type", "CCSI_QUESTIONNAIRE_LINKED_OUTCOME_SENT", "transactionId",
+            ccsInterviewOutcome.getTransactionId().toString(), "Case Ref", ccsInterviewOutcome.getCaseReference());
+      }
     } else {
-      gatewayEventManager.triggerErrorEvent(this.getClass(), null, "Fulfilment Request size incorrect ",
-          ccsInterviewOutcome.getCaseReference(), CCS_FAILED_FULFILMENT_REQUEST_INVALID,
-          "Primary Outcome", ccsInterviewOutcome.getPrimaryOutcome(), "Secondary Outcome", ccsInterviewOutcome.getSecondaryOutcome());
+      gatewayEventManager.triggerErrorEvent(this.getClass(), null, "Fulfilment Request size incorrect",
+          ccsInterviewOutcome.getCaseReference(), CCS_FAILED_FULFILMENT_REQUEST_INVALID, "Primary Outcome",
+          ccsInterviewOutcome.getPrimaryOutcome(), "Secondary Outcome", ccsInterviewOutcome.getSecondaryOutcome());
     }
   }
 
   private boolean isQuestionnaireLinked(List<FulfillmentRequest> fulfillmentRequests) {
-    return (fulfillmentRequests.size() == 1 && fulfillmentRequests.get(0).getQuestionnaireID() != null);
+    return fulfillmentRequests.size() > 1;
   }
 
   private boolean isNoContact(CCSInterviewOutcome ccsInterviewOutcome) {
