@@ -41,9 +41,7 @@ public final class CcsUtilityMethods {
     if (ccsPropertyListingOutcome.getCeDetails() != null) {
       if (!StringUtils.isEmpty(ccsPropertyListingOutcome.getCeDetails().getOrganisationName())) {
         return ccsPropertyListingOutcome.getCeDetails().getOrganisationName();
-      } else if (!StringUtils.isEmpty(ccsPropertyListingOutcome.getCeDetails().getManagerName())) {
-        return ccsPropertyListingOutcome.getCeDetails().getManagerName();
-      }
+      } 
     }
     return "";
   }
