@@ -37,7 +37,6 @@ public final class CcsUtilityMethods {
     return "";
   }
 
-  
   public static String getOrganisationName(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
     if (ccsPropertyListingOutcome.getCeDetails() != null) {
       if (!StringUtils.isEmpty(ccsPropertyListingOutcome.getCeDetails().getOrganisationName())) {
