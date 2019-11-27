@@ -5,4 +5,5 @@ ignore:
   - ".*/health/.*" # ignore folders and all its contents
   - ".*/Application.java"
   - ".*/WebConfig.java"
-  - ".*/interceptor/.*"
+  - ".*/controller/.*"
+  - ".*/enums/.*"
