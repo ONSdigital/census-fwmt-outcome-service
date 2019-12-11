@@ -42,7 +42,7 @@ springBoot {
 dependencies {
 	compile('uk.gov.ons.census.fwmt:census-fwmt-canonical:1.0.11-RELEASE')
 	compile('uk.gov.ons.census.fwmt:census-fwmt-events:1.0.18-RELEASE')
-	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.0.44-RELEASE')
+	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.0.43-RELEASE')
 	compile('uk.gov.ons.ctp.integration.common:product-reference:0.0.12')
 
 	compile("javax.activation:activation:1.1.1")
