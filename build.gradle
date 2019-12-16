@@ -28,8 +28,12 @@ repositories {
 springBoot {
 	buildInfo {
 		properties {
+			name = 'census-fwmt-outcome-service'
+			time = null
 			additional = [
-					'Git-Commit': grgit.head().getAbbreviatedId(8)
+					'commit': grgit.head().getId(),
+					'branch': grgit.branch.current().name,
+					'built':  grgit.head().dateTime
 			]
 		}
 	}
