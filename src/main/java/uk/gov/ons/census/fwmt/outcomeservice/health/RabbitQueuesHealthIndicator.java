@@ -24,8 +24,6 @@ import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.R
 public class RabbitQueuesHealthIndicator extends AbstractHealthIndicator {
 
   private static List<String> QUEUES = Arrays.asList(
-      GatewayOutcomeQueueConfig.FIELD_REFUSALS_QUEUE,
-      GatewayOutcomeQueueConfig.TEMP_FIELD_OTHERS_QUEUE,
       OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_QUEUE,
       OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_DLQ
   );
