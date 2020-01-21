@@ -1,6 +1,8 @@
 package uk.gov.ons.census.fwmt.outcomeservice.config;
 
+import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.TopicExchange;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,9 +19,14 @@ public class GatewayOutcomeQueueConfig {
   public static final String GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY = "event.questionnaire.update";
   public static final String GATEWAY_CCS_PROPERTYLISTING_ROUTING_KEY = "event.ccs.propertylisting";
 
+  @Autowired
+  private AmqpAdmin rmAmqpAdmin;
+
   //Exchange
   @Bean
   public TopicExchange gatewayOutcomeExchange() {
-    return new TopicExchange(GATEWAY_OUTCOME_EXCHANGE);
+    TopicExchange topicExchange = new TopicExchange(GATEWAY_OUTCOME_EXCHANGE);
+    topicExchange.setAdminsThatShouldDeclare(rmAmqpAdmin);
+    return topicExchange;
   }
 }

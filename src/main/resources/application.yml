@@ -20,11 +20,18 @@ management:
       show-details: always
 
 rabbitmq:
-  username: "guest"
-  password: "guest"
-  hostname: "localhost"
-  port: 5672
-  virtualHost: "/"
+  fwmt:
+    username: "guest"
+    password: "guest"
+    hostname: "localhost"
+    port: 5672
+    virtualHost: "/"
+  rm:
+    username: "guest"
+    password: "guest"
+    hostname: "localhost"
+    port: 5672
+    virtualHost: "/rm"
   initialInterval: 5000
   multiplier: 3.0
   maxInterval: 45000

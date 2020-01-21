@@ -21,7 +21,6 @@ import uk.gov.ons.census.fwmt.outcomeservice.message.OutcomePreprocessingReceive
 @Configuration
 public class OutcomePreprocessingQueueConfig {
 
-
   public static final String OUTCOME_PREPROCESSING_QUEUE = "Outcome.Preprocessing";
   public static final String OUTCOME_PREPROCESSING_EXCHANGE = "Outcome.Preprocessing.Exchange";
   public static final String OUTCOME_PREPROCESSING_ROUTING_KEY = "Outcome.Preprocessing.Request";
@@ -34,10 +33,10 @@ public class OutcomePreprocessingQueueConfig {
   @Bean
   public Queue outcomePreprocessingQueue() {
     Queue queue = QueueBuilder.durable(OUTCOME_PREPROCESSING_QUEUE)
-            .withArgument("x-dead-letter-exchange", "")
-            .withArgument("x-dead-letter-routing-key", OUTCOME_PREPROCESSING_DLQ)
-            .withArgument("x-death", "")
-            .build();
+        .withArgument("x-dead-letter-exchange", "")
+        .withArgument("x-dead-letter-routing-key", OUTCOME_PREPROCESSING_DLQ)
+        .withArgument("x-death", "")
+        .build();
     queue.setAdminsThatShouldDeclare(amqpAdmin);
     return queue;
   }
@@ -61,7 +60,7 @@ public class OutcomePreprocessingQueueConfig {
   // Bindings
   @Bean
   public Binding outcomePreprocessorBinding(@Qualifier("outcomePreprocessingQueue") Queue outcomePreprocessingQueue,
-                                            @Qualifier("outcomePreprocessingExchange") DirectExchange outcomePreprocessingExchange) {
+      @Qualifier("outcomePreprocessingExchange") DirectExchange outcomePreprocessingExchange) {
     Binding binding = BindingBuilder.bind(outcomePreprocessingQueue).to(outcomePreprocessingExchange)
             .with(OUTCOME_PREPROCESSING_ROUTING_KEY);
     binding.setAdminsThatShouldDeclare(amqpAdmin);
@@ -77,9 +76,9 @@ public class OutcomePreprocessingQueueConfig {
   //Message Listener
   @Bean
   public SimpleMessageListenerContainer outcomePreprocessingMessageListener(
-          @Qualifier("connectionFactory") ConnectionFactory connectionFactory,
-          @Qualifier("outcomePreprocessingListenerAdapter") MessageListenerAdapter messageListenerAdapter,
-          @Qualifier("interceptor") RetryOperationsInterceptor retryOperationsInterceptor) {
+      @Qualifier("connectionFactory") ConnectionFactory connectionFactory,
+      @Qualifier("outcomePreprocessingListenerAdapter") MessageListenerAdapter messageListenerAdapter,
+      @Qualifier("interceptor") RetryOperationsInterceptor retryOperationsInterceptor) {
     SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
     Advice[] adviceChain = {retryOperationsInterceptor};
     messageListenerAdapter.setMessageConverter(new MessagingMessageConverter());

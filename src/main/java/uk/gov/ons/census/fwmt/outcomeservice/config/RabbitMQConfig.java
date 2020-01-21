@@ -3,8 +3,6 @@ package uk.gov.ons.census.fwmt.outcomeservice.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.retry.RetryContext;
-import org.springframework.retry.RetryPolicy;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.support.RetryTemplate;
 import uk.gov.ons.census.fwmt.common.retry.DefaultListenerSupport;
