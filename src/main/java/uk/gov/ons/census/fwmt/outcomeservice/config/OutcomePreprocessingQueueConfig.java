@@ -8,26 +8,79 @@ import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.amqp.support.converter.MessagingMessageConverter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.retry.RetryOperations;
 import org.springframework.retry.interceptor.RetryOperationsInterceptor;
+import uk.gov.ons.census.fwmt.common.retry.GatewayMessageRecover;
 import uk.gov.ons.census.fwmt.outcomeservice.message.OutcomePreprocessingReceiver;
+
+import static uk.gov.ons.census.fwmt.outcomeservice.config.ConnectionFactoryBuilder.createConnectionFactory;
 
 @Configuration
 public class OutcomePreprocessingQueueConfig {
+
+  private String username;
+  private String password;
+  private String hostname;
+  private int port;
+  private String virtualHost;
+
+  public OutcomePreprocessingQueueConfig(@Value("${rabbitmq.fwmt.username}") String username,
+      @Value("${rabbitmq.fwmt.password}") String password,
+      @Value("${rabbitmq.fwmt.hostname}") String hostname,
+      @Value("${rabbitmq.fwmt.port}") Integer port,
+      @Value("${rabbitmq.fwmt.virtualHost}") String virtualHost) {
+    this.username = username;
+    this.password = password;
+    this.hostname = hostname;
+    this.port = port;
+    this.virtualHost = virtualHost;
+  }
 
   public static final String OUTCOME_PREPROCESSING_QUEUE = "Outcome.Preprocessing";
   public static final String OUTCOME_PREPROCESSING_EXCHANGE = "Outcome.Preprocessing.Exchange";
   public static final String OUTCOME_PREPROCESSING_ROUTING_KEY = "Outcome.Preprocessing.Request";
   public static final String OUTCOME_PREPROCESSING_DLQ = "Outcome.PreprocessingDLQ";
 
-  @Autowired
-  private AmqpAdmin amqpAdmin;
+  // Connection Factory
+  @Bean
+  @Primary
+  public ConnectionFactory connectionFactory() {
+    return createConnectionFactory(port, hostname, virtualHost, password, username);
+  }
+
+  @Bean
+  @Primary
+  @Qualifier("fwmtRabbitTemplate")
+  public RabbitTemplate fwmtRabbitTemplate() {
+    RabbitTemplate rabbitTemplate = new RabbitTemplate();
+    rabbitTemplate.setConnectionFactory(connectionFactory());
+    return rabbitTemplate;
+  }
+
+  // Interceptor
+  @Bean
+  public RetryOperationsInterceptor interceptor(
+      @Qualifier("retryTemplate") RetryOperations retryOperations) {
+    RetryOperationsInterceptor interceptor = new RetryOperationsInterceptor();
+    interceptor.setRecoverer(new GatewayMessageRecover());
+    interceptor.setRetryOperations(retryOperations);
+    return interceptor;
+  }
+
+  @Bean
+  public AmqpAdmin amqpAdmin() {
+    return new RabbitAdmin(connectionFactory());
+  }
 
   //Queues
   @Bean
@@ -37,7 +90,7 @@ public class OutcomePreprocessingQueueConfig {
         .withArgument("x-dead-letter-routing-key", OUTCOME_PREPROCESSING_DLQ)
         .withArgument("x-death", "")
         .build();
-    queue.setAdminsThatShouldDeclare(amqpAdmin);
+    queue.setAdminsThatShouldDeclare(amqpAdmin());
     return queue;
   }
 
@@ -45,7 +98,7 @@ public class OutcomePreprocessingQueueConfig {
   @Bean
   public Queue outcomePreprocessingDeadLetterQueue() {
     Queue queue = QueueBuilder.durable(OUTCOME_PREPROCESSING_DLQ).build();
-    queue.setAdminsThatShouldDeclare(amqpAdmin);
+    queue.setAdminsThatShouldDeclare(amqpAdmin());
     return queue;
   }
 
@@ -53,7 +106,7 @@ public class OutcomePreprocessingQueueConfig {
   @Bean
   public DirectExchange outcomePreprocessingExchange() {
     DirectExchange directExchange = new DirectExchange(OUTCOME_PREPROCESSING_EXCHANGE);
-    directExchange.setAdminsThatShouldDeclare(amqpAdmin);
+    directExchange.setAdminsThatShouldDeclare(amqpAdmin());
     return directExchange;
   }
 
@@ -63,7 +116,7 @@ public class OutcomePreprocessingQueueConfig {
       @Qualifier("outcomePreprocessingExchange") DirectExchange outcomePreprocessingExchange) {
     Binding binding = BindingBuilder.bind(outcomePreprocessingQueue).to(outcomePreprocessingExchange)
             .with(OUTCOME_PREPROCESSING_ROUTING_KEY);
-    binding.setAdminsThatShouldDeclare(amqpAdmin);
+    binding.setAdminsThatShouldDeclare(amqpAdmin());
     return binding;
   }
 
@@ -86,6 +139,7 @@ public class OutcomePreprocessingQueueConfig {
     container.setConnectionFactory(connectionFactory);
     container.setQueueNames(OUTCOME_PREPROCESSING_QUEUE);
     container.setMessageListener(messageListenerAdapter);
+    container.setAmqpAdmin(amqpAdmin());
     return container;
   }
 }
