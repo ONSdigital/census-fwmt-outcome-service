@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
+import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 
 @Api(value = "FWMT Census Outcome Service", description = "Operations pertaining to receiving outcomes from COMET")
@@ -46,4 +47,13 @@ public interface OutcomeApi {
       method = RequestMethod.POST)
   ResponseEntity<CCSInterviewOutcome> ccsInterviewOutcome(
       @PathVariable String caseId, @RequestBody CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException;
+
+  @ApiOperation(value = "Post a SPG survey outcome to the FWMT Gateway", response = HouseholdOutcome.class)
+  @ApiResponses(value = {
+      @ApiResponse(code = 202, message = "Case Outcome received", response = SPGOutcome.class)})
+  @RequestMapping(value = "/spgOutcome/{caseId}",
+      produces = {"application/json"},
+      method = RequestMethod.POST)
+  ResponseEntity<SPGOutcome> spgOutcomeResponse(
+      @PathVariable String caseId, @RequestBody SPGOutcome spgOutcome) throws GatewayException;
 }

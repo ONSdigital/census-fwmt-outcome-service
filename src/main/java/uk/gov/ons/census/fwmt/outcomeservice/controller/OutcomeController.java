@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
+import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.message.OutcomePreprocessingProducer;
@@ -103,5 +104,28 @@ public class OutcomeController implements OutcomeApi {
           errorMessage + " for case Id: " + caseId);
     }
     return new ResponseEntity<>(ccsInterviewOutcome, HttpStatus.ACCEPTED);
+  }
+
+  @Override
+  public ResponseEntity<SPGOutcome> spgOutcomeResponse(String caseId, SPGOutcome spgOutcome)
+      throws GatewayException {
+    gatewayEventManager.triggerEvent(caseId, COMET_CCSSI_OUTCOME_RECEIVED, "transactionId",
+        spgOutcome.getTransactionId().toString(), "Case Ref", spgOutcome.getCaseReference(),
+        "Primary Outcome", spgOutcome.getPrimaryOutcomeDescription(), "Secondary Outcome",
+        spgOutcome.getSecondaryOutcomeDescription());
+
+    try {
+      String spgOutcomeToQueue = objectMapper.writeValueAsString(spgOutcome);
+      outcomeType = "SPG";
+      outcomePreprocessingProducer.sendOutcomeToPreprocessingQueue(spgOutcomeToQueue, caseId, outcomeType);
+    } catch (JsonProcessingException e) {
+      String errorMessage = "Unable to move SPG outcome to pre-processing queue.";
+      gatewayEventManager
+          .triggerErrorEvent(this.getClass(), e, errorMessage, caseId, FAILED_JSON_CONVERSION, "Case Ref",
+              spgOutcome.getCaseReference());
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
+          errorMessage + " for case Id: " + caseId);
+    }
+    return new ResponseEntity<>(spgOutcome, HttpStatus.ACCEPTED);
   }
 }
