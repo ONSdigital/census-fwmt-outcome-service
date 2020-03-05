@@ -133,7 +133,7 @@ public class OutcomeController implements OutcomeApi {
 
     try {
       String spgOutcomeToQueue = objectMapper.writeValueAsString(spgOutcome);
-      outcomeType = "SPG";
+      outcomeType = "SPGUA";
       outcomePreprocessingProducer.sendOutcomeToPreprocessingQueue(spgOutcomeToQueue, String.valueOf(spgOutcome.getSiteCaseId()), outcomeType);
     } catch (JsonProcessingException e) {
       String errorMessage = "Unable to move SPG Unit Address outcome to pre-processing queue.";
@@ -155,7 +155,7 @@ public class OutcomeController implements OutcomeApi {
 
     try {
       String spgOutcomeToQueue = objectMapper.writeValueAsString(spgOutcome);
-      outcomeType = "SPG";
+      outcomeType = "SPGNS";
       outcomePreprocessingProducer.sendOutcomeToPreprocessingQueue(spgOutcomeToQueue, String.valueOf(spgOutcome.getSiteCaseId()), outcomeType);
     } catch (JsonProcessingException e) {
       String errorMessage = "Unable to move SPG New Standalone outcome to pre-processing queue.";
