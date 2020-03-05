@@ -23,7 +23,7 @@ public interface OutcomeApi {
 
   @ApiOperation(value = "Post a household survey outcome to the FWMT Gateway")
   @ApiResponses(value = {
-      @ApiResponse(code = 202, message = "Case Outcome received", response = HouseholdOutcome.class)})
+      @ApiResponse(code = 202, message = "Case Outcome received")})
   @RequestMapping(value = "/householdOutcome/{caseId}",
       produces = {"application/json"},
       method = RequestMethod.POST)
@@ -41,14 +41,14 @@ public interface OutcomeApi {
 
   @ApiOperation(value = "Post a CCS Interview outcome to the FWMT Gateway")
   @ApiResponses(value = {
-      @ApiResponse(code = 202, message = "Case Outcome received", response = CCSInterviewOutcome.class)})
+      @ApiResponse(code = 202, message = "Case Outcome received")})
   @RequestMapping(value = "/ccsInterviewOutcome/{caseId}",
       produces = {"application/json"},
       method = RequestMethod.POST)
   ResponseEntity<Void> ccsInterviewOutcome(
       @PathVariable String caseId, @RequestBody CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException;
 
-  @ApiOperation(value = "Post a SPG survey outcome to the FWMT Gateway", response = HouseholdOutcome.class)
+  @ApiOperation(value = "Post a SPG survey outcome to the FWMT Gateway")
   @ApiResponses(value = {
       @ApiResponse(code = 202, message = "Case Outcome received")})
   @RequestMapping(value = "/spgOutcome/{caseId}",
