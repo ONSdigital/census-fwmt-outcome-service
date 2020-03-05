@@ -59,8 +59,7 @@ public interface OutcomeApi {
   @RequestMapping(value = "/spgOutcome/unitAddress/new",
       produces = {"application/json"},
       method = RequestMethod.POST)
-  ResponseEntity<Void> spgNewUnitAddress(
-      @PathVariable String caseId, @RequestBody SPGOutcome spgOutcome) throws GatewayException;
+  ResponseEntity<Void> spgNewUnitAddress(@RequestBody SPGOutcome spgOutcome) throws GatewayException;
 
   @ApiOperation(value = "Post a SPG survey outcome to the FWMT Gateway")
   @ApiResponses(value = {
@@ -68,7 +67,6 @@ public interface OutcomeApi {
   @RequestMapping(value = "/spgOutcome/unitAddress/new",
       produces = {"application/json"},
       method = RequestMethod.POST)
-  ResponseEntity<Void> spgNewStandalone(
-      @PathVariable String caseId, @RequestBody SPGOutcome spgOutcome) throws GatewayException;
+  ResponseEntity<Void> spgNewStandalone(@RequestBody SPGOutcome spgOutcome) throws GatewayException;
 
 }
