@@ -21,39 +21,39 @@ import uk.gov.ons.census.fwmt.common.error.GatewayException;
 @RestController
 public interface OutcomeApi {
 
-  @ApiOperation(value = "Post a household survey outcome to the FWMT Gateway", response = HouseholdOutcome.class)
+  @ApiOperation(value = "Post a household survey outcome to the FWMT Gateway")
   @ApiResponses(value = {
       @ApiResponse(code = 202, message = "Case Outcome received", response = HouseholdOutcome.class)})
   @RequestMapping(value = "/householdOutcome/{caseId}",
       produces = {"application/json"},
       method = RequestMethod.POST)
-  ResponseEntity<HouseholdOutcome> householdCaseOutcomeResponse(
+  ResponseEntity<Void> householdCaseOutcomeResponse(
       @PathVariable String caseId, @RequestBody HouseholdOutcome householdOutcome) throws GatewayException;
 
-  @ApiOperation(value = "Post a CCS Property Listing outcome to the FWMT Gateway", response = CCSPropertyListingOutcome.class)
+  @ApiOperation(value = "Post a CCS Property Listing outcome to the FWMT Gateway")
   @ApiResponses(value = {
       @ApiResponse(code = 202, message = "Case Outcome received", response = CCSPropertyListingOutcome.class)})
   @RequestMapping(value = "/ccsPropertyListingOutcome",
       produces = {"application/json"},
       method = RequestMethod.POST)
-  ResponseEntity<CCSPropertyListingOutcome> ccsPropertyListingCaseOutcomeResponse(
+  ResponseEntity<Void> ccsPropertyListingCaseOutcomeResponse(
       @RequestBody CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException;
 
-  @ApiOperation(value = "Post a CCS Interview outcome to the FWMT Gateway", response = CCSInterviewOutcome.class)
+  @ApiOperation(value = "Post a CCS Interview outcome to the FWMT Gateway")
   @ApiResponses(value = {
       @ApiResponse(code = 202, message = "Case Outcome received", response = CCSInterviewOutcome.class)})
   @RequestMapping(value = "/ccsInterviewOutcome/{caseId}",
       produces = {"application/json"},
       method = RequestMethod.POST)
-  ResponseEntity<CCSInterviewOutcome> ccsInterviewOutcome(
+  ResponseEntity<Void> ccsInterviewOutcome(
       @PathVariable String caseId, @RequestBody CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException;
 
   @ApiOperation(value = "Post a SPG survey outcome to the FWMT Gateway", response = HouseholdOutcome.class)
   @ApiResponses(value = {
-      @ApiResponse(code = 202, message = "Case Outcome received", response = SPGOutcome.class)})
+      @ApiResponse(code = 202, message = "Case Outcome received")})
   @RequestMapping(value = "/spgOutcome/{caseId}",
       produces = {"application/json"},
       method = RequestMethod.POST)
-  ResponseEntity<SPGOutcome> spgOutcomeResponse(
+  ResponseEntity<Void> spgOutcomeResponse(
       @PathVariable String caseId, @RequestBody SPGOutcome spgOutcome) throws GatewayException;
 }

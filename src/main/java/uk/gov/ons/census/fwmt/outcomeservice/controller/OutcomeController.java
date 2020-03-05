@@ -38,7 +38,7 @@ public class OutcomeController implements OutcomeApi {
   private String outcomeType = null;
 
   @Override
-  public ResponseEntity<HouseholdOutcome> householdCaseOutcomeResponse(String caseId, HouseholdOutcome householdOutcome)
+  public ResponseEntity<Void> householdCaseOutcomeResponse(String caseId, HouseholdOutcome householdOutcome)
       throws GatewayException {
     gatewayEventManager.triggerEvent(caseId, COMET_HH_OUTCOME_RECEIVED, "transactionId",
         householdOutcome.getTransactionId().toString(), "Case Ref", householdOutcome.getCaseReference(),
@@ -58,11 +58,11 @@ public class OutcomeController implements OutcomeApi {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
           errorMessage + " for case Id: " + caseId);
     }
-    return new ResponseEntity<>(householdOutcome, HttpStatus.ACCEPTED);
+    return new ResponseEntity<>(HttpStatus.ACCEPTED);
   }
 
   @Override
-  public ResponseEntity<CCSPropertyListingOutcome> ccsPropertyListingCaseOutcomeResponse(
+  public ResponseEntity<Void> ccsPropertyListingCaseOutcomeResponse(
       CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException {
     String caseId = ccsPLOutcome.getPropertyListingCaseId().toString();
     gatewayEventManager
@@ -80,11 +80,11 @@ public class OutcomeController implements OutcomeApi {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
           errorMessage + " for case Id: " + caseId);
     }
-    return new ResponseEntity<>(ccsPLOutcome, HttpStatus.ACCEPTED);
+    return new ResponseEntity<>(HttpStatus.ACCEPTED);
   }
 
   @Override
-  public ResponseEntity<CCSInterviewOutcome> ccsInterviewOutcome(String caseId, CCSInterviewOutcome ccsInterviewOutcome)
+  public ResponseEntity<Void> ccsInterviewOutcome(String caseId, CCSInterviewOutcome ccsInterviewOutcome)
       throws GatewayException {
     gatewayEventManager.triggerEvent(caseId, COMET_CCSSI_OUTCOME_RECEIVED, "transactionId",
         ccsInterviewOutcome.getTransactionId().toString(), "Case Ref", ccsInterviewOutcome.getCaseReference(),
@@ -103,11 +103,11 @@ public class OutcomeController implements OutcomeApi {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
           errorMessage + " for case Id: " + caseId);
     }
-    return new ResponseEntity<>(ccsInterviewOutcome, HttpStatus.ACCEPTED);
+    return new ResponseEntity<>(HttpStatus.ACCEPTED);
   }
 
   @Override
-  public ResponseEntity<SPGOutcome> spgOutcomeResponse(String caseId, SPGOutcome spgOutcome)
+  public ResponseEntity<Void> spgOutcomeResponse(String caseId, SPGOutcome spgOutcome)
       throws GatewayException {
     gatewayEventManager.triggerEvent(caseId, COMET_CCSSI_OUTCOME_RECEIVED, "transactionId",
         spgOutcome.getTransactionId().toString(), "Case Ref", spgOutcome.getCaseReference(),
@@ -126,6 +126,6 @@ public class OutcomeController implements OutcomeApi {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
           errorMessage + " for case Id: " + caseId);
     }
-    return new ResponseEntity<>(spgOutcome, HttpStatus.ACCEPTED);
+    return new ResponseEntity<>(HttpStatus.ACCEPTED);
   }
 }
