@@ -1,7 +1,6 @@
 package uk.gov.ons.census.fwmt.outcomeservice.config;
 
 import org.springframework.amqp.core.AmqpAdmin;
-import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -62,13 +61,5 @@ public class GatewayOutcomeQueueConfig {
   @Bean
   public AmqpAdmin rmAmqpAdmin() {
     return new RabbitAdmin(rmConnectionFactory());
-  }
-
-  //Exchange
-  @Bean
-  public TopicExchange gatewayOutcomeExchange() {
-    TopicExchange topicExchange = new TopicExchange(GATEWAY_OUTCOME_EXCHANGE);
-    topicExchange.setAdminsThatShouldDeclare(rmAmqpAdmin());
-    return topicExchange;
   }
 }

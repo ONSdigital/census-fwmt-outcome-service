@@ -2,11 +2,6 @@ package uk.gov.ons.census.fwmt.outcomeservice.config;
 
 import org.aopalliance.aop.Advice;
 import org.springframework.amqp.core.AmqpAdmin;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -80,44 +75,6 @@ public class OutcomePreprocessingQueueConfig {
   @Bean
   public AmqpAdmin amqpAdmin() {
     return new RabbitAdmin(connectionFactory());
-  }
-
-  //Queues
-  @Bean
-  public Queue outcomePreprocessingQueue() {
-    Queue queue = QueueBuilder.durable(OUTCOME_PREPROCESSING_QUEUE)
-        .withArgument("x-dead-letter-exchange", "")
-        .withArgument("x-dead-letter-routing-key", OUTCOME_PREPROCESSING_DLQ)
-        .withArgument("x-death", "")
-        .build();
-    queue.setAdminsThatShouldDeclare(amqpAdmin());
-    return queue;
-  }
-
-  //Dead Letter Queue
-  @Bean
-  public Queue outcomePreprocessingDeadLetterQueue() {
-    Queue queue = QueueBuilder.durable(OUTCOME_PREPROCESSING_DLQ).build();
-    queue.setAdminsThatShouldDeclare(amqpAdmin());
-    return queue;
-  }
-
-  //Exchange
-  @Bean
-  public DirectExchange outcomePreprocessingExchange() {
-    DirectExchange directExchange = new DirectExchange(OUTCOME_PREPROCESSING_EXCHANGE);
-    directExchange.setAdminsThatShouldDeclare(amqpAdmin());
-    return directExchange;
-  }
-
-  // Bindings
-  @Bean
-  public Binding outcomePreprocessorBinding(@Qualifier("outcomePreprocessingQueue") Queue outcomePreprocessingQueue,
-      @Qualifier("outcomePreprocessingExchange") DirectExchange outcomePreprocessingExchange) {
-    Binding binding = BindingBuilder.bind(outcomePreprocessingQueue).to(outcomePreprocessingExchange)
-            .with(OUTCOME_PREPROCESSING_ROUTING_KEY);
-    binding.setAdminsThatShouldDeclare(amqpAdmin());
-    return binding;
   }
 
   //Listener Adapter
