@@ -45,6 +45,7 @@ public class CcsRefusalReceivedProcessor implements CcsOutcomeServiceProcessor {
   @Override
   public void processMessage(CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException {
     UUID newRandomUUID = UUID.randomUUID();
+    // TODO : is this ever true? See isValid method
     if(ccsPLOutcome.getSecondaryOutcome().equals("Soft refusal")) {
       jobCacheManager.cacheCCSOutcome(String.valueOf(newRandomUUID), ccsPLOutcome);
     }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
+import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
 import java.io.IOException;
@@ -73,6 +74,9 @@ public class OutcomePreprocessingReceiver {
                 processedMessage);
         outcomeService.createInterviewOutcomeEvent(ccsInterviewOutcome);
         break;
+    case "SPGUA":
+      SPGOutcome spgOutcome = outcomeMessageConverter.convertMessageToDTO(SPGOutcome.class, processedMessage);
+      outcomeService.createSpgOutcomeEvent(spgOutcome);
       default:
         throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Cannot process message for case ID " + caseId.asText());
     }

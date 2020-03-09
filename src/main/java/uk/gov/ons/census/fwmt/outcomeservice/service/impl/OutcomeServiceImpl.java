@@ -6,9 +6,11 @@ import org.springframework.stereotype.Service;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
+import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.CcsOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.HHOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.InterviewOutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.SpgOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
 
 import javax.annotation.PostConstruct;
@@ -26,6 +28,9 @@ public class OutcomeServiceImpl implements OutcomeService {
 
   @Autowired
   private List<InterviewOutcomeServiceProcessor> interviewOutcomeConverters;
+
+  @Autowired
+  private List<SpgOutcomeServiceProcessor> spgOutcomeServiceProcessors;
 
   @PostConstruct
   public void init() {
@@ -61,6 +66,19 @@ public class OutcomeServiceImpl implements OutcomeService {
       if (converter.isValid(ccsInterviewOutcome)) {
         try {
           converter.processMessage(ccsInterviewOutcome);
+        } catch (Exception e) {
+          log.error("failed to convert outcome", e);
+        }
+      }
+    }
+  }
+
+  @Override
+  public void createSpgOutcomeEvent(SPGOutcome spgOutcome) {
+    for (SpgOutcomeServiceProcessor converter : spgOutcomeServiceProcessors) {
+      if (converter.isValid(spgOutcome)) {
+        try {
+          converter.processMessage(spgOutcome);
         } catch (Exception e) {
           log.error("failed to convert outcome", e);
         }
