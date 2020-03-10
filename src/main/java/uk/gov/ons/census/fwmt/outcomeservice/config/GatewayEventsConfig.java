@@ -30,6 +30,7 @@ public class GatewayEventsConfig {
 
   //SPG_OUTCOME
   public static final String CESPG_OUTCOME_SENT = "CESPG_OUTCOME_SENT";
+  public static final String CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT = "CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT";
 
   //OUTCOME_SENT_RM
   public static final String HH_OUTCOME_SENT = "HH_OUTCOME_SENT";

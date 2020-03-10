@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.FAILED_FULFILMENT_REQUEST_IS_NULL;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.FULFILMENT_REQUESTED;
@@ -85,7 +86,7 @@ public class SPGFulfilmentRequestProcessor implements SPGOutcomeServiceProcessor
     gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(spgOutcome.getTransactionId()));
     // TODO : what to set as case id?
     gatewayEventManager.triggerEvent(String.valueOf(spgOutcome.getSiteCaseId()), CESPG_OUTCOME_SENT, "type",
-        "SPG_FULFILMENT_REQUESTED_OUTCOME_SENT", "transactionId",
+        CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId",
         spgOutcome.getTransactionId().toString(), "Case Ref", spgOutcome.getCaseReference());
   }
 

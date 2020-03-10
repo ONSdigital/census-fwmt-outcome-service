@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.NEW_ADDRESS_REPORTED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
@@ -41,7 +42,7 @@ public class SPGNewAddressReported implements SPGOutcomeServiceProcessor {
 
     gatewayOutcomeProducer.sendPropertyListing(outcomeEvent, String.valueOf(spgOutcome.getTransactionId()));
     gatewayEventManager.triggerEvent(String.valueOf(newRandomUUID), CESPG_OUTCOME_SENT,
-        "type", "CESPG_NEW_ADDRESS_REPORTED_RECEIVED_OUTCOME_SENT", "transactionId",
+        "type", CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId",
         spgOutcome.getTransactionId().toString());
   }
 }

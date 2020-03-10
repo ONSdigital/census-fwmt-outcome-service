@@ -13,6 +13,7 @@ import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 import java.util.HashMap;
 import java.util.Map;
 
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.FAILED_FULFILMENT_REQUEST_IS_NULL;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.LINKED_QID;
@@ -51,7 +52,7 @@ public class SPGLinkedQidProcessor implements SPGOutcomeServiceProcessor {
         gatewayOutcomeProducer.sendQuestionnaireLinked(outcomeEvent, String.valueOf(spgOutcome.getTransactionId()));
         // TODO : what to set as case id?
         gatewayEventManager.triggerEvent(String.valueOf(spgOutcome.getSiteCaseId()), CESPG_OUTCOME_SENT, "type",
-            "SPG_LINKED_QID_OUTCOME_SENT", "transactionId", spgOutcome.getTransactionId().toString(),
+            CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId", spgOutcome.getTransactionId().toString(),
             "Case Ref", spgOutcome.getCaseReference());
       }
     }
