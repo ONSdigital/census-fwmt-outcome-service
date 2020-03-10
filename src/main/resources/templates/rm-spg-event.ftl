@@ -4,7 +4,7 @@
 "source" : "FIELDWORK_GATEWAY",
 "channel" : "FIELD",
 "dateTime" : "${eventDate}",
-"transactionId" : "${householdOutcome.transactionId}"
+"transactionId" : "${spgOutcome.transactionId}"
 }
 ,
 "payload" : {

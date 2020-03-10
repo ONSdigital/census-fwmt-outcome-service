@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class SpgOutcomeLookup {
+public class SPGOutcomeLookup {
 
   public static final Map<String, String[]> spgOutcomeCodeMap = new HashMap<>();
 

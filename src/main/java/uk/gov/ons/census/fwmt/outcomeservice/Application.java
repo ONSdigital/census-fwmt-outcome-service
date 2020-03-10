@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.spg.SpgOutcomeLookup;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.spg.SPGOutcomeLookup;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -31,8 +31,8 @@ public class Application {
   }
 
   @Bean
-  SpgOutcomeLookup createSPGOutcomeLookup(){
-    SpgOutcomeLookup lookupMap = new SpgOutcomeLookup();
+  SPGOutcomeLookup createSPGOutcomeLookup(){
+    SPGOutcomeLookup lookupMap = new SPGOutcomeLookup();
     String line;
       try(BufferedReader in = new BufferedReader(new FileReader("outcomeCodeLookup.txt"));) {
         if ((line = in.readLine()) != null) {
