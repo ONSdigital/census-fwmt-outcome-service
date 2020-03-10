@@ -2,11 +2,13 @@ package uk.gov.ons.census.fwmt.outcomeservice.enums;
 
 public enum EventType {
 
-  // Household
-  FULFILMENT_REQUESTED,
+  // SHARED
   QUESTIONNAIRE_LINKED,
   REFUSAL_RECEIVED,
   ADDRESS_NOT_VALID,
+
+  // Household
+  FULFILMENT_REQUESTED,
   ADDRESS_TYPE_CHANGED,
 
   // CCS
@@ -15,6 +17,9 @@ public enum EventType {
   COLLECT_CE_DETAILS,
   CCS_CE_OUT_OF_SCOPE,
   NON_RESIDENTIAL,
-  SOFT_REFUSAL
+  SOFT_REFUSAL,
+
+  // SPG
+  NEW_UNIT_ADDRESS
 
 }

@@ -56,8 +56,6 @@ public class OutcomePreprocessingReceiver {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "__OutcomeType__ cannot be blankl");
     }
 
-
-
     switch (outcomeSurveyType) {
       case "Household":
         HouseholdOutcome householdOutcome = outcomeMessageConverter.convertMessageToDTO(HouseholdOutcome.class,

@@ -14,11 +14,11 @@ import java.util.Map;
 import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_OUTCOME_SENT;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.REFUSAL_RECEIVED;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.NEW_UNIT_ADDRESS;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
 
-@Component("REFUSAL_REQUESTED")
-public class SpgRefusalReceivedProcessor implements SpgOutcomeServiceProcessor {
+@Component("NEW_UNIT_ADDRESS")
+public class SpgNewUnitAddressLinked implements SpgOutcomeServiceProcessor {
 
   @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
@@ -29,18 +29,17 @@ public class SpgRefusalReceivedProcessor implements SpgOutcomeServiceProcessor {
   @Override
   public void processMessage(SPGOutcome spgOutcome) throws GatewayException {
     UUID newRandomUUID = UUID.randomUUID();
-
-    SpgSecondaryOutcomeMap spgSecondaryOutcomeMap = new SpgSecondaryOutcomeMap();
     String eventDateTime = spgOutcome.getEventDate().toString();
-    Map<String, Object> root = new HashMap<>();
 
+    Map<String, Object> root = new HashMap<>();
     root.put("generatedUuid", newRandomUUID);
+    root.put("siteCaseId", spgOutcome.getSiteCaseId());
     root.put("eventDate", eventDateTime + "Z");
     root.put("agentId", spgOutcome.getOfficerId());
-    root.put("refusalType",
-        spgSecondaryOutcomeMap.spgSecondaryOutcomeMap.get(spgOutcome.getSecondaryOutcomeDescription()));
+    root.put("coordinatorId", spgOutcome.getCoordinatorId());
+    root.put("addressLine1", spgOutcome.getAddress().getAddressLine1());
 
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root, spg);
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(NEW_UNIT_ADDRESS, root, spg);
 
     gatewayOutcomeProducer.sendPropertyListing(outcomeEvent, String.valueOf(spgOutcome.getTransactionId()));
     gatewayEventManager.triggerEvent(String.valueOf(newRandomUUID), CESPG_OUTCOME_SENT,

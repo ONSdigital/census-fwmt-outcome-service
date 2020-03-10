@@ -13,5 +13,5 @@ public interface OutcomeService {
 
   void createInterviewOutcomeEvent(CCSInterviewOutcome ccsInterviewOutcome);
 
-  void createSpgOutcomeEvent(SPGOutcome spgOutcome);
+  void createSpgOutcomeEvent(SPGOutcome spgOutcome) throws GatewayException;
 }

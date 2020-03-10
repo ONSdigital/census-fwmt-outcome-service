@@ -1,7 +1,5 @@
 package uk.gov.ons.census.fwmt.outcomeservice;
 
-import com.godaddy.logging.LoggingConfigs;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -13,12 +11,11 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.spg.SpgOutcomeLookup;
 
-import javax.annotation.PostConstruct;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.function.Function;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 @SpringBootApplication
 @EnableSwagger2
@@ -31,6 +28,21 @@ public class Application {
 
   public static void main(String[] args) {
     SpringApplication.run(Application.class, args);
+  }
+
+  @Bean
+  SpgOutcomeLookup createSPGOutcomeLookup(){
+    SpgOutcomeLookup lookupMap = new SpgOutcomeLookup();
+    String line;
+      try(BufferedReader in = new BufferedReader(new FileReader("outcomeCodeLookup.txt"));) {
+        if ((line = in.readLine()) != null) {
+          String[] lookup = line.split("\t");
+          lookupMap.add(lookup[0], lookup[1].split(","));
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    return lookupMap;
   }
 
   @Bean

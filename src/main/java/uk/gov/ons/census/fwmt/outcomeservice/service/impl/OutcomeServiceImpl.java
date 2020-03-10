@@ -2,19 +2,24 @@ package uk.gov.ons.census.fwmt.outcomeservice.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
+import uk.gov.ons.census.fwmt.outcomeservice.Application;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.CcsOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.HHOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.InterviewOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.SpgOutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.spg.SpgOutcomeLookup;
 import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -30,7 +35,7 @@ public class OutcomeServiceImpl implements OutcomeService {
   private List<InterviewOutcomeServiceProcessor> interviewOutcomeConverters;
 
   @Autowired
-  private List<SpgOutcomeServiceProcessor> spgOutcomeServiceProcessors;
+  private Map<String, SpgOutcomeServiceProcessor> spgOutcomeServiceProcessors;
 
   @PostConstruct
   public void init() {
@@ -74,15 +79,10 @@ public class OutcomeServiceImpl implements OutcomeService {
   }
 
   @Override
-  public void createSpgOutcomeEvent(SPGOutcome spgOutcome) {
-    for (SpgOutcomeServiceProcessor converter : spgOutcomeServiceProcessors) {
-      if (converter.isValid(spgOutcome)) {
-        try {
-          converter.processMessage(spgOutcome);
-        } catch (Exception e) {
-          log.error("failed to convert outcome", e);
-        }
-      }
+  public void createSpgOutcomeEvent(SPGOutcome spgOutcome) throws GatewayException {
+    String[] operationsList = SpgOutcomeLookup.getLookup(spgOutcome);
+    for (String operation: operationsList) {
+      spgOutcomeServiceProcessors.get(operation).processMessage(spgOutcome);
     }
   }
 }
