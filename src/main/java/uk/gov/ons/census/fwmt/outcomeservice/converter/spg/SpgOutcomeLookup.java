@@ -8,6 +8,7 @@ import java.util.Map;
 
 @Component
 public class SpgOutcomeLookup {
+
   public static final Map<String, String[]> spgOutcomeCodeMap = new HashMap<>();
 
   public void add(String productCode, String[] processorNames) {
@@ -17,5 +18,6 @@ public class SpgOutcomeLookup {
   public static String[] getLookup(SPGOutcome spgOutcome) {
     return spgOutcomeCodeMap.get(spgOutcome.getOutcomeCode());
   }
+
 }
 
