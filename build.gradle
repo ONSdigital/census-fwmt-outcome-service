@@ -92,7 +92,7 @@ dependencies {
 	compile('uk.gov.ons.census.fwmt:census-fwmt-canonical:1.0.17-RELEASE')
 	compile('uk.gov.ons.census.fwmt:census-fwmt-events:1.0.23-RELEASE')
 	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.1.0-RELEASE')
-	compile('uk.gov.ons.ctp.integration.common:product-reference:0.0.12')
+	compile('uk.gov.ons.ctp.integration.common:product-reference:1.0.2')
 
 	compile("javax.activation:activation:1.1.1")
 
