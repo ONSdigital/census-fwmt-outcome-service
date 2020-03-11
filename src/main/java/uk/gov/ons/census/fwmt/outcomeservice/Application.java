@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.spg.SPGOutcomeLookup;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.spg.SPGReasonCodeLookup;
 
@@ -32,7 +33,7 @@ public class Application {
   }
 
   @Bean
-  SPGOutcomeLookup createSPGOutcomeLookup(){
+  SPGOutcomeLookup createSPGOutcomeLookup() throws GatewayException {
     SPGOutcomeLookup lookupMap = new SPGOutcomeLookup();
     String line;
       try(BufferedReader in = new BufferedReader(new FileReader("outcomeCodeLookup.txt"))) {
@@ -41,13 +42,13 @@ public class Application {
           lookupMap.add(lookup[0], lookup[1].split(","));
         }
       } catch (IOException e) {
-        e.printStackTrace();
+        throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Cannot process outcome lookup");
       }
     return lookupMap;
   }
 
   @Bean
-  SPGReasonCodeLookup createSPGReasonCodeLookup(){
+  SPGReasonCodeLookup createSPGReasonCodeLookup() throws GatewayException {
     SPGReasonCodeLookup lookupMap = new SPGReasonCodeLookup();
     String line;
     try(BufferedReader in = new BufferedReader(new FileReader("reasonCodeLookup.txt"))) {
@@ -56,7 +57,7 @@ public class Application {
         lookupMap.add(lookup[0], lookup[1]);
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Cannot process reason code lookup");
     }
     return lookupMap;
   }
