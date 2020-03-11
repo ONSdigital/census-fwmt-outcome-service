@@ -30,9 +30,10 @@ public class SPGLinkedQidProcessor implements SPGOutcomeServiceProcessor {
 
   @Override
   public void processMessage(SPGOutcome spgOutcome) throws GatewayException {
+    // TODO : depending on the outcome code, caseId 'might' be provided or will be the NEW caseId allocated to a new Address must be used
     if (spgOutcome.getFulfillmentRequests() == null) {
       gatewayEventManager
-          .triggerErrorEvent(this.getClass(), null, "Fulfilment Request is null", spgOutcome.getCaseReference(),
+          .triggerErrorEvent(this.getClass(), (Exception) null, "Fulfilment Request is null", spgOutcome.getCaseReference(),
               FAILED_FULFILMENT_REQUEST_IS_NULL,
               "Primary Outcome", spgOutcome.getPrimaryOutcomeDescription(), "Secondary Outcome",
               spgOutcome.getSecondaryOutcomeDescription());
@@ -50,7 +51,6 @@ public class SPGLinkedQidProcessor implements SPGOutcomeServiceProcessor {
         String outcomeEvent = TemplateCreator.createOutcomeMessage(LINKED_QID, root, spg);
 
         gatewayOutcomeProducer.sendQuestionnaireLinked(outcomeEvent, String.valueOf(spgOutcome.getTransactionId()));
-        // TODO : what to set as case id?
         gatewayEventManager.triggerEvent(String.valueOf(spgOutcome.getSiteCaseId()), CESPG_OUTCOME_SENT, "type",
             CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId", spgOutcome.getTransactionId().toString(),
             "Case Ref", spgOutcome.getCaseReference());

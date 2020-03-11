@@ -27,7 +27,6 @@ import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.C
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.FAILED_FULFILMENT_REQUEST_IS_NULL;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.FULFILMENT_REQUESTED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
-import static uk.gov.ons.ctp.integration.common.product.model.Product.CaseType.HI;
 import static uk.gov.ons.ctp.integration.common.product.model.Product.RequestChannel.FIELD;
 
 @Slf4j
@@ -47,7 +46,7 @@ public class SPGFulfilmentRequestProcessor implements SPGOutcomeServiceProcessor
   public void processMessage(SPGOutcome spgOutcome) throws GatewayException {
     if (spgOutcome.getFulfillmentRequests() == null) {
       gatewayEventManager
-          .triggerErrorEvent(this.getClass(), null, "Fulfilment Request is null", spgOutcome.getCaseReference(),
+          .triggerErrorEvent(this.getClass(), (Exception) null, "Fulfilment Request is null", spgOutcome.getCaseReference(),
               FAILED_FULFILMENT_REQUEST_IS_NULL,
               "Primary Outcome", spgOutcome.getPrimaryOutcomeDescription(), "Secondary Outcome",
               spgOutcome.getSecondaryOutcomeDescription());
@@ -62,6 +61,15 @@ public class SPGFulfilmentRequestProcessor implements SPGOutcomeServiceProcessor
 
   private void createQuestionnaireRequiredByPostEvent(SPGOutcome spgOutcome,
       FulfilmentRequest fulfilmentRequest) throws GatewayException {
+    /** TODO
+     * depending on the outcome code, caseId 'might' be provided or will be the NEW caseId allocated to a new Address must be used
+     * the contact fields are optional depending on packcode (see next section)
+     * a new UUID is to be generated for the indCaseId, if an Individual UAC or Questionnaire is requested (see the next packcode section)
+     * although SPG's will only allow UAC's to be delivered by phone, the post-out delivery shall be used by other survey types, therefore we shall implement that function now (or reuse from HH)
+     * write nothing to the Gateway Cache for this fulfillment request
+     */
+
+    // TODO : depending on the outcome code, caseId 'might' be provided or will be the NEW caseId allocated to a new Address must be used
     String newCaseId = String.valueOf(UUID.randomUUID());
     Product product = getProductFromQuestionnaireType(fulfilmentRequest);
     String eventDateTime = spgOutcome.getEventDate().toString();
@@ -74,7 +82,7 @@ public class SPGFulfilmentRequestProcessor implements SPGOutcomeServiceProcessor
     root.put("telNo", fulfilmentRequest.getRequesterPhone());
     root.put("eventDate", eventDateTime + "Z");
 
-    if (product.getCaseType().equals(HI)) {
+    if (product.getIndividual()) {
       root.put("householdIndicator", 0);
       root.put("individualCaseId", newCaseId);
     } else {

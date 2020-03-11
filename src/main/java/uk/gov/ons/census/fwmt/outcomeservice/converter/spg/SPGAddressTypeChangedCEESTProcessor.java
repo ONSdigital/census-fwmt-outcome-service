@@ -29,11 +29,12 @@ public class SPGAddressTypeChangedCEESTProcessor implements SPGOutcomeServicePro
 
   @Override
   public void processMessage(SPGOutcome spgOutcome) throws GatewayException {
-    String generatedCaseId = String.valueOf(UUID.randomUUID());
+    // TODO : the case should exist in the Gateway Cache (an error case if not):
+    // TODO : cache any Care Codes (CE Details) and Access Information
     Map<String, Object> root = new HashMap<>();
     String eventDateTime = spgOutcome.getEventDate().toString();
     root.put("spgOutcome", spgOutcome);
-    root.put("generatedCaseId", generatedCaseId);
+    root.put("generatedCaseId", "caseId");
     root.put("eventDate", eventDateTime + "Z");
 
     if (spgOutcome.getCeDetails().getUsualResidents() == null) {
@@ -45,7 +46,7 @@ public class SPGAddressTypeChangedCEESTProcessor implements SPGOutcomeServicePro
     String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_TYPE_CHANGED_CEEST, root, spg);
 
     gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent, String.valueOf(spgOutcome.getTransactionId()));
-    gatewayEventManager.triggerEvent(generatedCaseId, CESPG_OUTCOME_SENT, "type",
+    gatewayEventManager.triggerEvent("caseId", CESPG_OUTCOME_SENT, "type",
         CESPG_ADDRESS_TYPE_CHANGED_OUTCOME_SENT, "transactionId", spgOutcome.getTransactionId().toString(),
         "Case Ref", spgOutcome.getCaseReference());
   }

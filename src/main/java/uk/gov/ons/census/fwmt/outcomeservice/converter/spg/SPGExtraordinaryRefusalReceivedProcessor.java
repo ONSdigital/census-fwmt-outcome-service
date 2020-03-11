@@ -29,12 +29,10 @@ public class SPGExtraordinaryRefusalReceivedProcessor implements SPGOutcomeServi
 
   @Override
   public void processMessage(SPGOutcome spgOutcome) throws GatewayException {
-    UUID newRandomUUID = UUID.randomUUID();
-
     String eventDateTime = spgOutcome.getEventDate().toString();
     Map<String, Object> root = new HashMap<>();
     root.put("spgOutcome", spgOutcome);
-    root.put("generatedUuid", newRandomUUID);
+    root.put("generatedUuid", "caseId");
     root.put("eventDate", eventDateTime + "Z");
     root.put("agentId", spgOutcome.getOfficerId());
     root.put("refusalType", "EXTRAORDINARY_REFUSAL");
@@ -42,7 +40,7 @@ public class SPGExtraordinaryRefusalReceivedProcessor implements SPGOutcomeServi
     String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root, spg);
 
     gatewayOutcomeProducer.sendPropertyListing(outcomeEvent, String.valueOf(spgOutcome.getTransactionId()));
-    gatewayEventManager.triggerEvent(String.valueOf(newRandomUUID), CESPG_OUTCOME_SENT,
+    gatewayEventManager.triggerEvent("caseId", CESPG_OUTCOME_SENT,
         "type", CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId", spgOutcome.getTransactionId().toString());
   }
 }

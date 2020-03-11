@@ -68,7 +68,7 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
               ccsPLOutcome.getTransactionId().toString());
 
         } else {
-          gatewayEventManager.triggerErrorEvent(this.getClass(), null, "Invalid number of Fulfillment",
+          gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "Invalid number of Fulfillment",
               ccsPLOutcome.getPropertyListingCaseReference(), FAILED_FULFILMENT_REQUEST_ADDITIONAL_QID_IN_PROPERTY_LISTING,
               "Primary Outcome", ccsPLOutcome.getPrimaryOutcome(), "Secondary Outcome", ccsPLOutcome.getSecondaryOutcome(),
               "Questionnaire ID", fulfillmentRequest.getQuestionnaireID());
@@ -76,7 +76,7 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
         fulfillmentFound++;
       }
     } else {
-      gatewayEventManager.triggerErrorEvent(this.getClass(), null, "Questionnaire ID is null",
+      gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "Questionnaire ID is null",
           ccsPLOutcome.getPropertyListingCaseReference(), CCS_FAILED_FULFILMENT_REQUEST_INVALID,
           "Primary Outcome", ccsPLOutcome.getPrimaryOutcome(), "Secondary Outcome", ccsPLOutcome.getSecondaryOutcome());
     }

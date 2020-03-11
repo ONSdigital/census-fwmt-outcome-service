@@ -42,7 +42,7 @@ public class QuestionnaireLinkedProcessorHH implements HHOutcomeServiceProcessor
   @Override
   public void processMessage(HouseholdOutcome householdOutcome) throws GatewayException{
     if (householdOutcome.getFulfillmentRequests()==null){
-      gatewayEventManager.triggerErrorEvent(this.getClass(), null, "Fulfilment Request is null", householdOutcome.getCaseReference(), FAILED_FULFILMENT_REQUEST_IS_NULL,
+      gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "Fulfilment Request is null", householdOutcome.getCaseReference(), FAILED_FULFILMENT_REQUEST_IS_NULL,
           "Primary Outcome", householdOutcome.getPrimaryOutcome(), "Secondary Outcome", householdOutcome.getSecondaryOutcome());
       return;
     }

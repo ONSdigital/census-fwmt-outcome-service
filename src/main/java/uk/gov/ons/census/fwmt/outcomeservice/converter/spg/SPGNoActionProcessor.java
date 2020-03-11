@@ -19,7 +19,7 @@ public class SPGNoActionProcessor implements SPGOutcomeServiceProcessor {
   public void processMessage(SPGOutcome spgOutcome) throws GatewayException {
 
     gatewayEventManager
-        .triggerErrorEvent(this.getClass(), null, "Action not expected", spgOutcome.getCaseReference(),
+        .triggerErrorEvent(this.getClass(), (Exception) null, "Action not expected", spgOutcome.getCaseReference(),
             RECEIVED_NO_ACTION_FROM_TM, "Transaction id", String.valueOf(spgOutcome.getTransactionId()),
             "Primary Outcome", spgOutcome.getPrimaryOutcomeDescription(), "Secondary Outcome",
             spgOutcome.getSecondaryOutcomeDescription());

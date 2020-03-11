@@ -29,13 +29,12 @@ public class SPGAddressNotValidProcessor implements SPGOutcomeServiceProcessor {
 
   @Override
   public void processMessage(SPGOutcome spgOutcome) throws GatewayException {
-    String newCaseId = String.valueOf(UUID.randomUUID());
     String reasonCode = SPGReasonCodeLookup.getLookup(spgOutcome);
 
     String eventDateTime = spgOutcome.getEventDate().toString();
     Map<String, Object> root = new HashMap<>();
     root.put("spgOutcome", spgOutcome);
-    root.put("generateCaseId", newCaseId);
+    root.put("generateCaseId", "caseId");
     root.put("secondaryOutcome", reasonCode);
     root.put("eventDate", eventDateTime + "Z");
 
@@ -43,7 +42,7 @@ public class SPGAddressNotValidProcessor implements SPGOutcomeServiceProcessor {
 
     gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent, String.valueOf(spgOutcome.getTransactionId()));
     gatewayEventManager
-        .triggerEvent(newCaseId, CESPG_OUTCOME_SENT, "type", CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId",
+        .triggerEvent("caseId", CESPG_OUTCOME_SENT, "type", CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId",
             spgOutcome.getTransactionId().toString(), "Case Ref", spgOutcome.getCaseReference());
   }
 }
