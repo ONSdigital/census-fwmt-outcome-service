@@ -15,11 +15,11 @@ import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_OUTCOME_SENT;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.ADDRESS_NOT_VALID;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.REFUSAL_RECEIVED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
 
-@Component("ADDRESS_NOT_VALID")
-public class SPGAddressNotValidProcessor implements SPGOutcomeServiceProcessor {
+@Component("EXTRAORDINARY_REFUSAL_RECEIVED")
+public class SPGExtraordinaryRefusalReceivedProcessor implements SPGOutcomeServiceProcessor {
 
   @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
@@ -29,21 +29,20 @@ public class SPGAddressNotValidProcessor implements SPGOutcomeServiceProcessor {
 
   @Override
   public void processMessage(SPGOutcome spgOutcome) throws GatewayException {
-    String newCaseId = String.valueOf(UUID.randomUUID());
-    String reasonCode = SPGReasonCodeLookup.getLookup(spgOutcome);
+    UUID newRandomUUID = UUID.randomUUID();
 
     String eventDateTime = spgOutcome.getEventDate().toString();
     Map<String, Object> root = new HashMap<>();
     root.put("spgOutcome", spgOutcome);
-    root.put("generateCaseId", newCaseId);
-    root.put("secondaryOutcome", reasonCode);
+    root.put("generatedUuid", newRandomUUID);
     root.put("eventDate", eventDateTime + "Z");
+    root.put("agentId", spgOutcome.getOfficerId());
+    root.put("refusalType", "EXTRAORDINARY_REFUSAL");
 
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_NOT_VALID, root, spg);
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root, spg);
 
-    gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent, String.valueOf(spgOutcome.getTransactionId()));
-    gatewayEventManager
-        .triggerEvent(newCaseId, CESPG_OUTCOME_SENT, "type", CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId",
-            spgOutcome.getTransactionId().toString(), "Case Ref", spgOutcome.getCaseReference());
+    gatewayOutcomeProducer.sendPropertyListing(outcomeEvent, String.valueOf(spgOutcome.getTransactionId()));
+    gatewayEventManager.triggerEvent(String.valueOf(newRandomUUID), CESPG_OUTCOME_SENT,
+        "type", CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId", spgOutcome.getTransactionId().toString());
   }
 }

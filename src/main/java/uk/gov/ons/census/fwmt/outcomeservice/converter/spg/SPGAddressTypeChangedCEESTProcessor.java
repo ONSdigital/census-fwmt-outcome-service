@@ -13,13 +13,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_ADDRESS_TYPE_CHANGED_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_OUTCOME_SENT;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.ADDRESS_NOT_VALID;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.ADDRESS_TYPE_CHANGED_CEEST;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
 
-@Component("ADDRESS_NOT_VALID")
-public class SPGAddressNotValidProcessor implements SPGOutcomeServiceProcessor {
+@Component("ADDRESS_TYPE_CHANGED_CEEST")
+public class SPGAddressTypeChangedCEESTProcessor implements SPGOutcomeServiceProcessor {
 
   @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
@@ -29,21 +29,25 @@ public class SPGAddressNotValidProcessor implements SPGOutcomeServiceProcessor {
 
   @Override
   public void processMessage(SPGOutcome spgOutcome) throws GatewayException {
-    String newCaseId = String.valueOf(UUID.randomUUID());
-    String reasonCode = SPGReasonCodeLookup.getLookup(spgOutcome);
-
-    String eventDateTime = spgOutcome.getEventDate().toString();
+    String generatedCaseId = String.valueOf(UUID.randomUUID());
     Map<String, Object> root = new HashMap<>();
+    String eventDateTime = spgOutcome.getEventDate().toString();
     root.put("spgOutcome", spgOutcome);
-    root.put("generateCaseId", newCaseId);
-    root.put("secondaryOutcome", reasonCode);
+    root.put("generatedCaseId", generatedCaseId);
     root.put("eventDate", eventDateTime + "Z");
 
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_NOT_VALID, root, spg);
+    if (spgOutcome.getCeDetails().getUsualResidents() == null) {
+      root.put("usualResidents", 0);
+    } else {
+      root.put("usualResidents", spgOutcome.getCeDetails().getUsualResidents());
+    }
+
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_TYPE_CHANGED_CEEST, root, spg);
 
     gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent, String.valueOf(spgOutcome.getTransactionId()));
-    gatewayEventManager
-        .triggerEvent(newCaseId, CESPG_OUTCOME_SENT, "type", CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId",
-            spgOutcome.getTransactionId().toString(), "Case Ref", spgOutcome.getCaseReference());
+    gatewayEventManager.triggerEvent(generatedCaseId, CESPG_OUTCOME_SENT, "type",
+        CESPG_ADDRESS_TYPE_CHANGED_OUTCOME_SENT, "transactionId", spgOutcome.getTransactionId().toString(),
+        "Case Ref", spgOutcome.getCaseReference());
   }
 }
+

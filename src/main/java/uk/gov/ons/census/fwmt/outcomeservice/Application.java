@@ -12,6 +12,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.spg.SPGOutcomeLookup;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.spg.SPGReasonCodeLookup;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -34,7 +35,7 @@ public class Application {
   SPGOutcomeLookup createSPGOutcomeLookup(){
     SPGOutcomeLookup lookupMap = new SPGOutcomeLookup();
     String line;
-      try(BufferedReader in = new BufferedReader(new FileReader("outcomeCodeLookup.txt"));) {
+      try(BufferedReader in = new BufferedReader(new FileReader("outcomeCodeLookup.txt"))) {
         if ((line = in.readLine()) != null) {
           String[] lookup = line.split("\t");
           lookupMap.add(lookup[0], lookup[1].split(","));
@@ -42,6 +43,21 @@ public class Application {
       } catch (IOException e) {
         e.printStackTrace();
       }
+    return lookupMap;
+  }
+
+  @Bean
+  SPGReasonCodeLookup createSPGReasonCodeLookup(){
+    SPGReasonCodeLookup lookupMap = new SPGReasonCodeLookup();
+    String line;
+    try(BufferedReader in = new BufferedReader(new FileReader("reasonCodeLookup.txt"))) {
+      if ((line = in.readLine()) != null) {
+        String[] lookup = line.split("\t");
+        lookupMap.add(lookup[0], lookup[1]);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     return lookupMap;
   }
 

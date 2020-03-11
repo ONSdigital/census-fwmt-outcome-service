@@ -18,8 +18,8 @@ import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.C
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.REFUSAL_RECEIVED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
 
-@Component("REFUSAL_RECEIVED")
-public class SPGRefusalReceivedProcessor implements SPGOutcomeServiceProcessor {
+@Component("HARD_REFUSAL_RECEIVED")
+public class SPGHardRefusalReceivedProcessor implements SPGOutcomeServiceProcessor {
 
   @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
@@ -31,15 +31,13 @@ public class SPGRefusalReceivedProcessor implements SPGOutcomeServiceProcessor {
   public void processMessage(SPGOutcome spgOutcome) throws GatewayException {
     UUID newRandomUUID = UUID.randomUUID();
 
-    SPGSecondaryOutcomeMap spgSecondaryOutcomeMap = new SPGSecondaryOutcomeMap();
     String eventDateTime = spgOutcome.getEventDate().toString();
     Map<String, Object> root = new HashMap<>();
     root.put("spgOutcome", spgOutcome);
     root.put("generatedUuid", newRandomUUID);
     root.put("eventDate", eventDateTime + "Z");
     root.put("agentId", spgOutcome.getOfficerId());
-    root.put("refusalType",
-        spgSecondaryOutcomeMap.spgSecondaryOutcomeMap.get(spgOutcome.getSecondaryOutcomeDescription()));
+    root.put("refusalType","HARD_REFUSAL");
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root, spg);
 
