@@ -9,7 +9,7 @@ import java.util.Map;
 @Component
 public class SPGReasonCodeLookup {
 
-  public static final Map<String, String> spgReasonCodeMap = new HashMap<>();
+  private static final Map<String, String> spgReasonCodeMap = new HashMap<>();
 
   public void add(String productCode, String processorNames) {
     spgReasonCodeMap.put(productCode, processorNames);

@@ -19,6 +19,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 @SpringBootApplication
 @EnableSwagger2
 @EnableRetry
@@ -36,7 +38,7 @@ public class Application {
   SPGOutcomeLookup createSPGOutcomeLookup() throws GatewayException {
     SPGOutcomeLookup lookupMap = new SPGOutcomeLookup();
     String line;
-      try(BufferedReader in = new BufferedReader(new FileReader("outcomeCodeLookup.txt"))) {
+      try(BufferedReader in = new BufferedReader(new FileReader("outcomeCodeLookup.txt", UTF_8))) {
         if ((line = in.readLine()) != null) {
           String[] lookup = line.split("\t");
           lookupMap.add(lookup[0], lookup[1].split(","));
@@ -51,7 +53,7 @@ public class Application {
   SPGReasonCodeLookup createSPGReasonCodeLookup() throws GatewayException {
     SPGReasonCodeLookup lookupMap = new SPGReasonCodeLookup();
     String line;
-    try(BufferedReader in = new BufferedReader(new FileReader("reasonCodeLookup.txt"))) {
+    try(BufferedReader in = new BufferedReader(new FileReader("reasonCodeLookup.txt", UTF_8))) {
       if ((line = in.readLine()) != null) {
         String[] lookup = line.split("\t");
         lookupMap.add(lookup[0], lookup[1]);
