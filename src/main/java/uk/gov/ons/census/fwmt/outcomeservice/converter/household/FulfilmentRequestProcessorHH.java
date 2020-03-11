@@ -5,7 +5,6 @@ import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.H
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.FULFILMENT_REQUESTED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.CONTACT_MADE;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.household;
-import static uk.gov.ons.ctp.integration.common.product.model.Product.CaseType.HI;
 import static uk.gov.ons.ctp.integration.common.product.model.Product.RequestChannel.FIELD;
 
 import java.util.Arrays;
@@ -57,7 +56,7 @@ public class FulfilmentRequestProcessorHH implements HHOutcomeServiceProcessor {
   @Override
   public void processMessage(HouseholdOutcome householdOutcome) throws GatewayException {
     if (householdOutcome.getFulfillmentRequests() == null) {
-      gatewayEventManager.triggerErrorEvent(this.getClass(), null, "Fulfilment Request is null", householdOutcome.getCaseReference(), FAILED_FULFILMENT_REQUEST_IS_NULL,
+      gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "Fulfilment Request is null", householdOutcome.getCaseReference(), FAILED_FULFILMENT_REQUEST_IS_NULL,
           "Primary Outcome", householdOutcome.getPrimaryOutcome(), "Secondary Outcome", householdOutcome.getSecondaryOutcome());
       return;
     }
@@ -81,7 +80,7 @@ public class FulfilmentRequestProcessorHH implements HHOutcomeServiceProcessor {
     root.put("telNo", fulfilmentRequest.getRequesterPhone());
     root.put("eventDate", eventDateTime + "Z");
 
-    if (product.getCaseType().equals(HI)) {
+    if (product.getIndividual()) {
       root.put("householdIndicator", 0);
       root.put("individualCaseId", generateUUID());
     } else {

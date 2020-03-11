@@ -21,7 +21,7 @@ public class BasicAuthenticationPoint extends BasicAuthenticationEntryPoint {
   }
 
   @Override
-  public void afterPropertiesSet() throws Exception {
+  public void afterPropertiesSet() {
     setRealmName("census-fwmt-outcome-service");
     super.afterPropertiesSet();
   }

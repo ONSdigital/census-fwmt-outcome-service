@@ -56,7 +56,7 @@ public class InterviewQuestionnaireLinkedProcessor implements InterviewOutcomeSe
             ccsInterviewOutcome.getTransactionId().toString(), "Case Ref", ccsInterviewOutcome.getCaseReference());
       }
     } else {
-      gatewayEventManager.triggerErrorEvent(this.getClass(), null, "Fulfilment Request size incorrect",
+      gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "Fulfilment Request size incorrect",
           ccsInterviewOutcome.getCaseReference(), CCS_FAILED_FULFILMENT_REQUEST_INVALID, "Primary Outcome",
           ccsInterviewOutcome.getPrimaryOutcome(), "Secondary Outcome", ccsInterviewOutcome.getSecondaryOutcome());
     }
