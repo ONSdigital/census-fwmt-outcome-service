@@ -15,13 +15,25 @@ apply plugin: 'io.spring.dependency-management'
 group = 'uk.gov.ons.census.fwmt'
 version = '1.0.77-SNAPSHOT'
 sourceCompatibility = '11'
- 
+
 repositories {
 	mavenLocal()
-	if (!project.hasProperty('omitSDCArtifactory')) {
-		maven { url 'http://artifactory-sdc.onsdigital.uk/artifactory/libs-release' }
-		maven { url 'http://artifactory-sdc.onsdigital.uk/artifactory/libs-snapshot' }
+
+	maven {
+		url 'https://ons.jfrog.io/ons/libs-releases-virtual'
+		credentials {
+			username "${artifactory_user}"
+			password "${artifactory_password}"
+		}
 	}
+	maven {
+		url 'https://ons.jfrog.io/ons/libs-snapshots-virtual'
+		credentials {
+			username "${artifactory_user}"
+			password "${artifactory_password}"
+		}
+	}
+
 	mavenCentral()
 }
 
