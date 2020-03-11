@@ -37,8 +37,7 @@ public class SpgRefusalReceivedProcessor implements SpgOutcomeServiceProcessor {
     root.put("generatedUuid", newRandomUUID);
     root.put("eventDate", eventDateTime + "Z");
     root.put("agentId", spgOutcome.getOfficerId());
-    root.put("refusalType",
-        spgSecondaryOutcomeMap.spgSecondaryOutcomeMap.get(spgOutcome.getSecondaryOutcomeDescription()));
+    root.put("refusalType",spgSecondaryOutcomeMap.getLookup(spgOutcome.getSecondaryOutcomeDescription()));
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root, spg);
 
