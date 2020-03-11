@@ -15,15 +15,28 @@ apply plugin: 'io.spring.dependency-management'
 group = 'uk.gov.ons.census.fwmt'
 version = '1.0.77-SNAPSHOT'
 sourceCompatibility = '11'
- 
+
 repositories {
-	mavenLocal()
-	if (!project.hasProperty('omitSDCArtifactory')) {
-		maven { url 'http://artifactory-sdc.onsdigital.uk/artifactory/libs-release' }
-		maven { url 'http://artifactory-sdc.onsdigital.uk/artifactory/libs-snapshot' }
-	}
-	mavenCentral()
+    mavenLocal()
+
+    maven {
+        url 'https://ons.jfrog.io/ons/libs-releases-virtual'
+        credentials {
+            username "${artifactory_user}"
+            password "${artifactory_password}"
+        }
+    }
+    maven {
+        url 'https://ons.jfrog.io/ons/libs-snapshots-virtual'
+        credentials {
+            username "${artifactory_user}"
+            password "${artifactory_password}"
+        }
+    }
+
+    mavenCentral()
 }
+
 
 springBoot {
 	buildInfo {
@@ -40,8 +53,8 @@ springBoot {
 }
 
 dependencies {
-	compile('uk.gov.ons.census.fwmt:census-fwmt-canonical:1.0.11-RELEASE')
-	compile('uk.gov.ons.census.fwmt:census-fwmt-events:1.0.18-RELEASE')
+	compile('uk.gov.ons.census.fwmt:census-fwmt-canonical:1.0.17-RELEASE')
+	compile('uk.gov.ons.census.fwmt:census-fwmt-events:1.0.23-RELEASE')
 	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.1.0-RELEASE')
 	compile('uk.gov.ons.ctp.integration.common:product-reference:0.0.12')
 
@@ -73,7 +86,7 @@ dependencies {
 	compile('org.freemarker:freemarker:2.3.28')
 
 	compileOnly('org.projectlombok:lombok')
-	
+
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 
 	compile('org.eclipse.persistence:org.eclipse.persistence.moxy:2.5.0')
