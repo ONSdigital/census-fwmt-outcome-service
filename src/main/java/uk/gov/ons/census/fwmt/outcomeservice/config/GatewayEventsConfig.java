@@ -28,6 +28,9 @@ public class GatewayEventsConfig {
   public static final String CCSPL_CACHED_OUTCOME = "CCSPL_CACHED_OUTCOME";
   public static final String CCSPL_CACHED_FAILED = "CCSPL_CACHED_FAILED";
 
+  //SPG_OUTCOME
+  public static final String CESPG_OUTCOME_SENT = "CESPG_OUTCOME_SENT";
+
   //OUTCOME_SENT_RM
   public static final String HH_OUTCOME_SENT = "HH_OUTCOME_SENT";
   public static final String CCSI_OUTCOME_SENT = "CCSI_OUTCOME_SENT";
