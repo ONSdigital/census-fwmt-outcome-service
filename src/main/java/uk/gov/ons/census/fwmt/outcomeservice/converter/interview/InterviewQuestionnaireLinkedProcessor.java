@@ -40,8 +40,8 @@ public class InterviewQuestionnaireLinkedProcessor implements InterviewOutcomeSe
 
   @Override
   public void processMessage(CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException {
-    if (isQuestionnaireLinked(ccsInterviewOutcome.getFulfillmentRequests())) {
-      for (FulfillmentRequest fulfillment: ccsInterviewOutcome.getFulfillmentRequests()) {
+    if (isQuestionnaireLinked(ccsInterviewOutcome.getFulfilmentRequests())) {
+      for (FulfillmentRequest fulfillment: ccsInterviewOutcome.getFulfilmentRequests()) {
         String eventDateTime = ccsInterviewOutcome.getEventDate().toString();
         Map<String, Object> root = new HashMap<>();
         root.put("ccsInterviewOutcome", ccsInterviewOutcome);
