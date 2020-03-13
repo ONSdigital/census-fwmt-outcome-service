@@ -62,7 +62,6 @@ public class SPGFulfilmentRequestProcessor implements SPGOutcomeServiceProcessor
   private void createQuestionnaireRequiredByPostEvent(SPGOutcome spgOutcome,
       FulfilmentRequest fulfilmentRequest) throws GatewayException {
     /** TODO
-     * depending on the outcome code, caseId 'might' be provided or will be the NEW caseId allocated to a new Address must be used
      * the contact fields are optional depending on packcode (see next section)
      * a new UUID is to be generated for the indCaseId, if an Individual UAC or Questionnaire is requested (see the next packcode section)
      * although SPG's will only allow UAC's to be delivered by phone, the post-out delivery shall be used by other survey types, therefore we shall implement that function now (or reuse from HH)
@@ -98,7 +97,6 @@ public class SPGFulfilmentRequestProcessor implements SPGOutcomeServiceProcessor
         spgOutcome.getTransactionId().toString(), "Case Ref", spgOutcome.getCaseReference());
   }
 
-  // TODO : Implement new product lookup lib
   @Nonnull
   private Product getProductFromQuestionnaireType(FulfilmentRequest fulfilmentRequest) {
     Product product = new Product();
