@@ -7,6 +7,7 @@ import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.SPGOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
+import uk.gov.ons.census.fwmt.outcomeservice.service.impl.GatewayCacheService;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
 import java.util.HashMap;
@@ -26,6 +27,9 @@ public class SPGAddressTypeChangedCEESTProcessor implements SPGOutcomeServicePro
 
   @Autowired
   private GatewayEventManager gatewayEventManager;
+
+  @Autowired
+  private GatewayCacheService gatewayCacheService;
 
   @Override
   public void processMessage(SPGOutcome spgOutcome) throws GatewayException {

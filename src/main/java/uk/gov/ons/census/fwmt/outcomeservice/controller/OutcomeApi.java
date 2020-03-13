@@ -59,7 +59,7 @@ public interface OutcomeApi {
 
   @ApiOperation(value = "Post a SPG survey outcome to the FWMT Gateway")
   @ApiResponses(value = {
-      @ApiResponse(code = 202, message = "Case Outcome received"),
+      @ApiResponse(code = 200, message = "Case Outcome received"),
       @ApiResponse(code = 401, message = "UNAUTHORIZED"),
       @ApiResponse(code = 403, message = "FORBIDDEN")})
   @RequestMapping(value = "/spgOutcome/unitAddress/new",

@@ -1,5 +1,6 @@
 package uk.gov.ons.census.fwmt.outcomeservice.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.ons.census.fwmt.common.data.spg.NewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.NewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.message.OutcomePreprocessingProducer;
 
@@ -102,66 +104,31 @@ public class OutcomeController implements OutcomeApi {
         spgOutcome.getSecondaryOutcomeDescription());
 
     outcomePreprocessingProducer.sendOutcomeToPreprocessingQueue(spgOutcome, caseId);
-    return new ResponseEntity<>(HttpStatus.ACCEPTED);
-    try {
-      String spgOutcomeToQueue = objectMapper.writeValueAsString(spgOutcome);
-      outcomeType = "SPG";
-      outcomePreprocessingProducer.sendOutcomeToPreprocessingQueue(spgOutcomeToQueue, caseId, outcomeType);
-    } catch (JsonProcessingException e) {
-      String errorMessage = "Unable to move SPG outcome to pre-processing queue.";
-      gatewayEventManager
-          .triggerErrorEvent(this.getClass(), e, errorMessage, caseId, FAILED_JSON_CONVERSION, "Case Ref",
-              spgOutcome.getCaseReference());
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
-          errorMessage + " for case Id: " + caseId);
-    }
+
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
   // TODO : what should i pass as case id for logging etc?
   @Override
-  public ResponseEntity<Void> spgNewUnitAddress(NewUnitAddress spgOutcome) throws GatewayException {
+  public ResponseEntity<Void> spgNewUnitAddress(NewUnitAddress spgOutcome) {
     gatewayEventManager.triggerEvent("", COMET_CESPGUNITADDRESS_OUTCOME_RECEIVED, "transactionId",
         spgOutcome.getTransactionId().toString(), "Case Ref", spgOutcome.getCaseReference(),
         "Primary Outcome", spgOutcome.getPrimaryOutcomeDescription(), "Secondary Outcome",
         spgOutcome.getSecondaryOutcomeDescription());
 
     outcomePreprocessingProducer.sendOutcomeToPreprocessingQueue(spgOutcome, String.valueOf(spgOutcome.getSiteCaseId()));
-    return new ResponseEntity<>(HttpStatus.ACCEPTED);
-    try {
-      String spgOutcomeToQueue = objectMapper.writeValueAsString(spgOutcome);
-      outcomeType = "SPGUA";
-      outcomePreprocessingProducer.sendOutcomeToPreprocessingQueue(spgOutcomeToQueue, "", outcomeType);
-    } catch (JsonProcessingException e) {
-      String errorMessage = "Unable to move SPG Unit Address outcome to pre-processing queue.";
-      gatewayEventManager
-          .triggerErrorEvent(this.getClass(), e, errorMessage, "", FAILED_JSON_CONVERSION, "Case Ref",
-              spgOutcome.getCaseReference());
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
-          errorMessage + " for case Id: ");
-    }
+
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
   // TODO : should site case id be used for logging etc?
   @Override
-  public ResponseEntity<Void> spgNewStandalone(NewStandaloneAddress spgOutcome) throws GatewayException {
+  public ResponseEntity<Void> spgNewStandalone(NewStandaloneAddress spgOutcome) {
     gatewayEventManager.triggerEvent("", COMET_CESPGSTANDALONE_OUTCOME_RECEIVED, "transactionId",
         spgOutcome.getTransactionId().toString(), "Case Ref", spgOutcome.getCaseReference(),
         "Primary Outcome", spgOutcome.getPrimaryOutcomeDescription(), "Secondary Outcome",
         spgOutcome.getSecondaryOutcomeDescription());
 
-    try {
-      String spgOutcomeToQueue = objectMapper.writeValueAsString(spgOutcome);
-      outcomeType = "SPGNS";
-      outcomePreprocessingProducer.sendOutcomeToPreprocessingQueue(spgOutcomeToQueue, "", outcomeType);
-    } catch (JsonProcessingException e) {
-      String errorMessage = "Unable to move SPG New Standalone outcome to pre-processing queue.";
-      gatewayEventManager.triggerErrorEvent(this.getClass(), e, errorMessage, "", FAILED_JSON_CONVERSION,
-              "Case Ref", spgOutcome.getCaseReference());
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
-          errorMessage + " for case Id: ");
-    }
     return new ResponseEntity<>(HttpStatus.OK);
   }
 }
