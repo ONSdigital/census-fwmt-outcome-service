@@ -45,7 +45,7 @@ plugins {
 
 description = 'census-fwmt-outcome-service'
 group = 'uk.gov.ons.census.fwmt'
-version = rootProject.file('version.txt').text.trim()
+version = '2.0.0-SNAPSHOT'
 
 mainClassName = 'uk.gov.ons.census.fwmt.outcomeservice.Application'
 
