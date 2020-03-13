@@ -33,7 +33,7 @@ public class SpgNewUnitAddressLinked implements SpgOutcomeServiceProcessor {
 
     Map<String, Object> root = new HashMap<>();
     root.put("generatedUuid", newRandomUUID);
-    root.put("siteCaseId", spgOutcome.getSiteCaseId());
+    root.put("siteCaseId", "");
     root.put("eventDate", eventDateTime + "Z");
     root.put("agentId", spgOutcome.getOfficerId());
     root.put("coordinatorId", spgOutcome.getCoordinatorId());

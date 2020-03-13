@@ -44,9 +44,9 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
 
   @Override
   public void processMessage(CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException {
-    if (isQuestionnaireLinked(ccsPLOutcome.getFulfillmentRequests())) {
+    if (isQuestionnaireLinked(ccsPLOutcome.getFulfilmentRequests())) {
       int fulfillmentFound = 0;
-      for (FulfillmentRequest fulfillmentRequest: ccsPLOutcome.getFulfillmentRequests()) {
+      for (FulfillmentRequest fulfillmentRequest: ccsPLOutcome.getFulfilmentRequests()) {
         if(fulfillmentFound == 0) {
           UUID newRandomUUID = UUID.randomUUID();
 
