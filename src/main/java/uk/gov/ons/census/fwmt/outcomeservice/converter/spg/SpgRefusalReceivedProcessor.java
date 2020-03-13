@@ -2,6 +2,7 @@ package uk.gov.ons.census.fwmt.outcomeservice.converter.spg;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.ons.census.fwmt.common.data.shared.CommonOutcome;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
@@ -27,7 +28,7 @@ public class SpgRefusalReceivedProcessor implements SpgOutcomeServiceProcessor {
   private GatewayEventManager gatewayEventManager;
 
   @Override
-  public void processMessage(SPGOutcome spgOutcome) throws GatewayException {
+  public void processMessage(CommonOutcome spgOutcome) throws GatewayException {
     UUID newRandomUUID = UUID.randomUUID();
 
     SpgSecondaryOutcomeMap spgSecondaryOutcomeMap = new SpgSecondaryOutcomeMap();
