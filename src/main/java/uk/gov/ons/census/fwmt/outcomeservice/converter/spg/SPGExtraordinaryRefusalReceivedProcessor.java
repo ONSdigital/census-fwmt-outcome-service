@@ -2,16 +2,15 @@ package uk.gov.ons.census.fwmt.outcomeservice.converter.spg;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
+import uk.gov.ons.census.fwmt.common.data.shared.CommonOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.SpgOutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.SPGOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.REFUSAL_RECEIVED;
@@ -27,7 +26,7 @@ public class SPGExtraordinaryRefusalReceivedProcessor implements SPGOutcomeServi
   private GatewayEventManager gatewayEventManager;
 
   @Override
-  public void processMessage(SPGOutcome spgOutcome) throws GatewayException {
+  public void processMessage(CommonOutcome spgOutcome) throws GatewayException {
     String eventDateTime = spgOutcome.getEventDate().toString();
     Map<String, Object> root = new HashMap<>();
     root.put("spgOutcome", spgOutcome);
@@ -40,6 +39,6 @@ public class SPGExtraordinaryRefusalReceivedProcessor implements SPGOutcomeServi
 
     gatewayOutcomeProducer.sendPropertyListing(outcomeEvent, String.valueOf(spgOutcome.getTransactionId()));
     gatewayEventManager.triggerEvent("caseId", CESPG_OUTCOME_SENT,
-        "type", CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId", spgOutcome.getTransactionId().toString());
+        "type", "CESPG_EXTRAORDINARY_REFUSAL_RECEIVED_OUTCOME_SENT", "transactionId", spgOutcome.getTransactionId().toString());
   }
 }
