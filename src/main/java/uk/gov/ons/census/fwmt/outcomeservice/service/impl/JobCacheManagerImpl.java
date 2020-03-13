@@ -19,7 +19,7 @@ import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.C
 public class JobCacheManagerImpl implements JobCacheManager {
 
   @Autowired
-  private RedisUtil <String> redisUtil;
+  private RedisUtil<String> redisUtil;
 
   @Autowired
   private ObjectMapper objectMapper;
