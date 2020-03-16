@@ -37,9 +37,10 @@ public class GatewayOutcomeProducer {
       Message message = messageConverter.toMessage(objectMapper.readTree(outcomeEvent), messageProperties);
 
       rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
-              GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY, message);
-    } catch (IOException e){
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Cannot process address update for transaction ID " + transactionId);
+          GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY, message);
+    } catch (IOException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
+          "Cannot process address update for transaction ID " + transactionId);
     }
   }
 
@@ -55,11 +56,13 @@ public class GatewayOutcomeProducer {
       Message message = messageConverter.toMessage(objectMapper.readTree(outcomeEvent), messageProperties);
 
       rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
-              GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY, message);
-    } catch (IOException e){
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Cannot process CCS interview for transaction ID " + transactionId);
+          GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY, message);
+    } catch (IOException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
+          "Cannot process CCS interview for transaction ID " + transactionId);
     }
   }
+
   @Retryable
   public void sendRespondentRefusal(String outcomeEvent, String transactionId) throws GatewayException {
     MessageProperties messageProperties = new MessageProperties();
@@ -72,9 +75,10 @@ public class GatewayOutcomeProducer {
       Message message = messageConverter.toMessage(objectMapper.readTree(outcomeEvent), messageProperties);
 
       rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
-              GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY, message);
-    } catch (IOException e){
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Cannot process respondent for transaction ID " + transactionId);
+          GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY, message);
+    } catch (IOException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
+          "Cannot process respondent for transaction ID " + transactionId);
     }
 
   }
@@ -91,9 +95,10 @@ public class GatewayOutcomeProducer {
       Message message = messageConverter.toMessage(objectMapper.readTree(outcomeEvent), messageProperties);
 
       rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
-              GatewayOutcomeQueueConfig.GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY, message);
-    } catch (IOException e){
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Cannot process fulfilment request for transaction ID " + transactionId);
+          GatewayOutcomeQueueConfig.GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY, message);
+    } catch (IOException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
+          "Cannot process fulfilment request for transaction ID " + transactionId);
     }
   }
 
@@ -110,8 +115,9 @@ public class GatewayOutcomeProducer {
 
       rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
           GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY, message);
-    } catch (IOException e){
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Cannot process questionnaire linked for transaction ID " + transactionId);
+    } catch (IOException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
+          "Cannot process questionnaire linked for transaction ID " + transactionId);
     }
   }
 
@@ -127,9 +133,10 @@ public class GatewayOutcomeProducer {
       Message message = messageConverter.toMessage(objectMapper.readTree(outcomeEvent), messageProperties);
 
       rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE,
-              GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTYLISTING_ROUTING_KEY, message);
-    } catch (IOException e){
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Cannot process CCS property listing for transaction ID " + transactionId);
+          GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTYLISTING_ROUTING_KEY, message);
+    } catch (IOException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
+          "Cannot process CCS property listing for transaction ID " + transactionId);
     }
   }
 }

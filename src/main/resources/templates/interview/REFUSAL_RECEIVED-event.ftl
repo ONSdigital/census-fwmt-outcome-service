@@ -1,7 +1,7 @@
 "refusal" : {
-"type" : "${refusalType}",
-"collectionCase" : {
-"id" : "${ccsInterviewOutcome.caseId}"
+"type": "${refusalType}",
+"collectionCase": {
+"id": "${ccsInterviewOutcome.caseId}"
 }
 }
 

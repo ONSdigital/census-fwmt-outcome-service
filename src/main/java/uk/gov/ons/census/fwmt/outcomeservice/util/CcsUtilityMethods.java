@@ -13,7 +13,6 @@ public final class CcsUtilityMethods {
   private final static String U = "U";
   private final static String E = "E";
 
-
   public static String getAddressType(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
     switch (ccsPropertyListingOutcome.getPrimaryOutcome()) {
     case HOUSEHOLD:
@@ -41,7 +40,7 @@ public final class CcsUtilityMethods {
     if (ccsPropertyListingOutcome.getCeDetails() != null) {
       if (!StringUtils.isEmpty(ccsPropertyListingOutcome.getCeDetails().getOrganisationName())) {
         return ccsPropertyListingOutcome.getCeDetails().getOrganisationName();
-      } 
+      }
     }
     return "";
   }

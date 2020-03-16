@@ -1,12 +1,12 @@
 "newAddress":{
 "sourceCaseId": ${spgOutcome.getSiteCaseId()},
-"collectionCase" : {
+"collectionCase": {
 "id": ${generatedUuid},
 "caseType": "SPG",
 "survey": "CENSUS",
 "fieldcoordinatorId": ${spgOutcome.getCoordinatorId()},
 "fieldofficerId": ${agentId},
-"address":{
+"address": {
 "addressLine1": ${address.getAddressLine1},
 "addressLine2": ${address.getAddressLine2},
 "addressLine3": ${address.getAddressLine3},

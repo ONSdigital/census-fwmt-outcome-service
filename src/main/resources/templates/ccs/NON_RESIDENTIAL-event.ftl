@@ -1,4 +1,4 @@
 ,
-"invalidAddress":{
-"reason":"NON_RESIDENTIAL"
+"invalidAddress": {
+"reason": "NON_RESIDENTIAL"
 }

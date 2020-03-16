@@ -1,4 +1,4 @@
 "uac" : {
-"questionnaireId":"${questionnaireId}",
-"caseId":"${ccsInterviewOutcome.caseId}"
+"questionnaireId": "${questionnaireId}",
+"caseId": "${ccsInterviewOutcome.caseId}"
 }

@@ -1,8 +1,8 @@
 "addressTypeChange" : {
-"collectionCase" : {
-"id":"${generatedCaseId}",
-"address" : {
-"addressType":"HH",
+"collectionCase": {
+"id": "${generatedCaseId}",
+"address": {
+"addressType": "HH",
 }
 }
 }

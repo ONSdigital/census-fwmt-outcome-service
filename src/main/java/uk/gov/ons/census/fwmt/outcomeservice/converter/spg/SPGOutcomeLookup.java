@@ -1,7 +1,6 @@
 package uk.gov.ons.census.fwmt.outcomeservice.converter.spg;
 
 import org.springframework.stereotype.Component;
-import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,12 +10,12 @@ public class SPGOutcomeLookup {
 
   private static final Map<String, String[]> spgOutcomeCodeMap = new HashMap<>();
 
-  public void add(String productCode, String[] processorNames) {
-    spgOutcomeCodeMap.put(productCode, processorNames);
+  public static String[] getLookup(String outcomeCode) {
+    return spgOutcomeCodeMap.get(outcomeCode);
   }
 
-  public static String[] getLookup(SPGOutcome spgOutcome) {
-    return spgOutcomeCodeMap.get(spgOutcome.getOutcomeCode());
+  public void add(String productCode, String[] processorNames) {
+    spgOutcomeCodeMap.put(productCode, processorNames);
   }
 
 }

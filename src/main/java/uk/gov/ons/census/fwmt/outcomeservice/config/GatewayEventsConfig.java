@@ -47,6 +47,8 @@ public class GatewayEventsConfig {
   public static final String RABBIT_QUEUE_DOWN = "RABBIT_QUEUE_DOWN";
   public static final String REDIS_SERVICE_UP = "REDIS_SERVICE_UP";
   public static final String REDIS_SERVICE_DOWN = "REDIS_SERVICE_DOWN";
+  @Value("#{'${logging.profile}' == 'CLOUD'}")
+  private boolean useJsonLogging;
 
   @Bean
   public GatewayEventManager gatewayEventManager() {
@@ -59,12 +61,9 @@ public class GatewayEventsConfig {
     gatewayEventManager.addErrorEventTypes(new String[] {FAILED_JSON_CONVERSION, FAILED_FULFILMENT_REQUEST_IS_NULL,
         CCS_FAILED_FULFILMENT_REQUEST_INVALID, RABBIT_QUEUE_DOWN, REDIS_SERVICE_DOWN,
         FAILED_FULFILMENT_REQUEST_ADDITIONAL_QID_IN_PROPERTY_LISTING, RECEIVED_NO_ACTION_FROM_TM});
-    
+
     return gatewayEventManager;
   }
-
-  @Value("#{'${logging.profile}' == 'CLOUD'}")
-  private boolean useJsonLogging;
 
   /**
    * This method needs to be called before the Gateway event Manager is used,
@@ -80,8 +79,7 @@ public class GatewayEventsConfig {
 
     if (useJsonLogging) {
       configs = LoggingConfigs.builder().customMapper(customMappers).build().useJson();
-    }
-    else {
+    } else {
       configs = LoggingConfigs.builder().customMapper(customMappers).build();
     }
     LoggingConfigs.setCurrent(configs);

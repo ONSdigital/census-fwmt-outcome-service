@@ -2,6 +2,8 @@ package uk.gov.ons.census.fwmt.outcomeservice.converter.spg;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.ons.census.fwmt.common.data.spg.NewStandaloneAddress;
+import uk.gov.ons.census.fwmt.common.data.spg.NewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
@@ -28,7 +30,7 @@ public class SPGAddressTypeChangedHHProcessor implements SPGOutcomeServiceProces
   private GatewayEventManager gatewayEventManager;
 
   @Override
-  public void processMessage(SPGOutcome spgOutcome) throws GatewayException {
+  public void processMessageSpgOutcome(SPGOutcome spgOutcome) throws GatewayException {
     String generatedCaseId = String.valueOf(UUID.randomUUID());
     Map<String, Object> root = new HashMap<>();
     String eventDateTime = spgOutcome.getEventDate().toString();
@@ -41,7 +43,41 @@ public class SPGAddressTypeChangedHHProcessor implements SPGOutcomeServiceProces
 
     gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent, String.valueOf(spgOutcome.getTransactionId()));
     gatewayEventManager.triggerEvent(generatedCaseId, CESPG_OUTCOME_SENT, "type",
-        CESPG_ADDRESS_TYPE_CHANGED_OUTCOME_SENT, "transactionId", spgOutcome.getTransactionId().toString(),
-        "Case Ref", spgOutcome.getCaseReference());
+        CESPG_ADDRESS_TYPE_CHANGED_OUTCOME_SENT, "transactionId", spgOutcome.getTransactionId().toString());
+  }
+
+  @Override
+  public void processMessageNewUnitAddress(NewUnitAddress newUnitAddress) throws GatewayException {
+    String generatedCaseId = String.valueOf(UUID.randomUUID());
+    Map<String, Object> root = new HashMap<>();
+    String eventDateTime = newUnitAddress.getEventDate().toString();
+    root.put("spgOutcome", newUnitAddress);
+    root.put("generatedCaseId", generatedCaseId);
+    root.put("eventDate", eventDateTime + "Z");
+    root.put("secondaryOutcome", newUnitAddress.getSecondaryOutcomeDescription());
+
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_TYPE_CHANGED_HH, root, spg);
+
+    gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent, String.valueOf(newUnitAddress.getTransactionId()));
+    gatewayEventManager.triggerEvent(generatedCaseId, CESPG_OUTCOME_SENT, "type",
+        CESPG_ADDRESS_TYPE_CHANGED_OUTCOME_SENT, "transactionId", newUnitAddress.getTransactionId().toString());
+  }
+
+  @Override
+  public void processMessageNewStandaloneAddress(NewStandaloneAddress newStandaloneAddress)
+      throws GatewayException {
+    String generatedCaseId = String.valueOf(UUID.randomUUID());
+    Map<String, Object> root = new HashMap<>();
+    String eventDateTime = newStandaloneAddress.getEventDate().toString();
+    root.put("spgOutcome", newStandaloneAddress);
+    root.put("generatedCaseId", generatedCaseId);
+    root.put("eventDate", eventDateTime + "Z");
+    root.put("secondaryOutcome", newStandaloneAddress.getSecondaryOutcomeDescription());
+
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_TYPE_CHANGED_HH, root, spg);
+
+    gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent, String.valueOf(newStandaloneAddress.getTransactionId()));
+    gatewayEventManager.triggerEvent(generatedCaseId, CESPG_OUTCOME_SENT, "type",
+        CESPG_ADDRESS_TYPE_CHANGED_OUTCOME_SENT, "transactionId", newStandaloneAddress.getTransactionId().toString());
   }
 }

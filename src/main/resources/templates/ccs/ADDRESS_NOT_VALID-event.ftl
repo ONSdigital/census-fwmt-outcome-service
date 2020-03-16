@@ -1,4 +1,4 @@
 ,
-"invalidAddress":{
-"reason":"${secondaryOutcome}"
+"invalidAddress": {
+"reason": "${secondaryOutcome}"
 }

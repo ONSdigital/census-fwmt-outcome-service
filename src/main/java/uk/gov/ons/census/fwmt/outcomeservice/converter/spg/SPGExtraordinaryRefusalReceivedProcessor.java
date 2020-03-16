@@ -2,7 +2,9 @@ package uk.gov.ons.census.fwmt.outcomeservice.converter.spg;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.ons.census.fwmt.common.data.shared.CommonOutcome;
+import uk.gov.ons.census.fwmt.common.data.spg.NewStandaloneAddress;
+import uk.gov.ons.census.fwmt.common.data.spg.NewUnitAddress;
+import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.SPGOutcomeServiceProcessor;
@@ -26,7 +28,7 @@ public class SPGExtraordinaryRefusalReceivedProcessor implements SPGOutcomeServi
   private GatewayEventManager gatewayEventManager;
 
   @Override
-  public void processMessage(CommonOutcome spgOutcome) throws GatewayException {
+  public void processMessageSpgOutcome(SPGOutcome spgOutcome) throws GatewayException {
     String eventDateTime = spgOutcome.getEventDate().toString();
     Map<String, Object> root = new HashMap<>();
     root.put("spgOutcome", spgOutcome);
@@ -39,6 +41,43 @@ public class SPGExtraordinaryRefusalReceivedProcessor implements SPGOutcomeServi
 
     gatewayOutcomeProducer.sendPropertyListing(outcomeEvent, String.valueOf(spgOutcome.getTransactionId()));
     gatewayEventManager.triggerEvent("caseId", CESPG_OUTCOME_SENT,
-        "type", "CESPG_EXTRAORDINARY_REFUSAL_RECEIVED_OUTCOME_SENT", "transactionId", spgOutcome.getTransactionId().toString());
+        "type", "CESPG_EXTRAORDINARY_REFUSAL_RECEIVED_OUTCOME_SENT",
+        "transactionId", spgOutcome.getTransactionId().toString());
+  }
+
+  @Override
+  public void processMessageNewUnitAddress(NewUnitAddress newUnitAddress) throws GatewayException {
+    String eventDateTime = newUnitAddress.getEventDate().toString();
+    Map<String, Object> root = new HashMap<>();
+    root.put("spgOutcome", newUnitAddress);
+    root.put("generatedUuid", "caseId");
+    root.put("eventDate", eventDateTime + "Z");
+    root.put("agentId", newUnitAddress.getOfficerId());
+    root.put("refusalType", "EXTRAORDINARY_REFUSAL");
+
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root, spg);
+
+    gatewayOutcomeProducer.sendPropertyListing(outcomeEvent, String.valueOf(newUnitAddress.getTransactionId()));
+    gatewayEventManager.triggerEvent("caseId", CESPG_OUTCOME_SENT,
+        "type", "CESPG_EXTRAORDINARY_REFUSAL_RECEIVED_OUTCOME_SENT",
+        "transactionId", newUnitAddress.getTransactionId().toString());
+  }
+
+  @Override
+  public void processMessageNewStandaloneAddress(NewStandaloneAddress newStandaloneAddress) throws GatewayException {
+    String eventDateTime = newStandaloneAddress.getEventDate().toString();
+    Map<String, Object> root = new HashMap<>();
+    root.put("spgOutcome", newStandaloneAddress);
+    root.put("generatedUuid", "caseId");
+    root.put("eventDate", eventDateTime + "Z");
+    root.put("agentId", newStandaloneAddress.getOfficerId());
+    root.put("refusalType", "EXTRAORDINARY_REFUSAL");
+
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root, spg);
+
+    gatewayOutcomeProducer.sendPropertyListing(outcomeEvent, String.valueOf(newStandaloneAddress.getTransactionId()));
+    gatewayEventManager.triggerEvent("caseId", CESPG_OUTCOME_SENT,
+        "type", "CESPG_EXTRAORDINARY_REFUSAL_RECEIVED_OUTCOME_SENT",
+        "transactionId", newStandaloneAddress.getTransactionId().toString());
   }
 }

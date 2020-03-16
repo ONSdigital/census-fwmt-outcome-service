@@ -33,7 +33,7 @@ public class JobCacheManagerImpl implements JobCacheManager {
     try {
       outcome = objectMapper.writeValueAsString(ccsPLOutcome);
     } catch (JsonProcessingException e) {
-      eventManager.triggerErrorEvent(this.getClass(), e,"Failed to cache", caseId, CCSPL_CACHED_FAILED);
+      eventManager.triggerErrorEvent(this.getClass(), e, "Failed to cache", caseId, CCSPL_CACHED_FAILED);
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
           "Unable to cache CCS PL Outcome for caseId: {}", caseId);
     }

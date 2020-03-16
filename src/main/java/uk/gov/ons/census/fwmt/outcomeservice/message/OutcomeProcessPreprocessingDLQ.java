@@ -32,7 +32,7 @@ public class OutcomeProcessPreprocessingDLQ {
         message = rabbitTemplate.receive(OUTCOME_PREPROCESSING_DLQ);
 
         rabbitTemplate.send(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
-                OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, message);
+            OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, message);
       }
     } catch (NullPointerException e) {
       throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "No messages in queue");

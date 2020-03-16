@@ -1,10 +1,11 @@
 "fulfilmentRequest" : {
 "fulfilmentCode": "${productCodeLookup}",
-"caseId" : "${householdOutcome.caseId}",
-"address": {},
+"caseId": "${householdOutcome.caseId}",
+"address": {
+},
 "contact": {
 <#if title??>
-    "title":"${title}",
+    "title": "${title}",
 <#else>
     "title":null,
 </#if>

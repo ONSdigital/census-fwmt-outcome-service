@@ -19,7 +19,9 @@ import java.util.UUID;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CCSPL_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.SOFT_REFUSAL;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.ccs;
-import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.*;
+import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressLevel;
+import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressType;
+import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getOrganisationName;
 
 @Component
 public class CssSoftRefusal implements CcsOutcomeServiceProcessor {

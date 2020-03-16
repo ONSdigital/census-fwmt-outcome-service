@@ -12,30 +12,30 @@ import uk.gov.ons.census.fwmt.outcomeservice.message.OutcomeProcessPreprocessing
 @Controller
 public class DLQController {
 
-    @Autowired
-    RabbitListenerEndpointRegistry rabbitListenerEndpointRegistry;
+  @Autowired
+  RabbitListenerEndpointRegistry rabbitListenerEndpointRegistry;
 
-    @Autowired
-    OutcomeProcessPreprocessingDLQ outcomeProcessPreprocessingDLQ;
+  @Autowired
+  OutcomeProcessPreprocessingDLQ outcomeProcessPreprocessingDLQ;
 
-    @Autowired
-    SimpleMessageListenerContainer simpleMessageListenerContainer;
+  @Autowired
+  SimpleMessageListenerContainer simpleMessageListenerContainer;
 
-    @GetMapping("/ProcessDLQ")
-    public ResponseEntity startDLQProcessor() throws GatewayException {
-        outcomeProcessPreprocessingDLQ.processDLQ();
-        return ResponseEntity.ok("DLQ listener started.");
-    }
+  @GetMapping("/ProcessDLQ")
+  public ResponseEntity startDLQProcessor() throws GatewayException {
+    outcomeProcessPreprocessingDLQ.processDLQ();
+    return ResponseEntity.ok("DLQ listener started.");
+  }
 
-    @GetMapping("/StartPreprocessorListener")
-    public ResponseEntity startPreprocessorListener() {
-        simpleMessageListenerContainer.start();
-        return ResponseEntity.ok("Queue listener started.");
-    }
+  @GetMapping("/StartPreprocessorListener")
+  public ResponseEntity startPreprocessorListener() {
+    simpleMessageListenerContainer.start();
+    return ResponseEntity.ok("Queue listener started.");
+  }
 
-    @GetMapping("/StopPreprocessorListener")
-    public ResponseEntity stopPreprocessorListener() {
-        simpleMessageListenerContainer.stop();
-        return ResponseEntity.ok("Queue listener stopped.");
-    }
+  @GetMapping("/StopPreprocessorListener")
+  public ResponseEntity stopPreprocessorListener() {
+    simpleMessageListenerContainer.stop();
+    return ResponseEntity.ok("Queue listener stopped.");
+  }
 }

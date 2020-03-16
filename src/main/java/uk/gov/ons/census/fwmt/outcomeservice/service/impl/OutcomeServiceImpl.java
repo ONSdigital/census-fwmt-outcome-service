@@ -2,10 +2,13 @@ package uk.gov.ons.census.fwmt.outcomeservice.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Service;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
+import uk.gov.ons.census.fwmt.common.data.spg.NewStandaloneAddress;
+import uk.gov.ons.census.fwmt.common.data.spg.NewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.CcsOutcomeServiceProcessor;
@@ -16,8 +19,11 @@ import uk.gov.ons.census.fwmt.outcomeservice.converter.spg.SPGOutcomeLookup;
 import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
 
 import javax.annotation.PostConstruct;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
+
+import static uk.gov.ons.census.fwmt.outcomeservice.util.SPGUtilityMethods.convertMessageToDTO;
 
 @Slf4j
 @Service
@@ -77,10 +83,41 @@ public class OutcomeServiceImpl implements OutcomeService {
   }
 
   @Override
-  public void createSpgOutcomeEvent(SPGOutcome spgOutcome) throws GatewayException {
-    String[] operationsList = SPGOutcomeLookup.getLookup(spgOutcome);
-    for (String operation: operationsList) {
-      spgOutcomeServiceProcessors.get(operation).processMessage(spgOutcome);
+  public void createSpgOutcomeEvent(GenericMessage receivedMessage, String outcomeCode) throws GatewayException {
+    String[] operationsList = SPGOutcomeLookup.getLookup(outcomeCode);
+    String outcomeSurveyType;
+    String processedMessage;
+
+    byte[] genericMessage = (byte[]) receivedMessage.getPayload();
+    processedMessage = new String(genericMessage, Charset.defaultCharset());
+
+    try {
+      outcomeSurveyType = receivedMessage.getHeaders().get("__OutcomeType__").toString();
+    } catch (NullPointerException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "__OutcomeType__ cannot be blankl");
+    }
+
+    switch (outcomeSurveyType) {
+    case "SPG_OUTCOME":
+      SPGOutcome spgOutcome = convertMessageToDTO(SPGOutcome.class, processedMessage);
+      for (String operation : operationsList) {
+        spgOutcomeServiceProcessors.get(operation).processMessageSpgOutcome(spgOutcome);
+      }
+      break;
+    case "NEW_UNIT_ADDRESS":
+      NewUnitAddress newUnitAddress = convertMessageToDTO(NewUnitAddress.class, processedMessage);
+      for (String operation : operationsList) {
+        spgOutcomeServiceProcessors.get(operation).processMessageNewUnitAddress(newUnitAddress);
+      }
+      break;
+    case "NEW_STANDALONE_ADDRESS":
+      NewStandaloneAddress newStandaloneAddress = convertMessageToDTO(NewStandaloneAddress.class, processedMessage);
+      for (String operation : operationsList) {
+        spgOutcomeServiceProcessors.get(operation).processMessageNewStandaloneAddress(newStandaloneAddress);
+      }
+      break;
+    default:
+      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Cannot convert to object");
     }
   }
 }

@@ -1,5 +1,21 @@
 package uk.gov.ons.census.fwmt.outcomeservice.converter.ccs;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
+import uk.gov.ons.census.fwmt.common.data.ccs.FulfillmentRequest;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
+import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.CcsOutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
+import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CCSPL_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CCS_FAILED_FULFILMENT_REQUEST_INVALID;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.FAILED_FULFILMENT_REQUEST_ADDITIONAL_QID_IN_PROPERTY_LISTING;
@@ -8,23 +24,6 @@ import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.ccs;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressLevel;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressType;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getOrganisationName;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
-import uk.gov.ons.census.fwmt.common.data.ccs.FulfillmentRequest;
-import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.CcsOutcomeServiceProcessor;
-import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
-import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
 @Component
 public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcessor {
@@ -46,8 +45,8 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
   public void processMessage(CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException {
     if (isQuestionnaireLinked(ccsPLOutcome.getFulfilmentRequests())) {
       int fulfillmentFound = 0;
-      for (FulfillmentRequest fulfillmentRequest: ccsPLOutcome.getFulfilmentRequests()) {
-        if(fulfillmentFound == 0) {
+      for (FulfillmentRequest fulfillmentRequest : ccsPLOutcome.getFulfilmentRequests()) {
+        if (fulfillmentFound == 0) {
           UUID newRandomUUID = UUID.randomUUID();
 
           String eventDateTime = ccsPLOutcome.getEventDate().toString();
@@ -69,8 +68,10 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
 
         } else {
           gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "Invalid number of Fulfillment",
-              ccsPLOutcome.getPropertyListingCaseReference(), FAILED_FULFILMENT_REQUEST_ADDITIONAL_QID_IN_PROPERTY_LISTING,
-              "Primary Outcome", ccsPLOutcome.getPrimaryOutcome(), "Secondary Outcome", ccsPLOutcome.getSecondaryOutcome(),
+              ccsPLOutcome.getPropertyListingCaseReference(),
+              FAILED_FULFILMENT_REQUEST_ADDITIONAL_QID_IN_PROPERTY_LISTING,
+              "Primary Outcome", ccsPLOutcome.getPrimaryOutcome(), "Secondary Outcome",
+              ccsPLOutcome.getSecondaryOutcome(),
               "Questionnaire ID", fulfillmentRequest.getQuestionnaireID());
         }
         fulfillmentFound++;

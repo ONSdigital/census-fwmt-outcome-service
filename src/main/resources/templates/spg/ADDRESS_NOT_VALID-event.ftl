@@ -1,6 +1,6 @@
 "invalidAddress":{
-"reason":"${secondaryOutcome}",
-"collectionCase":{
+"reason": "${secondaryOutcome}",
+"collectionCase": {
 "id":"${generateCaseId}"
 }
 }

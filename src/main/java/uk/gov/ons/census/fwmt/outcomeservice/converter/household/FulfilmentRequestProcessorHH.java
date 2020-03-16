@@ -1,26 +1,8 @@
 package uk.gov.ons.census.fwmt.outcomeservice.converter.household;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.FAILED_FULFILMENT_REQUEST_IS_NULL;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.HH_OUTCOME_SENT;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.FULFILMENT_REQUESTED;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.CONTACT_MADE;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.household;
-import static uk.gov.ons.ctp.integration.common.product.model.Product.RequestChannel.FIELD;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
-
-import javax.annotation.Nonnull;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import lombok.extern.slf4j.Slf4j;
 import uk.gov.ons.census.fwmt.common.data.household.FulfilmentRequest;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
@@ -31,6 +13,22 @@ import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 import uk.gov.ons.ctp.common.error.CTPException;
 import uk.gov.ons.ctp.integration.common.product.ProductReference;
 import uk.gov.ons.ctp.integration.common.product.model.Product;
+
+import javax.annotation.Nonnull;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
+
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.FAILED_FULFILMENT_REQUEST_IS_NULL;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.HH_OUTCOME_SENT;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.FULFILMENT_REQUESTED;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.CONTACT_MADE;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.household;
+import static uk.gov.ons.ctp.integration.common.product.model.Product.RequestChannel.FIELD;
 
 @Slf4j
 @Component
@@ -56,8 +54,10 @@ public class FulfilmentRequestProcessorHH implements HHOutcomeServiceProcessor {
   @Override
   public void processMessage(HouseholdOutcome householdOutcome) throws GatewayException {
     if (householdOutcome.getFulfillmentRequests() == null) {
-      gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "Fulfilment Request is null", householdOutcome.getCaseReference(), FAILED_FULFILMENT_REQUEST_IS_NULL,
-          "Primary Outcome", householdOutcome.getPrimaryOutcome(), "Secondary Outcome", householdOutcome.getSecondaryOutcome());
+      gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "Fulfilment Request is null",
+          householdOutcome.getCaseReference(), FAILED_FULFILMENT_REQUEST_IS_NULL,
+          "Primary Outcome", householdOutcome.getPrimaryOutcome(), "Secondary Outcome",
+          householdOutcome.getSecondaryOutcome());
       return;
     }
     for (FulfilmentRequest fulfilmentRequest : householdOutcome.getFulfillmentRequests()) {
@@ -90,7 +90,8 @@ public class FulfilmentRequestProcessorHH implements HHOutcomeServiceProcessor {
     String outcomeEvent = TemplateCreator.createOutcomeMessage(FULFILMENT_REQUESTED, root, household);
 
     gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()));
-    gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), HH_OUTCOME_SENT, "type", "HH_FULFILMENT_REQUESTED_OUTCOME_SENT", "transactionId",
+    gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), HH_OUTCOME_SENT, "type",
+        "HH_FULFILMENT_REQUESTED_OUTCOME_SENT", "transactionId",
         householdOutcome.getTransactionId().toString(), "Case Ref", householdOutcome.getCaseReference());
   }
 

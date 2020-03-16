@@ -1,11 +1,11 @@
 "refusal" : {
-"type" : "${refusalType}",
-"collectionCase" : {
-"id" : "${householdOutcome.caseId}"
+"type": "${refusalType}",
+"collectionCase": {
+"id": "${householdOutcome.caseId}"
 },
 "contact": {
 <#if title??>
-    "title":"${title}",
+    "title": "${title}",
 <#else>
     "title":null,
 </#if>
@@ -20,9 +20,9 @@
     "surname":null,
 </#if>
 <#if telNo??>
-    "telNo":"${telNo}"
+    "telNo": "${telNo}"
 <#else>
-    "telNo":null
+    "telNo": null
 </#if>
 }	
 }

@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.data.spg.FulfilmentRequest;
+import uk.gov.ons.census.fwmt.common.data.spg.NewStandaloneAddress;
+import uk.gov.ons.census.fwmt.common.data.spg.NewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
@@ -43,10 +45,10 @@ public class SPGFulfilmentRequestProcessor implements SPGOutcomeServiceProcessor
   private GatewayEventManager gatewayEventManager;
 
   @Override
-  public void processMessage(SPGOutcome spgOutcome) throws GatewayException {
+  public void processMessageSpgOutcome(SPGOutcome spgOutcome) throws GatewayException {
     if (spgOutcome.getFulfillmentRequests() == null) {
       gatewayEventManager
-          .triggerErrorEvent(this.getClass(), (Exception) null, "Fulfilment Request is null", spgOutcome.getCaseReference(),
+          .triggerErrorEvent(this.getClass(), (Exception) null, "Fulfilment Request is null",
               FAILED_FULFILMENT_REQUEST_IS_NULL,
               "Primary Outcome", spgOutcome.getPrimaryOutcomeDescription(), "Secondary Outcome",
               spgOutcome.getSecondaryOutcomeDescription());
@@ -54,12 +56,77 @@ public class SPGFulfilmentRequestProcessor implements SPGOutcomeServiceProcessor
     }
     for (FulfilmentRequest fulfilmentRequest : spgOutcome.getFulfillmentRequests()) {
       if (!isQuestionnaireLinked(fulfilmentRequest)) {
-        createQuestionnaireRequiredByPostEvent(spgOutcome, fulfilmentRequest);
+        String eventDateTime = spgOutcome.getEventDate().toString();
+        Map<String, Object> root = new HashMap<>();
+        root.put("spgOutcome", spgOutcome);
+        root.put("eventDate", eventDateTime + "Z");
+        String outcomeEvent = createQuestionnaireRequiredByPostEvent(root, fulfilmentRequest);
+
+        gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(spgOutcome.getTransactionId()));
+        // TODO : what to set as case id?
+        gatewayEventManager.triggerEvent(String.valueOf(spgOutcome.getCaseId()), CESPG_OUTCOME_SENT, "type",
+            CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId",
+            spgOutcome.getTransactionId().toString());
       }
     }
   }
 
-  private void createQuestionnaireRequiredByPostEvent(SPGOutcome spgOutcome,
+  @Override
+  public void processMessageNewUnitAddress(NewUnitAddress newUnitAddress) throws GatewayException {
+    if (newUnitAddress.getFulfillmentRequests() == null) {
+      gatewayEventManager
+          .triggerErrorEvent(this.getClass(), (Exception) null, "Fulfilment Request is null",
+              FAILED_FULFILMENT_REQUEST_IS_NULL,
+              "Primary Outcome", newUnitAddress.getPrimaryOutcomeDescription(),
+              "Secondary Outcome", newUnitAddress.getSecondaryOutcomeDescription());
+      return;
+    }
+    for (FulfilmentRequest fulfilmentRequest : newUnitAddress.getFulfillmentRequests()) {
+      if (!isQuestionnaireLinked(fulfilmentRequest)) {
+        String eventDateTime = newUnitAddress.getEventDate().toString();
+        Map<String, Object> root = new HashMap<>();
+        root.put("spgOutcome", newUnitAddress);
+        root.put("eventDate", eventDateTime + "Z");
+        String outcomeEvent = createQuestionnaireRequiredByPostEvent(root, fulfilmentRequest);
+
+        gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(newUnitAddress.getTransactionId()));
+        // TODO : what to set as case id?
+        gatewayEventManager.triggerEvent(String.valueOf(newUnitAddress.getCaseId()), CESPG_OUTCOME_SENT, "type",
+            CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId",
+            newUnitAddress.getTransactionId().toString());
+      }
+    }
+  }
+
+  @Override
+  public void processMessageNewStandaloneAddress(NewStandaloneAddress newStandaloneAddress) throws GatewayException {
+    if (newStandaloneAddress.getFulfillmentRequests() == null) {
+      gatewayEventManager
+          .triggerErrorEvent(this.getClass(), (Exception) null, "Fulfilment Request is null",
+              FAILED_FULFILMENT_REQUEST_IS_NULL,
+              "Primary Outcome", newStandaloneAddress.getPrimaryOutcomeDescription(), "Secondary Outcome",
+              newStandaloneAddress.getSecondaryOutcomeDescription());
+      return;
+    }
+    for (FulfilmentRequest fulfilmentRequest : newStandaloneAddress.getFulfillmentRequests()) {
+      if (!isQuestionnaireLinked(fulfilmentRequest)) {
+        String eventDateTime = newStandaloneAddress.getEventDate().toString();
+        Map<String, Object> root = new HashMap<>();
+        root.put("spgOutcome", newStandaloneAddress);
+        root.put("eventDate", eventDateTime + "Z");
+        String outcomeEvent = createQuestionnaireRequiredByPostEvent(root, fulfilmentRequest);
+
+        gatewayOutcomeProducer
+            .sendFulfilmentRequest(outcomeEvent, String.valueOf(newStandaloneAddress.getTransactionId()));
+        // TODO : what to set as case id?
+        gatewayEventManager.triggerEvent(String.valueOf(newStandaloneAddress.getCaseId()), CESPG_OUTCOME_SENT,
+            "type", CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT,
+            "transactionId", newStandaloneAddress.getTransactionId().toString());
+      }
+    }
+  }
+
+  private String createQuestionnaireRequiredByPostEvent(Map<String, Object> root,
       FulfilmentRequest fulfilmentRequest) throws GatewayException {
     /** TODO
      * the contact fields are optional depending on packcode (see next section)
@@ -71,30 +138,19 @@ public class SPGFulfilmentRequestProcessor implements SPGOutcomeServiceProcessor
     // TODO : depending on the outcome code, caseId 'might' be provided or will be the NEW caseId allocated to a new Address must be used
     String newCaseId = String.valueOf(UUID.randomUUID());
     Product product = getProductFromQuestionnaireType(fulfilmentRequest);
-    String eventDateTime = spgOutcome.getEventDate().toString();
-    Map<String, Object> root = new HashMap<>();
-    root.put("spgOutcome", spgOutcome);
     root.put("productCodeLookup", product.getFulfilmentCode());
     root.put("title", fulfilmentRequest.getRequesterTitle());
     root.put("forename", fulfilmentRequest.getRequesterForename());
     root.put("surname", fulfilmentRequest.getRequesterSurname());
     root.put("telNo", fulfilmentRequest.getRequesterPhone());
-    root.put("eventDate", eventDateTime + "Z");
 
     if (product.getIndividual()) {
       root.put("householdIndicator", 0);
       root.put("individualCaseId", newCaseId);
     } else {
       root.put("householdIndicator", 1);
-
     }
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(FULFILMENT_REQUESTED, root, spg);
-
-    gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(spgOutcome.getTransactionId()));
-    // TODO : what to set as case id?
-    gatewayEventManager.triggerEvent(String.valueOf(spgOutcome.getSiteCaseId()), CESPG_OUTCOME_SENT, "type",
-        CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId",
-        spgOutcome.getTransactionId().toString(), "Case Ref", spgOutcome.getCaseReference());
+    return TemplateCreator.createOutcomeMessage(FULFILMENT_REQUESTED, root, spg);
   }
 
   @Nonnull
