@@ -32,7 +32,7 @@ public class SPGExtraordinaryRefusalReceivedProcessor implements SPGOutcomeServi
     String eventDateTime = spgOutcome.getEventDate().toString();
     Map<String, Object> root = new HashMap<>();
     root.put("spgOutcome", spgOutcome);
-    root.put("generatedUuid", "caseId");
+    root.put("generatedUuid", spgOutcome.getCaseId());
     root.put("eventDate", eventDateTime + "Z");
     root.put("agentId", spgOutcome.getOfficerId());
     root.put("refusalType", "EXTRAORDINARY_REFUSAL");

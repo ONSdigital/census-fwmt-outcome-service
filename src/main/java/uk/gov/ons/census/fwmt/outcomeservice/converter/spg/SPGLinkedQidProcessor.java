@@ -14,6 +14,7 @@ import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_OUTCOME_SENT;
@@ -32,7 +33,6 @@ public class SPGLinkedQidProcessor implements SPGOutcomeServiceProcessor {
 
   @Override
   public void processMessageSpgOutcome(SPGOutcome spgOutcome) throws GatewayException {
-    // TODO : depending on the outcome code, caseId 'might' be provided or will be the NEW caseId allocated to a new Address must be used
     if (spgOutcome.getFulfillmentRequests() == null) {
       gatewayEventManager
           .triggerErrorEvent(this.getClass(), (Exception) null, "Fulfilment Request is null",
@@ -47,6 +47,7 @@ public class SPGLinkedQidProcessor implements SPGOutcomeServiceProcessor {
 
         Map<String, Object> root = new HashMap<>();
         root.put("spgOutcome", spgOutcome);
+        root.put("generatedCaseId", spgOutcome.getCaseId());
         root.put("questionnaireId", fulfilmentRequest.getQuestionnaireID());
         root.put("eventDate", eventDateTime + "Z");
 
@@ -73,9 +74,11 @@ public class SPGLinkedQidProcessor implements SPGOutcomeServiceProcessor {
     for (FulfilmentRequest fulfilmentRequest : newUnitAddress.getFulfillmentRequests()) {
       if (isQuestionnaireLinked(fulfilmentRequest)) {
         String eventDateTime = newUnitAddress.getEventDate().toString();
+        String newCaseId = String.valueOf(UUID.randomUUID());
 
         Map<String, Object> root = new HashMap<>();
         root.put("spgOutcome", newUnitAddress);
+        root.put("generatedCaseId", newCaseId);
         root.put("questionnaireId", fulfilmentRequest.getQuestionnaireID());
         root.put("eventDate", eventDateTime + "Z");
 
@@ -103,9 +106,11 @@ public class SPGLinkedQidProcessor implements SPGOutcomeServiceProcessor {
     for (FulfilmentRequest fulfilmentRequest : newStandaloneAddress.getFulfillmentRequests()) {
       if (isQuestionnaireLinked(fulfilmentRequest)) {
         String eventDateTime = newStandaloneAddress.getEventDate().toString();
+        String newCaseId = String.valueOf(UUID.randomUUID());
 
         Map<String, Object> root = new HashMap<>();
         root.put("spgOutcome", newStandaloneAddress);
+        root.put("generatedCaseId", newCaseId);
         root.put("questionnaireId", fulfilmentRequest.getQuestionnaireID());
         root.put("eventDate", eventDateTime + "Z");
 

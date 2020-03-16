@@ -60,10 +60,10 @@ public class SPGFulfilmentRequestProcessor implements SPGOutcomeServiceProcessor
         Map<String, Object> root = new HashMap<>();
         root.put("spgOutcome", spgOutcome);
         root.put("eventDate", eventDateTime + "Z");
-        String outcomeEvent = createQuestionnaireRequiredByPostEvent(root, fulfilmentRequest);
+        String outcomeEvent = createQuestionnaireRequiredByPostEvent(root, fulfilmentRequest,
+            String.valueOf(spgOutcome.getCaseId()));
 
         gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(spgOutcome.getTransactionId()));
-        // TODO : what to set as case id?
         gatewayEventManager.triggerEvent(String.valueOf(spgOutcome.getCaseId()), CESPG_OUTCOME_SENT, "type",
             CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId",
             spgOutcome.getTransactionId().toString());
@@ -87,7 +87,7 @@ public class SPGFulfilmentRequestProcessor implements SPGOutcomeServiceProcessor
         Map<String, Object> root = new HashMap<>();
         root.put("spgOutcome", newUnitAddress);
         root.put("eventDate", eventDateTime + "Z");
-        String outcomeEvent = createQuestionnaireRequiredByPostEvent(root, fulfilmentRequest);
+        String outcomeEvent = createQuestionnaireRequiredByPostEvent(root, fulfilmentRequest, "N/A");
 
         gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(newUnitAddress.getTransactionId()));
         // TODO : what to set as case id?
@@ -114,11 +114,10 @@ public class SPGFulfilmentRequestProcessor implements SPGOutcomeServiceProcessor
         Map<String, Object> root = new HashMap<>();
         root.put("spgOutcome", newStandaloneAddress);
         root.put("eventDate", eventDateTime + "Z");
-        String outcomeEvent = createQuestionnaireRequiredByPostEvent(root, fulfilmentRequest);
+        String outcomeEvent = createQuestionnaireRequiredByPostEvent(root, fulfilmentRequest, "N/A");
 
         gatewayOutcomeProducer
             .sendFulfilmentRequest(outcomeEvent, String.valueOf(newStandaloneAddress.getTransactionId()));
-        // TODO : what to set as case id?
         gatewayEventManager.triggerEvent(String.valueOf(newStandaloneAddress.getCaseId()), CESPG_OUTCOME_SENT,
             "type", CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT,
             "transactionId", newStandaloneAddress.getTransactionId().toString());
@@ -126,16 +125,8 @@ public class SPGFulfilmentRequestProcessor implements SPGOutcomeServiceProcessor
     }
   }
 
-  private String createQuestionnaireRequiredByPostEvent(Map<String, Object> root,
-      FulfilmentRequest fulfilmentRequest) throws GatewayException {
-    /** TODO
-     * the contact fields are optional depending on packcode (see next section)
-     * a new UUID is to be generated for the indCaseId, if an Individual UAC or Questionnaire is requested (see the next packcode section)
-     * although SPG's will only allow UAC's to be delivered by phone, the post-out delivery shall be used by other survey types, therefore we shall implement that function now (or reuse from HH)
-     * write nothing to the Gateway Cache for this fulfillment request
-     */
-
-    // TODO : depending on the outcome code, caseId 'might' be provided or will be the NEW caseId allocated to a new Address must be used
+  private String createQuestionnaireRequiredByPostEvent(Map<String, Object> root, FulfilmentRequest fulfilmentRequest,
+      String caseId) {
     String newCaseId = String.valueOf(UUID.randomUUID());
     Product product = getProductFromQuestionnaireType(fulfilmentRequest);
     root.put("productCodeLookup", product.getFulfilmentCode());
@@ -149,6 +140,11 @@ public class SPGFulfilmentRequestProcessor implements SPGOutcomeServiceProcessor
       root.put("individualCaseId", newCaseId);
     } else {
       root.put("householdIndicator", 1);
+      if (caseId.equals("N/A")) {
+        root.put("generatedCaseId", newCaseId);
+      } else {
+        root.put("generatedCaseId", caseId);
+      }
     }
     return TemplateCreator.createOutcomeMessage(FULFILMENT_REQUESTED, root, spg);
   }

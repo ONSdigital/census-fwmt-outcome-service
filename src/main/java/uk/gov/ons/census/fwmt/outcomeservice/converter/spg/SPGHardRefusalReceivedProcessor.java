@@ -33,7 +33,7 @@ public class SPGHardRefusalReceivedProcessor implements SPGOutcomeServiceProcess
     String eventDateTime = spgOutcome.getEventDate().toString();
     Map<String, Object> root = new HashMap<>();
     root.put("spgOutcome", spgOutcome);
-    root.put("generatedUuid", "caseId");
+    root.put("generatedUuid", spgOutcome.getCaseId());
     root.put("eventDate", eventDateTime + "Z");
     root.put("agentId", spgOutcome.getOfficerId());
     root.put("refusalType", "HARD_REFUSAL");
@@ -41,7 +41,7 @@ public class SPGHardRefusalReceivedProcessor implements SPGOutcomeServiceProcess
     String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root, spg);
 
     gatewayOutcomeProducer.sendPropertyListing(outcomeEvent, String.valueOf(spgOutcome.getTransactionId()));
-    gatewayEventManager.triggerEvent("caseId", CESPG_OUTCOME_SENT,
+    gatewayEventManager.triggerEvent(String.valueOf(spgOutcome.getCaseId()), CESPG_OUTCOME_SENT,
         "type", CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT,
         "transactionId", spgOutcome.getTransactionId().toString());
   }

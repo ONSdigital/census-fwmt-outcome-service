@@ -8,7 +8,9 @@ import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.SPGOutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
+import uk.gov.ons.census.fwmt.outcomeservice.service.impl.GatewayCacheService;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
 import java.util.HashMap;
@@ -29,20 +31,33 @@ public class SPGAddressTypeChangedHHProcessor implements SPGOutcomeServiceProces
   @Autowired
   private GatewayEventManager gatewayEventManager;
 
+  @Autowired
+  private GatewayCacheService gatewayCacheService;
+
   @Override
   public void processMessageSpgOutcome(SPGOutcome spgOutcome) throws GatewayException {
-    String generatedCaseId = String.valueOf(UUID.randomUUID());
+    if (gatewayCacheService.getById(String.valueOf(spgOutcome.getCaseId())) == null) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Case does not exist in cache: {}",
+          spgOutcome.getCaseId());
+    }
+
+    gatewayCacheService.save(GatewayCache.builder()
+            .caseId(String.valueOf(spgOutcome.getCaseId()))
+            .accessInfo(spgOutcome.getAccessInfo())
+            .careCodes(spgOutcome.getCareCodes().toString())
+            .build());
+
     Map<String, Object> root = new HashMap<>();
     String eventDateTime = spgOutcome.getEventDate().toString();
     root.put("spgOutcome", spgOutcome);
-    root.put("generatedCaseId", generatedCaseId);
+    root.put("generatedCaseId", spgOutcome.getCaseId());
     root.put("eventDate", eventDateTime + "Z");
     root.put("secondaryOutcome", spgOutcome.getSecondaryOutcomeDescription());
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_TYPE_CHANGED_HH, root, spg);
 
     gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent, String.valueOf(spgOutcome.getTransactionId()));
-    gatewayEventManager.triggerEvent(generatedCaseId, CESPG_OUTCOME_SENT, "type",
+    gatewayEventManager.triggerEvent(String.valueOf(spgOutcome.getCaseId()), CESPG_OUTCOME_SENT, "type",
         CESPG_ADDRESS_TYPE_CHANGED_OUTCOME_SENT, "transactionId", spgOutcome.getTransactionId().toString());
   }
 

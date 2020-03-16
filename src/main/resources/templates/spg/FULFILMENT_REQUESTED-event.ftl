@@ -1,6 +1,6 @@
 "fulfilmentRequest" : {
 "fulfilmentCode": "${productCodeLookup}",
-"caseId": "${householdOutcome.caseId}",
+"caseId": "${generatedCaseId}",
 "address": {
 },
 "contact": {

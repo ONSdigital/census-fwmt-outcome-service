@@ -8,6 +8,7 @@ import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.SPGOutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.service.impl.GatewayCacheService;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
@@ -34,8 +35,21 @@ public class SPGAddressTypeChangedCEESTProcessor implements SPGOutcomeServicePro
 
   @Override
   public void processMessageSpgOutcome(SPGOutcome spgOutcome) throws GatewayException {
-    // TODO : the case should exist in the Gateway Cache (an error case if not):
-    // TODO : cache any Care Codes (CE Details) and Access Information
+    if (gatewayCacheService.getById(String.valueOf(spgOutcome.getCaseId())) == null) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Case does not exist in cache: {}",
+          spgOutcome.getCaseId());
+    }
+
+    gatewayCacheService.save(GatewayCache.builder()
+        .caseId(String.valueOf(spgOutcome.getCaseId()))
+        .accessInfo(spgOutcome.getAccessInfo())
+        .careCodes(spgOutcome.getCareCodes().toString())
+        .managerTitle(spgOutcome.getCeDetails().getManagerTitle())
+        .managerFirstname(spgOutcome.getCeDetails().getManagerForename())
+        .managerSurname(spgOutcome.getCeDetails().getManagerSurname())
+        .contactPhoneNumber(spgOutcome.getCeDetails().getContactPhone())
+        .build());
+
     Map<String, Object> root = new HashMap<>();
     String eventDateTime = spgOutcome.getEventDate().toString();
     root.put("spgOutcome", spgOutcome);
