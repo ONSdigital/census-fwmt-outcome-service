@@ -38,7 +38,6 @@ public class RefusalReceivedProcessorHH implements HHOutcomeServiceProcessor {
 
   @Override
   public void processMessage(HouseholdOutcome householdOutcome) throws GatewayException {
-    HouseholdSecondaryOutcomeMap householdSecondaryOutcomeMap = new HouseholdSecondaryOutcomeMap();
     Map<String, Object> root = new HashMap<>();
     String eventDateTime = householdOutcome.getEventDate().toString();
 

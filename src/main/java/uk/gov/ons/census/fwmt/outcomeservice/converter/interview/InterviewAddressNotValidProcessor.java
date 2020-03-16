@@ -36,7 +36,6 @@ public class InterviewAddressNotValidProcessor implements InterviewOutcomeServic
 
   @Override
   public void processMessage(CCSInterviewOutcome ccsIOutcome) throws GatewayException {
-    InterviewSecondaryOutcomeMap interviewSecondaryOutcomeMap = new InterviewSecondaryOutcomeMap();
     String eventDateTime = ccsIOutcome.getEventDate().toString();
     Map<String, Object> root = new HashMap<>();
     root.put("ccsInterviewOutcome", ccsIOutcome);

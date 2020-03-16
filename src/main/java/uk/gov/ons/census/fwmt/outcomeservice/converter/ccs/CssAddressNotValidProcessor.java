@@ -40,7 +40,6 @@ public class CssAddressNotValidProcessor implements CcsOutcomeServiceProcessor {
   public void processMessage(CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException {
     UUID newRandomUUID = UUID.randomUUID();
 
-    CcsSecondaryOutcomeMap ccsSecondaryOutcomeMap = new CcsSecondaryOutcomeMap();
     String eventDateTime = ccsPLOutcome.getEventDate().toString();
     Map<String, Object> root = new HashMap<>();
     root.put("generatedUuid", newRandomUUID);

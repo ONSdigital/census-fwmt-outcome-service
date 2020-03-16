@@ -49,7 +49,6 @@ public class CcsRefusalReceivedProcessor implements CcsOutcomeServiceProcessor {
       jobCacheManager.cacheCCSOutcome(String.valueOf(newRandomUUID), ccsPLOutcome);
     }
 
-    CcsSecondaryOutcomeMap ccsSecondaryOutcomeMap = new CcsSecondaryOutcomeMap();
     String eventDateTime = ccsPLOutcome.getEventDate().toString();
     Map<String, Object> root = new HashMap<>();
     root.put("generatedUuid", newRandomUUID);

@@ -36,7 +36,7 @@ public class SPGAddressTypeChangedHHProcessor implements SPGOutcomeServiceProces
 
   @Override
   public void processMessageSpgOutcome(SPGOutcome spgOutcome) throws GatewayException {
-    if (gatewayCacheService.getById(String.valueOf(spgOutcome.getCaseId())) == null) {
+    if (!gatewayCacheService.getById(String.valueOf(spgOutcome.getCaseId())).existsInFwmt) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Case does not exist in cache: {}",
           spgOutcome.getCaseId());
     }
