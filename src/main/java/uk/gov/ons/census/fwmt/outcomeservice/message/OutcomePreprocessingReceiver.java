@@ -1,48 +1,42 @@
 package uk.gov.ons.census.fwmt.outcomeservice.message;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Component;
+import uk.gov.ons.census.fwmt.common.data.spg.NewStandaloneAddress;
+import uk.gov.ons.census.fwmt.common.data.spg.NewUnitAddress;
+import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.SPGOutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.spg.SPGOutcomeLookup;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
+import java.util.Map;
 
 @Slf4j
 @Component
 public class OutcomePreprocessingReceiver {
 
   @Autowired
-  private OutcomeService outcomeService;
+  private Map<String, SPGOutcomeServiceProcessor> spgOutcomeServiceProcessors;
 
-  @Autowired
-  private ObjectMapper jsonObjectMapper;
-
-  public void receiveMessage(GenericMessage spgOutcomeString) throws GatewayException {
-    log.info("Received a message in Outcome queue");
-    processStoredMessage(spgOutcomeString);
+  public void receiveSpgOutcome(SPGOutcome spgOutcome) throws GatewayException {
+    String[] operationsList = SPGOutcomeLookup.getLookup(spgOutcome.getOutcomeCode());
+    for (String operation : operationsList) {
+      spgOutcomeServiceProcessors.get(operation).processMessageSpgOutcome(spgOutcome);
+    }
   }
 
-  private void processStoredMessage(GenericMessage actualMessage) throws GatewayException {
-    JsonNode actualMessageRootNode;
-    JsonNode outcomeCode;
-    String processedMessage;
-
-    byte[] genericMessage = (byte[]) actualMessage.getPayload();
-    processedMessage = new String(genericMessage, Charset.defaultCharset());
-
-    try {
-      actualMessageRootNode = jsonObjectMapper.readTree(processedMessage);
-    } catch (IOException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Cannot process message JSON");
+  public void receiveNewUnitAddress(NewUnitAddress newUnitAddress) throws GatewayException {
+    String[] operationsList = SPGOutcomeLookup.getLookup(newUnitAddress.getOutcomeCode());
+    for (String operation : operationsList) {
+      spgOutcomeServiceProcessors.get(operation).processMessageNewUnitAddress(newUnitAddress);
     }
+  }
 
-    outcomeCode = actualMessageRootNode.path("outcomeCode");
-
-    outcomeService.createSpgOutcomeEvent(actualMessage, outcomeCode.asText());
+  public void receiveStandaloneAddress(NewStandaloneAddress standaloneAddress) throws GatewayException {
+    String[] operationsList = SPGOutcomeLookup.getLookup(standaloneAddress.getOutcomeCode());
+    for (String operation : operationsList) {
+      spgOutcomeServiceProcessors.get(operation).processMessageNewStandaloneAddress(standaloneAddress);
+    }
   }
 }

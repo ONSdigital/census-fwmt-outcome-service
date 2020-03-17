@@ -83,41 +83,7 @@ public class OutcomeServiceImpl implements OutcomeService {
   }
 
   @Override
-  public void createSpgOutcomeEvent(GenericMessage receivedMessage, String outcomeCode) throws GatewayException {
-    String[] operationsList = SPGOutcomeLookup.getLookup(outcomeCode);
-    String outcomeSurveyType;
-    String processedMessage;
+  public void createSpgOutcomeEvent(GenericMessage spgOutcome, String outcomeCode) throws GatewayException {
 
-    byte[] genericMessage = (byte[]) receivedMessage.getPayload();
-    processedMessage = new String(genericMessage, Charset.defaultCharset());
-
-    try {
-      outcomeSurveyType = receivedMessage.getHeaders().get("__OutcomeType__").toString();
-    } catch (NullPointerException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "__OutcomeType__ cannot be blankl");
-    }
-
-    switch (outcomeSurveyType) {
-    case "SPG_OUTCOME":
-      SPGOutcome spgOutcome = convertMessageToDTO(SPGOutcome.class, processedMessage);
-      for (String operation : operationsList) {
-        spgOutcomeServiceProcessors.get(operation).processMessageSpgOutcome(spgOutcome);
-      }
-      break;
-    case "NEW_UNIT_ADDRESS":
-      NewUnitAddress newUnitAddress = convertMessageToDTO(NewUnitAddress.class, processedMessage);
-      for (String operation : operationsList) {
-        spgOutcomeServiceProcessors.get(operation).processMessageNewUnitAddress(newUnitAddress);
-      }
-      break;
-    case "NEW_STANDALONE_ADDRESS":
-      NewStandaloneAddress newStandaloneAddress = convertMessageToDTO(NewStandaloneAddress.class, processedMessage);
-      for (String operation : operationsList) {
-        spgOutcomeServiceProcessors.get(operation).processMessageNewStandaloneAddress(newStandaloneAddress);
-      }
-      break;
-    default:
-      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Cannot convert to object");
-    }
   }
 }

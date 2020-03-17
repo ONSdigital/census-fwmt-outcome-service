@@ -22,6 +22,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.interceptor.RetryOperationsInterceptor;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import uk.gov.ons.census.fwmt.common.data.spg.NewStandaloneAddress;
+import uk.gov.ons.census.fwmt.common.data.spg.NewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
 import uk.gov.ons.census.fwmt.outcomeservice.message.OutcomePreprocessingReceiver;
 
@@ -79,8 +83,12 @@ public class OutcomePreprocessingQueueConfig {
 
   //Listener Adapter
   @Bean
-  public MessageListenerAdapter outcomePreprocessingListenerAdapter(OutcomePreprocessingReceiver receiver) {
-    return new MessageListenerAdapter(receiver, "receiveMessage");
+  @Transactional(propagation = Propagation.NEVER)
+  public MessageListenerAdapter outcomePreprocessingListenerAdapter(OutcomePreprocessingReceiver receiver,
+      @Qualifier("jsonMessageConverter") MessageConverter mc) {
+    MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter(receiver, "receiveMessage");
+    messageListenerAdapter.setMessageConverter(mc);
+    return messageListenerAdapter;
   }
 
   //Message Listener
@@ -104,10 +112,12 @@ public class OutcomePreprocessingQueueConfig {
     DefaultClassMapper classMapper = new DefaultClassMapper();
     Map<String, Class<?>> idClassMapping = new HashMap<>();
     idClassMapping.put("uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome", SPGOutcome.class);
+    idClassMapping.put("uk.gov.ons.census.fwmt.common.data.spg.NewUnitAddress", NewUnitAddress.class);
+    idClassMapping.put("uk.gov.ons.census.fwmt.common.data.spg.NewStandaloneAddress", NewStandaloneAddress.class);
     classMapper.setIdClassMapping(idClassMapping);
     return classMapper;
   }
-
+  
   @Bean
   public MessageConverter jsonMessageConverter() {
     final ObjectMapper objectMapper = new ObjectMapper();

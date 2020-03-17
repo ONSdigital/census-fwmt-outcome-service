@@ -13,6 +13,7 @@ import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.REFUSAL_RECEIVED;
@@ -48,9 +49,10 @@ public class SPGExtraordinaryRefusalReceivedProcessor implements SPGOutcomeServi
   @Override
   public void processMessageNewUnitAddress(NewUnitAddress newUnitAddress) throws GatewayException {
     String eventDateTime = newUnitAddress.getEventDate().toString();
+    String newCaseId = String.valueOf(UUID.randomUUID());
     Map<String, Object> root = new HashMap<>();
     root.put("spgOutcome", newUnitAddress);
-    root.put("generatedUuid", "caseId");
+    root.put("generatedUuid", newCaseId);
     root.put("eventDate", eventDateTime + "Z");
     root.put("agentId", newUnitAddress.getOfficerId());
     root.put("refusalType", "EXTRAORDINARY_REFUSAL");
@@ -66,9 +68,10 @@ public class SPGExtraordinaryRefusalReceivedProcessor implements SPGOutcomeServi
   @Override
   public void processMessageNewStandaloneAddress(NewStandaloneAddress newStandaloneAddress) throws GatewayException {
     String eventDateTime = newStandaloneAddress.getEventDate().toString();
+    String newCaseId = String.valueOf(UUID.randomUUID());
     Map<String, Object> root = new HashMap<>();
     root.put("spgOutcome", newStandaloneAddress);
-    root.put("generatedUuid", "caseId");
+    root.put("generatedUuid", newCaseId);
     root.put("eventDate", eventDateTime + "Z");
     root.put("agentId", newStandaloneAddress.getOfficerId());
     root.put("refusalType", "EXTRAORDINARY_REFUSAL");
