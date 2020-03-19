@@ -1,22 +1,12 @@
 package uk.gov.ons.census.fwmt.outcomeservice.converter.spg;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import uk.gov.ons.census.fwmt.common.data.spg.FulfilmentRequest;
-import uk.gov.ons.census.fwmt.common.data.spg.NewStandaloneAddress;
-import uk.gov.ons.census.fwmt.common.data.spg.NewUnitAddress;
-import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
-import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.SPGOutcomeServiceProcessor;
-import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
-import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
-import uk.gov.ons.ctp.common.error.CTPException;
-import uk.gov.ons.ctp.integration.common.product.ProductReference;
-import uk.gov.ons.ctp.integration.common.product.model.Product;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_OUTCOME_SENT;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.FAILED_FULFILMENT_REQUEST_IS_NULL;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.FULFILMENT_REQUESTED;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
+import static uk.gov.ons.ctp.integration.common.product.model.Product.RequestChannel.FIELD;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -24,12 +14,26 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_OUTCOME_SENT;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.FAILED_FULFILMENT_REQUEST_IS_NULL;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.FULFILMENT_REQUESTED;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
-import static uk.gov.ons.ctp.integration.common.product.model.Product.RequestChannel.FIELD;
+import javax.annotation.Nonnull;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import lombok.Builder;
+import lombok.extern.slf4j.Slf4j;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
+import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.SPGOutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
+import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache.GatewayCacheBuilder;
+import uk.gov.ons.census.fwmt.outcomeservice.dto.FulfilmentRequestDTO;
+import uk.gov.ons.census.fwmt.outcomeservice.dto.SPGOutcomeSuperSetDTO;
+import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
+import uk.gov.ons.census.fwmt.outcomeservice.service.impl.GatewayCacheService;
+import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
+import uk.gov.ons.ctp.common.error.CTPException;
+import uk.gov.ons.ctp.integration.common.product.ProductReference;
+import uk.gov.ons.ctp.integration.common.product.model.Product;
 
 @Slf4j
 @Component("FULFILMENT_REQUESTED")
@@ -44,113 +48,56 @@ public class SPGFulfilmentRequestProcessor implements SPGOutcomeServiceProcessor
   @Autowired
   private GatewayEventManager gatewayEventManager;
 
+  @Autowired
+  private GatewayCacheService gatewayCacheService;
+
   @Override
-  public void processMessageSpgOutcome(SPGOutcome spgOutcome) throws GatewayException {
-    if (spgOutcome.getFulfillmentRequests() == null) {
-      gatewayEventManager
-          .triggerErrorEvent(this.getClass(), (Exception) null, "Fulfilment Request is null",
-              FAILED_FULFILMENT_REQUEST_IS_NULL,
-              "Primary Outcome", spgOutcome.getPrimaryOutcomeDescription(), "Secondary Outcome",
-              spgOutcome.getSecondaryOutcomeDescription());
-      return;
+  public UUID process(SPGOutcomeSuperSetDTO outcome, UUID caseIdHolder) throws GatewayException {
+    if (outcome.getFulfillmentRequests() == null) {
+      return caseIdHolder;
     }
-    for (FulfilmentRequest fulfilmentRequest : spgOutcome.getFulfillmentRequests()) {
+    for (FulfilmentRequestDTO fulfilmentRequest : outcome.getFulfillmentRequests()) {
       if (!isQuestionnaireLinked(fulfilmentRequest)) {
-        String eventDateTime = spgOutcome.getEventDate().toString();
+
+        String eventDateTime = outcome.getEventDate().toString();
         Map<String, Object> root = new HashMap<>();
-        root.put("spgOutcome", spgOutcome);
+        root.put("spgOutcome", outcome);
         root.put("eventDate", eventDateTime + "Z");
         String outcomeEvent = createQuestionnaireRequiredByPostEvent(root, fulfilmentRequest,
-            String.valueOf(spgOutcome.getCaseId()));
+            String.valueOf(caseIdHolder));
 
-        gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(spgOutcome.getTransactionId()));
-        gatewayEventManager.triggerEvent(String.valueOf(spgOutcome.getCaseId()), CESPG_OUTCOME_SENT, "type",
+        gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(outcome.getTransactionId()));
+        gatewayEventManager.triggerEvent(String.valueOf(caseIdHolder), CESPG_OUTCOME_SENT, "type",
             CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId",
-            spgOutcome.getTransactionId().toString());
+            outcome.getTransactionId().toString());
       }
     }
+    return caseIdHolder;
   }
 
-  @Override
-  public void processMessageNewUnitAddress(NewUnitAddress newUnitAddress) throws GatewayException {
-    if (newUnitAddress.getFulfillmentRequests() == null) {
-      gatewayEventManager
-          .triggerErrorEvent(this.getClass(), (Exception) null, "Fulfilment Request is null",
-              FAILED_FULFILMENT_REQUEST_IS_NULL,
-              "Primary Outcome", newUnitAddress.getPrimaryOutcomeDescription(),
-              "Secondary Outcome", newUnitAddress.getSecondaryOutcomeDescription());
-      return;
-    }
-    for (FulfilmentRequest fulfilmentRequest : newUnitAddress.getFulfillmentRequests()) {
-      if (!isQuestionnaireLinked(fulfilmentRequest)) {
-        String eventDateTime = newUnitAddress.getEventDate().toString();
-        Map<String, Object> root = new HashMap<>();
-        root.put("spgOutcome", newUnitAddress);
-        root.put("eventDate", eventDateTime + "Z");
-        String outcomeEvent = createQuestionnaireRequiredByPostEvent(root, fulfilmentRequest, "N/A");
-
-        gatewayOutcomeProducer.sendFulfilmentRequest(outcomeEvent, String.valueOf(newUnitAddress.getTransactionId()));
-        // TODO : what to set as case id?
-        gatewayEventManager.triggerEvent(String.valueOf(newUnitAddress.getCaseId()), CESPG_OUTCOME_SENT, "type",
-            CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId",
-            newUnitAddress.getTransactionId().toString());
-      }
-    }
-  }
-
-  @Override
-  public void processMessageNewStandaloneAddress(NewStandaloneAddress newStandaloneAddress) throws GatewayException {
-    if (newStandaloneAddress.getFulfillmentRequests() == null) {
-      gatewayEventManager
-          .triggerErrorEvent(this.getClass(), (Exception) null, "Fulfilment Request is null",
-              FAILED_FULFILMENT_REQUEST_IS_NULL,
-              "Primary Outcome", newStandaloneAddress.getPrimaryOutcomeDescription(), "Secondary Outcome",
-              newStandaloneAddress.getSecondaryOutcomeDescription());
-      return;
-    }
-    for (FulfilmentRequest fulfilmentRequest : newStandaloneAddress.getFulfillmentRequests()) {
-      if (!isQuestionnaireLinked(fulfilmentRequest)) {
-        String eventDateTime = newStandaloneAddress.getEventDate().toString();
-        Map<String, Object> root = new HashMap<>();
-        root.put("spgOutcome", newStandaloneAddress);
-        root.put("eventDate", eventDateTime + "Z");
-        String outcomeEvent = createQuestionnaireRequiredByPostEvent(root, fulfilmentRequest, "N/A");
-
-        gatewayOutcomeProducer
-            .sendFulfilmentRequest(outcomeEvent, String.valueOf(newStandaloneAddress.getTransactionId()));
-        gatewayEventManager.triggerEvent(String.valueOf(newStandaloneAddress.getCaseId()), CESPG_OUTCOME_SENT,
-            "type", CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT,
-            "transactionId", newStandaloneAddress.getTransactionId().toString());
-      }
-    }
-  }
-
-  private String createQuestionnaireRequiredByPostEvent(Map<String, Object> root, FulfilmentRequest fulfilmentRequest,
+  private String createQuestionnaireRequiredByPostEvent(Map<String, Object> root, FulfilmentRequestDTO fulfilmentRequest,
       String caseId) {
-    String newCaseId = String.valueOf(UUID.randomUUID());
     Product product = getProductFromQuestionnaireType(fulfilmentRequest);
-    root.put("productCodeLookup", product.getFulfilmentCode());
-    root.put("title", fulfilmentRequest.getRequesterTitle());
-    root.put("forename", fulfilmentRequest.getRequesterForename());
-    root.put("surname", fulfilmentRequest.getRequesterSurname());
-    root.put("telNo", fulfilmentRequest.getRequesterPhone());
+    root.put("packcode", product.getFulfilmentCode());
+    root.put("requesterTitle", fulfilmentRequest.getRequesterTitle());
+    root.put("requesterForename", fulfilmentRequest.getRequesterForename());
+    root.put("requesterSurname", fulfilmentRequest.getRequesterSurname());
+    root.put("requesterPhone", fulfilmentRequest.getRequesterPhone());
+    root.put("caseId", caseId);
+    cacheData(caseId);
 
     if (product.getIndividual()) {
-      root.put("householdIndicator", 0);
-      root.put("individualCaseId", newCaseId);
-    } else {
+      String individualCaseId = String.valueOf(UUID.randomUUID());
       root.put("householdIndicator", 1);
-      if (caseId.equals("N/A")) {
-        root.put("generatedCaseId", newCaseId);
-      } else {
-        root.put("generatedCaseId", caseId);
-      }
+      root.put("individualCaseId", individualCaseId);
+    } else {
+      root.put("householdIndicator", 0);
     }
     return TemplateCreator.createOutcomeMessage(FULFILMENT_REQUESTED, root, spg);
   }
 
   @Nonnull
-  private Product getProductFromQuestionnaireType(FulfilmentRequest fulfilmentRequest) {
+  private Product getProductFromQuestionnaireType(FulfilmentRequestDTO fulfilmentRequest) {
     Product product = new Product();
     List<Product.RequestChannel> requestChannels = Collections.singletonList(FIELD);
 
@@ -166,7 +113,20 @@ public class SPGFulfilmentRequestProcessor implements SPGOutcomeServiceProcessor
     return Objects.requireNonNull(productList).get(0);
   }
 
-  private boolean isQuestionnaireLinked(FulfilmentRequest fulfilmentRequest) {
+  private boolean isQuestionnaireLinked(FulfilmentRequestDTO fulfilmentRequest) {
     return (fulfilmentRequest.getQuestionnaireID() != null);
   }
+
+  private void cacheData(String caseId) {
+    GatewayCache cache = gatewayCacheService.getById(String.valueOf(caseId));
+    GatewayCacheBuilder builder = null;
+    if (cache == null)
+      builder = GatewayCache.builder();
+    else
+      builder = cache.toBuilder();
+
+    gatewayCacheService.save(builder
+        .caseId(caseId).delivered(true).build());
+  }
+
 }

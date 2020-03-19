@@ -101,6 +101,9 @@ dependencies {
 	compile('org.springframework:spring-aop')
 
 	compile('org.aspectj:aspectjweaver')
+    compile('ma.glasnost.orika:orika-core:1.5.4')
+    runtimeOnly 'org.postgresql:postgresql'
+
 
 	compile('org.springframework.boot:spring-boot-starter')
 	compile('org.springframework.boot:spring-boot-starter-amqp')

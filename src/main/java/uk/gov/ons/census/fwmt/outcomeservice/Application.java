@@ -1,23 +1,16 @@
 package uk.gov.ons.census.fwmt.outcomeservice;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.retry.annotation.EnableRetry;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.spg.SPGOutcomeLookup;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.spg.SPGReasonCodeLookup;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 @SpringBootApplication
 @EnableSwagger2
@@ -30,36 +23,6 @@ public class Application {
 
   public static void main(String[] args) {
     SpringApplication.run(Application.class, args);
-  }
-
-  @Bean
-  SPGOutcomeLookup createSPGOutcomeLookup() throws GatewayException {
-    SPGOutcomeLookup lookupMap = new SPGOutcomeLookup();
-    String line;
-    try (BufferedReader in = new BufferedReader(new FileReader("outcomeCodeLookup.txt", UTF_8))) {
-      if ((line = in.readLine()) != null) {
-        String[] lookup = line.split("\t");
-        lookupMap.add(lookup[0], lookup[1].split(","));
-      }
-    } catch (IOException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Cannot process outcome lookup");
-    }
-    return lookupMap;
-  }
-
-  @Bean
-  SPGReasonCodeLookup createSPGReasonCodeLookup() throws GatewayException {
-    SPGReasonCodeLookup lookupMap = new SPGReasonCodeLookup();
-    String line;
-    try (BufferedReader in = new BufferedReader(new FileReader("reasonCodeLookup.txt", UTF_8))) {
-      if ((line = in.readLine()) != null) {
-        String[] lookup = line.split("\t");
-        lookupMap.add(lookup[0], lookup[1]);
-      }
-    } catch (IOException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Cannot process reason code lookup");
-    }
-    return lookupMap;
   }
 
   @Bean

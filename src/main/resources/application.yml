@@ -11,7 +11,15 @@ spring:
     user:
       name: "user"
       password: "password"
+  datasource:
+    url: jdbc:postgresql://localhost/postgres?currentSchema=fwmtg
+    driver-class-name: org.postgresql.Driver
+    continue-on-error: false
+    username: postgres
+    password: postgres
+    initialization-mode: always      
 
+    
 management:
   # Place /info and /health in the root
   endpoints.web.base-path: ''
@@ -47,3 +55,11 @@ redis:
   port: 6379
   password: "password"
   database: 1
+
+outcomeservice:
+  outcomeCodeLookup:
+    path: classpath:/outcomeCodeLookup.txt
+  reasonCodeLookup:
+    path: classpath:/reasonCodeLookup.txt
+    
+    

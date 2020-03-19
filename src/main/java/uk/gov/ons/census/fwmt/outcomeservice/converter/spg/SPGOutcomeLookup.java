@@ -8,9 +8,9 @@ import java.util.Map;
 @Component
 public class SPGOutcomeLookup {
 
-  private static final Map<String, String[]> spgOutcomeCodeMap = new HashMap<>();
+  private final Map<String, String[]> spgOutcomeCodeMap = new HashMap<>();
 
-  public static String[] getLookup(String outcomeCode) {
+  public String[] getLookup(String outcomeCode) {
     return spgOutcomeCodeMap.get(outcomeCode);
   }
 

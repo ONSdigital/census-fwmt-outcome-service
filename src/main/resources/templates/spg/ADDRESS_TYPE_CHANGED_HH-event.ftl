@@ -1,6 +1,6 @@
 "addressTypeChange" : {
 "collectionCase": {
-"id": "${generatedCaseId}",
+"id": "${caseId}",
 "address": {
 "addressType": "HH",
 }

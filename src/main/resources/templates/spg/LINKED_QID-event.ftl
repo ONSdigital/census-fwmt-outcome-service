@@ -1,4 +1,4 @@
 "uac" : {
 "questionnaireId": "${questionnaireId}",
-"caseId": "${generatedCaseId}"
+"caseId": "${caseId}"
 }
