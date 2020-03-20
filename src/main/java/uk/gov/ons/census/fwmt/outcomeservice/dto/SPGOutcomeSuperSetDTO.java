@@ -1,21 +1,23 @@
 package uk.gov.ons.census.fwmt.outcomeservice.dto;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import uk.gov.ons.census.fwmt.common.data.spg.Address;
 
 @Builder
-@Getter
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class SPGOutcomeSuperSetDTO {
   private UUID caseId;
   private UUID transactionId;
-  private LocalDateTime eventDate;
+  private Date eventDate;
   private String officerId;
   private String coordinatorId;
   private String primaryOutcomeDescription;

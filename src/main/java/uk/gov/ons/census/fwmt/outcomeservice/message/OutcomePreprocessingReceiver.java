@@ -22,17 +22,17 @@ public class OutcomePreprocessingReceiver {
   @Autowired
   private MapperFacade mapperFacade;
 
-  public void receiveMessage(SPGOutcome spgOutcome) throws GatewayException {
+  public void processMessage(SPGOutcome spgOutcome) throws GatewayException {
     SPGOutcomeSuperSetDTO outcomeDTO = mapperFacade.map(spgOutcome, SPGOutcomeSuperSetDTO.class);
     delegate.createSpgOutcomeEvent(outcomeDTO);
   }
 
-  public void receiveMessage(NewUnitAddress newUnitAddress) throws GatewayException {
+  public void processMessage(NewUnitAddress newUnitAddress) throws GatewayException {
     SPGOutcomeSuperSetDTO outcomeDTO = mapperFacade.map(newUnitAddress, SPGOutcomeSuperSetDTO.class);
     delegate.createSpgOutcomeEvent(outcomeDTO);
   }
 
-  public void receiveMessage(NewStandaloneAddress standaloneAddress) throws GatewayException {
+  public void processMessage(NewStandaloneAddress standaloneAddress) throws GatewayException {
     SPGOutcomeSuperSetDTO outcomeDTO = mapperFacade.map(standaloneAddress, SPGOutcomeSuperSetDTO.class);
     delegate.createSpgOutcomeEvent(outcomeDTO);
   }

@@ -42,6 +42,7 @@ public class OutcomeServiceImpl implements OutcomeService {
   @Override
   public void createSpgOutcomeEvent(SPGOutcomeSuperSetDTO outcome) throws GatewayException {
     String[] operationsList = spgOutcomeLookup.getLookup(outcome.getOutcomeCode());
+    if (operationsList==null) return;
     UUID caseIdHolder = null;
     for (String operation : operationsList) {
       caseIdHolder = spgOutcomeServiceProcessors.get(operation).process(outcome, caseIdHolder);

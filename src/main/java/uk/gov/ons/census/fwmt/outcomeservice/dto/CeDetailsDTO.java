@@ -4,11 +4,13 @@ import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Builder
-@Getter
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class CeDetailsDTO {
   private String establishmentName;
   private String establishmentType;

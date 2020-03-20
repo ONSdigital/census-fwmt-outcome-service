@@ -1,11 +1,8 @@
 package uk.gov.ons.census.fwmt.outcomeservice.converter.spg;
 
-import org.springframework.stereotype.Component;
-
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
 public class SPGOutcomeLookup {
 
   private final Map<String, String[]> spgOutcomeCodeMap = new HashMap<>();

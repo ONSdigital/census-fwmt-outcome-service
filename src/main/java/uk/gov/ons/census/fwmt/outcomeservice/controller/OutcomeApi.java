@@ -55,7 +55,7 @@ public interface OutcomeApi {
       produces = {"application/json"},
       method = RequestMethod.POST)
   ResponseEntity<Void> spgOutcomeResponse(
-      @PathVariable String caseID, @RequestBody SPGOutcome spgOutcome) throws GatewayException;
+      @PathVariable("caseID") String caseID, @RequestBody SPGOutcome spgOutcome) throws GatewayException;
 
   @ApiOperation(value = "Post a SPG survey outcome to the FWMT Gateway")
   @ApiResponses(value = {

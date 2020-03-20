@@ -1,11 +1,8 @@
 package uk.gov.ons.census.fwmt.outcomeservice.converter.spg;
 
-import org.springframework.stereotype.Component;
-
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
 public class SPGReasonCodeLookup {
 
   private final Map<String, String> spgReasonCodeMap = new HashMap<>();
