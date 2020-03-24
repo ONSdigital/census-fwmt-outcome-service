@@ -1,7 +1,7 @@
 "refusal" : {
-"type" : "${refusalType}",
-"agentId" : "${agentId}",
-"collectionCase" : {
-"id" : "${generatedUuid}"
+"type": "${refusalType}",
+"agentId": "${officerId}",
+"collectionCase": {
+"id": "${caseId}"
 }
 }

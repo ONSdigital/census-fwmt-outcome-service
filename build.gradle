@@ -86,12 +86,9 @@ dependencyManagement {
     }
 }
 
-
-
 dependencies {
-	compile('uk.gov.ons.census.fwmt:census-fwmt-canonical:1.0.17-RELEASE')
 	compile('uk.gov.ons.census.fwmt:census-fwmt-events:1.0.23-RELEASE')
-	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.1.2-RELEASE')
+	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.1.10-RELEASE')
 	compile('uk.gov.ons.ctp.integration.common:product-reference:1.0.2')
 
 	compile("javax.activation:activation:1.1.1")
@@ -104,6 +101,9 @@ dependencies {
 	compile('org.springframework:spring-aop')
 
 	compile('org.aspectj:aspectjweaver')
+    compile('ma.glasnost.orika:orika-core:1.5.4')
+    runtimeOnly 'org.postgresql:postgresql'
+
 
 	compile('org.springframework.boot:spring-boot-starter')
 	compile('org.springframework.boot:spring-boot-starter-amqp')
@@ -126,6 +126,7 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 
 	compile('org.eclipse.persistence:org.eclipse.persistence.moxy:2.5.0')
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 }
 
 artifactory {
@@ -180,6 +181,7 @@ springBoot {
         }
     }
 }
+
 publishing {
 	publications {
 		maven(MavenPublication) {

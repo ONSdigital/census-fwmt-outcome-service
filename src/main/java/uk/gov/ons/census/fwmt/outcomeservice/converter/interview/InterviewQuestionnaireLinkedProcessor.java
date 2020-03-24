@@ -1,11 +1,15 @@
 package uk.gov.ons.census.fwmt.outcomeservice.converter.interview;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CCSI_OUTCOME_SENT;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CCS_FAILED_FULFILMENT_REQUEST_INVALID;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.QUESTIONNAIRE_LINKED;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.CONTACT_MADE;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.NO_CONTACT;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.interview;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
+import uk.gov.ons.census.fwmt.common.data.ccs.FulfillmentRequest;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
+import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
+import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.InterviewOutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
+import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,16 +17,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
-import uk.gov.ons.census.fwmt.common.data.ccs.FulfillmentRequest;
-import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.InterviewOutcomeServiceProcessor;
-import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
-import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CCSI_OUTCOME_SENT;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CCS_FAILED_FULFILMENT_REQUEST_INVALID;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.QUESTIONNAIRE_LINKED;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.CONTACT_MADE;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.NO_CONTACT;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.interview;
 
 @Component
 public class InterviewQuestionnaireLinkedProcessor implements InterviewOutcomeServiceProcessor {
@@ -41,7 +41,7 @@ public class InterviewQuestionnaireLinkedProcessor implements InterviewOutcomeSe
   @Override
   public void processMessage(CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException {
     if (isQuestionnaireLinked(ccsInterviewOutcome.getFulfilmentRequests())) {
-      for (FulfillmentRequest fulfillment: ccsInterviewOutcome.getFulfilmentRequests()) {
+      for (FulfillmentRequest fulfillment : ccsInterviewOutcome.getFulfilmentRequests()) {
         String eventDateTime = ccsInterviewOutcome.getEventDate().toString();
         Map<String, Object> root = new HashMap<>();
         root.put("ccsInterviewOutcome", ccsInterviewOutcome);
@@ -50,7 +50,8 @@ public class InterviewQuestionnaireLinkedProcessor implements InterviewOutcomeSe
 
         String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, interview);
 
-        gatewayOutcomeProducer.sendCcsIntQuestionnaire(outcomeEvent, String.valueOf(ccsInterviewOutcome.getTransactionId()));
+        gatewayOutcomeProducer
+            .sendOutcome(outcomeEvent, String.valueOf(ccsInterviewOutcome.getTransactionId()), GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY);
         gatewayEventManager.triggerEvent(String.valueOf(ccsInterviewOutcome.getCaseId()), CCSI_OUTCOME_SENT,
             "type", "CCSI_QUESTIONNAIRE_LINKED_OUTCOME_SENT", "transactionId",
             ccsInterviewOutcome.getTransactionId().toString(), "Case Ref", ccsInterviewOutcome.getCaseReference());

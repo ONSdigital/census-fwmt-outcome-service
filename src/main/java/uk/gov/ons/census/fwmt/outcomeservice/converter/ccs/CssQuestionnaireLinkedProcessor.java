@@ -22,6 +22,7 @@ import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.ccs.FulfillmentRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
+import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.CcsOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
@@ -46,8 +47,8 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
   public void processMessage(CCSPropertyListingOutcome ccsPLOutcome) throws GatewayException {
     if (isQuestionnaireLinked(ccsPLOutcome.getFulfilmentRequests())) {
       int fulfillmentFound = 0;
-      for (FulfillmentRequest fulfillmentRequest: ccsPLOutcome.getFulfilmentRequests()) {
-        if(fulfillmentFound == 0) {
+      for (FulfillmentRequest fulfillmentRequest : ccsPLOutcome.getFulfilmentRequests()) {
+        if (fulfillmentFound == 0) {
           UUID newRandomUUID = UUID.randomUUID();
 
           String eventDateTime = ccsPLOutcome.getEventDate().toString();
@@ -62,15 +63,17 @@ public class CssQuestionnaireLinkedProcessor implements CcsOutcomeServiceProcess
 
           String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, ccs);
 
-          gatewayOutcomeProducer.sendPropertyListing(outcomeEvent, String.valueOf(ccsPLOutcome.getTransactionId()));
+          gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(ccsPLOutcome.getTransactionId()), GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTYLISTING_ROUTING_KEY);
           gatewayEventManager.triggerEvent(String.valueOf(newRandomUUID), CCSPL_OUTCOME_SENT,
               "type", "CCSPL_QUESTIONNAIRE_LINKED_OUTCOME_SENT", "transactionId",
               ccsPLOutcome.getTransactionId().toString());
 
         } else {
           gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "Invalid number of Fulfillment",
-              ccsPLOutcome.getPropertyListingCaseReference(), FAILED_FULFILMENT_REQUEST_ADDITIONAL_QID_IN_PROPERTY_LISTING,
-              "Primary Outcome", ccsPLOutcome.getPrimaryOutcome(), "Secondary Outcome", ccsPLOutcome.getSecondaryOutcome(),
+              ccsPLOutcome.getPropertyListingCaseReference(),
+              FAILED_FULFILMENT_REQUEST_ADDITIONAL_QID_IN_PROPERTY_LISTING,
+              "Primary Outcome", ccsPLOutcome.getPrimaryOutcome(), "Secondary Outcome",
+              ccsPLOutcome.getSecondaryOutcome(),
               "Questionnaire ID", fulfillmentRequest.getQuestionnaireID());
         }
         fulfillmentFound++;

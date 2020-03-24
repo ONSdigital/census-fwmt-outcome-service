@@ -30,6 +30,9 @@ public class GatewayEventsConfig {
 
   //SPG_OUTCOME
   public static final String CESPG_OUTCOME_SENT = "CESPG_OUTCOME_SENT";
+  public static final String CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT = "CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT";
+  public static final String CESPG_ADDRESS_TYPE_CHANGED_OUTCOME_SENT = "CESPG_ADDRESS_TYPE_CHANGED_OUTCOME_SENT";
+  public static final String RECEIVED_NO_ACTION_FROM_TM = "RECEIVED_NO_ACTION_FROM_TM";
 
   //OUTCOME_SENT_RM
   public static final String HH_OUTCOME_SENT = "HH_OUTCOME_SENT";
@@ -44,6 +47,8 @@ public class GatewayEventsConfig {
   public static final String RABBIT_QUEUE_DOWN = "RABBIT_QUEUE_DOWN";
   public static final String REDIS_SERVICE_UP = "REDIS_SERVICE_UP";
   public static final String REDIS_SERVICE_DOWN = "REDIS_SERVICE_DOWN";
+  @Value("#{'${logging.profile}' == 'CLOUD'}")
+  private boolean useJsonLogging;
 
   @Bean
   public GatewayEventManager gatewayEventManager() {
@@ -51,16 +56,14 @@ public class GatewayEventsConfig {
     gatewayEventManager.setSource(Application.APPLICATION_NAME);
     gatewayEventManager.addEventTypes(new String[] {COMET_HH_OUTCOME_RECEIVED, COMET_CCSSI_OUTCOME_RECEIVED,
         COMET_CCSPL_OUTCOME_RECEIVED, CCSPL_OUTCOME_SENT, HH_OUTCOME_SENT, CCSI_OUTCOME_SENT, RABBIT_QUEUE_UP,
-        REDIS_SERVICE_UP, CCSPL_CACHED_OUTCOME});
+        REDIS_SERVICE_UP, CCSPL_CACHED_OUTCOME, COMET_CESPG_OUTCOME_RECEIVED, COMET_CESPGUNITADDRESS_OUTCOME_RECEIVED,
+        COMET_CESPGSTANDALONE_OUTCOME_RECEIVED, CESPG_OUTCOME_SENT});
     gatewayEventManager.addErrorEventTypes(new String[] {FAILED_JSON_CONVERSION, FAILED_FULFILMENT_REQUEST_IS_NULL,
         CCS_FAILED_FULFILMENT_REQUEST_INVALID, RABBIT_QUEUE_DOWN, REDIS_SERVICE_DOWN,
-        FAILED_FULFILMENT_REQUEST_ADDITIONAL_QID_IN_PROPERTY_LISTING});
-    
+        FAILED_FULFILMENT_REQUEST_ADDITIONAL_QID_IN_PROPERTY_LISTING, RECEIVED_NO_ACTION_FROM_TM});
+
     return gatewayEventManager;
   }
-
-  @Value("#{'${logging.profile}' == 'CLOUD'}")
-  private boolean useJsonLogging;
 
   /**
    * This method needs to be called before the Gateway event Manager is used,
@@ -76,8 +79,7 @@ public class GatewayEventsConfig {
 
     if (useJsonLogging) {
       configs = LoggingConfigs.builder().customMapper(customMappers).build().useJson();
-    }
-    else {
+    } else {
       configs = LoggingConfigs.builder().customMapper(customMappers).build();
     }
     LoggingConfigs.setCurrent(configs);

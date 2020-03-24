@@ -1,4 +1,4 @@
 ,
-"refusal":{
-"type":"${refusalType}"
+"refusal": {
+"type": "${refusalType}"
 }

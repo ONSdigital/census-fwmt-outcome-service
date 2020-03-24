@@ -1,19 +1,15 @@
 package uk.gov.ons.census.fwmt.outcomeservice.message;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
-import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.outcomeservice.config.OutcomePreprocessingQueueConfig;
 
-import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
+import uk.gov.ons.census.fwmt.common.data.spg.NewStandaloneAddress;
+import uk.gov.ons.census.fwmt.common.data.spg.NewUnitAddress;
+import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
+import uk.gov.ons.census.fwmt.outcomeservice.config.OutcomePreprocessingQueueConfig;
 
 @Slf4j
 @Component
@@ -22,25 +18,23 @@ public class OutcomePreprocessingProducer {
   @Autowired
   private RabbitTemplate rabbitTemplate;
 
-  @Autowired
-  private ObjectMapper objectMapper;
+
 
   @Retryable
-  public void sendOutcomeToPreprocessingQueue(String outcomeMessage, String caseId, String outcomeType) throws GatewayException {
-    MessageProperties messageProperties = new MessageProperties();
-    messageProperties.setContentType("application/json");
-    messageProperties.setHeader("__OutcomeType__", outcomeType);
-    MessageConverter messageConverter = new Jackson2JsonMessageConverter();
-
-    log.info("Outcome message sent to pre-processing queue :{}", caseId);
-    try{
-      Message message = messageConverter.toMessage(objectMapper.readTree(outcomeMessage), messageProperties);
-
+  public void sendOutcomeToPreprocessingQueue(SPGOutcome spgOutcome) {
       rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
-              OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, message);
+          OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, spgOutcome);
+  }
 
-    } catch (IOException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Cannot process address update for transaction ID " + caseId);
-    }
+  @Retryable
+  public void sendNewUnitAddressToPreprocessingQueue(NewUnitAddress newUnitAddress) {
+    rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
+        OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, newUnitAddress);
+  }
+
+  @Retryable
+  public void sendNewStandaloneAddress(NewStandaloneAddress newStandaloneAddress) {
+    rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
+        OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, newStandaloneAddress);
   }
 }

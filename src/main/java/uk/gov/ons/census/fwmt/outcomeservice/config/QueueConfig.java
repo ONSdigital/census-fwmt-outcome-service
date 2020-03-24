@@ -10,9 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.retry.RetryOperations;
-import org.springframework.retry.interceptor.RetryInterceptorBuilder;
 import org.springframework.retry.interceptor.RetryOperationsInterceptor;
-import org.springframework.retry.interceptor.StatefulRetryOperationsInterceptor;
 import uk.gov.ons.census.fwmt.common.retry.GatewayMessageRecover;
 
 @Configuration
@@ -24,11 +22,11 @@ public class QueueConfig {
   private String virtualHost;
 
   public QueueConfig(
-          @Value("${rabbitmq.username}") String username,
-          @Value("${rabbitmq.password}") String password,
-          @Value("${rabbitmq.hostname}") String hostname,
-          @Value("${rabbitmq.port}") Integer port,
-          @Value("${rabbitmq.virtualHost}") String virtualHost) {
+      @Value("${rabbitmq.username}") String username,
+      @Value("${rabbitmq.password}") String password,
+      @Value("${rabbitmq.hostname}") String hostname,
+      @Value("${rabbitmq.port}") Integer port,
+      @Value("${rabbitmq.virtualHost}") String virtualHost) {
     this.username = username;
     this.password = password;
     this.hostname = hostname;
@@ -37,7 +35,7 @@ public class QueueConfig {
   }
 
   private static CachingConnectionFactory createConnectionFactory(int port, String hostname, String virtualHost,
-                                                                  String password, String username) {
+      String password, String username) {
     CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(hostname, port);
 
     cachingConnectionFactory.setVirtualHost(virtualHost);
@@ -50,7 +48,7 @@ public class QueueConfig {
   // Interceptor
   @Bean
   public RetryOperationsInterceptor interceptor(
-          @Qualifier("retryTemplate") RetryOperations retryOperations) {
+      @Qualifier("retryTemplate") RetryOperations retryOperations) {
     RetryOperationsInterceptor interceptor = new RetryOperationsInterceptor();
     interceptor.setRecoverer(new GatewayMessageRecover());
     interceptor.setRetryOperations(retryOperations);

@@ -8,7 +8,6 @@ import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
-import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
 import uk.gov.ons.census.fwmt.outcomeservice.config.OutcomePreprocessingQueueConfig;
 
 import java.util.Arrays;
@@ -27,14 +26,12 @@ public class RabbitQueuesHealthIndicator extends AbstractHealthIndicator {
       OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_QUEUE,
       OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_DLQ
   );
-
+  @Autowired
+  GatewayEventManager gatewayEventManager;
   @Autowired
   @Qualifier("connectionFactory")
   private ConnectionFactory connectionFactory;
   private RabbitAdmin rabbitAdmin;
-
-  @Autowired
-  GatewayEventManager gatewayEventManager;
 
   private boolean checkQueue(String queueName) {
     Properties properties = rabbitAdmin.getQueueProperties(queueName);

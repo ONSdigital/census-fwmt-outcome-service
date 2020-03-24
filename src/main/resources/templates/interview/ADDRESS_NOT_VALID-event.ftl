@@ -1,7 +1,7 @@
 "invalidAddress":{
-"collectionCase" : {
-"id":"${ccsInterviewOutcome.caseId}"
+"collectionCase": {
+"id": "${ccsInterviewOutcome.caseId}"
 },
-"reason":"${secondaryOutcome}"
+"reason": "${secondaryOutcome}"
 }
 }
