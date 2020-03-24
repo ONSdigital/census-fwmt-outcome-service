@@ -1,5 +1,6 @@
 package uk.gov.ons.census.fwmt.outcomeservice.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -31,4 +32,10 @@ public class SPGOutcomeSuperSetDTO {
   private CeDetailsDTO ceDetails;
   private UUID siteCaseId;
   private Boolean dummyInfoCollected;
+
+  public static String careCodesToText(List<CareCodeDTO> careCodes) {
+    List<String> ccs = new ArrayList<String>();
+    careCodes.stream().forEach(cc -> ccs.add(cc.getCareCode()));
+    return String.join(",", ccs);
+  }
 }

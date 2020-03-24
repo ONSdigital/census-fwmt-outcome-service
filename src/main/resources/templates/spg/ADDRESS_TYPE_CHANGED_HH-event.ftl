@@ -2,7 +2,7 @@
 "collectionCase": {
 "id": "${caseId}",
 "address": {
-"addressType": "HH",
+"addressType": "HH"
 }
 }
 }

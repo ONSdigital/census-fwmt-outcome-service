@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
+import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.SPGOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
 import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache.GatewayCacheBuilder;
@@ -37,7 +38,7 @@ public class SPGLinkedQidProcessor implements SPGOutcomeServiceProcessor {
   private GatewayCacheService gatewayCacheService;
 
   private boolean isQuestionnaireLinked(FulfilmentRequestDTO fulfilmentRequest) {
-    return (fulfilmentRequest.getQuestionnaireID() != null);
+    return (fulfilmentRequest.getQuestionnaireType() == null);
   }
 
   @Override
@@ -45,6 +46,7 @@ public class SPGLinkedQidProcessor implements SPGOutcomeServiceProcessor {
     if (outcome.getFulfillmentRequests() == null) {
        return caseIdHolder;
     }
+    UUID caseId = (outcome.getCaseId()!=null)?outcome.getCaseId():caseIdHolder;
     for (FulfilmentRequestDTO fulfilmentRequest : outcome.getFulfillmentRequests()) {
       if (isQuestionnaireLinked(fulfilmentRequest)) {
         String eventDateTime = outcome.getEventDate().toString();
@@ -54,13 +56,12 @@ public class SPGLinkedQidProcessor implements SPGOutcomeServiceProcessor {
         root.put("caseId", caseIdHolder);
         root.put("questionnaireId", fulfilmentRequest.getQuestionnaireID());
         root.put("eventDate", eventDateTime + "Z");
-        root.put("caseId", caseIdHolder);
         cacheData(caseIdHolder);
 
         String outcomeEvent = TemplateCreator.createOutcomeMessage(LINKED_QID, root, spg);
 
-        gatewayOutcomeProducer.sendQuestionnaireLinked(outcomeEvent, String.valueOf(outcome.getTransactionId()));
-        gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), CESPG_OUTCOME_SENT, "type",
+        gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()), GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY);
+        gatewayEventManager.triggerEvent(String.valueOf(caseIdHolder), CESPG_OUTCOME_SENT, "type",
             CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId", outcome.getTransactionId().toString());
       }
     }

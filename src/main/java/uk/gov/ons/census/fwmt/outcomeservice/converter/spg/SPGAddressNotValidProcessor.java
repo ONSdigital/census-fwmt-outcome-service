@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
+import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.SPGOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.SPGOutcomeSuperSetDTO;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
@@ -33,22 +34,24 @@ public class SPGAddressNotValidProcessor implements SPGOutcomeServiceProcessor {
 
   @Override
   public UUID process(SPGOutcomeSuperSetDTO outcome, UUID caseIdHolder) throws GatewayException {
+    UUID caseId = (outcome.getCaseId()!=null)?outcome.getCaseId():caseIdHolder;
+
     String reasonCode = spgReasonCodeLookup.getLookup(outcome.getOutcomeCode());
 
     String eventDateTime = outcome.getEventDate().toString();
     Map<String, Object> root = new HashMap<>();
     root.put("spgOutcome", outcome);
     root.put("reason", reasonCode);
-    root.put("caseId", outcome.getCaseId());
+    root.put("caseId", caseId);
     root.put("eventDate", eventDateTime + "Z");
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_NOT_VALID, root, spg);
 
-    gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent, String.valueOf(outcome.getTransactionId()));
+    gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()), GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
     gatewayEventManager
-        .triggerEvent(String.valueOf(outcome.getCaseId()), CESPG_OUTCOME_SENT,
+        .triggerEvent(String.valueOf(caseId), CESPG_OUTCOME_SENT,
             "type", CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT,
             "transactionId", outcome.getTransactionId().toString());
-    return outcome.getCaseId();
+    return caseId;
   }
 }

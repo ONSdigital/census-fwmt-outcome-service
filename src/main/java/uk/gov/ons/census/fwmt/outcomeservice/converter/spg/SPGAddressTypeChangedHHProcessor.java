@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
+import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.SPGOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.SPGOutcomeSuperSetDTO;
@@ -35,33 +36,34 @@ public class SPGAddressTypeChangedHHProcessor implements SPGOutcomeServiceProces
 
   @Override
   public UUID process(SPGOutcomeSuperSetDTO outcome, UUID caseIdHolder) throws GatewayException {
-    cacheData(outcome);
+    UUID caseId = (outcome.getCaseId()!=null)?outcome.getCaseId():caseIdHolder;
+    cacheData(outcome, caseId);
 
     Map<String, Object> root = new HashMap<>();
     String eventDateTime = outcome.getEventDate().toString();
     root.put("spgOutcome", outcome);
-    root.put("caseId", outcome.getCaseId());
+    root.put("caseId", caseId);
     root.put("eventDate", eventDateTime + "Z");
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_TYPE_CHANGED_HH, root, spg);
 
-    gatewayOutcomeProducer.sendAddressUpdate(outcomeEvent, String.valueOf(outcome.getTransactionId()));
-    gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), CESPG_OUTCOME_SENT, "type",
+    gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()), GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
+    gatewayEventManager.triggerEvent(String.valueOf(caseId), CESPG_OUTCOME_SENT, "type",
         CESPG_ADDRESS_TYPE_CHANGED_OUTCOME_SENT, "transactionId", outcome.getTransactionId().toString());
 
-    return outcome.getCaseId();
+    return caseId;
   }
 
-  private void cacheData(SPGOutcomeSuperSetDTO outcome) throws GatewayException {
-    GatewayCache cachedItem = gatewayCacheService.getById(String.valueOf(outcome.getCaseId()));
+  private void cacheData(SPGOutcomeSuperSetDTO outcome, UUID caseId) throws GatewayException {
+    GatewayCache cachedItem = gatewayCacheService.getById(String.valueOf(caseId));
     if (cachedItem==null) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Case does not exist in cache: {}",
-          outcome.getCaseId());
+          caseId);
     }
 
     gatewayCacheService.save(cachedItem.toBuilder()
             .accessInfo(outcome.getAccessInfo())
-            .careCodes(outcome.getCareCodes().toString())
+            .careCodes(SPGOutcomeSuperSetDTO.careCodesToText(outcome.getCareCodes()))
             .build());
   }
 }

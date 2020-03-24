@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
+import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.SPGOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.FulfilmentRequestDTO;
@@ -51,7 +52,7 @@ public class SPGNewUnitAddressLinked implements SPGOutcomeServiceProcessor {
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(NEW_UNIT_ADDRESS, root, spg);
 
-    gatewayOutcomeProducer.sendPropertyListing(outcomeEvent, String.valueOf(outcome.getTransactionId()));
+    gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()), GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTYLISTING_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(newCaseId), CESPG_OUTCOME_SENT,
         "type", CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId",
         outcome.getTransactionId().toString());
@@ -61,6 +62,7 @@ public class SPGNewUnitAddressLinked implements SPGOutcomeServiceProcessor {
 
   private boolean isDelivered(SPGOutcomeSuperSetDTO outcome) {
     List<FulfilmentRequestDTO> fulfilmentRequestList = outcome.getFulfillmentRequests();
+    if (fulfilmentRequestList==null) return false;
     boolean isDelivered = false;
     for (FulfilmentRequestDTO fulfilmentRequest : fulfilmentRequestList) {
       if (fulfilmentRequest.getQuestionnaireID() != null) {
@@ -71,15 +73,15 @@ public class SPGNewUnitAddressLinked implements SPGOutcomeServiceProcessor {
     return isDelivered;
   }
 
-  private void cacheData(SPGOutcomeSuperSetDTO outcome, UUID newRandomUUID, boolean isDelivered) throws GatewayException {
-    GatewayCache cache = gatewayCacheService.getById(String.valueOf(newRandomUUID));
-    if (cache==null) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Case does not exist in cache: {}",
-          outcome.getCaseId());
+  private void cacheData(SPGOutcomeSuperSetDTO outcome, UUID caseId, boolean isDelivered) throws GatewayException {
+    GatewayCache cache = gatewayCacheService.getById(String.valueOf(caseId));
+    if (cache!=null) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Case alreadyexist in cache: {}",
+          caseId);
     }
 
-    gatewayCacheService.save(cache.toBuilder()
-        .caseId(String.valueOf(newRandomUUID))
+    gatewayCacheService.save(GatewayCache.builder()
+        .caseId(String.valueOf(caseId))
         .delivered(isDelivered)
         .existsInFwmt(false)
         .accessInfo(outcome.getAccessInfo())

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
+import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.InterviewOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
@@ -45,7 +46,7 @@ public class InterviewRefusalReceivedProcessor implements InterviewOutcomeServic
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root, interview);
 
-    gatewayOutcomeProducer.sendRespondentRefusal(outcomeEvent, String.valueOf(ccsIOutcome.getTransactionId()));
+    gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(ccsIOutcome.getTransactionId()), GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(ccsIOutcome.getCaseId()), CCSI_OUTCOME_SENT, "type",
         "CCSI_REFUSAL_RECEIVED_OUTCOME_SENT", "transactionId", ccsIOutcome.getTransactionId().toString(), "Case Ref",
         ccsIOutcome.getCaseReference());

@@ -1,6 +1,8 @@
 package uk.gov.ons.census.fwmt.outcomeservice.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
 import uk.gov.ons.census.fwmt.outcomeservice.repository.GatewayCacheRepository;
@@ -15,6 +17,7 @@ import uk.gov.ons.census.fwmt.outcomeservice.repository.GatewayCacheRepository;
 @Service
 public class GatewayCacheService {
 
+  @Autowired
   private GatewayCacheRepository repository;
 
   public GatewayCache getById(String caseId) {

@@ -25,7 +25,7 @@
       "telNo":null
     </#if>
   }
-  <#if householdIndicator != 1>
+  <#if householdIndicator == 1>
     ,
       "individualCaseId": "${individualCaseId}"
   </#if>

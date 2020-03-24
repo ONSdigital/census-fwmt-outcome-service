@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
+import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.SPGOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.FulfilmentRequestDTO;
@@ -53,7 +54,7 @@ public class SPGNewAddressReported implements SPGOutcomeServiceProcessor {
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(NEW_ADDRESS_REPORTED, root, spg);
 
-    gatewayOutcomeProducer.sendPropertyListing(outcomeEvent, String.valueOf(outcome.getTransactionId()));
+    gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()), GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTYLISTING_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(newCaseId), CESPG_OUTCOME_SENT,
         "type", CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId",
         outcome.getTransactionId().toString());
@@ -63,17 +64,17 @@ public class SPGNewAddressReported implements SPGOutcomeServiceProcessor {
 
   private void cacheData(SPGOutcomeSuperSetDTO outcome, UUID newCaseId, boolean isDelivered) throws GatewayException {
     GatewayCache cache = gatewayCacheService.getById(String.valueOf(newCaseId));
-    if (cache==null) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Case does not exist in cache: {}",
-          outcome.getCaseId());
+    if (cache!=null) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Case alreadyexist in cache: {}",
+          newCaseId);
     }
 
-    gatewayCacheService.save(cache.toBuilder()
+    gatewayCacheService.save(GatewayCache.builder()
         .caseId(String.valueOf(newCaseId))
         .delivered(isDelivered)
         .existsInFwmt(false)
         .accessInfo(outcome.getAccessInfo())
-        .careCodes(outcome.getCareCodes().toString())
+        .careCodes(SPGOutcomeSuperSetDTO.careCodesToText(outcome.getCareCodes()))
         .build());
   }
 
