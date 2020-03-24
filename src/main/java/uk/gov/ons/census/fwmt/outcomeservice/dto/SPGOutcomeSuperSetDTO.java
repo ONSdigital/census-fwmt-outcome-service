@@ -5,16 +5,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import uk.gov.ons.census.fwmt.common.data.spg.Address;
 
-@Builder
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class SPGOutcomeSuperSetDTO {
   private UUID caseId;
   private UUID transactionId;
