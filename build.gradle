@@ -45,7 +45,7 @@ plugins {
 
 description = 'census-fwmt-outcome-service'
 group = 'uk.gov.ons.census.fwmt'
-version = '2.0.6-SNAPSHOT'
+version = '2.0.7-SNAPSHOT'
 
 mainClassName = 'uk.gov.ons.census.fwmt.outcomeservice.Application'
 
