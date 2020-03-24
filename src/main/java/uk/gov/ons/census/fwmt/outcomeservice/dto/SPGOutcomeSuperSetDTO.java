@@ -38,4 +38,12 @@ public class SPGOutcomeSuperSetDTO {
     careCodes.stream().forEach(cc -> ccs.add(cc.getCareCode()));
     return String.join(",", ccs);
   }
+
+  public Date getEventDate() {
+    return (eventDate!=null)?new Date(eventDate.getTime()):null;
+  }
+
+  public void setEventDate(Date ed) {
+    eventDate = (ed!=null)?new Date(ed.getTime()):null;
+  }
 }

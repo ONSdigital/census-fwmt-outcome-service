@@ -46,7 +46,6 @@ public class SPGLinkedQidProcessor implements SPGOutcomeServiceProcessor {
     if (outcome.getFulfillmentRequests() == null) {
        return caseIdHolder;
     }
-    UUID caseId = (outcome.getCaseId()!=null)?outcome.getCaseId():caseIdHolder;
     for (FulfilmentRequestDTO fulfilmentRequest : outcome.getFulfillmentRequests()) {
       if (isQuestionnaireLinked(fulfilmentRequest)) {
         String eventDateTime = outcome.getEventDate().toString();
