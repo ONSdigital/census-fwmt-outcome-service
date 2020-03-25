@@ -32,6 +32,7 @@ after_success:
 - |
   set -e
   if [[ "$TRAVIS_BRANCH" = "master" ]] && [[ "$TRAVIS_PULL_REQUEST" = "false" ]] && [[ $TRAVIS_COMMIT_MESSAGE != "SNAPSHOT UPDATE" ]]; then
+    echo "Currently handled by Concourse"
     # git config --global user.email "$EMAIL"
     # git config --global user.name "$UNAME"
     # git checkout master
