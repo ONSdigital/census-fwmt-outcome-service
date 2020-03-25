@@ -19,8 +19,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "gateway_cache")
 public class GatewayCache {
-
-  @Id
+@Id
   @Column(name = "case_id", unique = true, nullable = false)
   public String caseId;
 
@@ -36,18 +35,5 @@ public class GatewayCache {
 
   @Column(name = "access_info")
   public String accessInfo;
-
-//  @Column(name = "manager_title")
-//  public final String managerTitle;
-//
-//  @Column(name = "manager_firstname")
-//  public final String managerFirstname;
-//
-//  @Column(name = "manager_surname")
-//  public final String managerSurname;
-//
-//  @JsonProperty("contactPhoneNo")
-//  @Column(name = "contact_phone_number")
-//  public final String contactPhoneNumber;
 
 }

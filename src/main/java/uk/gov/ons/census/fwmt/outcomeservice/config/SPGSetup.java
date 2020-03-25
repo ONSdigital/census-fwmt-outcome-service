@@ -5,6 +5,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +30,13 @@ public class SPGSetup {
   @Value(value = "${outcomeservice.reasonCodeLookup.path}")
   private String reasonCodeLookupPath;
 
-
   @Bean
   public SPGOutcomeLookup buildSPGOutcomeLookup() throws GatewayException {
     String line;
     Resource resource = resourceLoader.getResource(outcomeCodeLookupPath);
 
     SPGOutcomeLookup spgOutcomeLookup = new SPGOutcomeLookup();
-    try (BufferedReader in = new BufferedReader(new FileReader(resource.getFile(), UTF_8))) {
+    try (BufferedReader in = new BufferedReader(new InputStreamReader(resource.getInputStream(), UTF_8))) {
       while ((line = in.readLine()) != null) {
         String[] lookup = line.split("\t");
         spgOutcomeLookup.add(lookup[0], lookup[1].split(","));
@@ -52,7 +52,7 @@ public class SPGSetup {
     String line;
     Resource resource = resourceLoader.getResource(reasonCodeLookupPath);
     SPGReasonCodeLookup spgReasonCodeLookup = new SPGReasonCodeLookup();
-    try (BufferedReader in = new BufferedReader(new FileReader(resource.getFile(), UTF_8))) {
+    try (BufferedReader in = new BufferedReader(new InputStreamReader(resource.getInputStream(), UTF_8))) {
       while ((line = in.readLine()) != null) {
         String[] lookup = line.split(",");
         spgReasonCodeLookup.add(lookup[0], lookup[1]);

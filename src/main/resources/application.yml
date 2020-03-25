@@ -14,12 +14,12 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost/postgres?currentSchema=fwmtg
     driver-class-name: org.postgresql.Driver
+    schema: classpath:/schema.sql
     continue-on-error: false
     username: postgres
     password: postgres
     initialization-mode: always      
 
-    
 management:
   # Place /info and /health in the root
   endpoints.web.base-path: ''
