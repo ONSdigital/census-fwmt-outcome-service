@@ -36,7 +36,7 @@ public class SPGSetup {
     Resource resource = resourceLoader.getResource(outcomeCodeLookupPath);
 
     SPGOutcomeLookup spgOutcomeLookup = new SPGOutcomeLookup();
-    try (BufferedReader in = new BufferedReader(new FileReader(resource.getFile(), UTF_8))) {
+    try (BufferedReader in = new BufferedReader(new InputStreamReader(resource.getInputStream(), UTF_8))) {
       while ((line = in.readLine()) != null) {
         String[] lookup = line.split("\t");
         spgOutcomeLookup.add(lookup[0], lookup[1].split(","));
