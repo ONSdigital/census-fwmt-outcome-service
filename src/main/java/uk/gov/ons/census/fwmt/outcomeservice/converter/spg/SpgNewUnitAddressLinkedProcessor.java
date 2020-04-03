@@ -13,6 +13,7 @@ import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.service.impl.GatewayCacheService;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
+import java.text.DateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,11 +28,11 @@ import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
 public class SpgNewUnitAddressLinkedProcessor implements SpgOutcomeServiceProcessor {
 
   @Autowired
+  DateFormat dateFormat;
+  @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
-
   @Autowired
   private GatewayEventManager gatewayEventManager;
-
   @Autowired
   private GatewayCacheService gatewayCacheService;
 
@@ -41,7 +42,7 @@ public class SpgNewUnitAddressLinkedProcessor implements SpgOutcomeServiceProces
     boolean isDelivered = isDelivered(outcome);
     cacheData(outcome, newCaseId, isDelivered);
 
-    String eventDateTime = outcome.getEventDate().toString();
+    String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
     root.put("spgOutcome", outcome);
     root.put("newUnitCaseId", newCaseId);

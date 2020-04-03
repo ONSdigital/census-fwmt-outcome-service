@@ -10,6 +10,7 @@ import uk.gov.ons.census.fwmt.outcomeservice.dto.SpgOutcomeSuperSetDto;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
+import java.text.DateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -23,11 +24,11 @@ import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
 public class SpgAddressNotValidProcessor implements SpgOutcomeServiceProcessor {
 
   @Autowired
+  DateFormat dateFormat;
+  @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
-
   @Autowired
   private GatewayEventManager gatewayEventManager;
-
   @Autowired
   private SpgReasonCodeLookup spgReasonCodeLookup;
 
@@ -37,7 +38,8 @@ public class SpgAddressNotValidProcessor implements SpgOutcomeServiceProcessor {
 
     String reasonCode = spgReasonCodeLookup.getLookup(outcome.getOutcomeCode());
 
-    String eventDateTime = outcome.getEventDate().toString();
+    String eventDateTime = dateFormat.format(outcome.getEventDate());
+    outcome.getEventDate();
     Map<String, Object> root = new HashMap<>();
     root.put("spgOutcome", outcome);
     root.put("reason", reasonCode);

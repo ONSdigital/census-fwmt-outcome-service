@@ -7,7 +7,7 @@ import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.common.rm.dto.FieldworkFollowup;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.SpgOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.SpgOutcomeSuperSetDto;
-import uk.gov.ons.census.fwmt.outcomeservice.service.impl.RmFieldRepublishService;
+import uk.gov.ons.census.fwmt.outcomeservice.message.RmFieldRepublishProducer;
 
 import java.util.UUID;
 
@@ -16,7 +16,7 @@ import java.util.UUID;
 public class SpgDeliveredFeedbackProcessor implements SpgOutcomeServiceProcessor {
 
   @Autowired
-  RmFieldRepublishService rmFieldRepublishService;
+  RmFieldRepublishProducer rmFieldRepublishProducer;
 
   @Override
   public UUID process(SpgOutcomeSuperSetDto outcome, UUID caseIdHolder) throws GatewayException {
@@ -28,7 +28,7 @@ public class SpgDeliveredFeedbackProcessor implements SpgOutcomeServiceProcessor
         .caseId(outcome.getCaseId().toString())
         .build();
 
-    rmFieldRepublishService.republish(fieldworkFollowup);
+    rmFieldRepublishProducer.republish(fieldworkFollowup);
 
     return null;
   }

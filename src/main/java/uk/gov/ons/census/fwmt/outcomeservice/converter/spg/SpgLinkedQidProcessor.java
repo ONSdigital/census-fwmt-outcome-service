@@ -14,6 +14,7 @@ import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.service.impl.GatewayCacheService;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
+import java.text.DateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -27,11 +28,11 @@ import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
 public class SpgLinkedQidProcessor implements SpgOutcomeServiceProcessor {
 
   @Autowired
+  DateFormat dateFormat;
+  @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
-
   @Autowired
   private GatewayEventManager gatewayEventManager;
-
   @Autowired
   private GatewayCacheService gatewayCacheService;
 
@@ -46,7 +47,7 @@ public class SpgLinkedQidProcessor implements SpgOutcomeServiceProcessor {
     }
     for (FulfilmentRequestDto fulfilmentRequest : outcome.getFulfillmentRequests()) {
       if (isQuestionnaireLinked(fulfilmentRequest)) {
-        String eventDateTime = outcome.getEventDate().toString();
+        String eventDateTime = dateFormat.format(outcome.getEventDate());
 
         Map<String, Object> root = new HashMap<>();
         root.put("spgOutcome", outcome);

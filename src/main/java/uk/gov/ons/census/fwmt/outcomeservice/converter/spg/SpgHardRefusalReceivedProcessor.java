@@ -10,6 +10,7 @@ import uk.gov.ons.census.fwmt.outcomeservice.dto.SpgOutcomeSuperSetDto;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
+import java.text.DateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -23,15 +24,16 @@ import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
 public class SpgHardRefusalReceivedProcessor implements SpgOutcomeServiceProcessor {
 
   @Autowired
+  DateFormat dateFormat;
+  @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
-
   @Autowired
   private GatewayEventManager gatewayEventManager;
 
   @Override
   public UUID process(SpgOutcomeSuperSetDto outcome, UUID caseIdHolder) throws GatewayException {
     UUID caseId = (outcome.getCaseId() != null) ? outcome.getCaseId() : caseIdHolder;
-    String eventDateTime = outcome.getEventDate().toString();
+    String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
     root.put("spgOutcome", outcome);
     root.put("refusalType", "HARD_REFUSAL");

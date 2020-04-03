@@ -12,6 +12,7 @@ import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.service.impl.GatewayCacheService;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
+import java.text.DateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -25,11 +26,11 @@ import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
 public class SpgAddressTypeChangedHhProcessor implements SpgOutcomeServiceProcessor {
 
   @Autowired
+  DateFormat dateFormat;
+  @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
-
   @Autowired
   private GatewayEventManager gatewayEventManager;
-
   @Autowired
   private GatewayCacheService gatewayCacheService;
 
@@ -39,7 +40,7 @@ public class SpgAddressTypeChangedHhProcessor implements SpgOutcomeServiceProces
     cacheData(outcome, caseId);
 
     Map<String, Object> root = new HashMap<>();
-    String eventDateTime = outcome.getEventDate().toString();
+    String eventDateTime = dateFormat.format(outcome.getEventDate());
     root.put("spgOutcome", outcome);
     root.put("caseId", caseId);
     root.put("eventDate", eventDateTime + "Z");
