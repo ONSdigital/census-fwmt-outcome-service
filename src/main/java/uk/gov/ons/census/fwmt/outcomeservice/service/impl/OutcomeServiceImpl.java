@@ -1,31 +1,30 @@
 package uk.gov.ons.census.fwmt.outcomeservice.service.impl;
 
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import lombok.extern.slf4j.Slf4j;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.CcsOutcomeServiceProcessor;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.HHOutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.HhOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.InterviewOutcomeServiceProcessor;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.SPGOutcomeServiceProcessor;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.spg.SPGOutcomeLookup;
-import uk.gov.ons.census.fwmt.outcomeservice.dto.SPGOutcomeSuperSetDTO;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.SpgOutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.spg.SpgOutcomeLookup;
+import uk.gov.ons.census.fwmt.outcomeservice.dto.SpgOutcomeSuperSetDto;
 import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
+
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Service
 public class OutcomeServiceImpl implements OutcomeService {
 
   @Autowired
-  private List<HHOutcomeServiceProcessor> householdOutcomeConverters;
+  private List<HhOutcomeServiceProcessor> householdOutcomeConverters;
 
   @Autowired
   private List<CcsOutcomeServiceProcessor> propertyListingConverters;
@@ -34,15 +33,16 @@ public class OutcomeServiceImpl implements OutcomeService {
   private List<InterviewOutcomeServiceProcessor> interviewOutcomeConverters;
 
   @Autowired
-  private Map<String, SPGOutcomeServiceProcessor> spgOutcomeServiceProcessors;
+  private Map<String, SpgOutcomeServiceProcessor> spgOutcomeServiceProcessors;
 
   @Autowired
-  private SPGOutcomeLookup spgOutcomeLookup;
+  private SpgOutcomeLookup spgOutcomeLookup;
 
   @Override
-  public void createSpgOutcomeEvent(SPGOutcomeSuperSetDTO outcome) throws GatewayException {
+  public void createSpgOutcomeEvent(SpgOutcomeSuperSetDto outcome) throws GatewayException {
     String[] operationsList = spgOutcomeLookup.getLookup(outcome.getOutcomeCode());
-    if (operationsList==null) return;
+    if (operationsList == null)
+      return;
     UUID caseIdHolder = null;
     for (String operation : operationsList) {
       caseIdHolder = spgOutcomeServiceProcessors.get(operation).process(outcome, caseIdHolder);
@@ -50,7 +50,7 @@ public class OutcomeServiceImpl implements OutcomeService {
   }
 
   public void createHouseHoldOutcomeEvent(HouseholdOutcome householdOutcome) {
-    for (HHOutcomeServiceProcessor converter : householdOutcomeConverters) {
+    for (HhOutcomeServiceProcessor converter : householdOutcomeConverters) {
       if (converter.isValid(householdOutcome)) {
         try {
           converter.processMessage(householdOutcome);
@@ -85,6 +85,5 @@ public class OutcomeServiceImpl implements OutcomeService {
       }
     }
   }
-
 
 }

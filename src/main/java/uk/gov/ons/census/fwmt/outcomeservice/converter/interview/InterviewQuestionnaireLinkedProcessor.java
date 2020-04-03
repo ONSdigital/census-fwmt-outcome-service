@@ -51,7 +51,8 @@ public class InterviewQuestionnaireLinkedProcessor implements InterviewOutcomeSe
         String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, interview);
 
         gatewayOutcomeProducer
-            .sendOutcome(outcomeEvent, String.valueOf(ccsInterviewOutcome.getTransactionId()), GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY);
+            .sendOutcome(outcomeEvent, String.valueOf(ccsInterviewOutcome.getTransactionId()),
+                GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY);
         gatewayEventManager.triggerEvent(String.valueOf(ccsInterviewOutcome.getCaseId()), CCSI_OUTCOME_SENT,
             "type", "CCSI_QUESTIONNAIRE_LINKED_OUTCOME_SENT", "transactionId",
             ccsInterviewOutcome.getTransactionId().toString(), "Case Ref", ccsInterviewOutcome.getCaseReference());

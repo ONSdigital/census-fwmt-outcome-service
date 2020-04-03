@@ -46,7 +46,8 @@ public class InterviewAddressNotValidProcessor implements InterviewOutcomeServic
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_NOT_VALID, root, interview);
 
-    gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(ccsIOutcome.getTransactionId()), GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
+    gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(ccsIOutcome.getTransactionId()),
+        GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(ccsIOutcome.getCaseId()), CCSI_OUTCOME_SENT, "type",
         "CCSI_ADDRESS_NOT_VALID_OUTCOME_SENT", "transactionId", ccsIOutcome.getTransactionId().toString(), "Case Ref",
         ccsIOutcome.getCaseReference());

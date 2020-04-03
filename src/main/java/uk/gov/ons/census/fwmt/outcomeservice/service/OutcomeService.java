@@ -4,7 +4,7 @@ import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.outcomeservice.dto.SPGOutcomeSuperSetDTO;
+import uk.gov.ons.census.fwmt.outcomeservice.dto.SpgOutcomeSuperSetDto;
 
 public interface OutcomeService {
   void createHouseHoldOutcomeEvent(HouseholdOutcome householdOutcome) throws GatewayException;
@@ -13,5 +13,5 @@ public interface OutcomeService {
 
   void createInterviewOutcomeEvent(CCSInterviewOutcome ccsInterviewOutcome);
 
-  void createSpgOutcomeEvent(SPGOutcomeSuperSetDTO outcome) throws GatewayException;
+  void createSpgOutcomeEvent(SpgOutcomeSuperSetDto outcome) throws GatewayException;
 }

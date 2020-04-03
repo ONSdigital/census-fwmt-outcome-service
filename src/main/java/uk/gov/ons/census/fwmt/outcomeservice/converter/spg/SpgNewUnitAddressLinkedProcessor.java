@@ -1,31 +1,30 @@
 package uk.gov.ons.census.fwmt.outcomeservice.converter.spg;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_OUTCOME_SENT;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.NEW_UNIT_ADDRESS;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
+import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
+import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.SpgOutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
+import uk.gov.ons.census.fwmt.outcomeservice.dto.FulfilmentRequestDto;
+import uk.gov.ons.census.fwmt.outcomeservice.dto.SpgOutcomeSuperSetDto;
+import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
+import uk.gov.ons.census.fwmt.outcomeservice.service.impl.GatewayCacheService;
+import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
-import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.SPGOutcomeServiceProcessor;
-import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
-import uk.gov.ons.census.fwmt.outcomeservice.dto.FulfilmentRequestDTO;
-import uk.gov.ons.census.fwmt.outcomeservice.dto.SPGOutcomeSuperSetDTO;
-import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
-import uk.gov.ons.census.fwmt.outcomeservice.service.impl.GatewayCacheService;
-import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_OUTCOME_SENT;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.NEW_UNIT_ADDRESS;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
 
 @Component("NEW_UNIT_ADDRESS")
-public class SPGNewUnitAddressLinked implements SPGOutcomeServiceProcessor {
+public class SpgNewUnitAddressLinkedProcessor implements SpgOutcomeServiceProcessor {
 
   @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
@@ -37,7 +36,7 @@ public class SPGNewUnitAddressLinked implements SPGOutcomeServiceProcessor {
   private GatewayCacheService gatewayCacheService;
 
   @Override
-  public UUID process(SPGOutcomeSuperSetDTO outcome, UUID caseIdHolder) throws GatewayException {
+  public UUID process(SpgOutcomeSuperSetDto outcome, UUID caseIdHolder) throws GatewayException {
     UUID newCaseId = UUID.randomUUID();
     boolean isDelivered = isDelivered(outcome);
     cacheData(outcome, newCaseId, isDelivered);
@@ -52,7 +51,8 @@ public class SPGNewUnitAddressLinked implements SPGOutcomeServiceProcessor {
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(NEW_UNIT_ADDRESS, root, spg);
 
-    gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()), GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTYLISTING_ROUTING_KEY);
+    gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
+        GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTYLISTING_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(newCaseId), CESPG_OUTCOME_SENT,
         "type", CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId",
         outcome.getTransactionId().toString());
@@ -60,11 +60,12 @@ public class SPGNewUnitAddressLinked implements SPGOutcomeServiceProcessor {
     return newCaseId;
   }
 
-  private boolean isDelivered(SPGOutcomeSuperSetDTO outcome) {
-    List<FulfilmentRequestDTO> fulfilmentRequestList = outcome.getFulfillmentRequests();
-    if (fulfilmentRequestList==null) return false;
+  private boolean isDelivered(SpgOutcomeSuperSetDto outcome) {
+    List<FulfilmentRequestDto> fulfilmentRequestList = outcome.getFulfillmentRequests();
+    if (fulfilmentRequestList == null)
+      return false;
     boolean isDelivered = false;
-    for (FulfilmentRequestDTO fulfilmentRequest : fulfilmentRequestList) {
+    for (FulfilmentRequestDto fulfilmentRequest : fulfilmentRequestList) {
       if (fulfilmentRequest.getQuestionnaireID() != null) {
         isDelivered = true;
         break;
@@ -73,9 +74,9 @@ public class SPGNewUnitAddressLinked implements SPGOutcomeServiceProcessor {
     return isDelivered;
   }
 
-  private void cacheData(SPGOutcomeSuperSetDTO outcome, UUID caseId, boolean isDelivered) throws GatewayException {
+  private void cacheData(SpgOutcomeSuperSetDto outcome, UUID caseId, boolean isDelivered) throws GatewayException {
     GatewayCache cache = gatewayCacheService.getById(String.valueOf(caseId));
-    if (cache!=null) {
+    if (cache != null) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Case alreadyexist in cache: {}",
           caseId);
     }

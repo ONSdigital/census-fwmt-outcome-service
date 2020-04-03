@@ -21,7 +21,7 @@
 //import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 //
 //@Component
-//public class AddressTypeChangedProcessorHH implements HHOutcomeServiceProcessor {
+//public class HhAddressTypeChangedProcessor implements HHOutcomeServiceProcessor {
 //
 //  @Autowired
 //  private GatewayOutcomeProducer gatewayOutcomeProducer;

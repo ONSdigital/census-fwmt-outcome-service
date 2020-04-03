@@ -3,7 +3,7 @@ package uk.gov.ons.census.fwmt.outcomeservice.converter.household;
 import java.util.HashMap;
 import java.util.Map;
 
-class HouseholdSecondaryOutcomeMap {
+class HhSecondaryOutcomeMap {
 
   static final Map<String, String> householdSecondaryOutcomeMap = new HashMap<>();
 
@@ -25,6 +25,6 @@ class HouseholdSecondaryOutcomeMap {
     householdSecondaryOutcomeMap.put("Extraordinary refusal", "EXTRAORDINARY_REFUSAL");
   }
 
-  HouseholdSecondaryOutcomeMap() {
+  HhSecondaryOutcomeMap() {
   }
 }

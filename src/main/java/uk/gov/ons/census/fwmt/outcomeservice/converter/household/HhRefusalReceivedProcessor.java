@@ -6,7 +6,7 @@ import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.HHOutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.HhOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
@@ -21,7 +21,7 @@ import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.CONTAC
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.household;
 
 @Component
-public class RefusalReceivedProcessorHH implements HHOutcomeServiceProcessor {
+public class HhRefusalReceivedProcessor implements HhOutcomeServiceProcessor {
 
   @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
@@ -44,7 +44,7 @@ public class RefusalReceivedProcessorHH implements HHOutcomeServiceProcessor {
 
     root.put("householdOutcome", householdOutcome);
     root.put("refusalType",
-        HouseholdSecondaryOutcomeMap.householdSecondaryOutcomeMap.get(householdOutcome.getSecondaryOutcome()));
+        HhSecondaryOutcomeMap.householdSecondaryOutcomeMap.get(householdOutcome.getSecondaryOutcome()));
     root.put("eventDate", eventDateTime + "Z");
 
     if (householdOutcome.getFulfillmentRequests() != null) {
@@ -56,7 +56,8 @@ public class RefusalReceivedProcessorHH implements HHOutcomeServiceProcessor {
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root, household);
 
-    gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()), GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
+    gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()),
+        GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), HH_OUTCOME_SENT, "type",
         "HH_REFUSAL_RECEIVED_OUTCOME_SENT", "transactionId", householdOutcome.getTransactionId().toString(), "Case Ref",
         householdOutcome.getCaseReference());

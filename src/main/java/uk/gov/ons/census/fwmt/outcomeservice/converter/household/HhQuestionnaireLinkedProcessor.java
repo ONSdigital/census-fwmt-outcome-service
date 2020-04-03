@@ -7,7 +7,7 @@ import uk.gov.ons.census.fwmt.common.data.household.HouseholdOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.HHOutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.HhOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
@@ -23,7 +23,7 @@ import static uk.gov.ons.census.fwmt.outcomeservice.enums.PrimaryOutcomes.CONTAC
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.household;
 
 @Component
-public class QuestionnaireLinkedProcessorHH implements HHOutcomeServiceProcessor {
+public class HhQuestionnaireLinkedProcessor implements HhOutcomeServiceProcessor {
 
   @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
@@ -59,7 +59,8 @@ public class QuestionnaireLinkedProcessorHH implements HHOutcomeServiceProcessor
 
         String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, household);
 
-        gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()), GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY);
+        gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(householdOutcome.getTransactionId()),
+            GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY);
         gatewayEventManager.triggerEvent(String.valueOf(householdOutcome.getCaseId()), HH_OUTCOME_SENT, "type",
             "HH_QUESTIONNAIRE_LINKED_OUTCOME_SENT", "transactionId", householdOutcome.getTransactionId().toString(),
             "Case Ref", householdOutcome.getCaseReference());
