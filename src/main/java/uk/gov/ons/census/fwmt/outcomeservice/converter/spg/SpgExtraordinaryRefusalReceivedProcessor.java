@@ -44,7 +44,7 @@ public class SpgExtraordinaryRefusalReceivedProcessor implements SpgOutcomeServi
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTYLISTING_ROUTING_KEY);
-    gatewayEventManager.triggerEvent("caseId", CESPG_OUTCOME_SENT,
+    gatewayEventManager.triggerEvent(String.valueOf(caseId), CESPG_OUTCOME_SENT,
         "type", "CESPG_EXTRAORDINARY_REFUSAL_RECEIVED_OUTCOME_SENT",
         "transactionId", outcome.getTransactionId().toString());
 

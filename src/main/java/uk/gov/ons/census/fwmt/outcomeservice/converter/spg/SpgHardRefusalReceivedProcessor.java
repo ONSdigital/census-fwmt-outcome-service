@@ -45,7 +45,7 @@ public class SpgHardRefusalReceivedProcessor implements SpgOutcomeServiceProcess
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTYLISTING_ROUTING_KEY);
-    gatewayEventManager.triggerEvent("caseId", CESPG_OUTCOME_SENT,
+    gatewayEventManager.triggerEvent(String.valueOf(caseId), CESPG_OUTCOME_SENT,
         "type", CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT,
         "transactionId", outcome.getTransactionId().toString());
 
