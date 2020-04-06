@@ -19,6 +19,7 @@ import uk.gov.ons.ctp.integration.common.product.ProductReference;
 import uk.gov.ons.ctp.integration.common.product.model.Product;
 
 import javax.annotation.Nonnull;
+import java.text.DateFormat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -37,14 +38,13 @@ import static uk.gov.ons.ctp.integration.common.product.model.Product.RequestCha
 public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor {
 
   @Autowired
+  DateFormat dateFormat;
+  @Autowired
   private ProductReference productReference;
-
   @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
-
   @Autowired
   private GatewayEventManager gatewayEventManager;
-
   @Autowired
   private GatewayCacheService gatewayCacheService;
 
@@ -57,7 +57,7 @@ public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor
     for (FulfilmentRequestDto fulfilmentRequest : outcome.getFulfillmentRequests()) {
       if (!isQuestionnaireLinked(fulfilmentRequest)) {
 
-        String eventDateTime = outcome.getEventDate().toString();
+        String eventDateTime = dateFormat.format(outcome.getEventDate());
         Map<String, Object> root = new HashMap<>();
         root.put("spgOutcome", outcome);
         root.put("caseId", caseId);
