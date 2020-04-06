@@ -98,7 +98,7 @@ public class RabbitMqConfig {
     return cachingConnectionFactory;
   }
 
-  @Bean
+  @Bean(name = "rmRabbitTemplate")
   @Qualifier("RmField")
   public RabbitTemplate rabbitTemplate() {
     return new RabbitTemplate(connectionFactory());
