@@ -61,7 +61,7 @@ public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor
         Map<String, Object> root = new HashMap<>();
         root.put("spgOutcome", outcome);
         root.put("caseId", caseId);
-        root.put("eventDate", eventDateTime);
+        root.put("eventDate", eventDateTime + "Z");
         String outcomeEvent = createQuestionnaireRequiredByPostEvent(root, fulfilmentRequest,
             String.valueOf(caseIdHolder));
 

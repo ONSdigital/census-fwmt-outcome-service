@@ -53,7 +53,7 @@ public class SpgLinkedQidProcessor implements SpgOutcomeServiceProcessor {
         root.put("spgOutcome", outcome);
         root.put("caseId", caseIdHolder);
         root.put("questionnaireId", fulfilmentRequest.getQuestionnaireID());
-        root.put("eventDate", eventDateTime);
+        root.put("eventDate", eventDateTime + "Z");
         cacheData(caseIdHolder);
 
         String outcomeEvent = TemplateCreator.createOutcomeMessage(LINKED_QID, root, spg);

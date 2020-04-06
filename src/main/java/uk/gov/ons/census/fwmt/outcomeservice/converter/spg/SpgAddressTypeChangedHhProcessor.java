@@ -43,7 +43,7 @@ public class SpgAddressTypeChangedHhProcessor implements SpgOutcomeServiceProces
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     root.put("spgOutcome", outcome);
     root.put("caseId", caseId);
-    root.put("eventDate", eventDateTime);
+    root.put("eventDate", eventDateTime + "Z");
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_TYPE_CHANGED_HH, root, spg);
 

@@ -43,7 +43,7 @@ public class SpgAddressNotValidProcessor implements SpgOutcomeServiceProcessor {
     root.put("spgOutcome", outcome);
     root.put("reason", reasonCode);
     root.put("caseId", caseId);
-    root.put("eventDate", eventDateTime);
+    root.put("eventDate", eventDateTime + "Z");
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_NOT_VALID, root, spg);
 

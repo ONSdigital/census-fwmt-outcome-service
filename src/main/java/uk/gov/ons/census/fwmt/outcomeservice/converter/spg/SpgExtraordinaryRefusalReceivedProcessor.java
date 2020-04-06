@@ -38,7 +38,7 @@ public class SpgExtraordinaryRefusalReceivedProcessor implements SpgOutcomeServi
     root.put("refusalType", "EXTRAORDINARY_REFUSAL");
     root.put("officerId", outcome.getOfficerId());
     root.put("caseId", caseId);
-    root.put("eventDate", eventDateTime);
+    root.put("eventDate", eventDateTime + "Z");
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root, spg);
 
