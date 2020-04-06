@@ -10,21 +10,21 @@ import uk.gov.ons.census.fwmt.outcomeservice.converter.CcsOutcomeServiceProcesso
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CCSPL_OUTCOME_SENT;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.ADDRESS_NOT_VALID;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.NON_RESIDENTIAL;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.ccs;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressLevel;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getAddressType;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.CcsUtilityMethods.getOrganisationName;
 
 @Component
-public class CssAddressNotValidProcessor implements CcsOutcomeServiceProcessor {
+public class CssNonResidentialProcessor implements CcsOutcomeServiceProcessor {
 
   @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
@@ -34,7 +34,8 @@ public class CssAddressNotValidProcessor implements CcsOutcomeServiceProcessor {
 
   @Override
   public boolean isValid(CCSPropertyListingOutcome ccsPLOutcome) {
-    return isNonValidCcsPropertyListing(ccsPLOutcome);
+    List<String> validSecondaryOutcomes = Collections.singletonList("Non-residential or business");
+    return validSecondaryOutcomes.contains(ccsPLOutcome.getSecondaryOutcome());
   }
 
   @Override
@@ -48,21 +49,13 @@ public class CssAddressNotValidProcessor implements CcsOutcomeServiceProcessor {
     root.put("addressType", getAddressType(ccsPLOutcome));
     root.put("addressLevel", getAddressLevel(ccsPLOutcome));
     root.put("organisationName", getOrganisationName(ccsPLOutcome));
-    root.put("secondaryOutcome", CcsSecondaryOutcomeMap.ccsSecondaryOutcomeMap.get(ccsPLOutcome.getSecondaryOutcome()));
     root.put("eventDate", eventDateTime + "Z");
 
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_NOT_VALID, root, ccs);
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(NON_RESIDENTIAL, root, ccs);
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(ccsPLOutcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTYLISTING_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(newRandomUUID), CCSPL_OUTCOME_SENT,
-        "type", "CCSPL_ADDRESS_NOT_VALID_OUTCOME_SENT", "transactionId", ccsPLOutcome.getTransactionId().toString());
-  }
-
-  private boolean isNonValidCcsPropertyListing(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
-    List<String> validSecondaryOutcomes = Arrays
-        .asList("Derelict / Uninhabitable", "Under construction", "Non residential or business", "CE Out of scope",
-            "Demolished");
-    return validSecondaryOutcomes.contains(ccsPropertyListingOutcome.getSecondaryOutcome());
+        "type", "CCSPL_NON_RESIDENTIAL_OUTCOME_SENT", "transactionId", ccsPLOutcome.getTransactionId().toString());
   }
 }

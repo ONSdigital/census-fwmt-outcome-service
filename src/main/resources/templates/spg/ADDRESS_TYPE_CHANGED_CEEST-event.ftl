@@ -1,14 +1,14 @@
 "addressTypeChange" : {
   "collectionCase": {
     "id": "${caseId}",
-    "ceExpectedResponses":"${usualResidents}",
+    "ceExpectedCapacity":"${usualResidents}",
     "address" : {
       "addressType":"CE",
       "estabType":"${spgOutcome.ceDetails.establishmentType}",
       <#if spgOutcome.ceDetails.establishmentName??>
-        "orgName": "${spgOutcome.ceDetails.establishmentName}"
+        "organisationName": "${spgOutcome.ceDetails.establishmentName}"
       <#else>
-        "orgName": null
+        "organisationName": null
       </#if>
     }
   }

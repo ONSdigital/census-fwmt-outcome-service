@@ -36,7 +36,10 @@ rabbitmq:
   initialInterval: 5000
   multiplier: 3.0
   maxInterval: 45000
-  rmOutcomeExchange: "events"
+  queues:
+    rm:
+      field: "RM.Field"
+      exchange: "adapter-outbound-exchange"
 
 logging:
   profile: DEV

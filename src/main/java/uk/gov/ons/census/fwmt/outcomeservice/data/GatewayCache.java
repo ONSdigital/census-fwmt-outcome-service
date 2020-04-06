@@ -1,7 +1,6 @@
 package uk.gov.ons.census.fwmt.outcomeservice.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +18,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "gateway_cache")
 public class GatewayCache {
-@Id
+  @Id
   @Column(name = "case_id", unique = true, nullable = false)
   public String caseId;
 

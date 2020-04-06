@@ -1,11 +1,10 @@
 package uk.gov.ons.census.fwmt.outcomeservice.message;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
-
-import lombok.extern.slf4j.Slf4j;
 import uk.gov.ons.census.fwmt.common.data.spg.NewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.NewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
@@ -18,12 +17,10 @@ public class OutcomePreprocessingProducer {
   @Autowired
   private RabbitTemplate rabbitTemplate;
 
-
-
   @Retryable
   public void sendOutcomeToPreprocessingQueue(SPGOutcome spgOutcome) {
-      rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
-          OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, spgOutcome);
+    rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
+        OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, spgOutcome);
   }
 
   @Retryable
