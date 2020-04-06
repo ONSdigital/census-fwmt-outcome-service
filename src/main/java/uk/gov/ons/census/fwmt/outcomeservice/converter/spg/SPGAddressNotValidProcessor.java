@@ -39,7 +39,6 @@ public class SpgAddressNotValidProcessor implements SpgOutcomeServiceProcessor {
     String reasonCode = spgReasonCodeLookup.getLookup(outcome.getOutcomeCode());
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
-    outcome.getEventDate();
     Map<String, Object> root = new HashMap<>();
     root.put("spgOutcome", outcome);
     root.put("reason", reasonCode);
