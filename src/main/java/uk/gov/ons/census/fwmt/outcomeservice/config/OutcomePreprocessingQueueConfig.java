@@ -131,7 +131,7 @@ public class OutcomePreprocessingQueueConfig {
     return jsonMessageConverter;
   }
 
-  @Bean
+  @Bean(name = "preprocessingRabbitTemplate")
   @Qualifier("OS_RT")
   public RabbitTemplate rabbitTemplate(@Qualifier("OS_MC") MessageConverter mc,
       ConnectionFactory connectionFactory) {
