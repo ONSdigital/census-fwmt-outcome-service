@@ -49,7 +49,7 @@ public class SpgNewAddressReportedProcessor implements SpgOutcomeServiceProcesso
     root.put("newCaseId", newCaseId);
     root.put("address", outcome.getAddress());
     root.put("officerId", outcome.getOfficerId());
-    root.put("eventDate", eventDateTime + "Z");
+    root.put("eventDate", eventDateTime);
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(NEW_ADDRESS_REPORTED, root, spg);
 

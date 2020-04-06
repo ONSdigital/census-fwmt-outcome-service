@@ -48,7 +48,7 @@ public class SpgNewUnitAddressLinkedProcessor implements SpgOutcomeServiceProces
     root.put("newUnitCaseId", newCaseId);
     root.put("officerId", outcome.getOfficerId());
     root.put("address", outcome.getAddress());
-    root.put("eventDate", eventDateTime + "Z");
+    root.put("eventDate", eventDateTime);
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(NEW_UNIT_ADDRESS, root, spg);
 
