@@ -3,6 +3,7 @@ package uk.gov.ons.census.fwmt.outcomeservice.message;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.data.spg.NewStandaloneAddress;
@@ -15,6 +16,7 @@ import uk.gov.ons.census.fwmt.outcomeservice.config.OutcomePreprocessingQueueCon
 public class OutcomePreprocessingProducer {
 
   @Autowired
+  @Qualifier("OS_RT")
   private RabbitTemplate rabbitTemplate;
 
   @Retryable
