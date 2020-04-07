@@ -6,11 +6,10 @@
 </#if>
 "address" : {
 "addressType":"${estabType}",
-"estabType":"${householdOutcome.ceDetails.establishmentType}",
 <#if estabType == "CE">
+    "estabType":"${householdOutcome.ceDetails.establishmentType}",
     "organisationName": "${householdOutcome.ceDetails.establishmentName}"
 <#else>
-    "organisationName": null
 </#if>
 }
 }
