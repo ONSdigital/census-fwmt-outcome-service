@@ -32,7 +32,8 @@ public class OutcomeController implements OutcomeApi {
     gatewayEventManager.triggerEvent(caseId, COMET_CESPG_OUTCOME_RECEIVED, "transactionId",
         spgOutcome.getTransactionId().toString(), "Primary Outcome", spgOutcome.getPrimaryOutcomeDescription(),
         "Secondary Outcome",
-        spgOutcome.getSecondaryOutcomeDescription());
+        spgOutcome.getSecondaryOutcomeDescription(),
+        "Outcome code", spgOutcome.getOutcomeCode());
     spgOutcome.setCaseId(UUID.fromString(caseId));
 
     outcomePreprocessingProducer.sendOutcomeToPreprocessingQueue(spgOutcome);
@@ -46,7 +47,8 @@ public class OutcomeController implements OutcomeApi {
     gatewayEventManager.triggerEvent(String.valueOf(newCaseId), COMET_CESPGUNITADDRESS_OUTCOME_RECEIVED, "transactionId",
         newUnitAddress.getTransactionId().toString(), "Primary Outcome", newUnitAddress.getPrimaryOutcomeDescription(),
         "Secondary Outcome",
-        newUnitAddress.getSecondaryOutcomeDescription());
+        newUnitAddress.getSecondaryOutcomeDescription(),
+        "Outcome code", newUnitAddress.getOutcomeCode());
 
     outcomePreprocessingProducer.sendNewUnitAddressToPreprocessingQueue(newUnitAddress);
 
@@ -60,7 +62,8 @@ public class OutcomeController implements OutcomeApi {
         newStandaloneAddress.getTransactionId().toString(), "Primary Outcome",
         newStandaloneAddress.getPrimaryOutcomeDescription(),
         "Secondary Outcome",
-        newStandaloneAddress.getSecondaryOutcomeDescription());
+        newStandaloneAddress.getSecondaryOutcomeDescription(),
+        "Outcome code", newStandaloneAddress.getOutcomeCode());
 
     outcomePreprocessingProducer.sendNewStandaloneAddress(newStandaloneAddress);
 
