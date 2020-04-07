@@ -19,7 +19,7 @@ import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_ADDRESS_TYPE_CHANGED_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_OUTCOME_SENT;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.ADDRESS_TYPE_CHANGED_HH;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.ADDRESS_TYPE_CHANGED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
 
 @Component("ADDRESS_TYPE_CHANGED_HH")
@@ -44,8 +44,10 @@ public class SpgAddressTypeChangedHhProcessor implements SpgOutcomeServiceProces
     root.put("spgOutcome", outcome);
     root.put("caseId", caseId);
     root.put("eventDate", eventDateTime);
+    root.put("usualResidents", 0);
+    root.put("estabType", "HH");
 
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_TYPE_CHANGED_HH, root, spg);
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_TYPE_CHANGED, root, spg);
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
