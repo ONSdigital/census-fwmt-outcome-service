@@ -40,10 +40,10 @@ public class OutcomeController implements OutcomeApi {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  // TODO : what should i pass as case id for logging etc?
   @Override
   public ResponseEntity<Void> spgNewUnitAddress(NewUnitAddress newUnitAddress) {
-    gatewayEventManager.triggerEvent("", COMET_CESPGUNITADDRESS_OUTCOME_RECEIVED, "transactionId",
+    UUID newCaseId = UUID.randomUUID();
+    gatewayEventManager.triggerEvent(String.valueOf(newCaseId), COMET_CESPGUNITADDRESS_OUTCOME_RECEIVED, "transactionId",
         newUnitAddress.getTransactionId().toString(), "Primary Outcome", newUnitAddress.getPrimaryOutcomeDescription(),
         "Secondary Outcome",
         newUnitAddress.getSecondaryOutcomeDescription());
@@ -53,10 +53,10 @@ public class OutcomeController implements OutcomeApi {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  // TODO : should site case id be used for logging etc?
   @Override
   public ResponseEntity<Void> spgNewStandalone(NewStandaloneAddress newStandaloneAddress) {
-    gatewayEventManager.triggerEvent("", COMET_CESPGSTANDALONE_OUTCOME_RECEIVED, "transactionId",
+    UUID newCaseId = UUID.randomUUID();
+    gatewayEventManager.triggerEvent(String.valueOf(newCaseId), COMET_CESPGSTANDALONE_OUTCOME_RECEIVED, "transactionId",
         newStandaloneAddress.getTransactionId().toString(), "Primary Outcome",
         newStandaloneAddress.getPrimaryOutcomeDescription(),
         "Secondary Outcome",

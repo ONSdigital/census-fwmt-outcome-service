@@ -19,7 +19,7 @@ import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_ADDRESS_TYPE_CHANGED_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_OUTCOME_SENT;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.ADDRESS_TYPE_CHANGED_CEEST;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.ADDRESS_TYPE_CHANGED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
 
 @Component("ADDRESS_TYPE_CHANGED_CE_EST")
@@ -44,6 +44,7 @@ public class SpgAddressTypeChangedCeEstProcessor implements SpgOutcomeServicePro
     root.put("spgOutcome", outcome);
     root.put("caseId", caseId);
     root.put("eventDate", eventDateTime);
+    root.put("estabType", "CE");
 
     if (outcome.getCeDetails().getUsualResidents() == null) {
       root.put("usualResidents", 0);
@@ -51,12 +52,13 @@ public class SpgAddressTypeChangedCeEstProcessor implements SpgOutcomeServicePro
       root.put("usualResidents", outcome.getCeDetails().getUsualResidents());
     }
 
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_TYPE_CHANGED_CEEST, root, spg);
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_TYPE_CHANGED, root, spg);
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(caseId), CESPG_OUTCOME_SENT, "type",
-        CESPG_ADDRESS_TYPE_CHANGED_OUTCOME_SENT, "transactionId", outcome.getTransactionId().toString());
+        CESPG_ADDRESS_TYPE_CHANGED_OUTCOME_SENT, "transactionId", outcome.getTransactionId().toString(),
+        "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
 
     return caseId;
   }

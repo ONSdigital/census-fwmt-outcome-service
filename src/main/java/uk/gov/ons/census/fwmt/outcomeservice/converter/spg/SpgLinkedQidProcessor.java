@@ -61,7 +61,8 @@ public class SpgLinkedQidProcessor implements SpgOutcomeServiceProcessor {
         gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
             GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY);
         gatewayEventManager.triggerEvent(String.valueOf(caseIdHolder), CESPG_OUTCOME_SENT, "type",
-            CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId", outcome.getTransactionId().toString());
+            CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId", outcome.getTransactionId().toString(),
+            "routing key", GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY);
       }
     }
     return caseIdHolder;
