@@ -54,7 +54,7 @@ public class SpgNewAddressReportedProcessor implements SpgOutcomeServiceProcesso
     String outcomeEvent = TemplateCreator.createOutcomeMessage(NEW_ADDRESS_REPORTED, root, spg);
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
-        GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTYLISTING_ROUTING_KEY);
+        GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(newCaseId), CESPG_OUTCOME_SENT,
         "type", CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId",
         outcome.getTransactionId().toString());

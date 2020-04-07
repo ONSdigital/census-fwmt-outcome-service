@@ -28,6 +28,7 @@ public class SpgOutcomeSuperSetDto {
   private Boolean dummyInfoCollected;
 
   public static String careCodesToText(List<CareCodeDto> careCodes) {
+    if (careCodes == null) return "";
     List<String> ccs = new ArrayList<String>();
     careCodes.stream().forEach(cc -> ccs.add(cc.getCareCode()));
     return String.join(",", ccs);

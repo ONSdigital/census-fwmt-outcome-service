@@ -8,7 +8,8 @@ import java.text.SimpleDateFormat;
 
 @Configuration
 public class DateConfig {
-  @Bean DateFormat dateFormat() {
-    return new SimpleDateFormat("yyyy-MM-dd 'T'HH:mm:ss.SSSX");
+  @Bean
+  DateFormat dateFormat() {
+    return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
   }
 }

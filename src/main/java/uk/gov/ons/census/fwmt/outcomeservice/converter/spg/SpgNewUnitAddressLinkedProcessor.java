@@ -53,7 +53,7 @@ public class SpgNewUnitAddressLinkedProcessor implements SpgOutcomeServiceProces
     String outcomeEvent = TemplateCreator.createOutcomeMessage(NEW_UNIT_ADDRESS, root, spg);
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
-        GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTYLISTING_ROUTING_KEY);
+        GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(newCaseId), CESPG_OUTCOME_SENT,
         "type", CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId",
         outcome.getTransactionId().toString());
@@ -78,7 +78,7 @@ public class SpgNewUnitAddressLinkedProcessor implements SpgOutcomeServiceProces
   private void cacheData(SpgOutcomeSuperSetDto outcome, UUID caseId, boolean isDelivered) throws GatewayException {
     GatewayCache cache = gatewayCacheService.getById(String.valueOf(caseId));
     if (cache != null) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Case alreadyexist in cache: {}",
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Case already exist in cache: {}",
           caseId);
     }
 

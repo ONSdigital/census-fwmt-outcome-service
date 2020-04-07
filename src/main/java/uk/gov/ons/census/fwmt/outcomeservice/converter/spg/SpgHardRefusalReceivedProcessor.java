@@ -39,13 +39,13 @@ public class SpgHardRefusalReceivedProcessor implements SpgOutcomeServiceProcess
     root.put("refusalType", "HARD_REFUSAL");
     root.put("officerId", outcome.getOfficerId());
     root.put("caseId", caseId);
-    root.put("eventDate", eventDateTime + "Z");
+    root.put("eventDate", eventDateTime);
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root, spg);
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
-        GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTYLISTING_ROUTING_KEY);
-    gatewayEventManager.triggerEvent("caseId", CESPG_OUTCOME_SENT,
+        GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
+    gatewayEventManager.triggerEvent(String.valueOf(caseId), CESPG_OUTCOME_SENT,
         "type", CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT,
         "transactionId", outcome.getTransactionId().toString());
 
