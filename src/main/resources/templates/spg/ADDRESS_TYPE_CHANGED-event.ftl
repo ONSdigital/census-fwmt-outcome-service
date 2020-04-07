@@ -8,9 +8,9 @@
 "addressType":"${estabType}",
 "estabType":"${householdOutcome.ceDetails.establishmentType}",
 <#if estabType == "CE">
-    "orgName": "${householdOutcome.ceDetails.establishmentName}"
+    "organizationName": "${householdOutcome.ceDetails.establishmentName}"
 <#else>
-    "orgName": null
+    "organizationName": null
 </#if>
 }
 }
