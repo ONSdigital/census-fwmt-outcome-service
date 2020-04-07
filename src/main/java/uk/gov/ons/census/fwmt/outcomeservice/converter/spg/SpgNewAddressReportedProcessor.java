@@ -38,15 +38,15 @@ public class SpgNewAddressReportedProcessor implements SpgOutcomeServiceProcesso
 
   @Override
   public UUID process(SpgOutcomeSuperSetDto outcome, UUID caseIdHolder) throws GatewayException {
-    UUID newCaseId = UUID.randomUUID();
+    UUID caseId = (outcome.getCaseId() != null) ? outcome.getCaseId() : caseIdHolder;
     boolean isDelivered = isDelivered(outcome);
-    cacheData(outcome, newCaseId, isDelivered);
+    cacheData(outcome, caseId, isDelivered);
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
 
     Map<String, Object> root = new HashMap<>();
     root.put("spgOutcome", outcome);
-    root.put("newCaseId", newCaseId);
+    root.put("newCaseId", caseId);
     root.put("address", outcome.getAddress());
     root.put("officerId", outcome.getOfficerId());
     root.put("eventDate", eventDateTime);
@@ -55,11 +55,12 @@ public class SpgNewAddressReportedProcessor implements SpgOutcomeServiceProcesso
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
-    gatewayEventManager.triggerEvent(String.valueOf(newCaseId), CESPG_OUTCOME_SENT,
-        "type", CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT, "transactionId",
-        outcome.getTransactionId().toString());
+    gatewayEventManager.triggerEvent(String.valueOf(caseId), CESPG_OUTCOME_SENT,
+        "type", CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT,
+        "transactionId", outcome.getTransactionId().toString(),
+        "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
 
-    return newCaseId;
+    return caseId;
   }
 
   private void cacheData(SpgOutcomeSuperSetDto outcome, UUID newCaseId, boolean isDelivered) throws GatewayException {
