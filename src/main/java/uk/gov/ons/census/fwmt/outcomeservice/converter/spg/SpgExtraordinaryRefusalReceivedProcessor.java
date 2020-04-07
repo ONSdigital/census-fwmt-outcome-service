@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_EXTRAORDINARY_REFUSAL_RECEIVED_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.REFUSAL_RECEIVED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
@@ -45,7 +46,7 @@ public class SpgExtraordinaryRefusalReceivedProcessor implements SpgOutcomeServi
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(caseId), CESPG_OUTCOME_SENT,
-        "type", "CESPG_EXTRAORDINARY_REFUSAL_RECEIVED_OUTCOME_SENT",
+        "type", CESPG_EXTRAORDINARY_REFUSAL_RECEIVED_OUTCOME_SENT,
         "transactionId", outcome.getTransactionId().toString(),
         "routing key", GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
 

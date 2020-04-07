@@ -22,6 +22,5 @@ public enum EventType {
   // SPG
   NEW_UNIT_ADDRESS,
   NEW_ADDRESS_REPORTED,
-  LINKED_QID,
 
 }

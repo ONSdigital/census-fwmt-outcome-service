@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_NEW_UNIT_ADDRESS_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.NEW_UNIT_ADDRESS;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
@@ -55,7 +55,7 @@ public class SpgNewUnitAddressLinkedProcessor implements SpgOutcomeServiceProces
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(caseId), CESPG_OUTCOME_SENT,
-        "type", CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT,
+        "type", CESPG_NEW_UNIT_ADDRESS_OUTCOME_SENT,
         "transactionId", outcome.getTransactionId().toString(),
         "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
 
