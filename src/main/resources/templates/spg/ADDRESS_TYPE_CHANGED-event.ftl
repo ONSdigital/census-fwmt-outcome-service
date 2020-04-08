@@ -2,13 +2,13 @@
 "collectionCase": {
 "id": "${caseId}",
 <#if estabType == "CE">
-    "ceExpectedCapacity”:"${usualResidents}",
+    "ceExpectedCapacity":"${usualResidents}",
 </#if>
 "address" : {
-    "addressType":"${estabType}",
+    "addressType":"${estabType}"
 <#if estabType == "CE">
-    "estabType":"${householdOutcome.ceDetails.establishmentType}",
-    "organisationName": "${householdOutcome.ceDetails.establishmentName}"
+    "estabType":"${spgOutcome.ceDetails.establishmentType}",
+    "organisationName": "${spgOutcome.ceDetails.establishmentName}"
 </#if>
 }
 }
