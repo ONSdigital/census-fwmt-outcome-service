@@ -43,25 +43,6 @@ public class OutcomePreprocessingQueueConfig {
   @Autowired
   private AmqpAdmin amqpAdmin;
 
-  // TODO change exchange back and remove debug.
-  @Bean
-  @Qualifier("DEBUG_Q")
-  public Queue debugQueue() {
-    Queue queue = QueueBuilder.durable("FWMT-GATEWAY-DEBUG")
-        .build();
-    queue.setAdminsThatShouldDeclare(amqpAdmin);
-    return queue;
-  }
-
-  @Bean
-  @Qualifier("DEBUG_B")
-  public Binding debugBinding(@Qualifier("OS_Q") Queue debugQueue,
-      @Qualifier("OS_E") FanoutExchange outcomePreprocessingExchange) {
-    Binding binding = BindingBuilder.bind(debugQueue).to(outcomePreprocessingExchange);
-    binding.setAdminsThatShouldDeclare(amqpAdmin);
-    return binding;
-  }
-
   // Queues
   @Bean
   @Qualifier("OS_Q")
