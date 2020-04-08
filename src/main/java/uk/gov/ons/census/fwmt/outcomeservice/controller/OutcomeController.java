@@ -29,10 +29,10 @@ public class OutcomeController implements OutcomeApi {
 
   @Override
   public ResponseEntity<Void> spgOutcomeResponse(String caseId, SPGOutcome spgOutcome) {
-    gatewayEventManager.triggerEvent(caseId, COMET_CESPG_OUTCOME_RECEIVED, "transactionId",
-        spgOutcome.getTransactionId().toString(), "Primary Outcome", spgOutcome.getPrimaryOutcomeDescription(),
-        "Secondary Outcome",
-        spgOutcome.getSecondaryOutcomeDescription(),
+    gatewayEventManager.triggerEvent(caseId, COMET_CESPG_OUTCOME_RECEIVED,
+        "transactionId", spgOutcome.getTransactionId().toString(),
+        "Primary Outcome", spgOutcome.getPrimaryOutcomeDescription(),
+        "Secondary Outcome", spgOutcome.getSecondaryOutcomeDescription(),
         "Outcome code", spgOutcome.getOutcomeCode());
     spgOutcome.setCaseId(UUID.fromString(caseId));
 
@@ -43,11 +43,10 @@ public class OutcomeController implements OutcomeApi {
 
   @Override
   public ResponseEntity<Void> spgNewUnitAddress(NewUnitAddress newUnitAddress) {
-    UUID newCaseId = UUID.randomUUID();
-    gatewayEventManager.triggerEvent(String.valueOf(newCaseId), COMET_CESPGUNITADDRESS_OUTCOME_RECEIVED, "transactionId",
-        newUnitAddress.getTransactionId().toString(), "Primary Outcome", newUnitAddress.getPrimaryOutcomeDescription(),
-        "Secondary Outcome",
-        newUnitAddress.getSecondaryOutcomeDescription(),
+    gatewayEventManager.triggerEvent("N/A", COMET_CESPGUNITADDRESS_OUTCOME_RECEIVED,
+        "transactionId", newUnitAddress.getTransactionId().toString(),
+        "Primary Outcome", newUnitAddress.getPrimaryOutcomeDescription(),
+        "Secondary Outcome", newUnitAddress.getSecondaryOutcomeDescription(),
         "Outcome code", newUnitAddress.getOutcomeCode());
 
     outcomePreprocessingProducer.sendNewUnitAddressToPreprocessingQueue(newUnitAddress);
@@ -57,12 +56,10 @@ public class OutcomeController implements OutcomeApi {
 
   @Override
   public ResponseEntity<Void> spgNewStandalone(NewStandaloneAddress newStandaloneAddress) {
-    UUID newCaseId = UUID.randomUUID();
-    gatewayEventManager.triggerEvent(String.valueOf(newCaseId), COMET_CESPGSTANDALONE_OUTCOME_RECEIVED, "transactionId",
-        newStandaloneAddress.getTransactionId().toString(), "Primary Outcome",
-        newStandaloneAddress.getPrimaryOutcomeDescription(),
-        "Secondary Outcome",
-        newStandaloneAddress.getSecondaryOutcomeDescription(),
+    gatewayEventManager.triggerEvent("N/A", COMET_CESPGSTANDALONE_OUTCOME_RECEIVED,
+        "transactionId", newStandaloneAddress.getTransactionId().toString(),
+        "Primary Outcome", newStandaloneAddress.getPrimaryOutcomeDescription(),
+        "Secondary Outcome", newStandaloneAddress.getSecondaryOutcomeDescription(),
         "Outcome code", newStandaloneAddress.getOutcomeCode());
 
     outcomePreprocessingProducer.sendNewStandaloneAddress(newStandaloneAddress);

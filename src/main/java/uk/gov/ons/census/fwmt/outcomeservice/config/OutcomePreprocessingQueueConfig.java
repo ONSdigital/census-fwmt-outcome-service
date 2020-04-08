@@ -7,6 +7,7 @@ import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -65,19 +66,18 @@ public class OutcomePreprocessingQueueConfig {
   // Exchange
   @Bean
   @Qualifier("OS_E")
-  public DirectExchange outcomePreprocessingExchange() {
-    DirectExchange directExchange = new DirectExchange(OUTCOME_PREPROCESSING_EXCHANGE);
-    directExchange.setAdminsThatShouldDeclare(amqpAdmin);
-    return directExchange;
+  public FanoutExchange outcomePreprocessingExchange() {
+    FanoutExchange fanoutExchange = new FanoutExchange(OUTCOME_PREPROCESSING_EXCHANGE);
+    fanoutExchange.setAdminsThatShouldDeclare(amqpAdmin);
+    return fanoutExchange;
   }
 
   // Bindings
   @Bean
   @Qualifier("OS_B")
   public Binding outcomePreprocessorBinding(@Qualifier("OS_Q") Queue outcomePreprocessingQueue,
-      @Qualifier("OS_E") DirectExchange outcomePreprocessingExchange) {
-    Binding binding = BindingBuilder.bind(outcomePreprocessingQueue).to(outcomePreprocessingExchange)
-        .with(OUTCOME_PREPROCESSING_ROUTING_KEY);
+      @Qualifier("OS_E") FanoutExchange outcomePreprocessingExchange) {
+    Binding binding = BindingBuilder.bind(outcomePreprocessingQueue).to(outcomePreprocessingExchange);
     binding.setAdminsThatShouldDeclare(amqpAdmin);
     return binding;
   }
