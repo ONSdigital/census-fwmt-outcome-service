@@ -63,7 +63,7 @@ public class SpgNewUnitAddressLinkedProcessor implements SpgOutcomeServiceProces
   }
 
   private boolean isDelivered(SpgOutcomeSuperSetDto outcome) {
-    List<FulfilmentRequestDto> fulfilmentRequestList = outcome.getFulfillmentRequests();
+    List<FulfilmentRequestDto> fulfilmentRequestList = outcome.getFulfilmentRequests();
     if (fulfilmentRequestList == null)
       return false;
     boolean isDelivered = false;

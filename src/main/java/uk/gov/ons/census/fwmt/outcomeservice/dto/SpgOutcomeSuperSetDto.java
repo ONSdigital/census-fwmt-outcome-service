@@ -21,7 +21,7 @@ public class SpgOutcomeSuperSetDto {
   private Address address;
   private String accessInfo;
   private List<CareCodeDto> careCodes;
-  private List<FulfilmentRequestDto> fulfillmentRequests;
+  private List<FulfilmentRequestDto> fulfilmentRequests;
   private String accompanyingOfficerId;
   private CeDetailsDto ceDetails;
   private UUID siteCaseId;
