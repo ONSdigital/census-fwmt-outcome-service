@@ -41,12 +41,14 @@ public class SpgNewUnitAddressLinkedProcessor implements SpgOutcomeServiceProces
     UUID caseId = (outcome.getCaseId() != null) ? outcome.getCaseId() : caseIdHolder;
     boolean isDelivered = isDelivered(outcome);
     cacheData(outcome, outcome.getCaseId(), isDelivered);
+    String collectionCaseId = String.valueOf(UUID.randomUUID());
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
     root.put("sourceCase", "NEW_UNIT");
     root.put("spgOutcome", outcome);
     root.put("newUnitCaseId", caseId);
+    root.put("collectionCaseId", collectionCaseId);
     root.put("officerId", outcome.getOfficerId());
     root.put("address", outcome.getAddress());
     root.put("eventDate", eventDateTime);
@@ -57,7 +59,8 @@ public class SpgNewUnitAddressLinkedProcessor implements SpgOutcomeServiceProces
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(caseId), CESPG_OUTCOME_SENT,
         "type", CESPG_NEW_UNIT_ADDRESS_OUTCOME_SENT,
-        "transactionId", outcome.getTransactionId().toString(),
+        "transaction id", outcome.getTransactionId().toString(),
+        "collection case id", collectionCaseId,
         "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
 
     return caseId;
@@ -80,7 +83,7 @@ public class SpgNewUnitAddressLinkedProcessor implements SpgOutcomeServiceProces
   private void cacheData(SpgOutcomeSuperSetDto outcome, UUID caseId, boolean isDelivered) throws GatewayException {
     GatewayCache cache = gatewayCacheService.getById(String.valueOf(caseId));
     if (cache != null) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Case already exist in cache: {}",
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Case already exists in cache: {}",
           caseId);
     }
 
