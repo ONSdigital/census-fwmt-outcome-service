@@ -21,7 +21,7 @@ import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_NEW_UNIT_ADDRESS_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_OUTCOME_SENT;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.NEW_UNIT_ADDRESS;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.NEW_ADDRESS_REPORTED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
 
 @Component("NEW_UNIT_ADDRESS")
@@ -41,22 +41,26 @@ public class SpgNewUnitAddressLinkedProcessor implements SpgOutcomeServiceProces
     UUID caseId = (outcome.getCaseId() != null) ? outcome.getCaseId() : caseIdHolder;
     boolean isDelivered = isDelivered(outcome);
     cacheData(outcome, outcome.getCaseId(), isDelivered);
+    String collectionCaseId = String.valueOf(UUID.randomUUID());
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
+    root.put("sourceCase", "NEW_UNIT");
     root.put("spgOutcome", outcome);
     root.put("newUnitCaseId", caseId);
+    root.put("collectionCaseId", collectionCaseId);
     root.put("officerId", outcome.getOfficerId());
     root.put("address", outcome.getAddress());
     root.put("eventDate", eventDateTime);
 
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(NEW_UNIT_ADDRESS, root, spg);
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(NEW_ADDRESS_REPORTED, root, spg);
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(caseId), CESPG_OUTCOME_SENT,
         "type", CESPG_NEW_UNIT_ADDRESS_OUTCOME_SENT,
-        "transactionId", outcome.getTransactionId().toString(),
+        "transaction id", outcome.getTransactionId().toString(),
+        "collection case id", collectionCaseId,
         "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
 
     return caseId;
@@ -79,7 +83,7 @@ public class SpgNewUnitAddressLinkedProcessor implements SpgOutcomeServiceProces
   private void cacheData(SpgOutcomeSuperSetDto outcome, UUID caseId, boolean isDelivered) throws GatewayException {
     GatewayCache cache = gatewayCacheService.getById(String.valueOf(caseId));
     if (cache != null) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Case already exist in cache: {}",
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Case already exists in cache: {}",
           caseId);
     }
 

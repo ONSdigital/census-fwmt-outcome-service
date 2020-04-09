@@ -45,6 +45,7 @@ public class SpgNewAddressReportedProcessor implements SpgOutcomeServiceProcesso
     String eventDateTime = dateFormat.format(outcome.getEventDate());
 
     Map<String, Object> root = new HashMap<>();
+    root.put("sourceCase", "NEW_STANDALONE");
     root.put("spgOutcome", outcome);
     root.put("newCaseId", caseId);
     root.put("address", outcome.getAddress());
@@ -57,7 +58,7 @@ public class SpgNewAddressReportedProcessor implements SpgOutcomeServiceProcesso
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(caseId), CESPG_OUTCOME_SENT,
         "type", CESPG_NEW_ADDRESS_REPORTED_OUTCOME_SENT,
-        "transactionId", outcome.getTransactionId().toString(),
+        "transaction id", outcome.getTransactionId().toString(),
         "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
 
     return caseId;
@@ -66,7 +67,7 @@ public class SpgNewAddressReportedProcessor implements SpgOutcomeServiceProcesso
   private void cacheData(SpgOutcomeSuperSetDto outcome, UUID newCaseId, boolean isDelivered) throws GatewayException {
     GatewayCache cache = gatewayCacheService.getById(String.valueOf(newCaseId));
     if (cache != null) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Case alreadyexist in cache: {}",
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Case already exists in cache: {}",
           newCaseId);
     }
 
