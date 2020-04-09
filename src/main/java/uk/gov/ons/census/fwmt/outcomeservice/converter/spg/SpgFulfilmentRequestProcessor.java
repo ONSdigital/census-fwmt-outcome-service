@@ -50,10 +50,10 @@ public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor
 
   @Override
   public UUID process(SpgOutcomeSuperSetDto outcome, UUID caseIdHolder) throws GatewayException {
-    UUID caseId = (outcome.getCaseId() != null) ? outcome.getCaseId() : caseIdHolder;
     if (outcome.getFulfilmentRequests() == null) {
       return caseIdHolder;
     }
+    UUID caseId = (outcome.getCaseId() != null) ? outcome.getCaseId() : caseIdHolder;
     for (FulfilmentRequestDto fulfilmentRequest : outcome.getFulfilmentRequests()) {
       if (!isQuestionnaireLinked(fulfilmentRequest)) {
 
@@ -62,8 +62,7 @@ public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor
         root.put("spgOutcome", outcome);
         root.put("caseId", caseId);
         root.put("eventDate", eventDateTime);
-        String outcomeEvent = createQuestionnaireRequiredByPostEvent(root, fulfilmentRequest,
-            String.valueOf(caseIdHolder));
+        String outcomeEvent = createQuestionnaireRequiredByPostEvent(root, fulfilmentRequest, String.valueOf(caseId));
 
         gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
             GatewayOutcomeQueueConfig.GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY);
@@ -77,15 +76,13 @@ public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor
   }
 
   private String createQuestionnaireRequiredByPostEvent(Map<String, Object> root,
-      FulfilmentRequestDto fulfilmentRequest,
-      String caseId) {
+      FulfilmentRequestDto fulfilmentRequest, String caseId) {
     Product product = getProductFromQuestionnaireType(fulfilmentRequest);
     root.put("packcode", product.getFulfilmentCode());
     root.put("requesterTitle", fulfilmentRequest.getRequesterTitle());
     root.put("requesterForename", fulfilmentRequest.getRequesterForename());
     root.put("requesterSurname", fulfilmentRequest.getRequesterSurname());
     root.put("requesterPhone", fulfilmentRequest.getRequesterPhone());
-    root.put("caseId", caseId);
     cacheData(caseId);
 
     if (product.getIndividual()) {

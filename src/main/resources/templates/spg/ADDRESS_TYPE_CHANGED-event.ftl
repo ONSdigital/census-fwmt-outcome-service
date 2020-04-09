@@ -5,11 +5,11 @@
     "ceExpectedCapacity":"${usualResidents}",
 </#if>
 "address" : {
-    "addressType":"${estabType}"
 <#if estabType == "CE">
     "estabType":"${spgOutcome.ceDetails.establishmentType}",
-    "organisationName": "${spgOutcome.ceDetails.establishmentName}"
+    "organisationName": "${spgOutcome.ceDetails.establishmentName}",
 </#if>
+    "addressType":"${estabType}"
 }
 }
 }
