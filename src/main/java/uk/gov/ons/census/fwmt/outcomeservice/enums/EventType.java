@@ -20,7 +20,6 @@ public enum EventType {
   SOFT_REFUSAL,
 
   // SPG
-  NEW_UNIT_ADDRESS,
   NEW_ADDRESS_REPORTED,
 
 }

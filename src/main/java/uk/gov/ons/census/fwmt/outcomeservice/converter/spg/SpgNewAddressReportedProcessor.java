@@ -45,6 +45,7 @@ public class SpgNewAddressReportedProcessor implements SpgOutcomeServiceProcesso
     String eventDateTime = dateFormat.format(outcome.getEventDate());
 
     Map<String, Object> root = new HashMap<>();
+    root.put("sourceCase", "NEW_STANDALONE");
     root.put("spgOutcome", outcome);
     root.put("newCaseId", caseId);
     root.put("address", outcome.getAddress());
