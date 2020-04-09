@@ -62,7 +62,7 @@ public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor
         root.put("spgOutcome", outcome);
         root.put("caseId", caseId);
         root.put("eventDate", eventDateTime);
-        String outcomeEvent = createQuestionnaireRequiredByPostEvent(root, fulfilmentRequest);
+        String outcomeEvent = createQuestionnaireRequiredByPostEvent(root, fulfilmentRequest, String.valueOf(caseId));
 
         gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
             GatewayOutcomeQueueConfig.GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY);
@@ -76,14 +76,14 @@ public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor
   }
 
   private String createQuestionnaireRequiredByPostEvent(Map<String, Object> root,
-      FulfilmentRequestDto fulfilmentRequest) {
+      FulfilmentRequestDto fulfilmentRequest, String caseId) {
     Product product = getProductFromQuestionnaireType(fulfilmentRequest);
     root.put("packcode", product.getFulfilmentCode());
     root.put("requesterTitle", fulfilmentRequest.getRequesterTitle());
     root.put("requesterForename", fulfilmentRequest.getRequesterForename());
     root.put("requesterSurname", fulfilmentRequest.getRequesterSurname());
     root.put("requesterPhone", fulfilmentRequest.getRequesterPhone());
-//    cacheData(caseId);
+    cacheData(caseId);
 
     if (product.getIndividual()) {
       String individualCaseId = String.valueOf(UUID.randomUUID());
