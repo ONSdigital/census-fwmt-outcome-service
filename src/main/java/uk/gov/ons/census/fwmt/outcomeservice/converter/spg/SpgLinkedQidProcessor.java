@@ -45,22 +45,23 @@ public class SpgLinkedQidProcessor implements SpgOutcomeServiceProcessor {
     if (outcome.getFulfilmentRequests() == null) {
       return caseIdHolder;
     }
+    UUID caseId = (outcome.getCaseId() != null) ? outcome.getCaseId() : caseIdHolder;
     for (FulfilmentRequestDto fulfilmentRequest : outcome.getFulfilmentRequests()) {
       if (isQuestionnaireLinked(fulfilmentRequest)) {
         String eventDateTime = dateFormat.format(outcome.getEventDate());
 
         Map<String, Object> root = new HashMap<>();
         root.put("spgOutcome", outcome);
-        root.put("caseId", caseIdHolder);
+        root.put("caseId", caseId);
         root.put("questionnaireId", fulfilmentRequest.getQuestionnaireID());
         root.put("eventDate", eventDateTime);
-        cacheData(caseIdHolder);
+        cacheData(caseId);
 
         String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, spg);
 
         gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
             GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY);
-        gatewayEventManager.triggerEvent(String.valueOf(caseIdHolder), CESPG_OUTCOME_SENT, "type",
+        gatewayEventManager.triggerEvent(String.valueOf(caseId), CESPG_OUTCOME_SENT, "type",
             CESPG_QUESTIONNAIRE_LINKED_OUTCOME_SENT, "transactionId", outcome.getTransactionId().toString(),
             "routing key", GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY);
       }

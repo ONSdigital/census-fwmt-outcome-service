@@ -4,22 +4,22 @@
   "address": {
   },
   "contact": {
-    <#if title??>
+    <#if requesterTitle??>
       "title": "${requesterTitle}",
     <#else>
       "title":null,
     </#if>
-    <#if forename??>
+    <#if requesterForename??>
       "forename":"${requesterForename}",
     <#else>
       "forename":null,
      </#if>
-    <#if surname??>
+    <#if requesterSurname??>
        "surname":"${requesterSurname}",
     <#else>
        "surname":null,
     </#if>
-    <#if telNo??>
+    <#if requesterPhone??>
       "telNo":"${requesterPhone}"
     <#else>
       "telNo":null
