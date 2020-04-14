@@ -4,7 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.common.rm.dto.FieldworkFollowup;
+import uk.gov.ons.census.fwmt.common.rm.dto.ActionInstructionType;
+import uk.gov.ons.census.fwmt.common.rm.dto.FwmtActionInstruction;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.SpgOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.SpgOutcomeSuperSetDto;
 import uk.gov.ons.census.fwmt.outcomeservice.message.RmFieldRepublishProducer;
@@ -20,8 +21,8 @@ public class SpgDeliveredFeedbackProcessor implements SpgOutcomeServiceProcessor
 
   @Override
   public UUID process(SpgOutcomeSuperSetDto outcome, UUID caseIdHolder) throws GatewayException {
-    FieldworkFollowup fieldworkFollowup = FieldworkFollowup.builder()
-        .actionInstruction("UPDATE")
+    FwmtActionInstruction fieldworkFollowup = FwmtActionInstruction.builder()
+        .actionInstruction(ActionInstructionType.UPDATE)
         .surveyName("CENSUS")
         .addressType("SPG")
         .addressLevel("U")

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.common.rm.dto.FieldworkFollowup;
+import uk.gov.ons.census.fwmt.common.rm.dto.FwmtActionInstruction;
 
 @Service
 public class RmFieldRepublishProducer {
@@ -14,7 +14,7 @@ public class RmFieldRepublishProducer {
   @Qualifier("RmField")
   RabbitTemplate rabbitTemplate;
 
-  public void republish(FieldworkFollowup fieldworkFollowup) throws GatewayException {
+  public void republish(FwmtActionInstruction fieldworkFollowup) throws GatewayException {
     rabbitTemplate.convertAndSend("RM.Field", fieldworkFollowup);
   }
 }
