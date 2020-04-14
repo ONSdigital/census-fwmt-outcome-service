@@ -31,7 +31,7 @@
        "townName" : null,
     </#if>
     <#if address.postCode??>
-      "postcode" : "${address.postCode}",
+      "postcode" : "${address.postcode}",
     <#else>
       "postcode" : null,
     </#if>
