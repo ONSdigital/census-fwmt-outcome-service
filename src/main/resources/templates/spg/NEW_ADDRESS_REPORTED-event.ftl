@@ -1,6 +1,6 @@
 "newAddress" : {
 <#if sourceCase == "NEW_UNIT">
-  "sourceCaseId": "${spgOutcome.siteCaseId}",
+  "sourceCaseId" : "${spgOutcome.siteCaseId}",
 </#if>
 "collectionCase" : {
    "id" : "${newCaseId}",
@@ -8,7 +8,6 @@
     "survey" : "CENSUS",
     "fieldcoordinatorId" : "${spgOutcome.coordinatorId}",
     "fieldofficerId" : "${officerId}",
-
 <#if collectionCaseId??>
     "collectionExerciseId" : "${collectionCaseId}",
 <#else>
@@ -19,22 +18,22 @@
     <#if address.addressLine2??>
       "addressLine2" : "${address.addressLine2}",
     <#else>
-      "addressLine2":null,
+      "addressLine2" : null,
     </#if>
     <#if address.addressLine3??>
-      "addressLine3": "${address.addressLine3}",
+      "addressLine3" : "${address.addressLine3}",
     <#else>
-      "addressLine3":null,
+      "addressLine3" : null,
     </#if>
     <#if address.locality??>
        "townName" : "${address.locality}",
     <#else>
-       "townName":null,
+       "townName" : null,
     </#if>
     <#if address.postCode??>
       "postcode" : "${address.postCode}",
     <#else>
-      "postcode":null,
+      "postcode" : null,
     </#if>
       "latitude" : "${address.latitude}",
       "longitude" : "${address.longitude}",
