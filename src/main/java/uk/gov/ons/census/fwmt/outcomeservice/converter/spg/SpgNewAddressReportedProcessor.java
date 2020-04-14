@@ -82,8 +82,8 @@ public class SpgNewAddressReportedProcessor implements SpgOutcomeServiceProcesso
 
   private boolean isDelivered(SpgOutcomeSuperSetDto outcome) {
     List<FulfilmentRequestDto> fulfilmentRequestList = outcome.getFulfilmentRequests();
+    if (fulfilmentRequestList == null) return false;
     boolean isDelivered = false;
-
     for (FulfilmentRequestDto fulfilmentRequest : fulfilmentRequestList) {
       if (fulfilmentRequest.getQuestionnaireID() != null) {
         isDelivered = true;
