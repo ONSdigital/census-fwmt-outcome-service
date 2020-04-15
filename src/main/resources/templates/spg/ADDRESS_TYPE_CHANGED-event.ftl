@@ -9,6 +9,7 @@
     "estabType":"${spgOutcome.ceDetails.establishmentType}",
     "organisationName": "${spgOutcome.ceDetails.establishmentName}",
 </#if>
+    "region":"${region}",
     "addressType":"${estabType}"
 }
 }

@@ -38,6 +38,7 @@
       "latitude" : "${address.latitude}",
       "longitude" : "${address.longitude}",
 </#if>
+      "region" : "${region}",
       "addressType" : "SPG",
       "addressLevel" : "U"
     }

@@ -21,16 +21,20 @@ import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.C
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.ADDRESS_TYPE_CHANGED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
+import static uk.gov.ons.census.fwmt.outcomeservice.util.SpgUtilityMethods.regionLookup;
 
 @Component("ADDRESS_TYPE_CHANGED_CE_EST")
 public class SpgAddressTypeChangedCeEstProcessor implements SpgOutcomeServiceProcessor {
 
   @Autowired
-  DateFormat dateFormat;
+  private DateFormat dateFormat;
+
   @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
+
   @Autowired
   private GatewayEventManager gatewayEventManager;
+
   @Autowired
   private GatewayCacheService gatewayCacheService;
 
@@ -43,6 +47,7 @@ public class SpgAddressTypeChangedCeEstProcessor implements SpgOutcomeServicePro
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     root.put("spgOutcome", outcome);
     root.put("caseId", caseId);
+    root.put("region", regionLookup(outcome.getOfficerId()));
     root.put("eventDate", eventDateTime);
     root.put("estabType", "CE");
 
@@ -56,8 +61,9 @@ public class SpgAddressTypeChangedCeEstProcessor implements SpgOutcomeServicePro
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
-    gatewayEventManager.triggerEvent(String.valueOf(caseId), CESPG_OUTCOME_SENT, "type",
-        CESPG_ADDRESS_TYPE_CHANGED_OUTCOME_SENT, "transactionId", outcome.getTransactionId().toString(),
+    gatewayEventManager.triggerEvent(String.valueOf(caseId), CESPG_OUTCOME_SENT,
+        "type", CESPG_ADDRESS_TYPE_CHANGED_OUTCOME_SENT,
+        "transactionId", outcome.getTransactionId().toString(),
         "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
 
     return caseId;
@@ -73,10 +79,6 @@ public class SpgAddressTypeChangedCeEstProcessor implements SpgOutcomeServicePro
     gatewayCacheService.save(cache.toBuilder()
         .accessInfo(outcome.getAccessInfo())
         .careCodes(SpgOutcomeSuperSetDto.careCodesToText(outcome.getCareCodes()))
-        //        .managerTitle(outcome.getCeDetails().getManagerTitle())
-        //        .managerFirstname(outcome.getCeDetails().getManagerForename())
-        //        .managerSurname(outcome.getCeDetails().getManagerSurname())
-        //        .contactPhoneNumber(outcome.getCeDetails().getContactPhone())
         .build());
   }
 }

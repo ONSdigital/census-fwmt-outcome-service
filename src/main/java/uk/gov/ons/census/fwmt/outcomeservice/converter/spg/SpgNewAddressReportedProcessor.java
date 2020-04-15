@@ -7,7 +7,6 @@ import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.SpgOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
-import uk.gov.ons.census.fwmt.outcomeservice.dto.FulfilmentRequestDto;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.SpgOutcomeSuperSetDto;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.service.impl.GatewayCacheService;
@@ -15,7 +14,6 @@ import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
 import java.text.DateFormat;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -23,16 +21,21 @@ import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.C
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.NEW_ADDRESS_REPORTED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
+import static uk.gov.ons.census.fwmt.outcomeservice.util.SpgUtilityMethods.isDelivered;
+import static uk.gov.ons.census.fwmt.outcomeservice.util.SpgUtilityMethods.regionLookup;
 
 @Component("NEW_ADDRESS_REPORTED")
 public class SpgNewAddressReportedProcessor implements SpgOutcomeServiceProcessor {
 
   @Autowired
-  DateFormat dateFormat;
+  private DateFormat dateFormat;
+
   @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
+
   @Autowired
   private GatewayEventManager gatewayEventManager;
+
   @Autowired
   private GatewayCacheService gatewayCacheService;
 
@@ -48,6 +51,7 @@ public class SpgNewAddressReportedProcessor implements SpgOutcomeServiceProcesso
     root.put("sourceCase", "NEW_STANDALONE");
     root.put("spgOutcome", outcome);
     root.put("newCaseId", caseId);
+    root.put("region", regionLookup(outcome.getOfficerId()));
     root.put("address", outcome.getAddress());
     root.put("officerId", outcome.getOfficerId());
     root.put("eventDate", eventDateTime);
@@ -64,32 +68,18 @@ public class SpgNewAddressReportedProcessor implements SpgOutcomeServiceProcesso
     return caseId;
   }
 
-  private void cacheData(SpgOutcomeSuperSetDto outcome, UUID newCaseId, boolean isDelivered) throws GatewayException {
-    GatewayCache cache = gatewayCacheService.getById(String.valueOf(newCaseId));
+  private void cacheData(SpgOutcomeSuperSetDto outcome, UUID caseId, boolean isDelivered) throws GatewayException {
+    GatewayCache cache = gatewayCacheService.getById(String.valueOf(caseId));
     if (cache != null) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Case already exists in cache: {}",
-          newCaseId);
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Case already exists in cache: {}", caseId);
     }
 
     gatewayCacheService.save(GatewayCache.builder()
-        .caseId(String.valueOf(newCaseId))
+        .caseId(String.valueOf(caseId))
         .delivered(isDelivered)
         .existsInFwmt(false)
         .accessInfo(outcome.getAccessInfo())
         .careCodes(SpgOutcomeSuperSetDto.careCodesToText(outcome.getCareCodes()))
         .build());
-  }
-
-  private boolean isDelivered(SpgOutcomeSuperSetDto outcome) {
-    List<FulfilmentRequestDto> fulfilmentRequestList = outcome.getFulfilmentRequests();
-    if (fulfilmentRequestList == null) return false;
-    boolean isDelivered = false;
-    for (FulfilmentRequestDto fulfilmentRequest : fulfilmentRequestList) {
-      if (fulfilmentRequest.getQuestionnaireID() != null) {
-        isDelivered = true;
-        break;
-      }
-    }
-    return isDelivered;
   }
 }

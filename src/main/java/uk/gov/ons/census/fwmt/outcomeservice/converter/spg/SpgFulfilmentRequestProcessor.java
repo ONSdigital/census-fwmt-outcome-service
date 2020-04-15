@@ -38,21 +38,23 @@ import static uk.gov.ons.ctp.integration.common.product.model.Product.RequestCha
 public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor {
 
   @Autowired
-  DateFormat dateFormat;
+  private DateFormat dateFormat;
+
   @Autowired
   private ProductReference productReference;
+
   @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
+
   @Autowired
   private GatewayEventManager gatewayEventManager;
+
   @Autowired
   private GatewayCacheService gatewayCacheService;
 
   @Override
   public UUID process(SpgOutcomeSuperSetDto outcome, UUID caseIdHolder) throws GatewayException {
-    if (outcome.getFulfilmentRequests() == null) {
-      return caseIdHolder;
-    }
+    if (outcome.getFulfilmentRequests() == null) return caseIdHolder;
     UUID caseId = (outcome.getCaseId() != null) ? outcome.getCaseId() : caseIdHolder;
     for (FulfilmentRequestDto fulfilmentRequest : outcome.getFulfilmentRequests()) {
       if (!isQuestionnaireLinked(fulfilmentRequest)) {
@@ -118,11 +120,9 @@ public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor
 
   private void cacheData(String caseId) {
     GatewayCache cache = gatewayCacheService.getById(String.valueOf(caseId));
-    GatewayCacheBuilder builder = null;
-    if (cache == null)
-      builder = GatewayCache.builder();
-    else
-      builder = cache.toBuilder();
+    GatewayCacheBuilder builder ;
+    if (cache == null) builder = GatewayCache.builder();
+    else builder = cache.toBuilder();
 
     gatewayCacheService.save(builder
         .caseId(caseId).delivered(true).build());
