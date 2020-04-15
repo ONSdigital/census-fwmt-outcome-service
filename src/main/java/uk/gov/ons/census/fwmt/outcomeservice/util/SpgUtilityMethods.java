@@ -1,25 +1,32 @@
 package uk.gov.ons.census.fwmt.outcomeservice.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import uk.gov.ons.census.fwmt.common.error.GatewayException;
+import uk.gov.ons.census.fwmt.outcomeservice.dto.FulfilmentRequestDto;
+import uk.gov.ons.census.fwmt.outcomeservice.dto.SpgOutcomeSuperSetDto;
 
-import java.io.IOException;
+import java.util.List;
 
 public final class SpgUtilityMethods {
 
-  public static <T> T convertMessageToDTO(Class<T> klass, String message) throws GatewayException {
-    ObjectMapper objectMapper = new ObjectMapper();
-
-    objectMapper.registerModule(new JavaTimeModule());
-    objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-    T dto;
-    try {
-      dto = objectMapper.readValue(message, klass);
-    } catch (IOException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Failed to convert message into DTO.", e);
+  public static boolean isDelivered(SpgOutcomeSuperSetDto outcome) {
+    List<FulfilmentRequestDto> fulfilmentRequestList = outcome.getFulfilmentRequests();
+    if (fulfilmentRequestList == null) return false;
+    boolean isDelivered = false;
+    for (FulfilmentRequestDto fulfilmentRequest : fulfilmentRequestList) {
+      if (fulfilmentRequest.getQuestionnaireID() != null) {
+        isDelivered = true;
+        break;
+      }
     }
-    return dto;
+    return isDelivered;
+  }
+
+  public static String regionLookup(String officerId) {
+    if (officerId.substring(1).equals("W")) {
+      return "W";
+    } else if (officerId.substring(1).equals("Y")) {
+      return "N";
+    } else {
+      return "E";
+    }
   }
 }

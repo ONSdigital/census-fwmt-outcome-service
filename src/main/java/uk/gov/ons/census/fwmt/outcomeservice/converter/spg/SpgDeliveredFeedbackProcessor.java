@@ -17,7 +17,7 @@ import java.util.UUID;
 public class SpgDeliveredFeedbackProcessor implements SpgOutcomeServiceProcessor {
 
   @Autowired
-  RmFieldRepublishProducer rmFieldRepublishProducer;
+  private RmFieldRepublishProducer rmFieldRepublishProducer;
 
   @Override
   public UUID process(SpgOutcomeSuperSetDto outcome, UUID caseIdHolder) throws GatewayException {

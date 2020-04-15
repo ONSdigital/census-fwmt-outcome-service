@@ -21,16 +21,20 @@ import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.C
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.ADDRESS_TYPE_CHANGED;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
+import static uk.gov.ons.census.fwmt.outcomeservice.util.SpgUtilityMethods.regionLookup;
 
 @Component("ADDRESS_TYPE_CHANGED_HH")
 public class SpgAddressTypeChangedHhProcessor implements SpgOutcomeServiceProcessor {
 
   @Autowired
-  DateFormat dateFormat;
+  private DateFormat dateFormat;
+
   @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
+
   @Autowired
   private GatewayEventManager gatewayEventManager;
+
   @Autowired
   private GatewayCacheService gatewayCacheService;
 
@@ -43,6 +47,7 @@ public class SpgAddressTypeChangedHhProcessor implements SpgOutcomeServiceProces
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     root.put("spgOutcome", outcome);
     root.put("caseId", caseId);
+    root.put("region", regionLookup(outcome.getOfficerId()));
     root.put("eventDate", eventDateTime);
     root.put("estabType", "HH");
     root.put("usualResidents", 0);
@@ -51,8 +56,9 @@ public class SpgAddressTypeChangedHhProcessor implements SpgOutcomeServiceProces
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
-    gatewayEventManager.triggerEvent(String.valueOf(caseId), CESPG_OUTCOME_SENT, "type",
-        CESPG_ADDRESS_TYPE_CHANGED_OUTCOME_SENT, "transactionId", outcome.getTransactionId().toString(),
+    gatewayEventManager.triggerEvent(String.valueOf(caseId), CESPG_OUTCOME_SENT,
+        "type", CESPG_ADDRESS_TYPE_CHANGED_OUTCOME_SENT,
+        "transactionId", outcome.getTransactionId().toString(),
         "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
 
     return caseId;

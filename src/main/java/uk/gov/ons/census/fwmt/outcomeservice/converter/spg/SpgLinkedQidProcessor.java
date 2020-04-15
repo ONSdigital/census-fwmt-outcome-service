@@ -28,11 +28,14 @@ import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
 public class SpgLinkedQidProcessor implements SpgOutcomeServiceProcessor {
 
   @Autowired
-  DateFormat dateFormat;
+  private DateFormat dateFormat;
+
   @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
+
   @Autowired
   private GatewayEventManager gatewayEventManager;
+
   @Autowired
   private GatewayCacheService gatewayCacheService;
 
@@ -42,9 +45,7 @@ public class SpgLinkedQidProcessor implements SpgOutcomeServiceProcessor {
 
   @Override
   public UUID process(SpgOutcomeSuperSetDto outcome, UUID caseIdHolder) throws GatewayException {
-    if (outcome.getFulfilmentRequests() == null) {
-      return caseIdHolder;
-    }
+    if (outcome.getFulfilmentRequests() == null) return caseIdHolder;
     UUID caseId = (outcome.getCaseId() != null) ? outcome.getCaseId() : caseIdHolder;
     for (FulfilmentRequestDto fulfilmentRequest : outcome.getFulfilmentRequests()) {
       if (isQuestionnaireLinked(fulfilmentRequest)) {
@@ -61,8 +62,9 @@ public class SpgLinkedQidProcessor implements SpgOutcomeServiceProcessor {
 
         gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
             GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY);
-        gatewayEventManager.triggerEvent(String.valueOf(caseId), CESPG_OUTCOME_SENT, "type",
-            CESPG_QUESTIONNAIRE_LINKED_OUTCOME_SENT, "transactionId", outcome.getTransactionId().toString(),
+        gatewayEventManager.triggerEvent(String.valueOf(caseId), CESPG_OUTCOME_SENT,
+            "type", CESPG_QUESTIONNAIRE_LINKED_OUTCOME_SENT,
+            "transactionId", outcome.getTransactionId().toString(),
             "routing key", GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY);
       }
     }
@@ -71,11 +73,9 @@ public class SpgLinkedQidProcessor implements SpgOutcomeServiceProcessor {
 
   private void cacheData(UUID caseId) {
     GatewayCache cache = gatewayCacheService.getById(String.valueOf(caseId));
-    GatewayCacheBuilder builder = null;
-    if (cache == null)
-      builder = GatewayCache.builder();
-    else
-      builder = cache.toBuilder();
+    GatewayCacheBuilder builder;
+    if (cache == null) builder = GatewayCache.builder();
+    else builder = cache.toBuilder();
 
     gatewayCacheService.save(builder
         .caseId(String.valueOf(caseId)).delivered(true).build());

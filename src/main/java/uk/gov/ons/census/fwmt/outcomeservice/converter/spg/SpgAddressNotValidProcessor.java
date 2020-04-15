@@ -24,11 +24,14 @@ import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
 public class SpgAddressNotValidProcessor implements SpgOutcomeServiceProcessor {
 
   @Autowired
-  DateFormat dateFormat;
+  private DateFormat dateFormat;
+
   @Autowired
   private GatewayOutcomeProducer gatewayOutcomeProducer;
+
   @Autowired
   private GatewayEventManager gatewayEventManager;
+
   @Autowired
   private SpgReasonCodeLookup spgReasonCodeLookup;
 
