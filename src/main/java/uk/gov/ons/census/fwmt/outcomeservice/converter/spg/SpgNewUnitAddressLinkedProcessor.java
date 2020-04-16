@@ -50,7 +50,7 @@ public class SpgNewUnitAddressLinkedProcessor implements SpgOutcomeServiceProces
     Map<String, Object> root = new HashMap<>();
     root.put("sourceCase", "NEW_UNIT");
     root.put("spgOutcome", outcome);
-    root.put("newUnitCaseId", caseId);
+    root.put("newCaseId", caseId);
     root.put("region", regionLookup(outcome.getOfficerId()));
     root.put("collectionCaseId", collectionCaseId);
     root.put("officerId", outcome.getOfficerId());
