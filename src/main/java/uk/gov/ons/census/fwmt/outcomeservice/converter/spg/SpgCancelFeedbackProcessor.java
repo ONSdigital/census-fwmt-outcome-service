@@ -16,21 +16,21 @@ import java.util.UUID;
 @Component("CANCEL_FEEDBACK")
 public class SpgCancelFeedbackProcessor implements SpgOutcomeServiceProcessor {
 
-    @Autowired
-    private RmFieldRepublishProducer rmFieldRepublishProducer;
+  @Autowired
+  private RmFieldRepublishProducer rmFieldRepublishProducer;
 
-    @Override
-    public UUID process(SpgOutcomeSuperSetDto outcome, UUID caseIdHolder) throws GatewayException {
-        FwmtActionInstruction fieldworkFollowup = FwmtActionInstruction.builder()
-                .actionInstruction(ActionInstructionType.UPDATE)
-                .surveyName("CENSUS")
-                .addressType("SPG")
-                .addressLevel("U")
-                .caseId(outcome.getCaseId().toString())
-                .build();
+  @Override
+  public UUID process(SpgOutcomeSuperSetDto outcome, UUID caseIdHolder) throws GatewayException {
+    FwmtActionInstruction fieldworkFollowup = FwmtActionInstruction.builder()
+        .actionInstruction(ActionInstructionType.CANCEL)
+        .surveyName("CENSUS")
+        .addressType("SPG")
+        .addressLevel("U")
+        .caseId(outcome.getCaseId().toString())
+        .build();
 
-        rmFieldRepublishProducer.republish(fieldworkFollowup);
+    rmFieldRepublishProducer.republish(fieldworkFollowup);
 
-        return null;
-    }
+    return null;
+  }
 }
