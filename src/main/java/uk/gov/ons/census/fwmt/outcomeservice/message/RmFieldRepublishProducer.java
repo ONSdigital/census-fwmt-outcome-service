@@ -11,10 +11,10 @@ import uk.gov.ons.census.fwmt.common.rm.dto.FwmtActionInstruction;
 public class RmFieldRepublishProducer {
 
   @Autowired
-  @Qualifier("RmField")
-  RabbitTemplate rabbitTemplate;
+  @Qualifier("feedbackRabbitTemplate")
+  private RabbitTemplate rabbitTemplate;
 
-  public void republish(FwmtActionInstruction fieldworkFollowup) throws GatewayException {
+  public void republish(FwmtActionInstruction fieldworkFollowup) {
     rabbitTemplate.convertAndSend("RM.Field", fieldworkFollowup);
   }
 }
