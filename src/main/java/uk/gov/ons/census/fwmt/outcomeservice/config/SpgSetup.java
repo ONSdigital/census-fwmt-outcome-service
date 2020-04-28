@@ -35,7 +35,7 @@ public class SpgSetup {
     SpgOutcomeLookup spgOutcomeLookup = new SpgOutcomeLookup();
     try (BufferedReader in = new BufferedReader(new InputStreamReader(resource.getInputStream(), UTF_8))) {
       while ((line = in.readLine()) != null) {
-        String[] lookup = line.split("|");
+        String[] lookup = line.split("\\|");
         spgOutcomeLookup.add(lookup[0], lookup[1].split(","));
       }
     } catch (IOException e) {
