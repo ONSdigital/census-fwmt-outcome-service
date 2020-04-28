@@ -28,7 +28,7 @@ public class FeedbackQueueConfig {
     return template;
   }
 
-  @Bean
+  @Bean(name = "feedbackJsonMessageConverter")
   @Qualifier("FB_MC")
   public MessageConverter jsonMessageConverter(@Qualifier("FB_CM") DefaultClassMapper cm) {
     final ObjectMapper objectMapper = new ObjectMapper();
@@ -38,7 +38,7 @@ public class FeedbackQueueConfig {
     return jsonMessageConverter;
   }
 
-  @Bean
+  @Bean(name = "feedbackClassMapper")
   @Qualifier("FB_CM")
   public DefaultClassMapper classMapper() {
     DefaultClassMapper classMapper = new DefaultClassMapper();
