@@ -6,8 +6,8 @@
    "id" : "${newCaseId}",
     "caseType" : "SPG",
     "survey" : "CENSUS",
-    "fieldcoordinatorId" : "${spgOutcome.coordinatorId}",
-    "fieldofficerId" : "${officerId}",
+    "fieldCoordinatorId" : "${spgOutcome.coordinatorId}",
+    "fieldOfficerId" : "${officerId}",
 <#if collectionCaseId??>
     "collectionExerciseId" : "${collectionCaseId}",
 <#else>
