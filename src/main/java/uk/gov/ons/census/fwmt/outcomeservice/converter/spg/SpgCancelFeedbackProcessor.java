@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.common.rm.dto.ActionInstructionType;
 import uk.gov.ons.census.fwmt.common.rm.dto.FwmtActionInstruction;
+import uk.gov.ons.census.fwmt.common.rm.dto.FwmtCancelActionInstruction;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.SpgOutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.SpgOutcomeSuperSetDto;
 import uk.gov.ons.census.fwmt.outcomeservice.message.RmFieldRepublishProducer;
@@ -21,7 +22,7 @@ public class SpgCancelFeedbackProcessor implements SpgOutcomeServiceProcessor {
 
   @Override
   public UUID process(SpgOutcomeSuperSetDto outcome, UUID caseIdHolder) throws GatewayException {
-    FwmtActionInstruction fieldworkFollowup = FwmtActionInstruction.builder()
+    FwmtCancelActionInstruction fieldworkFollowup = FwmtCancelActionInstruction.builder()
         .actionInstruction(ActionInstructionType.CANCEL)
         .surveyName("CENSUS")
         .addressType("SPG")
