@@ -40,7 +40,7 @@ public class SpgLinkedQidProcessor implements SpgOutcomeServiceProcessor {
   private GatewayCacheService gatewayCacheService;
 
   private boolean isQuestionnaireLinked(FulfilmentRequestDto fulfilmentRequest) {
-    return (fulfilmentRequest.getQuestionnaireType() == null);
+    return (fulfilmentRequest.getQuestionnaireID() == null);
   }
 
   @Override
@@ -48,7 +48,7 @@ public class SpgLinkedQidProcessor implements SpgOutcomeServiceProcessor {
     if (outcome.getFulfilmentRequests() == null) return caseIdHolder;
     UUID caseId = (outcome.getCaseId() != null) ? outcome.getCaseId() : caseIdHolder;
     for (FulfilmentRequestDto fulfilmentRequest : outcome.getFulfilmentRequests()) {
-      if (isQuestionnaireLinked(fulfilmentRequest)) {
+      if (!isQuestionnaireLinked(fulfilmentRequest)) {
         String eventDateTime = dateFormat.format(outcome.getEventDate());
 
         Map<String, Object> root = new HashMap<>();
