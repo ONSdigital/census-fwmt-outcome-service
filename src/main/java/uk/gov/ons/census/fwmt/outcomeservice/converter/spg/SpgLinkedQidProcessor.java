@@ -40,7 +40,7 @@ public class SpgLinkedQidProcessor implements SpgOutcomeServiceProcessor {
   private GatewayCacheService gatewayCacheService;
 
   private boolean isQuestionnaireLinked(FulfilmentRequestDto fulfilmentRequest) {
-    return (fulfilmentRequest.getQuestionnaireType() == null);
+    return (fulfilmentRequest.getQuestionnaireID() != null);
   }
 
   @Override

@@ -35,8 +35,8 @@
     <#else>
       "postcode" : null,
     </#if>
-      "latitude" : "${address.latitude}",
-      "longitude" : "${address.longitude}",
+      "latitude" : "${address.latitude?string["0.########"]}",
+      "longitude" : "${address.longitude?string["0.#########"]}",
 </#if>
       "region" : "${region}",
       "addressType" : "SPG",

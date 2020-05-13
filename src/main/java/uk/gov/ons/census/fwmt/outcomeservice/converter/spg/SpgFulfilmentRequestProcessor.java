@@ -115,7 +115,7 @@ public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor
   }
 
   private boolean isQuestionnaireLinked(FulfilmentRequestDto fulfilmentRequest) {
-    return (fulfilmentRequest.getQuestionnaireType() == null);
+    return (fulfilmentRequest.getQuestionnaireID() != null);
   }
 
   private void cacheData(String caseId) {
