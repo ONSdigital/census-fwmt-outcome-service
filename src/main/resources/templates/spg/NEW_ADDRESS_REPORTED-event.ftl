@@ -1,7 +1,4 @@
 "newAddress" : {
-<#if sourceCase == "NEW_UNIT">
-  "sourceCaseId" : "${spgOutcome.siteCaseId}",
-</#if>
 "collectionCase" : {
    "id" : "${newCaseId}",
     "caseType" : "SPG",
@@ -14,7 +11,6 @@
 </#if>
     "address" : {
       "addressLine1" : "${address.addressLine1}",
-<#if sourceCase == "NEW_STANDALONE">
     <#if address.addressLine2??>
       "addressLine2" : "${address.addressLine2}",
     <#else>
@@ -37,7 +33,6 @@
     </#if>
       "latitude" : "${address.latitude?string["0.########"]}",
       "longitude" : "${address.longitude?string["0.#########"]}",
-</#if>
       "region" : "${region}",
       "addressType" : "SPG",
       "addressLevel" : "U"
