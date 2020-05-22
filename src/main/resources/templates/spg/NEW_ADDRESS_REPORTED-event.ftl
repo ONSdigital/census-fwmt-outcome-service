@@ -1,4 +1,7 @@
 "newAddress" : {
+<#if sourceCase == "NEW_UNIT">
+"sourceCaseId" : "${spgOutcome.siteCaseId}",
+</#if>
 "collectionCase" : {
    "id" : "${newCaseId}",
     "caseType" : "SPG",
