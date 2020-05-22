@@ -48,6 +48,7 @@ public class SpgNewUnitAddressLinkedProcessor implements SpgOutcomeServiceProces
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
+    root.put("sourceCase", "NEW_UNIT");
     root.put("spgOutcome", outcome);
     root.put("newCaseId", caseId);
     root.put("region", regionLookup(outcome.getOfficerId()));
