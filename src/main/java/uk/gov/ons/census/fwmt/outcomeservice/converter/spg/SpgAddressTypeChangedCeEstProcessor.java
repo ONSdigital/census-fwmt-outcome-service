@@ -51,7 +51,7 @@ public class SpgAddressTypeChangedCeEstProcessor implements SpgOutcomeServicePro
     root.put("eventDate", eventDateTime);
     root.put("estabType", "CE");
 
-    if (outcome.getCeDetails().getUsualResidents() == null) {
+    if (outcome.getCeDetails() == null) {
       root.put("usualResidents", 0);
     } else {
       root.put("usualResidents", outcome.getCeDetails().getUsualResidents());
