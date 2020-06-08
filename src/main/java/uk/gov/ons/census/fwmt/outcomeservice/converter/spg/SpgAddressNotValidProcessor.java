@@ -37,7 +37,7 @@ public class SpgAddressNotValidProcessor implements SpgOutcomeServiceProcessor {
 
   @Override
   public UUID process(SpgOutcomeSuperSetDto outcome, UUID caseIdHolder) throws GatewayException {
-    UUID caseId = (outcome.getCaseId() != null) ? outcome.getCaseId() : caseIdHolder;
+    UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
 
     String reasonCode = spgReasonCodeLookup.getLookup(outcome.getOutcomeCode());
 

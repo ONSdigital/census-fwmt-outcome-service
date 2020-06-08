@@ -21,16 +21,17 @@ public class SpgCancelFeedbackProcessor implements SpgOutcomeServiceProcessor {
 
   @Override
   public UUID process(SpgOutcomeSuperSetDto outcome, UUID caseIdHolder) throws GatewayException {
+    UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
     FwmtCancelActionInstruction fieldworkFollowup = FwmtCancelActionInstruction.builder()
         .actionInstruction(ActionInstructionType.CANCEL)
         .surveyName("CENSUS")
         .addressType("SPG")
         .addressLevel("U")
-        .caseId(outcome.getCaseId().toString())
+        .caseId(caseId.toString())
         .build();
 
     rmFieldRepublishProducer.republish(fieldworkFollowup);
 
-    return null;
+    return caseId;
   }
 }

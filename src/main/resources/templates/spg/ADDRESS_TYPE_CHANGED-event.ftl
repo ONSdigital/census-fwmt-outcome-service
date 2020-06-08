@@ -1,4 +1,5 @@
 "addressTypeChange":{
+"newCaseId":"${newCaseId}",
 "collectionCase":{
 "id":"${caseId}",
 <#if estabType == "CE">
@@ -10,8 +11,8 @@
     "estabType":"${spgOutcome.ceDetails.establishmentType}",
     "organisationName":"${spgOutcome.ceDetails.establishmentName}",
     <#else>
-    "organisationName":null,
-    "estabType":null,
+    "organisationName":"Unknown",
+    "estabType":"Unknown",
     </#if>
 </#if>
     "region":"${region}",

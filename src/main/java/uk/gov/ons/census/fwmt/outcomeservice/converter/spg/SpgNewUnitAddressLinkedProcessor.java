@@ -41,7 +41,7 @@ public class SpgNewUnitAddressLinkedProcessor implements SpgOutcomeServiceProces
 
   @Override
   public UUID process(SpgOutcomeSuperSetDto outcome, UUID caseIdHolder) throws GatewayException {
-    UUID caseId = (outcome.getCaseId() != null) ? outcome.getCaseId() : caseIdHolder;
+    UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
     boolean isDelivered = isDelivered(outcome);
     cacheData(outcome, outcome.getCaseId(), isDelivered);
     String collectionCaseId = String.valueOf(UUID.randomUUID());

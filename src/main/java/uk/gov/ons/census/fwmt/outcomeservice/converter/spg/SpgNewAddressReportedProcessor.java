@@ -41,7 +41,7 @@ public class SpgNewAddressReportedProcessor implements SpgOutcomeServiceProcesso
 
   @Override
   public UUID process(SpgOutcomeSuperSetDto outcome, UUID caseIdHolder) throws GatewayException {
-    UUID caseId = (outcome.getCaseId() != null) ? outcome.getCaseId() : caseIdHolder;
+    UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
     boolean isDelivered = isDelivered(outcome);
     cacheData(outcome, caseId, isDelivered);
 

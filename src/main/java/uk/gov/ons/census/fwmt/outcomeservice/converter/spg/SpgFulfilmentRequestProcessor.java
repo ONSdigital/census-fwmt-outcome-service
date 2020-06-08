@@ -55,7 +55,7 @@ public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor
   @Override
   public UUID process(SpgOutcomeSuperSetDto outcome, UUID caseIdHolder) throws GatewayException {
     if (outcome.getFulfilmentRequests() == null) return caseIdHolder;
-    UUID caseId = (outcome.getCaseId() != null) ? outcome.getCaseId() : caseIdHolder;
+    UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
     for (FulfilmentRequestDto fulfilmentRequest : outcome.getFulfilmentRequests()) {
       if (!isQuestionnaireLinked(fulfilmentRequest)) {
 

@@ -40,13 +40,15 @@ public class SpgAddressTypeChangedHhProcessor implements SpgOutcomeServiceProces
 
   @Override
   public UUID process(SpgOutcomeSuperSetDto outcome, UUID caseIdHolder) throws GatewayException {
-    UUID caseId = (outcome.getCaseId() != null) ? outcome.getCaseId() : caseIdHolder;
-    cacheData(outcome, caseId);
-
     Map<String, Object> root = new HashMap<>();
+    UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
+    root.put("caseId", caseId);
+    UUID newCaseId = UUID.randomUUID();
+    root.put("newCaseId", newCaseId);
+    cacheData(outcome, caseId, newCaseId);
+
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     root.put("spgOutcome", outcome);
-    root.put("caseId", caseId);
     root.put("region", regionLookup(outcome.getOfficerId()));
     root.put("eventDate", eventDateTime);
     root.put("estabType", "HH");
@@ -61,17 +63,23 @@ public class SpgAddressTypeChangedHhProcessor implements SpgOutcomeServiceProces
         "transactionId", outcome.getTransactionId().toString(),
         "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
 
-    return caseId;
+    return newCaseId;
   }
 
-  private void cacheData(SpgOutcomeSuperSetDto outcome, UUID caseId) throws GatewayException {
-    GatewayCache cachedItem = gatewayCacheService.getById(String.valueOf(caseId));
-    if (cachedItem == null) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Case does not exist in cache: {}",
-          caseId);
+  private void cacheData(SpgOutcomeSuperSetDto outcome, UUID caseId, UUID newCaseId) throws GatewayException {
+    GatewayCache parentCacheJob = gatewayCacheService.getById(caseId.toString());
+    if (parentCacheJob == null) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Parent case does not exist in cache: {}", caseId);
     }
 
-    gatewayCacheService.save(cachedItem.toBuilder()
+    GatewayCache newCachedJob = gatewayCacheService.getById(newCaseId.toString());
+    if (newCachedJob != null) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "New case exists in cache: {}", caseId);
+    }
+
+    gatewayCacheService.save(GatewayCache.builder()
+        .caseId(newCaseId.toString())
+        .existsInFwmt(false)
         .accessInfo(outcome.getAccessInfo())
         .careCodes(SpgOutcomeSuperSetDto.careCodesToText(outcome.getCareCodes()))
         .build());
