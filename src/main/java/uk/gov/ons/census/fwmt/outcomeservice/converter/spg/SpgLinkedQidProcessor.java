@@ -46,7 +46,7 @@ public class SpgLinkedQidProcessor implements SpgOutcomeServiceProcessor {
   @Override
   public UUID process(SpgOutcomeSuperSetDto outcome, UUID caseIdHolder) throws GatewayException {
     if (outcome.getFulfilmentRequests() == null) return caseIdHolder;
-    UUID caseId = (outcome.getCaseId() != null) ? outcome.getCaseId() : caseIdHolder;
+    UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
     for (FulfilmentRequestDto fulfilmentRequest : outcome.getFulfilmentRequests()) {
       if (isQuestionnaireLinked(fulfilmentRequest)) {
         String eventDateTime = dateFormat.format(outcome.getEventDate());
