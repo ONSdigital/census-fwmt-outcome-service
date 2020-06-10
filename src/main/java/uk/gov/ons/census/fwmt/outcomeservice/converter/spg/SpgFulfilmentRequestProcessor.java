@@ -57,8 +57,7 @@ public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor
     if (outcome.getFulfilmentRequests() == null) return caseIdHolder;
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
     for (FulfilmentRequestDto fulfilmentRequest : outcome.getFulfilmentRequests()) {
-      if (!isQuestionnaireLinked(fulfilmentRequest)) {
-
+      if (!isQuestionnaireLinked(fulfilmentRequest) && fulfilmentRequest.getQuestionnaireType() != null) {
         String eventDateTime = dateFormat.format(outcome.getEventDate());
         Map<String, Object> root = new HashMap<>();
         root.put("spgOutcome", outcome);
