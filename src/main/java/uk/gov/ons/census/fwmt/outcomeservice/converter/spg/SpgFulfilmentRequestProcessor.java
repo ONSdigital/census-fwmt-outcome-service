@@ -80,7 +80,7 @@ public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor
       FulfilmentRequestDto fulfilmentRequest, String caseId, String outcomeCode) {
     String packcode;
     List<Product> productList = getProductFromQuestionnaireType(fulfilmentRequest, outcomeCode);
-    if (productList.get(0) == null) {
+    if (productList.get(0) == null || productList.size() > 1) {
       packcode = outcomeCode;
     } else {
       packcode = productList.get(0).getFulfilmentCode();
