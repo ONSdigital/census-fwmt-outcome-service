@@ -18,7 +18,7 @@ import uk.gov.ons.ctp.common.error.CTPException;
 import uk.gov.ons.ctp.integration.common.product.ProductReference;
 import uk.gov.ons.ctp.integration.common.product.model.Product;
 
-import javax.annotation.Nonnull;
+
 import java.text.DateFormat;
 import java.util.Collections;
 import java.util.HashMap;
@@ -79,8 +79,8 @@ public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor
   private String createQuestionnaireRequiredByPostEvent(Map<String, Object> root,
       FulfilmentRequestDto fulfilmentRequest, String caseId, String outcomeCode) {
     String packcode;
-    List<Product> productList = getProductFromQuestionnaireType(fulfilmentRequest, outcomeCode);
-    if (productList.get(0) == null || productList.size() > 1) {
+    List<Product> productList = getProductFromQuestionnaireType(fulfilmentRequest);
+    if ((productList != null && !productList.isEmpty()) && (productList.get(0) == null || productList.size() > 1 )) {
       packcode = outcomeCode;
     } else {
       packcode = productList.get(0).getFulfilmentCode();
@@ -103,7 +103,7 @@ public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor
     return TemplateCreator.createOutcomeMessage(FULFILMENT_REQUESTED, root, spg);
   }
 
-  private List<Product> getProductFromQuestionnaireType(FulfilmentRequestDto fulfilmentRequest, String outcomeCode) {
+  private List<Product> getProductFromQuestionnaireType(FulfilmentRequestDto fulfilmentRequest) {
     Product product = new Product();
     List<Product.RequestChannel> requestChannels = Collections.singletonList(FIELD);
 
