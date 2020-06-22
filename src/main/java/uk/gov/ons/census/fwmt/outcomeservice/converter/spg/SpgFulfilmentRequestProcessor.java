@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_FULFILMENT_REQUESTED_OUTCOME_SENT;
@@ -63,7 +62,8 @@ public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor
         root.put("spgOutcome", outcome);
         root.put("caseId", caseId);
         root.put("eventDate", eventDateTime);
-        String outcomeEvent = createQuestionnaireRequiredByPostEvent(root, fulfilmentRequest, String.valueOf(caseId));
+        String outcomeEvent = createQuestionnaireRequiredByPostEvent(root, fulfilmentRequest, String.valueOf(caseId),
+            outcome.getOutcomeCode());
 
         gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
             GatewayOutcomeQueueConfig.GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY);
@@ -77,32 +77,38 @@ public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor
   }
 
   private String createQuestionnaireRequiredByPostEvent(Map<String, Object> root,
-      FulfilmentRequestDto fulfilmentRequest, String caseId) {
-    Product product = getProductFromQuestionnaireType(fulfilmentRequest);
-    root.put("packcode", product.getFulfilmentCode());
+      FulfilmentRequestDto fulfilmentRequest, String caseId, String outcomeCode) {
+    String packcode;
+    List<Product> productList = getProductFromQuestionnaireType(fulfilmentRequest, outcomeCode);
+    if (productList.get(0) == null) {
+      packcode = outcomeCode;
+    } else {
+      packcode = productList.get(0).getFulfilmentCode();
+
+      if (productList.get(0).getIndividual()) {
+        String individualCaseId = String.valueOf(UUID.randomUUID());
+        root.put("householdIndicator", 1);
+        root.put("individualCaseId", individualCaseId);
+      } else {
+        root.put("householdIndicator", 0);
+      }
+    }
+    root.put("packcode", packcode);
     root.put("requesterTitle", fulfilmentRequest.getRequesterTitle());
     root.put("requesterForename", fulfilmentRequest.getRequesterForename());
     root.put("requesterSurname", fulfilmentRequest.getRequesterSurname());
     root.put("requesterPhone", fulfilmentRequest.getRequesterPhone());
     cacheData(caseId);
 
-    if (product.getIndividual()) {
-      String individualCaseId = String.valueOf(UUID.randomUUID());
-      root.put("householdIndicator", 1);
-      root.put("individualCaseId", individualCaseId);
-    } else {
-      root.put("householdIndicator", 0);
-    }
     return TemplateCreator.createOutcomeMessage(FULFILMENT_REQUESTED, root, spg);
   }
 
-  @Nonnull
-  private Product getProductFromQuestionnaireType(FulfilmentRequestDto fulfilmentRequest) {
+  private List<Product> getProductFromQuestionnaireType(FulfilmentRequestDto fulfilmentRequest, String outcomeCode) {
     Product product = new Product();
     List<Product.RequestChannel> requestChannels = Collections.singletonList(FIELD);
 
     product.setRequestChannels(requestChannels);
-    product.setFieldQuestionnaireCode(fulfilmentRequest.getQuestionnaireType());
+    product.setFulfilmentCode(fulfilmentRequest.getQuestionnaireType());
 
     List<Product> productList = null;
     try {
@@ -110,7 +116,7 @@ public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor
     } catch (CTPException e) {
       log.error("unable to find valid Products {}", e);
     }
-    return Objects.requireNonNull(productList).get(0);
+    return productList;
   }
 
   private boolean isQuestionnaireLinked(FulfilmentRequestDto fulfilmentRequest) {
