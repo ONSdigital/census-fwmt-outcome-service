@@ -87,6 +87,7 @@ public class SpgAddressTypeChangedCeEstProcessor implements SpgOutcomeServicePro
         .existsInFwmt(false)
         .accessInfo(outcome.getAccessInfo())
         .careCodes(SpgOutcomeSuperSetDto.careCodesToText(outcome.getCareCodes()))
+        .type(0)
         .build());
   }
 }

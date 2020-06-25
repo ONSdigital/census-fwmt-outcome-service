@@ -35,4 +35,15 @@ public class GatewayCache {
   @Column(name = "access_info")
   public String accessInfo;
 
+  @Column(name = "uprn")
+  public String uprn;
+
+  @Column(name = "estab_uprn")
+  public String estabUprn;
+
+  @Column(name ="type")
+  public int type;
+
+  // TODO : Probably move this object to common so its in one location
+
 }
