@@ -82,6 +82,7 @@ public class SpgNewUnitAddressLinkedProcessor implements SpgOutcomeServiceProces
         .existsInFwmt(false)
         .accessInfo(outcome.getAccessInfo())
         .careCodes(SpgOutcomeSuperSetDto.careCodesToText(outcome.getCareCodes()))
+        .type(0)
         .build());
   }
 }

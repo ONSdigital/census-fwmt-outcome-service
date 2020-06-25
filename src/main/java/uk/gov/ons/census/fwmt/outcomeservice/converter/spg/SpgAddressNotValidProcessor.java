@@ -52,8 +52,7 @@ public class SpgAddressNotValidProcessor implements SpgOutcomeServiceProcessor {
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
-    gatewayEventManager
-        .triggerEvent(String.valueOf(caseId), CESPG_OUTCOME_SENT,
+    gatewayEventManager.triggerEvent(String.valueOf(caseId), CESPG_OUTCOME_SENT,
             "type", CESPG_ADDRESS_NOT_VALID_OUTCOME_SENT,
             "transactionId", outcome.getTransactionId().toString(),
             "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);

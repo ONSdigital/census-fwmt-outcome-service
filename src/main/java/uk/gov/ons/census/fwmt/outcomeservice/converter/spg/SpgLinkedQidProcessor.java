@@ -78,6 +78,9 @@ public class SpgLinkedQidProcessor implements SpgOutcomeServiceProcessor {
     else builder = cache.toBuilder();
 
     gatewayCacheService.save(builder
-        .caseId(String.valueOf(caseId)).delivered(true).build());
+        .caseId(String.valueOf(caseId))
+        .delivered(true)
+        .type(0)
+        .build());
   }
 }

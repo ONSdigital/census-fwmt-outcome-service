@@ -130,7 +130,9 @@ public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor
     else builder = cache.toBuilder();
 
     gatewayCacheService.save(builder
-        .caseId(caseId).delivered(true).build());
+        .caseId(caseId).delivered(true)
+        .type(0)
+        .build());
   }
 
 }
