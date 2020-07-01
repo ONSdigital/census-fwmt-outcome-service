@@ -34,16 +34,8 @@
     <#else>
       "postcode" : null,
     </#if>
-    <#if address.latitude??>
       "latitude" : "${address.latitude?string["0.########"]}",
-    <#else>
-      "latitude" : null,
-    </#if>
-    <#if address.latitude??>
       "longitude" : "${address.longitude?string["0.#########"]}",
-    <#else>
-      "longitude" : null,
-    </#if>
       "region" : "${region}",
       "addressType" : "SPG",
       "addressLevel" : "U"

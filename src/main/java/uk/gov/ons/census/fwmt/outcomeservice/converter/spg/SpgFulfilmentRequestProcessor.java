@@ -87,10 +87,7 @@ public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor
 
       if (productList.get(0).getIndividual()) {
         String individualCaseId = String.valueOf(UUID.randomUUID());
-        root.put("householdIndicator", 1);
         root.put("individualCaseId", individualCaseId);
-      } else {
-        root.put("householdIndicator", 0);
       }
     }
     root.put("packcode", packcode);
