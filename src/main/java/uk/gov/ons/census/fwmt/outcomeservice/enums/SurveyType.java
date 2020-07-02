@@ -4,5 +4,6 @@ public enum SurveyType {
   household,
   ccs,
   interview,
-  spg
+  spg,
+  ce
 }

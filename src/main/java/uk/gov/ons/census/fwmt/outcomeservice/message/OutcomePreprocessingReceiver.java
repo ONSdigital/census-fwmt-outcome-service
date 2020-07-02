@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.ons.census.fwmt.common.data.ce.CEOutcome;
 import uk.gov.ons.census.fwmt.common.data.spg.NewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.NewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
@@ -55,5 +56,13 @@ public class OutcomePreprocessingReceiver {
         "Outcome code", outcomeDTO.getOutcomeCode(),
         "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
     delegate.createSpgOutcomeEvent(outcomeDTO);
+  }
+
+  public void processMessage(CEOutcome CeOutcome) throws GatewayException {
+    SpgOutcomeSuperSetDto outcomeDTO = mapperFacade.map(CeOutcome, SpgOutcomeSuperSetDto.class);
+    gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), PREPROCESSING_CESPG_OUTCOME,
+        "Outcome code", outcomeDTO.getOutcomeCode(),
+        "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
+    delegate.createCeOutcomeEvent(outcomeDTO);
   }
 }

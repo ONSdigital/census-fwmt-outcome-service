@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.ons.census.fwmt.common.data.ce.CEOutcome;
 import uk.gov.ons.census.fwmt.common.data.spg.NewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.NewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
@@ -26,6 +27,20 @@ public class OutcomeController implements OutcomeApi {
 
   @Autowired
   private OutcomePreprocessingProducer outcomePreprocessingProducer;
+
+  @Override
+  public ResponseEntity<Void> ceOutcomeResponse(String caseId, CEOutcome ceOutcome) {
+    gatewayEventManager.triggerEvent(caseId, COMET_CESPG_OUTCOME_RECEIVED,
+        "transactionId", ceOutcome.getTransactionId().toString(),
+        "Primary Outcome", ceOutcome.getPrimaryOutcomeDescription(),
+        "Secondary Outcome", ceOutcome.getSecondaryOutcomeDescription(),
+        "Outcome code", ceOutcome.getOutcomeCode());
+    ceOutcome.setCaseId(UUID.fromString(caseId));
+
+    outcomePreprocessingProducer.sendCeOutcomeToPreprocessingQueue(ceOutcome);
+
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 
   @Override
   public ResponseEntity<Void> spgOutcomeResponse(String caseId, SPGOutcome spgOutcome) {
