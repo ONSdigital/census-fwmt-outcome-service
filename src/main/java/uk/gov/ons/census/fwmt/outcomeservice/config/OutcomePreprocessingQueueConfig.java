@@ -24,6 +24,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.interceptor.RetryOperationsInterceptor;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import uk.gov.ons.census.fwmt.common.data.ce.CEOutcome;
 import uk.gov.ons.census.fwmt.common.data.spg.NewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.NewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
@@ -116,6 +117,7 @@ public class OutcomePreprocessingQueueConfig {
     idClassMapping.put("uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome", SPGOutcome.class);
     idClassMapping.put("uk.gov.ons.census.fwmt.common.data.spg.NewUnitAddress", NewUnitAddress.class);
     idClassMapping.put("uk.gov.ons.census.fwmt.common.data.spg.NewStandaloneAddress", NewStandaloneAddress.class);
+    idClassMapping.put("uk.gov.ons.census.fwmt.common.data.ce.CEOutcome", CEOutcome.class);
     classMapper.setIdClassMapping(idClassMapping);
     classMapper.setTrustedPackages("*");
     return classMapper;

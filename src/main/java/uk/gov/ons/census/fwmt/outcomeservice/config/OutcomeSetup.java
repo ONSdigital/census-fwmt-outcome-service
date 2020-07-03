@@ -17,7 +17,7 @@ import java.io.InputStreamReader;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Configuration
-public class SpgSetup {
+public class OutcomeSetup {
   @Autowired
   private ResourceLoader resourceLoader;
 
@@ -28,7 +28,7 @@ public class SpgSetup {
   private String reasonCodeLookupPath;
 
   @Bean
-  public SpgOutcomeLookup buildSPGOutcomeLookup() throws GatewayException {
+  public SpgOutcomeLookup buildOutcomeLookup() throws GatewayException {
     String line;
     Resource resource = resourceLoader.getResource(outcomeCodeLookupPath);
 
@@ -45,7 +45,7 @@ public class SpgSetup {
   }
 
   @Bean
-  public SpgReasonCodeLookup buildSPGReasonCodeLookup() throws GatewayException {
+  public SpgReasonCodeLookup buildReasonCodeLookup() throws GatewayException {
     String line;
     Resource resource = resourceLoader.getResource(reasonCodeLookupPath);
     SpgReasonCodeLookup spgReasonCodeLookup = new SpgReasonCodeLookup();
