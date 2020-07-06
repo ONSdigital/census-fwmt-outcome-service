@@ -1,12 +1,12 @@
-package uk.gov.ons.census.fwmt.outcomeservice.converter.spg;
+package uk.gov.ons.census.fwmt.outcomeservice.converter.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.SpgOutcomeServiceProcessor;
-import uk.gov.ons.census.fwmt.outcomeservice.dto.SpgOutcomeSuperSetDto;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.dto.OutcomeSuperSetDto;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
@@ -15,13 +15,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_EXTRAORDINARY_REFUSAL_RECEIVED_OUTCOME_SENT;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_OUTCOME_SENT;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.HARD_REFUSAL_RECEIVED_OUTCOME_SENT;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.REFUSAL_RECEIVED;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
 
-@Component("EXTRAORDINARY_REFUSAL_RECEIVED")
-public class SpgExtraordinaryRefusalReceivedProcessor implements SpgOutcomeServiceProcessor {
+@Component("HARD_REFUSAL_RECEIVED")
+public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
 
   @Autowired
   private DateFormat dateFormat;
@@ -33,22 +32,23 @@ public class SpgExtraordinaryRefusalReceivedProcessor implements SpgOutcomeServi
   private GatewayEventManager gatewayEventManager;
 
   @Override
-  public UUID process(SpgOutcomeSuperSetDto outcome, UUID caseIdHolder) throws GatewayException {
+  public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
     root.put("spgOutcome", outcome);
-    root.put("refusalType", "EXTRAORDINARY_REFUSAL");
+    root.put("refusalType", "HARD_REFUSAL");
     root.put("officerId", outcome.getOfficerId());
     root.put("caseId", caseId);
     root.put("eventDate", eventDateTime);
 
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root, spg);
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root);
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
-    gatewayEventManager.triggerEvent(String.valueOf(caseId), CESPG_OUTCOME_SENT,
-        "type", CESPG_EXTRAORDINARY_REFUSAL_RECEIVED_OUTCOME_SENT,
+    gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
+        "survey type", type,
+        "type", HARD_REFUSAL_RECEIVED_OUTCOME_SENT,
         "transactionId", outcome.getTransactionId().toString(),
         "routing key", GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
 

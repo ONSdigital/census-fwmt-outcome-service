@@ -1,13 +1,13 @@
 package uk.gov.ons.census.fwmt.outcomeservice.util;
 
 import uk.gov.ons.census.fwmt.outcomeservice.dto.FulfilmentRequestDto;
-import uk.gov.ons.census.fwmt.outcomeservice.dto.SpgOutcomeSuperSetDto;
+import uk.gov.ons.census.fwmt.outcomeservice.dto.OutcomeSuperSetDto;
 
 import java.util.List;
 
 public final class SpgUtilityMethods {
 
-  public static boolean isDelivered(SpgOutcomeSuperSetDto outcome) {
+  public static boolean isDelivered(OutcomeSuperSetDto outcome) {
     List<FulfilmentRequestDto> fulfilmentRequestList = outcome.getFulfilmentRequests();
     if (fulfilmentRequestList == null) return false;
     boolean isDelivered = false;

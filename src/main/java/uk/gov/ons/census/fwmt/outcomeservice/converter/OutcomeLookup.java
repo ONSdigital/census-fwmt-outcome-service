@@ -1,9 +1,9 @@
-package uk.gov.ons.census.fwmt.outcomeservice.converter.spg;
+package uk.gov.ons.census.fwmt.outcomeservice.converter;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class SpgOutcomeLookup {
+public class OutcomeLookup {
 
   private final Map<String, String[]> spgOutcomeCodeMap = new HashMap<>();
 

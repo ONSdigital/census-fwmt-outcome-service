@@ -17,6 +17,7 @@ import java.util.UUID;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_CESPGSTANDALONE_OUTCOME_RECEIVED;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_CESPGUNITADDRESS_OUTCOME_RECEIVED;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_CESPG_OUTCOME_RECEIVED;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_CE_OUTCOME_RECEIVED;
 
 @RestController
 @Import({springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration.class})
@@ -30,7 +31,7 @@ public class OutcomeController implements OutcomeApi {
 
   @Override
   public ResponseEntity<Void> ceOutcomeResponse(String caseId, CEOutcome ceOutcome) {
-    gatewayEventManager.triggerEvent(caseId, COMET_CESPG_OUTCOME_RECEIVED,
+    gatewayEventManager.triggerEvent(caseId, COMET_CE_OUTCOME_RECEIVED,
         "transactionId", ceOutcome.getTransactionId().toString(),
         "Primary Outcome", ceOutcome.getPrimaryOutcomeDescription(),
         "Secondary Outcome", ceOutcome.getSecondaryOutcomeDescription(),

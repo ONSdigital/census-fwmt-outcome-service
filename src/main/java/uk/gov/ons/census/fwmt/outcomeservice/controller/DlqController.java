@@ -1,6 +1,5 @@
 package uk.gov.ons.census.fwmt.outcomeservice.controller;
 
-import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistry;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,28 +12,25 @@ import uk.gov.ons.census.fwmt.outcomeservice.message.OutcomeProcessPreprocessing
 public class DlqController {
 
   @Autowired
-  RabbitListenerEndpointRegistry rabbitListenerEndpointRegistry;
-
-  @Autowired
   OutcomeProcessPreprocessingDlq outcomeProcessPreprocessingDLQ;
 
   @Autowired
   SimpleMessageListenerContainer simpleMessageListenerContainer;
 
   @GetMapping("/ProcessDLQ")
-  public ResponseEntity startDLQProcessor() throws GatewayException {
+  public ResponseEntity<String> startDLQProcessor() throws GatewayException {
     outcomeProcessPreprocessingDLQ.processDLQ();
     return ResponseEntity.ok("DLQ listener started.");
   }
 
   @GetMapping("/StartPreprocessorListener")
-  public ResponseEntity startPreprocessorListener() {
+  public ResponseEntity<String> startPreprocessorListener() {
     simpleMessageListenerContainer.start();
     return ResponseEntity.ok("Queue listener started.");
   }
 
   @GetMapping("/StopPreprocessorListener")
-  public ResponseEntity stopPreprocessorListener() {
+  public ResponseEntity<String> stopPreprocessorListener() {
     simpleMessageListenerContainer.stop();
     return ResponseEntity.ok("Queue listener stopped.");
   }

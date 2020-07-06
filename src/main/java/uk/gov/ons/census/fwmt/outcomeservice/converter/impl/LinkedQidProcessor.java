@@ -1,15 +1,15 @@
-package uk.gov.ons.census.fwmt.outcomeservice.converter.spg;
+package uk.gov.ons.census.fwmt.outcomeservice.converter.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.SpgOutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
 import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache.GatewayCacheBuilder;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.FulfilmentRequestDto;
-import uk.gov.ons.census.fwmt.outcomeservice.dto.SpgOutcomeSuperSetDto;
+import uk.gov.ons.census.fwmt.outcomeservice.dto.OutcomeSuperSetDto;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.service.impl.GatewayCacheService;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
@@ -19,13 +19,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_QUESTIONNAIRE_LINKED_OUTCOME_SENT;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_OUTCOME_SENT;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.QUESTIONNAIRE_LINKED_OUTCOME_SENT;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.QUESTIONNAIRE_LINKED;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
 
 @Component("LINKED_QID")
-public class SpgLinkedQidProcessor implements SpgOutcomeServiceProcessor {
+public class LinkedQidProcessor implements OutcomeServiceProcessor {
 
   @Autowired
   private DateFormat dateFormat;
@@ -44,7 +43,7 @@ public class SpgLinkedQidProcessor implements SpgOutcomeServiceProcessor {
   }
 
   @Override
-  public UUID process(SpgOutcomeSuperSetDto outcome, UUID caseIdHolder) throws GatewayException {
+  public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     if (outcome.getFulfilmentRequests() == null) return caseIdHolder;
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
     for (FulfilmentRequestDto fulfilmentRequest : outcome.getFulfilmentRequests()) {
@@ -58,12 +57,13 @@ public class SpgLinkedQidProcessor implements SpgOutcomeServiceProcessor {
         root.put("eventDate", eventDateTime);
         cacheData(caseId);
 
-        String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root, spg);
+        String outcomeEvent = TemplateCreator.createOutcomeMessage(QUESTIONNAIRE_LINKED, root);
 
         gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
             GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY);
-        gatewayEventManager.triggerEvent(String.valueOf(caseId), CESPG_OUTCOME_SENT,
-            "type", CESPG_QUESTIONNAIRE_LINKED_OUTCOME_SENT,
+        gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
+            "survey type", type,
+            "type", QUESTIONNAIRE_LINKED_OUTCOME_SENT,
             "transactionId", outcome.getTransactionId().toString(),
             "routing key", GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY);
       }

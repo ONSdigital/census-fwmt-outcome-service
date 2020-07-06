@@ -10,7 +10,7 @@ import uk.gov.ons.census.fwmt.common.data.spg.NewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
-import uk.gov.ons.census.fwmt.outcomeservice.dto.SpgOutcomeSuperSetDto;
+import uk.gov.ons.census.fwmt.outcomeservice.dto.OutcomeSuperSetDto;
 import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
 
 import java.util.UUID;
@@ -33,7 +33,7 @@ public class OutcomePreprocessingReceiver {
   private GatewayEventManager gatewayEventManager;
 
   public void processMessage(SPGOutcome spgOutcome) throws GatewayException {
-    SpgOutcomeSuperSetDto outcomeDTO = mapperFacade.map(spgOutcome, SpgOutcomeSuperSetDto.class);
+    OutcomeSuperSetDto outcomeDTO = mapperFacade.map(spgOutcome, OutcomeSuperSetDto.class);
     gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), PREPROCESSING_CESPG_OUTCOME,
         "Outcome code", outcomeDTO.getOutcomeCode(),
         "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
@@ -41,7 +41,7 @@ public class OutcomePreprocessingReceiver {
   }
 
   public void processMessage(NewUnitAddress newUnitAddress) throws GatewayException {
-    SpgOutcomeSuperSetDto outcomeDTO = mapperFacade.map(newUnitAddress, SpgOutcomeSuperSetDto.class);
+    OutcomeSuperSetDto outcomeDTO = mapperFacade.map(newUnitAddress, OutcomeSuperSetDto.class);
     outcomeDTO.setCaseId(UUID.randomUUID());
     gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), PREPROCESSING_CESPGUNITADDRESS_OUTCOME,
         "Outcome code", outcomeDTO.getOutcomeCode(),
@@ -50,7 +50,7 @@ public class OutcomePreprocessingReceiver {
   }
 
   public void processMessage(NewStandaloneAddress standaloneAddress) throws GatewayException {
-    SpgOutcomeSuperSetDto outcomeDTO = mapperFacade.map(standaloneAddress, SpgOutcomeSuperSetDto.class);
+    OutcomeSuperSetDto outcomeDTO = mapperFacade.map(standaloneAddress, OutcomeSuperSetDto.class);
     outcomeDTO.setCaseId(UUID.randomUUID());
     gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), PREPROCESSING_CESPGSTANDALONE_OUTCOME,
         "Outcome code", outcomeDTO.getOutcomeCode(),
@@ -59,7 +59,7 @@ public class OutcomePreprocessingReceiver {
   }
 
   public void processMessage(CEOutcome CeOutcome) throws GatewayException {
-    SpgOutcomeSuperSetDto outcomeDTO = mapperFacade.map(CeOutcome, SpgOutcomeSuperSetDto.class);
+    OutcomeSuperSetDto outcomeDTO = mapperFacade.map(CeOutcome, OutcomeSuperSetDto.class);
     gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), PREPROCESSING_CESPG_OUTCOME,
         "Outcome code", outcomeDTO.getOutcomeCode(),
         "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());

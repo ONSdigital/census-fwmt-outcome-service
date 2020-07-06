@@ -1,4 +1,4 @@
-package uk.gov.ons.census.fwmt.outcomeservice.converter.spg;
+package uk.gov.ons.census.fwmt.outcomeservice.converter.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,11 +6,11 @@ import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.SpgOutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
 import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache.GatewayCacheBuilder;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.FulfilmentRequestDto;
-import uk.gov.ons.census.fwmt.outcomeservice.dto.SpgOutcomeSuperSetDto;
+import uk.gov.ons.census.fwmt.outcomeservice.dto.OutcomeSuperSetDto;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.service.impl.GatewayCacheService;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
@@ -26,15 +26,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_FULFILMENT_REQUESTED_OUTCOME_SENT;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.CESPG_OUTCOME_SENT;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.FULFILMENT_REQUESTED_OUTCOME_SENT;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.FULFILMENT_REQUESTED;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType.spg;
 import static uk.gov.ons.ctp.integration.common.product.model.Product.RequestChannel.FIELD;
 
 @Slf4j
 @Component("FULFILMENT_REQUESTED")
-public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor {
+public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
 
   @Autowired
   private DateFormat dateFormat;
@@ -52,7 +51,7 @@ public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor
   private GatewayCacheService gatewayCacheService;
 
   @Override
-  public UUID process(SpgOutcomeSuperSetDto outcome, UUID caseIdHolder) throws GatewayException {
+  public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     if (outcome.getFulfilmentRequests() == null) return caseIdHolder;
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
     for (FulfilmentRequestDto fulfilmentRequest : outcome.getFulfilmentRequests()) {
@@ -67,8 +66,9 @@ public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor
 
         gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
             GatewayOutcomeQueueConfig.GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY);
-        gatewayEventManager.triggerEvent(String.valueOf(caseIdHolder), CESPG_OUTCOME_SENT,
-            "type", CESPG_FULFILMENT_REQUESTED_OUTCOME_SENT,
+        gatewayEventManager.triggerEvent(String.valueOf(caseIdHolder), OUTCOME_SENT,
+            "survey type", type,
+            "type", FULFILMENT_REQUESTED_OUTCOME_SENT,
             "transactionId", outcome.getTransactionId().toString(),
             "routing key", GatewayOutcomeQueueConfig.GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY);
       }
@@ -97,7 +97,7 @@ public class SpgFulfilmentRequestProcessor implements SpgOutcomeServiceProcessor
     root.put("requesterPhone", fulfilmentRequest.getRequesterPhone());
     cacheData(caseId);
 
-    return TemplateCreator.createOutcomeMessage(FULFILMENT_REQUESTED, root, spg);
+    return TemplateCreator.createOutcomeMessage(FULFILMENT_REQUESTED, root);
   }
 
   private List<Product> getProductFromQuestionnaireType(FulfilmentRequestDto fulfilmentRequest) {

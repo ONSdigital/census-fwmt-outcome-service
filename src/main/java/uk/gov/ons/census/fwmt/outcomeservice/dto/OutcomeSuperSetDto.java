@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-public class SpgOutcomeSuperSetDto {
+public class OutcomeSuperSetDto {
   private UUID caseId;
   private UUID transactionId;
   private Date eventDate;
