@@ -58,7 +58,7 @@ public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
       if (!isQuestionnaireLinked(fulfilmentRequest) && fulfilmentRequest.getQuestionnaireType() != null) {
         String eventDateTime = dateFormat.format(outcome.getEventDate());
         Map<String, Object> root = new HashMap<>();
-        root.put("spgOutcome", outcome);
+        root.put("outcome", outcome);
         root.put("caseId", caseId);
         root.put("eventDate", eventDateTime);
         String outcomeEvent = createQuestionnaireRequiredByPostEvent(root, fulfilmentRequest, String.valueOf(caseId),

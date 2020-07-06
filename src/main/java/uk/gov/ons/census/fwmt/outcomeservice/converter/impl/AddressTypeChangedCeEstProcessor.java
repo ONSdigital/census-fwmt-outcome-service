@@ -47,7 +47,7 @@ public class AddressTypeChangedCeEstProcessor implements OutcomeServiceProcessor
     cacheData(outcome, caseId, newCaseId);
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
-    root.put("spgOutcome", outcome);
+    root.put("outcome", outcome);
     root.put("region", regionLookup(outcome.getOfficerId()));
     root.put("eventDate", eventDateTime);
     root.put("estabType", "CE");

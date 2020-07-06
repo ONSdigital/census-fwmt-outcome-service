@@ -1,12 +1,12 @@
 "newAddress" : {
 <#if sourceCase == "NEW_UNIT">
-"sourceCaseId" : "${spgOutcome.siteCaseId}",
+"sourceCaseId" : "${outcome.siteCaseId}",
 </#if>
 "collectionCase" : {
    "id" : "${newCaseId}",
     "caseType" : "SPG",
     "survey" : "CENSUS",
-    "fieldCoordinatorId" : "${spgOutcome.coordinatorId}",
+    "fieldCoordinatorId" : "${outcome.coordinatorId}",
     "fieldOfficerId" : "${officerId}",
 <#if collectionCaseId??>
     "collectionExerciseId" : "${collectionCaseId}",

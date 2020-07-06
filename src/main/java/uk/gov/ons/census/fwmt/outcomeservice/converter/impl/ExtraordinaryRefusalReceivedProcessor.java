@@ -36,7 +36,7 @@ public class ExtraordinaryRefusalReceivedProcessor implements OutcomeServiceProc
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
-    root.put("spgOutcome", outcome);
+    root.put("outcome", outcome);
     root.put("refusalType", "EXTRAORDINARY_REFUSAL");
     root.put("officerId", outcome.getOfficerId());
     root.put("caseId", caseId);

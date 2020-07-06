@@ -43,7 +43,7 @@ public class AddressNotValidProcessor implements OutcomeServiceProcessor {
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
-    root.put("spgOutcome", outcome);
+    root.put("outcome", outcome);
     root.put("reason", reasonCode);
     root.put("caseId", caseId);
     root.put("eventDate", eventDateTime);

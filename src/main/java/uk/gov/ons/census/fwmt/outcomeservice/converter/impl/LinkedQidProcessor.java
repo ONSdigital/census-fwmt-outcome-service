@@ -51,7 +51,7 @@ public class LinkedQidProcessor implements OutcomeServiceProcessor {
         String eventDateTime = dateFormat.format(outcome.getEventDate());
 
         Map<String, Object> root = new HashMap<>();
-        root.put("spgOutcome", outcome);
+        root.put("outcome", outcome);
         root.put("caseId", caseId);
         root.put("questionnaireId", fulfilmentRequest.getQuestionnaireID());
         root.put("eventDate", eventDateTime);

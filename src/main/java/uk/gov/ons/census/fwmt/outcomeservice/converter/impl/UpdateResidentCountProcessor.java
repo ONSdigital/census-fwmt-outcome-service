@@ -15,12 +15,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.HARD_REFUSAL_RECEIVED_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.REFUSAL_RECEIVED;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.UPDATE_RESIDENT_COUNT_OUTCOME_SENT;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.UPDATE_RESIDENT_COUNT;
 
-@Component("HARD_REFUSAL_RECEIVED")
-public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
+@Component("UPDATE_RESIDENT_COUNT")
+public class UpdateResidentCountProcessor implements OutcomeServiceProcessor {
 
   @Autowired
   private DateFormat dateFormat;
@@ -34,24 +34,22 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
+
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
     root.put("outcome", outcome);
-    root.put("refusalType", "HARD_REFUSAL");
-    root.put("officerId", outcome.getOfficerId());
-    root.put("caseId", caseId);
     root.put("eventDate", eventDateTime);
+    root.put("caseId", caseId);
 
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root);
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(UPDATE_RESIDENT_COUNT, root);
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
-        GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
+        GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
         "survey type", type,
-        "type", HARD_REFUSAL_RECEIVED_OUTCOME_SENT,
+        "type", UPDATE_RESIDENT_COUNT_OUTCOME_SENT,
         "transactionId", outcome.getTransactionId().toString(),
-        "routing key", GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
-
+        "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
     return caseId;
   }
 }

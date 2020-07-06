@@ -7,9 +7,9 @@
 </#if>
 "address" : {
 <#if estabType == "CE">
-    <#if spgOutcome.ceDetails??>
-    "estabType":"${spgOutcome.ceDetails.establishmentType}",
-    "organisationName":"${spgOutcome.ceDetails.establishmentName}",
+    <#if outcome.ceDetails??>
+    "estabType":"${outcome.ceDetails.establishmentType}",
+    "organisationName":"${outcome.ceDetails.establishmentName}",
     <#else>
     "organisationName":"Unknown",
     "estabType":"Unknown",
