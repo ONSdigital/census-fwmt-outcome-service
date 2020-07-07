@@ -19,9 +19,10 @@ public class NoActionProcessor implements OutcomeServiceProcessor {
 
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
+    UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
     gatewayEventManager
-        .triggerErrorEvent(this.getClass(), (Exception) null, "Action not expected",
-            RECEIVED_NO_ACTION_FROM_TM, "NO ACTION",
+        .triggerErrorEvent(this.getClass(), (Exception) null,"Action not expected", String.valueOf(caseId),
+            RECEIVED_NO_ACTION_FROM_TM,
             "Transaction id", String.valueOf(outcome.getTransactionId()),
             "Primary Outcome", outcome.getPrimaryOutcomeDescription(),
             "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
