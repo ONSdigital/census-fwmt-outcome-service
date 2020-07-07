@@ -7,7 +7,6 @@ import freemarker.template.TemplateExceptionHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.outcomeservice.enums.EventType;
-import uk.gov.ons.census.fwmt.outcomeservice.enums.SurveyType;
 import uk.gov.ons.census.fwmt.outcomeservice.service.impl.OutcomeServiceImpl;
 
 import java.io.IOException;
@@ -18,7 +17,7 @@ import java.util.Map;
 @Component
 public class TemplateCreator {
 
-  public static String createOutcomeMessage(EventType eventType, Map<String, Object> root, SurveyType surveyType) {
+  public static String createOutcomeMessage(EventType eventType, Map<String, Object> root) {
     String outcomeMessage = "";
 
     try {
@@ -29,7 +28,7 @@ public class TemplateCreator {
       configuration.setLogTemplateExceptions(false);
       configuration.setWrapUncheckedExceptions(true);
 
-      Template temp = configuration.getTemplate(surveyType.name() + "/" + eventType.name() + "-event.ftl");
+      Template temp = configuration.getTemplate("payload/" + eventType.name() + "-event.ftl");
       try (StringWriter out = new StringWriter(); StringWriter outcomeEventMessage = new StringWriter()) {
 
         temp.process(root, out);
@@ -39,7 +38,7 @@ public class TemplateCreator {
 
         root.put("payload", outcomePayload);
         root.put("eventType", eventType);
-        Template outcomeMessageTemplate = configuration.getTemplate("rm-" + surveyType.name() + "-event.ftl");
+        Template outcomeMessageTemplate = configuration.getTemplate("rm-outcome-event.ftl");
         outcomeMessageTemplate.process(root, outcomeEventMessage);
 
         outcomeEventMessage.flush();

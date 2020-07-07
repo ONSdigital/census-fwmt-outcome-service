@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.spg.SpgOutcomeLookup;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.spg.SpgReasonCodeLookup;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeLookup;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.ReasonCodeLookup;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,35 +28,35 @@ public class OutcomeSetup {
   private String reasonCodeLookupPath;
 
   @Bean
-  public SpgOutcomeLookup buildOutcomeLookup() throws GatewayException {
+  public OutcomeLookup buildOutcomeLookup() throws GatewayException {
     String line;
     Resource resource = resourceLoader.getResource(outcomeCodeLookupPath);
 
-    SpgOutcomeLookup spgOutcomeLookup = new SpgOutcomeLookup();
+    OutcomeLookup outcomeLookup = new OutcomeLookup();
     try (BufferedReader in = new BufferedReader(new InputStreamReader(resource.getInputStream(), UTF_8))) {
       while ((line = in.readLine()) != null) {
         String[] lookup = line.split("\\|");
-        spgOutcomeLookup.add(lookup[0], lookup[1].split(","));
+        outcomeLookup.add(lookup[0], lookup[1].split(","));
       }
     } catch (IOException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Cannot process outcome lookup");
     }
-    return spgOutcomeLookup;
+    return outcomeLookup;
   }
 
   @Bean
-  public SpgReasonCodeLookup buildReasonCodeLookup() throws GatewayException {
+  public ReasonCodeLookup buildReasonCodeLookup() throws GatewayException {
     String line;
     Resource resource = resourceLoader.getResource(reasonCodeLookupPath);
-    SpgReasonCodeLookup spgReasonCodeLookup = new SpgReasonCodeLookup();
+    ReasonCodeLookup reasonCodeLookup = new ReasonCodeLookup();
     try (BufferedReader in = new BufferedReader(new InputStreamReader(resource.getInputStream(), UTF_8))) {
       while ((line = in.readLine()) != null) {
         String[] lookup = line.split(",");
-        spgReasonCodeLookup.add(lookup[0], lookup[1]);
+        reasonCodeLookup.add(lookup[0], lookup[1]);
       }
     } catch (IOException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Cannot process reason code lookup");
     }
-    return spgReasonCodeLookup;
+    return reasonCodeLookup;
   }
 }

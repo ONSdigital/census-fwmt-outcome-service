@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.SpgOutcomeServiceProcessor;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.spg.SpgOutcomeLookup;
-import uk.gov.ons.census.fwmt.outcomeservice.dto.SpgOutcomeSuperSetDto;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeLookup;
+import uk.gov.ons.census.fwmt.outcomeservice.dto.OutcomeSuperSetDto;
 import uk.gov.ons.census.fwmt.outcomeservice.service.OutcomeService;
 
 import java.util.Arrays;
@@ -16,23 +16,24 @@ import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.FAILED_TO_LOOKUP_OUTCOME_CODE;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_CESPG_OUTCOME;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_CE_OUTCOME;
 
 @Slf4j
 @Service
 public class OutcomeServiceImpl implements OutcomeService {
 
   @Autowired
-  private Map<String, SpgOutcomeServiceProcessor> spgOutcomeServiceProcessors;
+  private Map<String, OutcomeServiceProcessor> outcomeServiceProcessors;
 
   @Autowired
-  private SpgOutcomeLookup spgOutcomeLookup;
+  private OutcomeLookup outcomeLookup;
 
   @Autowired
   private GatewayEventManager gatewayEventManager;
 
   @Override
-  public void createSpgOutcomeEvent(SpgOutcomeSuperSetDto outcome) throws GatewayException {
-    String[] operationsList = spgOutcomeLookup.getLookup(outcome.getOutcomeCode());
+  public void createSpgOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
+    String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
     if (operationsList == null) {
       gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "No outcome code found",
           String.valueOf(outcome.getCaseId()), FAILED_TO_LOOKUP_OUTCOME_CODE,
@@ -47,13 +48,13 @@ public class OutcomeServiceImpl implements OutcomeService {
           "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
           "Operation", operation,
           "Operation list", Arrays.toString(operationsList));
-      caseIdHolder = spgOutcomeServiceProcessors.get(operation).process(outcome, caseIdHolder);
+      caseIdHolder = outcomeServiceProcessors.get(operation).process(outcome, caseIdHolder, "SPG");
     }
   }
 
   @Override
-  public void createCeOutcomeEvent(SpgOutcomeSuperSetDto outcome) throws GatewayException {
-    String[] operationsList = spgOutcomeLookup.getLookup(outcome.getOutcomeCode());
+  public void createCeOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
+    String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
     if (operationsList == null) {
       gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "No outcome code found",
           String.valueOf(outcome.getCaseId()), FAILED_TO_LOOKUP_OUTCOME_CODE,
@@ -63,12 +64,12 @@ public class OutcomeServiceImpl implements OutcomeService {
     }
     UUID caseIdHolder = null;
     for (String operation : operationsList) {
-      gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_CESPG_OUTCOME,
+      gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_CE_OUTCOME,
           "Secondary Outcome", outcome.getSecondaryOutcomeDescription(),
           "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
           "Operation", operation,
           "Operation list", Arrays.toString(operationsList));
-      caseIdHolder = spgOutcomeServiceProcessors.get(operation).process(outcome, caseIdHolder);
+      caseIdHolder = outcomeServiceProcessors.get(operation).process(outcome, caseIdHolder, "CE");
     }
   }
 }
