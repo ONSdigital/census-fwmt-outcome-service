@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.ADDRESS_NOT_VALID_OUTCOME_SENT;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_OUTCOME;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.ADDRESS_NOT_VALID;
 
@@ -38,6 +39,11 @@ public class AddressNotValidProcessor implements OutcomeServiceProcessor {
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
+    
+    gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
+    "survey type", type,
+    "processor", "ADDRESS_NOT_VALID",
+    "original caseId", String.valueOf(outcome.getCaseId()));
 
     String reasonCode = reasonCodeLookup.getLookup(outcome.getOutcomeCode());
 
@@ -54,7 +60,7 @@ public class AddressNotValidProcessor implements OutcomeServiceProcessor {
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
             "survey type", type,
-            "type", ADDRESS_NOT_VALID_OUTCOME_SENT,
+            "type", ADDRESS_NOT_VALID.toString(),
             "transactionId", outcome.getTransactionId().toString(),
             "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
     return caseId;

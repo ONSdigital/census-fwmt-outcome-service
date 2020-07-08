@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.ADDRESS_TYPE_CHANGED_OUTCOME_SENT;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_OUTCOME;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.ADDRESS_TYPE_CHANGED;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.SpgUtilityMethods.regionLookup;
@@ -39,8 +40,14 @@ public class AddressTypeChangedHhProcessor implements OutcomeServiceProcessor {
 
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
-    Map<String, Object> root = new HashMap<>();
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
+    
+    gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
+    "survey type", type,
+    "processor", "ADDRESS_TYPE_CHANGED_HH",
+    "original caseId", String.valueOf(outcome.getCaseId()));
+
+    Map<String, Object> root = new HashMap<>();
     root.put("caseId", caseId);
     UUID newCaseId = UUID.randomUUID();
     root.put("newCaseId", newCaseId);
@@ -59,7 +66,7 @@ public class AddressTypeChangedHhProcessor implements OutcomeServiceProcessor {
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
         "survey type", type,
-        "type", ADDRESS_TYPE_CHANGED_OUTCOME_SENT,
+        "type", ADDRESS_TYPE_CHANGED.toString(),
         "transactionId", outcome.getTransactionId().toString(),
         "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
 

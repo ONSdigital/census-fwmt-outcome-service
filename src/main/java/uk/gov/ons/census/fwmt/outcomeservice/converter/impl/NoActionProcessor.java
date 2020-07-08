@@ -10,6 +10,7 @@ import uk.gov.ons.census.fwmt.outcomeservice.dto.OutcomeSuperSetDto;
 import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.RECEIVED_NO_ACTION_FROM_TM;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_OUTCOME;
 
 @Component("NO_ACTION")
 public class NoActionProcessor implements OutcomeServiceProcessor {
@@ -20,6 +21,12 @@ public class NoActionProcessor implements OutcomeServiceProcessor {
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
+    
+    gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
+    "survey type", type,
+    "processor", "NO_ACTION",
+    "original caseId", String.valueOf(outcome.getCaseId()));
+    
     gatewayEventManager
         .triggerErrorEvent(this.getClass(), (Exception) null,"Action not expected", String.valueOf(caseId),
             RECEIVED_NO_ACTION_FROM_TM,

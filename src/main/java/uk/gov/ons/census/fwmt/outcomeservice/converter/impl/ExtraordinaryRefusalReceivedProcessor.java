@@ -18,6 +18,7 @@ import java.util.UUID;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.EXTRAORDINARY_REFUSAL_RECEIVED_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.REFUSAL_RECEIVED;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_OUTCOME;
 
 @Component("EXTRAORDINARY_REFUSAL_RECEIVED")
 public class ExtraordinaryRefusalReceivedProcessor implements OutcomeServiceProcessor {
@@ -34,6 +35,12 @@ public class ExtraordinaryRefusalReceivedProcessor implements OutcomeServiceProc
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
+
+    gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
+    "survey type", type,
+    "processor", "EXTRAORDINARY_REFUSAL_RECEIVED",
+    "original caseId", String.valueOf(outcome.getCaseId()));
+
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
     root.put("outcome", outcome);
@@ -48,7 +55,7 @@ public class ExtraordinaryRefusalReceivedProcessor implements OutcomeServiceProc
         GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
         "survey type", type,
-        "type", EXTRAORDINARY_REFUSAL_RECEIVED_OUTCOME_SENT,
+        "type", REFUSAL_RECEIVED.toString(),
         "transactionId", outcome.getTransactionId().toString(),
         "routing key", GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
 
