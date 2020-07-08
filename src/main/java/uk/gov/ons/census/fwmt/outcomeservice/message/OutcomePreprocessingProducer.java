@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
+import uk.gov.ons.census.fwmt.common.data.ce.CENewStandaloneAddress;
+import uk.gov.ons.census.fwmt.common.data.ce.CENewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.ce.CEOutcome;
-import uk.gov.ons.census.fwmt.common.data.spg.NewStandaloneAddress;
-import uk.gov.ons.census.fwmt.common.data.spg.NewUnitAddress;
+import uk.gov.ons.census.fwmt.common.data.spg.SPGNewStandaloneAddress;
+import uk.gov.ons.census.fwmt.common.data.spg.SPGNewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
 import uk.gov.ons.census.fwmt.outcomeservice.config.OutcomePreprocessingQueueConfig;
 
@@ -27,13 +29,13 @@ public class OutcomePreprocessingProducer {
   }
 
   @Retryable
-  public void sendNewUnitAddressToPreprocessingQueue(NewUnitAddress newUnitAddress) {
+  public void sendCeNewUnitAddressToPreprocessingQueue(SPGNewUnitAddress newUnitAddress) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, newUnitAddress);
   }
 
   @Retryable
-  public void sendNewStandaloneAddress(NewStandaloneAddress newStandaloneAddress) {
+  public void sendCeNewStandaloneAddress(SPGNewStandaloneAddress newStandaloneAddress) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, newStandaloneAddress);
   }
@@ -42,5 +44,17 @@ public class OutcomePreprocessingProducer {
   public void sendCeOutcomeToPreprocessingQueue(CEOutcome ceOutcome) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, ceOutcome);
+  }
+
+  @Retryable
+  public void sendSpgNewUnitAddressToPreprocessingQueue(CENewUnitAddress newUnitAddress) {
+    rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
+        OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, newUnitAddress);
+  }
+
+  @Retryable
+  public void sendSpgNewStandaloneAddress(CENewStandaloneAddress newStandaloneAddress) {
+    rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
+        OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, newStandaloneAddress);
   }
 }

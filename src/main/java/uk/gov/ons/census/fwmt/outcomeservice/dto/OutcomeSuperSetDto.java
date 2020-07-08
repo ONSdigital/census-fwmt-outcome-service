@@ -1,7 +1,7 @@
 package uk.gov.ons.census.fwmt.outcomeservice.dto;
 
 import lombok.Data;
-import uk.gov.ons.census.fwmt.common.data.spg.Address;
+import uk.gov.ons.census.fwmt.common.data.shared.Address;
 
 import java.util.ArrayList;
 import java.util.Date;

@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.FAILED_TO_LOOKUP_OUTCOME_CODE;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_CESPG_OUTCOME;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_SPG_OUTCOME;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_CE_OUTCOME;
 
 @Slf4j
@@ -37,13 +37,15 @@ public class OutcomeServiceImpl implements OutcomeService {
     if (operationsList == null) {
       gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "No outcome code found",
           String.valueOf(outcome.getCaseId()), FAILED_TO_LOOKUP_OUTCOME_CODE,
+          "Survey type", "SPG",
           "Outcome code", outcome.getOutcomeCode(),
           "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
       return;
     }
     UUID caseIdHolder = null;
     for (String operation : operationsList) {
-      gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_CESPG_OUTCOME,
+      gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_SPG_OUTCOME,
+          "Survey type", "SPG",
           "Secondary Outcome", outcome.getSecondaryOutcomeDescription(),
           "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
           "Operation", operation,
@@ -58,6 +60,7 @@ public class OutcomeServiceImpl implements OutcomeService {
     if (operationsList == null) {
       gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "No outcome code found",
           String.valueOf(outcome.getCaseId()), FAILED_TO_LOOKUP_OUTCOME_CODE,
+          "Survey type", "CE",
           "Outcome code", outcome.getOutcomeCode(),
           "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
       return;
@@ -65,6 +68,7 @@ public class OutcomeServiceImpl implements OutcomeService {
     UUID caseIdHolder = null;
     for (String operation : operationsList) {
       gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_CE_OUTCOME,
+          "Survey type", "CE",
           "Secondary Outcome", outcome.getSecondaryOutcomeDescription(),
           "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
           "Operation", operation,
