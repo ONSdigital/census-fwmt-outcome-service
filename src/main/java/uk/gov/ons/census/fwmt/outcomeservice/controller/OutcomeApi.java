@@ -25,7 +25,7 @@ public interface OutcomeApi {
       @ApiResponse(code = 200, message = "Case Outcome received"),
       @ApiResponse(code = 401, message = "UNAUTHORIZED"),
       @ApiResponse(code = 403, message = "FORBIDDEN")})
-  @RequestMapping(value = "/spgOutcome/ceOutcome/{caseID}",
+  @RequestMapping(value = "/ceOutcome/{caseID}",
       produces = {"application/json"},
       method = RequestMethod.POST)
   ResponseEntity<Void> ceOutcomeResponse(
