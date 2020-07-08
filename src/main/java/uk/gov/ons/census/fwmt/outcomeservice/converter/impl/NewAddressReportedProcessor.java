@@ -22,6 +22,7 @@ import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.O
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.NEW_ADDRESS_REPORTED;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.SpgUtilityMethods.isDelivered;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.SpgUtilityMethods.regionLookup;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_OUTCOME;
 
 @Component("NEW_ADDRESS_REPORTED")
 public class NewAddressReportedProcessor implements OutcomeServiceProcessor {
@@ -41,6 +42,12 @@ public class NewAddressReportedProcessor implements OutcomeServiceProcessor {
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
+
+    gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
+    "survey type", type,
+    "processor", "NEW_ADDRESS_REPORTED",
+    "original caseId", String.valueOf(outcome.getCaseId()));
+    
     boolean isDelivered = isDelivered(outcome);
     cacheData(outcome, caseId, isDelivered);
 
@@ -61,7 +68,7 @@ public class NewAddressReportedProcessor implements OutcomeServiceProcessor {
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
         "survey type", type,
-        "type", NEW_ADDRESS_REPORTED_OUTCOME_SENT,
+        "type", NEW_ADDRESS_REPORTED.toString(),
         "transaction id", outcome.getTransactionId().toString(),
         "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
 

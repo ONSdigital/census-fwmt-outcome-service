@@ -18,6 +18,7 @@ import java.util.UUID;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.UPDATE_RESIDENT_COUNT_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.UPDATE_RESIDENT_COUNT;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_OUTCOME;
 
 @Component("UPDATE_RESIDENT_COUNT")
 public class UpdateResidentCountProcessor implements OutcomeServiceProcessor {
@@ -35,6 +36,11 @@ public class UpdateResidentCountProcessor implements OutcomeServiceProcessor {
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
 
+    gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
+    "survey type", type,
+    "processor", "UPDATE_RESIDENT_COUNT",
+    "original caseId", String.valueOf(outcome.getCaseId()));
+
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
     root.put("outcome", outcome);
@@ -47,7 +53,7 @@ public class UpdateResidentCountProcessor implements OutcomeServiceProcessor {
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
         "survey type", type,
-        "type", UPDATE_RESIDENT_COUNT_OUTCOME_SENT,
+        "type", UPDATE_RESIDENT_COUNT.toString(),
         "transactionId", outcome.getTransactionId().toString(),
         "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
     return caseId;

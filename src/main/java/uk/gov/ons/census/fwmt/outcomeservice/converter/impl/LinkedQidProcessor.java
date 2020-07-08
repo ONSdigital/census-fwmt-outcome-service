@@ -22,6 +22,7 @@ import java.util.UUID;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.QUESTIONNAIRE_LINKED_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.QUESTIONNAIRE_LINKED;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_OUTCOME;
 
 @Component("LINKED_QID")
 public class LinkedQidProcessor implements OutcomeServiceProcessor {
@@ -44,6 +45,12 @@ public class LinkedQidProcessor implements OutcomeServiceProcessor {
 
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
+    gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_OUTCOME,
+    "survey type", type,
+    "processor", "LINKED_QID",
+    "original caseId", String.valueOf(outcome.getCaseId()));
+
+
     if (outcome.getFulfilmentRequests() == null) return caseIdHolder;
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
     for (FulfilmentRequestDto fulfilmentRequest : outcome.getFulfilmentRequests()) {
@@ -63,7 +70,7 @@ public class LinkedQidProcessor implements OutcomeServiceProcessor {
             GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY);
         gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
             "survey type", type,
-            "type", QUESTIONNAIRE_LINKED_OUTCOME_SENT,
+            "type", QUESTIONNAIRE_LINKED.toString(),
             "transactionId", outcome.getTransactionId().toString(),
             "routing key", GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY);
       }

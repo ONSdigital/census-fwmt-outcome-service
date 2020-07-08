@@ -30,6 +30,7 @@ import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.F
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.FULFILMENT_REQUESTED;
 import static uk.gov.ons.ctp.integration.common.product.model.Product.RequestChannel.FIELD;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_OUTCOME;
 
 @Slf4j
 @Component("FULFILMENT_REQUESTED")
@@ -52,6 +53,11 @@ public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
 
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
+    gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_OUTCOME,
+    "survey type", type,
+    "processor", "FULFILMENT_REQUESTED",
+    "original caseId", String.valueOf(outcome.getCaseId()));
+ 
     if (outcome.getFulfilmentRequests() == null) return caseIdHolder;
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
     for (FulfilmentRequestDto fulfilmentRequest : outcome.getFulfilmentRequests()) {
@@ -68,7 +74,7 @@ public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
             GatewayOutcomeQueueConfig.GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY);
         gatewayEventManager.triggerEvent(String.valueOf(caseIdHolder), OUTCOME_SENT,
             "survey type", type,
-            "type", FULFILMENT_REQUESTED_OUTCOME_SENT,
+            "type", FULFILMENT_REQUESTED.toString(),
             "transactionId", outcome.getTransactionId().toString(),
             "routing key", GatewayOutcomeQueueConfig.GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY);
       }

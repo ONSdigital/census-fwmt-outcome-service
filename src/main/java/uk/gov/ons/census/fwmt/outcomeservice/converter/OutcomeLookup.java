@@ -5,14 +5,14 @@ import java.util.Map;
 
 public class OutcomeLookup {
 
-  private final Map<String, String[]> spgOutcomeCodeMap = new HashMap<>();
+  private final Map<String, String[]> outcomeCodeMap = new HashMap<>();
 
   public String[] getLookup(String outcomeCode) {
-    return spgOutcomeCodeMap.get(outcomeCode);
+    return outcomeCodeMap.get(outcomeCode);
   }
 
   public void add(String productCode, String[] processorNames) {
-    spgOutcomeCodeMap.put(productCode, processorNames);
+    outcomeCodeMap.put(productCode, processorNames);
   }
 
 }
