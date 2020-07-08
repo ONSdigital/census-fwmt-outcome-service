@@ -16,9 +16,11 @@ import uk.gov.ons.census.fwmt.outcomeservice.message.OutcomePreprocessingProduce
 
 import java.util.UUID;
 
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_CE_STANDALONE_OUTCOME_RECEIVED;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_CE_UNITADDRESS_OUTCOME_RECEIVED;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_SPG_STANDALONE_OUTCOME_RECEIVED;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_SPG_UNITADDRESS_OUTCOME_RECEIVED;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_CESPG_OUTCOME_RECEIVED;
+import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_SPG_OUTCOME_RECEIVED;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_CE_OUTCOME_RECEIVED;
 
 @RestController
@@ -47,7 +49,7 @@ public class OutcomeController implements OutcomeApi {
 
   @Override
   public ResponseEntity<Void> ceNewUnitAddress(CENewUnitAddress newUnitAddress) {
-    gatewayEventManager.triggerEvent("N/A", COMET_SPG_STANDALONE_OUTCOME_RECEIVED,
+    gatewayEventManager.triggerEvent("N/A", COMET_CE_UNITADDRESS_OUTCOME_RECEIVED,
         "transactionId", newUnitAddress.getTransactionId().toString(),
         "Primary Outcome", newUnitAddress.getPrimaryOutcomeDescription(),
         "Secondary Outcome", newUnitAddress.getSecondaryOutcomeDescription(),
@@ -60,7 +62,7 @@ public class OutcomeController implements OutcomeApi {
 
   @Override
   public ResponseEntity<Void> ceNewStandalone(CENewStandaloneAddress newStandaloneAddress) {
-    gatewayEventManager.triggerEvent("N/A", COMET_SPG_STANDALONE_OUTCOME_RECEIVED,
+    gatewayEventManager.triggerEvent("N/A", COMET_CE_STANDALONE_OUTCOME_RECEIVED,
         "transactionId", newStandaloneAddress.getTransactionId().toString(),
         "Survey type", "CE",
         "Primary Outcome", newStandaloneAddress.getPrimaryOutcomeDescription(),
@@ -74,7 +76,7 @@ public class OutcomeController implements OutcomeApi {
 
   @Override
   public ResponseEntity<Void> spgOutcomeResponse(String caseId, SPGOutcome spgOutcome) {
-    gatewayEventManager.triggerEvent(caseId, COMET_CESPG_OUTCOME_RECEIVED,
+    gatewayEventManager.triggerEvent(caseId, COMET_SPG_OUTCOME_RECEIVED,
         "transactionId", spgOutcome.getTransactionId().toString(),
         "Survey type", "SPG",
         "Primary Outcome", spgOutcome.getPrimaryOutcomeDescription(),
