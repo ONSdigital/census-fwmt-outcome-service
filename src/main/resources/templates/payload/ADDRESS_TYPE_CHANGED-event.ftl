@@ -2,11 +2,11 @@
 "newCaseId":"${newCaseId}",
 "collectionCase":{
 "id":"${caseId}",
-<#if estabType == "CE">
+<#if estabType != "HH">
     "ceExpectedCapacity":"${usualResidents}",
 </#if>
 "address" : {
-<#if estabType == "CE">
+<#if estabType != "HH">
     <#if outcome.ceDetails??>
     "estabType":"${outcome.ceDetails.establishmentType}",
     "organisationName":"${outcome.ceDetails.establishmentName}",
