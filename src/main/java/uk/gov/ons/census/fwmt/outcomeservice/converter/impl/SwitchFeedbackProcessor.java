@@ -16,7 +16,7 @@ import static uk.gov.ons.census.fwmt.common.data.tm.SurveyType.CE_EST_F;
 
 
 @Component("SWITCH_FEEDBACK")
-public class SwitchFeedbackEstF implements OutcomeServiceProcessor {
+public class SwitchFeedbackProcessor implements OutcomeServiceProcessor {
 
   @Autowired
   private RmFieldRepublishProducer rmFieldRepublishProducer;
