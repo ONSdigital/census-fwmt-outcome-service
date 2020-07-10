@@ -82,7 +82,7 @@ public class OutcomePreprocessingReceiver {
         "Survey type", "CE",
         "Outcome code", outcomeDTO.getOutcomeCode(),
         "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
-    delegate.createSpgOutcomeEvent(outcomeDTO);
+    delegate.createCeOutcomeEvent(outcomeDTO);
   }
 
   public void processMessage(CENewStandaloneAddress standaloneAddress) throws GatewayException {
@@ -92,6 +92,6 @@ public class OutcomePreprocessingReceiver {
         "Survey type", "CE",
         "Outcome code", outcomeDTO.getOutcomeCode(),
         "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
-    delegate.createSpgOutcomeEvent(outcomeDTO);
+    delegate.createCeOutcomeEvent(outcomeDTO);
   }
 }
