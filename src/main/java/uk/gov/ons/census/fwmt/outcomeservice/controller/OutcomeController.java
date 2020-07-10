@@ -55,7 +55,7 @@ public class OutcomeController implements OutcomeApi {
         "Secondary Outcome", newUnitAddress.getSecondaryOutcomeDescription(),
         "Outcome code", newUnitAddress.getOutcomeCode());
 
-    outcomePreprocessingProducer.sendSpgNewUnitAddressToPreprocessingQueue(newUnitAddress);
+    outcomePreprocessingProducer.sendCeNewUnitAddressToPreprocessingQueue(newUnitAddress);
 
     return new ResponseEntity<>(HttpStatus.OK);
   }
@@ -69,7 +69,7 @@ public class OutcomeController implements OutcomeApi {
         "Secondary Outcome", newStandaloneAddress.getSecondaryOutcomeDescription(),
         "Outcome code", newStandaloneAddress.getOutcomeCode());
 
-    outcomePreprocessingProducer.sendSpgNewStandaloneAddress(newStandaloneAddress);
+    outcomePreprocessingProducer.sendCeNewStandaloneAddress(newStandaloneAddress);
 
     return new ResponseEntity<>(HttpStatus.OK);
   }
@@ -98,7 +98,7 @@ public class OutcomeController implements OutcomeApi {
         "Secondary Outcome", newUnitAddress.getSecondaryOutcomeDescription(),
         "Outcome code", newUnitAddress.getOutcomeCode());
 
-    outcomePreprocessingProducer.sendCeNewUnitAddressToPreprocessingQueue(newUnitAddress);
+    outcomePreprocessingProducer.sendSpgNewUnitAddressToPreprocessingQueue(newUnitAddress);
 
     return new ResponseEntity<>(HttpStatus.OK);
   }
@@ -112,7 +112,7 @@ public class OutcomeController implements OutcomeApi {
         "Secondary Outcome", newStandaloneAddress.getSecondaryOutcomeDescription(),
         "Outcome code", newStandaloneAddress.getOutcomeCode());
 
-    outcomePreprocessingProducer.sendCeNewStandaloneAddress(newStandaloneAddress);
+    outcomePreprocessingProducer.sendSpgNewStandaloneAddress(newStandaloneAddress);
 
     return new ResponseEntity<>(HttpStatus.OK);
   }

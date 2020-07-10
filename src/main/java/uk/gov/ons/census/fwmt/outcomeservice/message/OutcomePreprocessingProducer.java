@@ -29,13 +29,13 @@ public class OutcomePreprocessingProducer {
   }
 
   @Retryable
-  public void sendSpgNewUnitAddressToPreprocessingQueue(CENewUnitAddress newUnitAddress) {
+  public void sendSpgNewUnitAddressToPreprocessingQueue(SPGNewUnitAddress newUnitAddress) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, newUnitAddress);
   }
 
   @Retryable
-  public void sendSpgNewStandaloneAddress(CENewStandaloneAddress newStandaloneAddress) {
+  public void sendSpgNewStandaloneAddress(SPGNewStandaloneAddress newStandaloneAddress) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, newStandaloneAddress);
   }
@@ -47,13 +47,13 @@ public class OutcomePreprocessingProducer {
   }
 
   @Retryable
-  public void sendCeNewUnitAddressToPreprocessingQueue(SPGNewUnitAddress newUnitAddress) {
+  public void sendCeNewUnitAddressToPreprocessingQueue(CENewUnitAddress newUnitAddress) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, newUnitAddress);
   }
 
   @Retryable
-  public void sendCeNewStandaloneAddress(SPGNewStandaloneAddress newStandaloneAddress) {
+  public void sendCeNewStandaloneAddress(CENewStandaloneAddress newStandaloneAddress) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, newStandaloneAddress);
   }
