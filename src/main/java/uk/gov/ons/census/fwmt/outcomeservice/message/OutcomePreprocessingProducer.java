@@ -23,19 +23,19 @@ public class OutcomePreprocessingProducer {
   private RabbitTemplate rabbitTemplate;
 
   @Retryable
-  public void sendOutcomeToPreprocessingQueue(SPGOutcome spgOutcome) {
+  public void sendSpgOutcomeToPreprocessingQueue(SPGOutcome spgOutcome) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, spgOutcome);
   }
 
   @Retryable
-  public void sendCeNewUnitAddressToPreprocessingQueue(SPGNewUnitAddress newUnitAddress) {
+  public void sendSpgNewUnitAddressToPreprocessingQueue(CENewUnitAddress newUnitAddress) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, newUnitAddress);
   }
 
   @Retryable
-  public void sendCeNewStandaloneAddress(SPGNewStandaloneAddress newStandaloneAddress) {
+  public void sendSpgNewStandaloneAddress(CENewStandaloneAddress newStandaloneAddress) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, newStandaloneAddress);
   }
@@ -47,13 +47,13 @@ public class OutcomePreprocessingProducer {
   }
 
   @Retryable
-  public void sendSpgNewUnitAddressToPreprocessingQueue(CENewUnitAddress newUnitAddress) {
+  public void sendCeNewUnitAddressToPreprocessingQueue(SPGNewUnitAddress newUnitAddress) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, newUnitAddress);
   }
 
   @Retryable
-  public void sendSpgNewStandaloneAddress(CENewStandaloneAddress newStandaloneAddress) {
+  public void sendCeNewStandaloneAddress(SPGNewStandaloneAddress newStandaloneAddress) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, newStandaloneAddress);
   }

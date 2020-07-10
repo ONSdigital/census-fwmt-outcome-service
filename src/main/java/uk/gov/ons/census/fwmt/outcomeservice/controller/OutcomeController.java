@@ -84,7 +84,7 @@ public class OutcomeController implements OutcomeApi {
         "Outcome code", spgOutcome.getOutcomeCode());
     spgOutcome.setCaseId(UUID.fromString(caseId));
 
-    outcomePreprocessingProducer.sendOutcomeToPreprocessingQueue(spgOutcome);
+    outcomePreprocessingProducer.sendSpgOutcomeToPreprocessingQueue(spgOutcome);
 
     return new ResponseEntity<>(HttpStatus.OK);
   }
