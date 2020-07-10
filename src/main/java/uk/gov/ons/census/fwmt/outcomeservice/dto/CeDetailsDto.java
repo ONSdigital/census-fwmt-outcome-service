@@ -21,5 +21,4 @@ public class CeDetailsDto {
   private String contactPhone;
   private String accessInfo;
   private List<CareCodeDto> careCodes;
-
 }
