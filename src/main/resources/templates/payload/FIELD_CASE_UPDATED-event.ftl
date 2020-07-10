@@ -1,4 +1,4 @@
 "collectionCase" : {
-"id" : ${caseId},
+"id" : "${caseId}",
 "ceExpectedCapacity" : ${outcome.ceDetails.usualResidents}
 }
