@@ -4,14 +4,13 @@
 </#if>
 "collectionCase" : {
    "id" : "${newCaseId}",
-    "caseType" : "SPG",
+    "caseType" : "${addressType}",
     "survey" : "CENSUS",
     "fieldCoordinatorId" : "${outcome.coordinatorId}",
     "fieldOfficerId" : "${officerId}",
-<#if collectionCaseId??>
-    "collectionExerciseId" : "${collectionCaseId}",
-<#else>
-</#if>
+	<#if sourceCase == "NEW_UNIT">
+   		"collectionExerciseId" : "32fn45nd-0dbf-4499-bfa7-0aa4mgit8sh54",
+    </#if>
     "address" : {
       "addressLine1" : "${address.addressLine1}",
     <#if address.addressLine2??>
@@ -34,10 +33,12 @@
     <#else>
       "postcode" : null,
     </#if>
+    <#if sourceCase != "NEW_UNIT">
       "latitude" : "${address.latitude?string["0.########"]}",
       "longitude" : "${address.longitude?string["0.#########"]}",
+    </#if>
       "region" : "${region}",
-      "addressType" : "SPG",
+      "addressType" : "${addressType}",
       "addressLevel" : "U"
     }
   }

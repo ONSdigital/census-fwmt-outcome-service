@@ -47,7 +47,7 @@ public class NewAddressReportedProcessor implements OutcomeServiceProcessor {
     "survey type", type,
     "processor", "NEW_ADDRESS_REPORTED",
     "original caseId", String.valueOf(outcome.getCaseId()));
-    
+
     boolean isDelivered = isDelivered(outcome);
     cacheData(outcome, caseId, isDelivered);
 
@@ -61,6 +61,8 @@ public class NewAddressReportedProcessor implements OutcomeServiceProcessor {
     root.put("address", outcome.getAddress());
     root.put("officerId", outcome.getOfficerId());
     root.put("eventDate", eventDateTime);
+    root.put("addressType", type);
+
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(NEW_ADDRESS_REPORTED, root);
 
