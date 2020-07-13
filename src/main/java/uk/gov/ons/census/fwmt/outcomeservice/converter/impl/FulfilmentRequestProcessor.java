@@ -94,6 +94,7 @@ public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
       if (productList.get(0).getIndividual() && type.equals("HH")) {
         String individualCaseId = String.valueOf(UUID.randomUUID());
         root.put("individualCaseId", individualCaseId);
+        root.put("surveyType", type);
       }
     }
     root.put("packcode", packcode);

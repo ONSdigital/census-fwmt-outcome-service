@@ -25,7 +25,7 @@
       "telNo":null
     </#if>
   }
-  <#if individualCaseId??>
+  <#if individualCaseId?? && surveyType == "HH">
     ,
       "individualCaseId": "${individualCaseId}"
   <#else>
