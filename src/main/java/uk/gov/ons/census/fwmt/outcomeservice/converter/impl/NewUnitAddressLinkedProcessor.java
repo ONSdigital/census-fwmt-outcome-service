@@ -50,7 +50,6 @@ public class NewUnitAddressLinkedProcessor implements OutcomeServiceProcessor {
 
     boolean isDelivered = isDelivered(outcome);
     cacheData(outcome, outcome.getCaseId(), isDelivered);
-    String collectionCaseId = String.valueOf(UUID.randomUUID());
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
@@ -58,10 +57,10 @@ public class NewUnitAddressLinkedProcessor implements OutcomeServiceProcessor {
     root.put("outcome", outcome);
     root.put("newCaseId", caseId);
     root.put("region", regionLookup(outcome.getOfficerId()));
-    root.put("collectionCaseId", collectionCaseId);
     root.put("officerId", outcome.getOfficerId());
     root.put("address", outcome.getAddress());
     root.put("eventDate", eventDateTime);
+    root.put("addressType", type);
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(NEW_ADDRESS_REPORTED, root);
 
@@ -71,7 +70,6 @@ public class NewUnitAddressLinkedProcessor implements OutcomeServiceProcessor {
         "survey type", type,
         "type", NEW_ADDRESS_REPORTED.toString(),
         "transaction id", outcome.getTransactionId().toString(),
-        "collection case id", collectionCaseId,
         "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
 
     return caseId;
