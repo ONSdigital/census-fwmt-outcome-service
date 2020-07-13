@@ -11,12 +11,11 @@ import uk.gov.ons.census.fwmt.outcomeservice.message.RmFieldRepublishProducer;
 
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.common.data.tm.SurveyType.CE_EST_F;
 
+import static uk.gov.ons.census.fwmt.common.data.tm.SurveyType.CE_UNIT_F;
 
-
-@Component("SWITCH_FEEDBACK")
-public class SwitchFeedbackProcessor implements OutcomeServiceProcessor {
+@Component("SWITCH_FEEDBACK_CE_UNIT_F")
+public class SwitchFeedbackUnitFProcessor implements OutcomeServiceProcessor {
 
   @Autowired
   private RmFieldRepublishProducer rmFieldRepublishProducer;
@@ -27,8 +26,8 @@ public class SwitchFeedbackProcessor implements OutcomeServiceProcessor {
     FwmtActionInstruction fieldworkFollowup = FwmtActionInstruction.builder()
         .actionInstruction(ActionInstructionType.SWITCH_CE_TYPE)
         .surveyName("CENSUS")
-        .addressType("CE")
-        .surveyType(CE_EST_F)
+        .addressType(type)
+        .surveyType(CE_UNIT_F)
         .caseId(caseId.toString())
         .build();
 
