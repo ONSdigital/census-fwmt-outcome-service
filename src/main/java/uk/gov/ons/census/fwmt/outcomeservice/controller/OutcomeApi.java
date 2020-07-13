@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.ons.census.fwmt.common.data.ce.CENewStandaloneAddress;
+import uk.gov.ons.census.fwmt.common.data.ce.CENewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.ce.CEOutcome;
-import uk.gov.ons.census.fwmt.common.data.spg.NewStandaloneAddress;
-import uk.gov.ons.census.fwmt.common.data.spg.NewUnitAddress;
+import uk.gov.ons.census.fwmt.common.data.spg.SPGNewStandaloneAddress;
+import uk.gov.ons.census.fwmt.common.data.spg.SPGNewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 
@@ -25,11 +27,31 @@ public interface OutcomeApi {
       @ApiResponse(code = 200, message = "Case Outcome received"),
       @ApiResponse(code = 401, message = "UNAUTHORIZED"),
       @ApiResponse(code = 403, message = "FORBIDDEN")})
-  @RequestMapping(value = "/spgOutcome/ceOutcome/{caseID}",
+  @RequestMapping(value = "/ceOutcome/{caseID}",
       produces = {"application/json"},
       method = RequestMethod.POST)
   ResponseEntity<Void> ceOutcomeResponse(
       @PathVariable("caseID") String caseID, @RequestBody CEOutcome ceOutcome) throws GatewayException;
+
+  @ApiOperation(value = "Post a CE survey outcome to the FWMT Gateway")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "Case Outcome received"),
+      @ApiResponse(code = 401, message = "UNAUTHORIZED"),
+      @ApiResponse(code = 403, message = "FORBIDDEN")})
+  @RequestMapping(value = "/ceOutcome/unitAddress/new",
+      produces = {"application/json"},
+      method = RequestMethod.POST)
+  ResponseEntity<Void> ceNewUnitAddress(@RequestBody CENewUnitAddress ceOutcome) throws GatewayException;
+
+  @ApiOperation(value = "Post a CE survey outcome to the FWMT Gateway")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "Case Outcome received"),
+      @ApiResponse(code = 401, message = "UNAUTHORIZED"),
+      @ApiResponse(code = 403, message = "FORBIDDEN")})
+  @RequestMapping(value = "/ceOutcome/standaloneAddress/new",
+      produces = {"application/json"},
+      method = RequestMethod.POST)
+  ResponseEntity<Void> ceNewStandalone(@RequestBody CENewStandaloneAddress ceOutcome) throws GatewayException;
 
   @ApiOperation(value = "Post a SPG survey outcome to the FWMT Gateway")
   @ApiResponses(value = {
@@ -50,7 +72,7 @@ public interface OutcomeApi {
   @RequestMapping(value = "/spgOutcome/unitAddress/new",
       produces = {"application/json"},
       method = RequestMethod.POST)
-  ResponseEntity<Void> spgNewUnitAddress(@RequestBody NewUnitAddress spgOutcome) throws GatewayException;
+  ResponseEntity<Void> spgNewUnitAddress(@RequestBody SPGNewUnitAddress spgOutcome) throws GatewayException;
 
   @ApiOperation(value = "Post a SPG survey outcome to the FWMT Gateway")
   @ApiResponses(value = {
@@ -60,5 +82,5 @@ public interface OutcomeApi {
   @RequestMapping(value = "/spgOutcome/standaloneAddress/new",
       produces = {"application/json"},
       method = RequestMethod.POST)
-  ResponseEntity<Void> spgNewStandalone(@RequestBody NewStandaloneAddress spgOutcome) throws GatewayException;
+  ResponseEntity<Void> spgNewStandalone(@RequestBody SPGNewStandaloneAddress spgOutcome) throws GatewayException;
 }
