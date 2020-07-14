@@ -35,13 +35,14 @@ public class UpdateResidentCountProcessor implements OutcomeServiceProcessor {
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
-    if (outcome.getCeDetails() == null) return caseId;
-    if (outcome.getCeDetails().getUsualResidents() == null) return caseId;
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
     "survey type", type,
     "processor", "UPDATE_RESIDENT_COUNT",
     "original caseId", String.valueOf(outcome.getCaseId()));
+
+    if (outcome.getCeDetails() == null) return caseId;
+    if (outcome.getCeDetails().getUsualResidents() == null) return caseId;
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
