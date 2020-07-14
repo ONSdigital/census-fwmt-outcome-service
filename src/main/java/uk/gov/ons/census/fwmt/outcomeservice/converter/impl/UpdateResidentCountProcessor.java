@@ -41,6 +41,9 @@ public class UpdateResidentCountProcessor implements OutcomeServiceProcessor {
     "processor", "UPDATE_RESIDENT_COUNT",
     "original caseId", String.valueOf(outcome.getCaseId()));
 
+    if (outcome.getCeDetails() == null) return caseId;
+    if (outcome.getCeDetails().getUsualResidents() == null) return caseId;
+
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
     root.put("outcome", outcome);
