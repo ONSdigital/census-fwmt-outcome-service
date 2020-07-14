@@ -29,16 +29,16 @@ public class CancelFeedbackProcessor implements OutcomeServiceProcessor {
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
-    
+
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
     "survey type", type,
     "processor", "CANCEL_FEEDBACK",
     "original caseId", String.valueOf(outcome.getCaseId()));
-    
+
     FwmtCancelActionInstruction fieldworkFollowup = FwmtCancelActionInstruction.builder()
         .actionInstruction(ActionInstructionType.CANCEL)
         .surveyName("CENSUS")
-        .addressType("SPG")
+        .addressType(type)
         .addressLevel("U")
         .caseId(caseId.toString())
         .build();
@@ -46,7 +46,8 @@ public class CancelFeedbackProcessor implements OutcomeServiceProcessor {
     rmFieldRepublishProducer.republish(fieldworkFollowup);
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), RM_FIELD_REPUBLISH,
-    "survey type", type,
+        "survey name", "CENSUS",
+        "address type", type,
     "action instruction", ActionInstructionType.CANCEL.toString(),
     "transactionId", outcome.getTransactionId().toString());
 

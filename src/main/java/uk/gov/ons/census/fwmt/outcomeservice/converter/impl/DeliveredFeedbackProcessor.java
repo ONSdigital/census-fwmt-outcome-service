@@ -39,7 +39,7 @@ public class DeliveredFeedbackProcessor implements OutcomeServiceProcessor {
     FwmtActionInstruction fieldworkFollowup = FwmtActionInstruction.builder()
         .actionInstruction(ActionInstructionType.UPDATE)
         .surveyName("CENSUS")
-        .addressType("SPG")
+        .addressType(type)
         .addressLevel("U")
         .caseId(caseId.toString())
         .build();
@@ -47,7 +47,8 @@ public class DeliveredFeedbackProcessor implements OutcomeServiceProcessor {
     rmFieldRepublishProducer.republish(fieldworkFollowup);
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), RM_FIELD_REPUBLISH,
-    "survey type", type,
+        "survey name", "CENSUS",
+        "address type", type,
     "action instruction", ActionInstructionType.UPDATE.toString(),
     "transactionId", outcome.getTransactionId().toString());
 
