@@ -26,13 +26,6 @@ public class NoActionProcessor implements OutcomeServiceProcessor {
     "survey type", type,
     "processor", "NO_ACTION",
     "original caseId", String.valueOf(outcome.getCaseId()));
-    
-    gatewayEventManager
-        .triggerErrorEvent(this.getClass(), (Exception) null,"Action not expected", String.valueOf(caseId),
-            RECEIVED_NO_ACTION_FROM_TM,
-            "Transaction id", String.valueOf(outcome.getTransactionId()),
-            "Primary Outcome", outcome.getPrimaryOutcomeDescription(),
-            "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
 
     return outcome.getCaseId();
   }
