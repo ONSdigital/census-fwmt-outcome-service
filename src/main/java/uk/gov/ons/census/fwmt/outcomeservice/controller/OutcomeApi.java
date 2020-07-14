@@ -48,7 +48,7 @@ public interface OutcomeApi {
       @ApiResponse(code = 200, message = "Case Outcome received"),
       @ApiResponse(code = 401, message = "UNAUTHORIZED"),
       @ApiResponse(code = 403, message = "FORBIDDEN")})
-  @RequestMapping(value = "/ceOutcome/standaloneAddress/new",
+  @RequestMapping(value = "/ceOutcome/standaloneAddress",
       produces = {"application/json"},
       method = RequestMethod.POST)
   ResponseEntity<Void> ceNewStandalone(@RequestBody CENewStandaloneAddress ceOutcome) throws GatewayException;
@@ -79,7 +79,7 @@ public interface OutcomeApi {
       @ApiResponse(code = 200, message = "Case Outcome received"),
       @ApiResponse(code = 401, message = "UNAUTHORIZED"),
       @ApiResponse(code = 403, message = "FORBIDDEN")})
-  @RequestMapping(value = "/spgOutcome/standaloneAddress/new",
+  @RequestMapping(value = "/spgOutcome/standaloneAddress",
       produces = {"application/json"},
       method = RequestMethod.POST)
   ResponseEntity<Void> spgNewStandalone(@RequestBody SPGNewStandaloneAddress spgOutcome) throws GatewayException;
