@@ -44,7 +44,8 @@ public class AddressTypeChangedSpgProcessor implements OutcomeServiceProcessor {
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
         "survey type", type,
         "processor", "ADDRESS_TYPE_CHANGED_SPG",
-        "original caseId", String.valueOf(outcome.getCaseId()));
+        "original caseId", String.valueOf(outcome.getCaseId()),
+        "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
     Map<String, Object> root = new HashMap<>();
     root.put("caseId", caseId);

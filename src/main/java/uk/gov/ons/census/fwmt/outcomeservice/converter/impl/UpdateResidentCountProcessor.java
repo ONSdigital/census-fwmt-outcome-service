@@ -38,7 +38,8 @@ public class UpdateResidentCountProcessor implements OutcomeServiceProcessor {
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
     "survey type", type,
     "processor", "UPDATE_RESIDENT_COUNT",
-    "original caseId", String.valueOf(outcome.getCaseId()));
+    "original caseId", String.valueOf(outcome.getCaseId()),
+    "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
     if (outcome.getCeDetails() == null) return caseId;
     if (outcome.getCeDetails().getUsualResidents() == null) return caseId;
