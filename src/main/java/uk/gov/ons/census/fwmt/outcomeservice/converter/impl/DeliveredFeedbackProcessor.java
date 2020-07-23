@@ -34,7 +34,8 @@ public class DeliveredFeedbackProcessor implements OutcomeServiceProcessor {
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
     "survey type", type,
     "processor", "DELIVERED_FEEDBACK",
-    "original caseId", String.valueOf(outcome.getCaseId()));
+    "original caseId", String.valueOf(outcome.getCaseId()),
+    "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
     FwmtActionInstruction fieldworkFollowup = FwmtActionInstruction.builder()
         .actionInstruction(ActionInstructionType.UPDATE)

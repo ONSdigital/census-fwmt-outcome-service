@@ -12,7 +12,6 @@ import uk.gov.ons.census.fwmt.outcomeservice.message.RmFieldRepublishProducer;
 
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.common.data.tm.SurveyType.CE_EST_F;
 import static uk.gov.ons.census.fwmt.common.data.tm.SurveyType.CE_UNIT_F;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_OUTCOME;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.RM_FIELD_REPUBLISH;
@@ -33,7 +32,8 @@ public class SwitchFeedbackUnitFProcessor implements OutcomeServiceProcessor {
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
     "survey type", type,
     "processor", "SWITCH_FEEDBACK_CE_UNIT_F",
-    "original caseId", String.valueOf(outcome.getCaseId()));
+    "original caseId", String.valueOf(outcome.getCaseId()),
+    "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
     FwmtActionInstruction fieldworkFollowup = FwmtActionInstruction.builder()
         .actionInstruction(ActionInstructionType.SWITCH_CE_TYPE)

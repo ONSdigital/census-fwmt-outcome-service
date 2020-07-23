@@ -46,7 +46,8 @@ public class NewUnitAddressLinkedProcessor implements OutcomeServiceProcessor {
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
     "survey type", type,
     "processor", "NEW_UNIT_ADDRESS",
-    "original caseId", String.valueOf(outcome.getCaseId()));
+    "original caseId", String.valueOf(outcome.getCaseId()),
+    "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
     boolean isDelivered = isDelivered(outcome);
     cacheData(outcome, outcome.getCaseId(), isDelivered);

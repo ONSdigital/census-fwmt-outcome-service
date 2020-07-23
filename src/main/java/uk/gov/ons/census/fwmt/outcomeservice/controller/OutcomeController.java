@@ -51,6 +51,7 @@ public class OutcomeController implements OutcomeApi {
   public ResponseEntity<Void> ceNewUnitAddress(CENewUnitAddress newUnitAddress) {
     gatewayEventManager.triggerEvent("N/A", COMET_CE_UNITADDRESS_OUTCOME_RECEIVED,
         "transactionId", newUnitAddress.getTransactionId().toString(),
+        "Site Case ID", String.valueOf(newUnitAddress.getSiteCaseId()),
         "Primary Outcome", newUnitAddress.getPrimaryOutcomeDescription(),
         "Secondary Outcome", newUnitAddress.getSecondaryOutcomeDescription(),
         "Outcome code", newUnitAddress.getOutcomeCode());

@@ -25,7 +25,8 @@ public class NoActionProcessor implements OutcomeServiceProcessor {
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
     "survey type", type,
     "processor", "NO_ACTION",
-    "original caseId", String.valueOf(outcome.getCaseId()));
+    "original caseId", String.valueOf(outcome.getCaseId()),
+    "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
     return outcome.getCaseId();
   }

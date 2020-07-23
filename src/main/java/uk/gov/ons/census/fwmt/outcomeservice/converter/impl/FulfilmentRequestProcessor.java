@@ -56,7 +56,8 @@ public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
     gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_OUTCOME,
     "survey type", type,
     "processor", "FULFILMENT_REQUESTED",
-    "original caseId", String.valueOf(outcome.getCaseId()));
+    "original caseId", String.valueOf(outcome.getCaseId()),
+    "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
  
     if (outcome.getFulfilmentRequests() == null) return caseIdHolder;
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
