@@ -12,7 +12,6 @@ import uk.gov.ons.census.fwmt.outcomeservice.message.RmFieldRepublishProducer;
 
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.common.data.tm.SurveyType.CE_EST_F;
 import static uk.gov.ons.census.fwmt.common.data.tm.SurveyType.CE_SITE;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_OUTCOME;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.RM_FIELD_REPUBLISH;
@@ -41,7 +40,7 @@ public class SwitchFeedbackCeSiteProcessor implements OutcomeServiceProcessor {
         .surveyName("CENSUS")
         .addressType(type)
         .surveyType(CE_SITE)
-        .caseId(caseId.toString())
+        .caseId(String.valueOf(outcome.getSiteCaseId()))
         .build();
 
     rmFieldRepublishProducer.republish(fieldworkFollowup);
