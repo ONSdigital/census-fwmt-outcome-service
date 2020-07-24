@@ -32,7 +32,7 @@ public class SwitchFeedbackCeSiteProcessor implements OutcomeServiceProcessor {
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
         "survey type", type,
-        "processor", "SWITCH_FEEDBACK_CE_EST_F",
+        "processor", "SWITCH_FEEDBACK_CE_SITE",
         "original caseId", String.valueOf(outcome.getCaseId()),
         "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
