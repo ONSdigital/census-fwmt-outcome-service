@@ -26,15 +26,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.FULFILMENT_REQUESTED_OUTCOME_SENT;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.FULFILMENT_REQUESTED;
 import static uk.gov.ons.ctp.integration.common.product.model.Product.RequestChannel.FIELD;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_OUTCOME;
 
 @Slf4j
 @Component("FULFILMENT_REQUESTED")
 public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
+
+  public final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
+
+  public final String OUTCOME_SENT = "OUTCOME_SENT";
 
   @Autowired
   private DateFormat dateFormat;

@@ -13,11 +13,13 @@ import uk.gov.ons.census.fwmt.outcomeservice.message.RmFieldRepublishProducer;
 import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.common.data.tm.SurveyType.CE_EST_F;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_OUTCOME;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.RM_FIELD_REPUBLISH;
 
 @Component("SWITCH_FEEDBACK_CE_EST_F")
 public class SwitchFeedbackEstFProcessor implements OutcomeServiceProcessor {
+
+  public final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
+
+  public final String RM_FIELD_REPUBLISH = "RM_FIELD_REPUBLISH";
 
   @Autowired
   private RmFieldRepublishProducer rmFieldRepublishProducer;

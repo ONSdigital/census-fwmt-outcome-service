@@ -17,15 +17,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.NEW_ADDRESS_REPORTED_OUTCOME_SENT;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.NEW_ADDRESS_REPORTED;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.SpgUtilityMethods.isDelivered;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.SpgUtilityMethods.regionLookup;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_OUTCOME;
 
 @Component("NEW_ADDRESS_REPORTED")
 public class NewAddressReportedProcessor implements OutcomeServiceProcessor {
+
+  public final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
+
+  public final String OUTCOME_SENT = "OUTCOME_SENT";
 
   @Autowired
   private DateFormat dateFormat;

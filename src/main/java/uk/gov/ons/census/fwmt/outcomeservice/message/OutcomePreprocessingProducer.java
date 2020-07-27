@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.data.ce.CENewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.ce.CENewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.ce.CEOutcome;
+import uk.gov.ons.census.fwmt.common.data.household.HHNewSplitAddress;
+import uk.gov.ons.census.fwmt.common.data.household.HHNewStandaloneAddress;
+import uk.gov.ons.census.fwmt.common.data.household.HHOutcome;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGNewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGNewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
@@ -53,8 +56,26 @@ public class OutcomePreprocessingProducer {
   }
 
   @Retryable
-  public void sendCeNewStandaloneAddress(CENewStandaloneAddress newStandaloneAddress) {
+  public void sendCeNewStandaloneAddressToPreprocessingQueue(CENewStandaloneAddress newStandaloneAddress) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, newStandaloneAddress);
+  }
+
+  @Retryable
+  public void sendHHOutcomeToPreprocessingQueue(HHOutcome hhOutcome) {
+    rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
+        OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, hhOutcome);
+  }
+
+  @Retryable
+  public void sendHHSplitAddressToPreprocessingQueue(HHNewSplitAddress hhNewSplitAddress) {
+    rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
+        OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, hhNewSplitAddress);
+  }
+
+  @Retryable
+  public void sendHHStandaloneAddressToPreprocessingQueue(HHNewStandaloneAddress hhNewStandaloneAddress) {
+    rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
+        OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, hhNewStandaloneAddress);
   }
 }

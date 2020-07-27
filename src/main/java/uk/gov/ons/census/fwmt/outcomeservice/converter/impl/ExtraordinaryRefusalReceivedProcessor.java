@@ -15,13 +15,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.EXTRAORDINARY_REFUSAL_RECEIVED_OUTCOME_SENT;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.REFUSAL_RECEIVED;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_OUTCOME;
 
 @Component("EXTRAORDINARY_REFUSAL_RECEIVED")
 public class ExtraordinaryRefusalReceivedProcessor implements OutcomeServiceProcessor {
+
+  public final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
+
+  public final String OUTCOME_SENT = "OUTCOME_SENT";
 
   @Autowired
   private DateFormat dateFormat;

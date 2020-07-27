@@ -11,11 +11,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.REDIS_SERVICE_DOWN;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.REDIS_SERVICE_UP;
-
 @Component
 public class RedisHealthLogging extends AbstractHealthIndicator {
+
+  public static final String REDIS_SERVICE_UP = "REDIS_SERVICE_UP";
+
+  public static final String REDIS_SERVICE_DOWN = "REDIS_SERVICE_DOWN";
 
   @Autowired
   private GatewayEventManager gatewayEventManager;

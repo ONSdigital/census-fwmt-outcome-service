@@ -38,8 +38,10 @@
       "longitude" : "${address.longitude?string["0.#########"]}",
     </#if>
       "region" : "${region}",
+    <#if sourceCase != "NEW_SPLIT_ADDRESS">
       "addressType" : "${addressType}",
       "addressLevel" : "U"
+    </#if>
     }
   }
 }
