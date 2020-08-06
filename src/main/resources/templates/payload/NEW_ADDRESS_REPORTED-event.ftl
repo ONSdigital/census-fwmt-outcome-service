@@ -8,9 +8,6 @@
     "survey" : "CENSUS",
     "fieldCoordinatorId" : "${outcome.coordinatorId}",
     "fieldOfficerId" : "${officerId}",
-	<#if sourceCase == "NEW_UNIT">
-   		"collectionExerciseId" : "32fn45nd-0dbf-4499-bfa7-0aa4mgit8sh54",
-    </#if>
     "address" : {
       "addressLine1" : "${address.addressLine1}",
     <#if address.addressLine2??>
