@@ -1,6 +1,6 @@
 "newAddress" : {
-<#if sourceCase == "NEW_UNIT">
-"sourceCaseId" : "${outcome.siteCaseId}",
+<#if sourceCase != "NEW_STANDALONE">
+"sourceCaseId" : "${sourceCaseId}",
 </#if>
 "collectionCase" : {
    "id" : "${newCaseId}",

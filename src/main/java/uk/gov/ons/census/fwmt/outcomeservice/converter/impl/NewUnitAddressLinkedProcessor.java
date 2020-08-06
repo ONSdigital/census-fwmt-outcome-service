@@ -58,6 +58,7 @@ public class NewUnitAddressLinkedProcessor implements OutcomeServiceProcessor {
     root.put("sourceCase", "NEW_UNIT");
     root.put("outcome", outcome);
     root.put("newCaseId", caseId);
+    root.put("sourceCaseId", outcome.getSiteCaseId());
     root.put("region", regionLookup(outcome.getOfficerId()));
     root.put("officerId", outcome.getOfficerId());
     root.put("address", outcome.getAddress());
