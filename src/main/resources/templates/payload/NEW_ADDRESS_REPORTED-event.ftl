@@ -1,6 +1,7 @@
 "newAddress" : {
 <#if sourceCase == "NEW_UNIT">
 "sourceCaseId" : "${outcome.siteCaseId}",
+<#else>
 </#if>
 "collectionCase" : {
    "id" : "${newCaseId}",
@@ -33,6 +34,10 @@
     <#if sourceCase != "NEW_UNIT">
       "latitude" : "${address.latitude?string["0.########"]}",
       "longitude" : "${address.longitude?string["0.#########"]}",
+      <#if addressType == "CE">
+      "estabType": "${ceDetails.establishmentType}",
+      "secureType": "${ceDetails.establishmentSecure}"
+      </#if>
     </#if>
       "region" : "${region}",
       "addressType" : "${addressType}",
