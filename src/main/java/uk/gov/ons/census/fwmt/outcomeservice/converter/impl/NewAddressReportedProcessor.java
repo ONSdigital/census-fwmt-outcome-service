@@ -56,6 +56,9 @@ public class NewAddressReportedProcessor implements OutcomeServiceProcessor {
     Map<String, Object> root = new HashMap<>();
     root.put("sourceCase", "NEW_STANDALONE");
     root.put("outcome", outcome);
+    if (outcome.getCeDetails() != null) {
+      root.put("ceDetails", outcome.getCeDetails());
+    }
     root.put("newCaseId", caseId);
     root.put("region", regionLookup(outcome.getOfficerId()));
     root.put("address", outcome.getAddress());
