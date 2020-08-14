@@ -19,8 +19,8 @@ import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.O
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.FIELD_CASE_UPDATED;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_OUTCOME;
 
-@Component("UPDATE_RESIDENT_COUNT")
-public class UpdateResidentCountProcessor implements OutcomeServiceProcessor {
+@Component("UPDATE_RESIDENT_COUNT_1")
+public class UpdateResidentCountOneProcessor implements OutcomeServiceProcessor {
 
   @Autowired
   private DateFormat dateFormat;
@@ -36,10 +36,10 @@ public class UpdateResidentCountProcessor implements OutcomeServiceProcessor {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
-    "survey type", type,
-    "processor", "UPDATE_RESIDENT_COUNT",
-    "original caseId", String.valueOf(outcome.getCaseId()),
-    "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+        "survey type", type,
+        "processor", "UPDATE_RESIDENT_COUNT",
+        "original caseId", String.valueOf(outcome.getCaseId()),
+        "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
     if (outcome.getCeDetails() == null) return caseId;
     if (outcome.getCeDetails().getUsualResidents() == null) return caseId;
@@ -49,7 +49,7 @@ public class UpdateResidentCountProcessor implements OutcomeServiceProcessor {
     root.put("outcome", outcome);
     root.put("eventDate", eventDateTime);
     root.put("caseId", caseId);
-    root.put("usualResidents", outcome.getCeDetails().getUsualResidents());
+    root.put("usualResidents",(outcome.getCeDetails().getUsualResidents() > 0)?outcome.getCeDetails().getUsualResidents():"1");
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(FIELD_CASE_UPDATED, root);
 
