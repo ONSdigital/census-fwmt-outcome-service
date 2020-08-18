@@ -1,6 +1,8 @@
 server:
   port: 8030
-
+  tomcat:
+    max-threads: 200
+    min-spare-threads: 10
 spring:
   application:
     name: census-fwmt-outcome-service
@@ -35,6 +37,7 @@ rabbitmq:
   virtualHost: "/"
   initialInterval: 5000
   multiplier: 3.0
+  prefetchCount: 250
   maxInterval: 45000
   queues:
     rm:
