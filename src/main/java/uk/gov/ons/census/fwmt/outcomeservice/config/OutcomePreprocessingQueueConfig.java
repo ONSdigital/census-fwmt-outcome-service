@@ -18,6 +18,7 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.interceptor.RetryOperationsInterceptor;
@@ -47,6 +48,8 @@ public class OutcomePreprocessingQueueConfig {
 
   @Autowired
   private AmqpAdmin amqpAdmin;
+  @Value("${rabbitmq.prefetchCount}")
+  private int prefetchCount;
 
   // Queues
   @Bean
@@ -110,6 +113,7 @@ public class OutcomePreprocessingQueueConfig {
     container.setConnectionFactory(connectionFactory);
     container.setQueueNames(OUTCOME_PREPROCESSING_QUEUE);
     container.setMessageListener(messageListenerAdapter);
+    container.setPrefetchCount(prefetchCount);
     return container;
   }
 

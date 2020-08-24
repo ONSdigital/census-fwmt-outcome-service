@@ -1,6 +1,7 @@
 "newAddress" : {
-<#if sourceCase != "NEW_STANDALONE">
-"sourceCaseId" : "${sourceCaseId}",
+<#if sourceCase == "NEW_UNIT">
+"sourceCaseId" : "${outcome.siteCaseId}",
+<#else>
 </#if>
 "collectionCase" : {
    "id" : "${newCaseId}",
@@ -8,9 +9,6 @@
     "survey" : "CENSUS",
     "fieldCoordinatorId" : "${outcome.coordinatorId}",
     "fieldOfficerId" : "${officerId}",
-	<#if sourceCase == "NEW_UNIT">
-   		"collectionExerciseId" : "32fn45nd-0dbf-4499-bfa7-0aa4mgit8sh54",
-    </#if>
     "address" : {
       "addressLine1" : "${address.addressLine1}",
     <#if address.addressLine2??>
@@ -36,8 +34,14 @@
     <#if sourceCase != "NEW_UNIT">
       "latitude" : "${address.latitude?string["0.########"]}",
       "longitude" : "${address.longitude?string["0.#########"]}",
+      <#if addressType == "CE">
+      "estabType": "${ceDetails.establishmentType}",
+      "secureType": "${ceDetails.establishmentSecure}"
+      </#if>
     </#if>
+    <#if sourceCase == "NEW_STANDALONE">
       "region" : "${region}",
+    </#if>
     <#if sourceCase != "NEW_SPLIT_ADDRESS">
       "addressType" : "${addressType}",
       "addressLevel" : "U"
