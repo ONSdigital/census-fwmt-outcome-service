@@ -14,6 +14,7 @@ import java.util.List;
 public class CeDetailsDto {
   private String establishmentName;
   private String establishmentType;
+  private String establishmentSecure;
   private String managerTitle;
   private String managerForename;
   private String managerSurname;
