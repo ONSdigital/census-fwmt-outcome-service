@@ -36,7 +36,7 @@
       "longitude" : "${address.longitude?string["0.#########"]}",
       <#if addressType == "CE">
       "estabType": "${ceDetails.establishmentType}",
-      "secureType": "${ceDetails.establishmentSecure}"
+      "secureType": "${ceDetails.establishmentSecure}",
       </#if>
     </#if>
     <#if sourceCase == "NEW_STANDALONE">
