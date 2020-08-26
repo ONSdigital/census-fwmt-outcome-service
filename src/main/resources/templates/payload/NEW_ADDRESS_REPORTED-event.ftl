@@ -39,9 +39,7 @@
       "secureType": "${ceDetails.establishmentSecure}",
       </#if>
     </#if>
-    <#if sourceCase == "NEW_STANDALONE">
       "region" : "${region}",
-    </#if>
       "addressType" : "${addressType}",
       "addressLevel" : "U"
     }

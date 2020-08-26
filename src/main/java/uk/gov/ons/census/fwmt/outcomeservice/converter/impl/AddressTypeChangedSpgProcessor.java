@@ -55,7 +55,6 @@ public class AddressTypeChangedSpgProcessor implements OutcomeServiceProcessor {
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     root.put("outcome", outcome);
-    root.put("region", regionLookup(outcome.getOfficerId()));
     root.put("eventDate", eventDateTime);
     root.put("estabType", "SPG");
 
