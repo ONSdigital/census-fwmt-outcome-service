@@ -1,5 +1,5 @@
 "newAddress" : {
-<#if sourceCase == "NEW_UNIT">
+<#if sourceCase != "NEW_STANDALONE">
 "sourceCaseId" : "${sourceCaseId}",
 <#else>
 </#if>
