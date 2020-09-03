@@ -23,9 +23,9 @@ import static uk.gov.ons.census.fwmt.outcomeservice.util.SpgUtilityMethods.regio
 @Component("ADDRESS_TYPE_CHANGED_CE_EST")
 public class AddressTypeChangedCeEstProcessor implements OutcomeServiceProcessor {
 
-  public final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
+  public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
 
-  public final String OUTCOME_SENT = "OUTCOME_SENT";
+  public static final String OUTCOME_SENT = "OUTCOME_SENT";
 
   @Autowired
   private DateFormat dateFormat;

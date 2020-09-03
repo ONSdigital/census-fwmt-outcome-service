@@ -12,7 +12,7 @@ import java.util.UUID;
 @Component("NO_ACTION")
 public class NoActionProcessor implements OutcomeServiceProcessor {
 
-  public final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
+  public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
 
   @Autowired
   private GatewayEventManager gatewayEventManager;

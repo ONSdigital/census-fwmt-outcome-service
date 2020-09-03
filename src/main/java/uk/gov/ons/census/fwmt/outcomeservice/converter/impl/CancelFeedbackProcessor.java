@@ -17,9 +17,9 @@ import java.util.UUID;
 @Component("CANCEL_FEEDBACK")
 public class CancelFeedbackProcessor implements OutcomeServiceProcessor {
 
-  public final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
+  public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
 
-  public final String RM_FIELD_REPUBLISH = "RM_FIELD_REPUBLISH";
+  public static final String RM_FIELD_REPUBLISH = "RM_FIELD_REPUBLISH";
 
   @Autowired
   private RmFieldRepublishProducer rmFieldRepublishProducer;

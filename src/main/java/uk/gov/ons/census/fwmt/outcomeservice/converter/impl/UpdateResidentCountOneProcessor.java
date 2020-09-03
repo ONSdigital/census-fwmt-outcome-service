@@ -15,12 +15,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.FIELD_CASE_UPDATED;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_OUTCOME;
 
 @Component("UPDATE_RESIDENT_COUNT_1")
 public class UpdateResidentCountOneProcessor implements OutcomeServiceProcessor {
+
+  public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
+
+  public static final String OUTCOME_SENT = "OUTCOME_SENT";
 
   @Autowired
   private DateFormat dateFormat;

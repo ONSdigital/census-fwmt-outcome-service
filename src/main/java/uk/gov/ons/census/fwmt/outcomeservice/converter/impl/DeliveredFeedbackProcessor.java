@@ -18,9 +18,9 @@ import uk.gov.ons.census.fwmt.outcomeservice.message.RmFieldRepublishProducer;
 @Component("DELIVERED_FEEDBACK")
 public class DeliveredFeedbackProcessor implements OutcomeServiceProcessor {
 
-  public final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
+  public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
 
-  public final String RM_FIELD_REPUBLISH = "RM_FIELD_REPUBLISH";
+  public static final String RM_FIELD_REPUBLISH = "RM_FIELD_REPUBLISH";
 
   @Autowired
   private RmFieldRepublishProducer rmFieldRepublishProducer;
