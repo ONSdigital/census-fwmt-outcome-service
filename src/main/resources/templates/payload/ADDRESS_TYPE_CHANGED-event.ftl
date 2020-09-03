@@ -15,7 +15,6 @@
     "estabType":"Unknown",
     </#if>
 </#if>
-    "region":"${region}",
     "addressType":"${estabType}"
 }
 }

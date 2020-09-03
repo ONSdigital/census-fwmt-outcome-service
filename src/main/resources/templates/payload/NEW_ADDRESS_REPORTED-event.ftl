@@ -36,10 +36,9 @@
       "longitude" : "${address.longitude?string["0.#########"]}",
       <#if addressType == "CE">
       "estabType": "${ceDetails.establishmentType}",
-      "secureType": "${ceDetails.establishmentSecure}"
+      "secureType": "${ceDetails.establishmentSecure}",
       </#if>
     </#if>
-    <#if sourceCase == "NEW_STANDALONE">
       "region" : "${region}",
     </#if>
     <#if sourceCase != "NEW_SPLIT_ADDRESS">
