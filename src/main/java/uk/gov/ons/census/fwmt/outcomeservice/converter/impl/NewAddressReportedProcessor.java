@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.NEW_ADDRESS_REPORTED_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.NEW_ADDRESS_REPORTED;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.SpgUtilityMethods.isDelivered;
@@ -65,6 +64,11 @@ public class NewAddressReportedProcessor implements OutcomeServiceProcessor {
     root.put("officerId", outcome.getOfficerId());
     root.put("eventDate", eventDateTime);
     root.put("addressType", type);
+    if (type.equals("CE")) {
+      root.put("addressLevel","E");
+    } else if (type.equals("SPG")) {
+      root.put("addressLevel","U");
+    }
 
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(NEW_ADDRESS_REPORTED, root);

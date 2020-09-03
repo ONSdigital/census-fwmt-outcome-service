@@ -49,7 +49,8 @@ public class UpdateResidentCountOneProcessor implements OutcomeServiceProcessor 
     root.put("outcome", outcome);
     root.put("eventDate", eventDateTime);
     root.put("caseId", caseId);
-    root.put("usualResidents",(outcome.getCeDetails().getUsualResidents() > 0)?outcome.getCeDetails().getUsualResidents():"1");
+    root.put("usualResidents", outcome.getCeDetails().getUsualResidents() > 0
+        ? outcome.getCeDetails().getUsualResidents() : "1");
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(FIELD_CASE_UPDATED, root);
 

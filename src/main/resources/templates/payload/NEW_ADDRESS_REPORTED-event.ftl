@@ -41,7 +41,7 @@
     </#if>
       "region" : "${region}",
       "addressType" : "${addressType}",
-      "addressLevel" : "U"
+      "addressLevel" : "${addressLevel}"
     }
   }
 }

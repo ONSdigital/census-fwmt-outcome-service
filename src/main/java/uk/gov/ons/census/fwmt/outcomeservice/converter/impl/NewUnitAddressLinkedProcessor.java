@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.NEW_UNIT_ADDRESS_OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.NEW_ADDRESS_REPORTED;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.SpgUtilityMethods.isDelivered;
@@ -62,8 +61,14 @@ public class NewUnitAddressLinkedProcessor implements OutcomeServiceProcessor {
     root.put("address", outcome.getAddress());
     root.put("eventDate", eventDateTime);
     root.put("addressType", type);
+    if (type.equals("CE")) {
+      root.put("addressLevel","E");
+    } else if (type.equals("SPG")) {
+      root.put("addressLevel", "U");
+    }
 
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(NEW_ADDRESS_REPORTED, root);
+
+      String outcomeEvent = TemplateCreator.createOutcomeMessage(NEW_ADDRESS_REPORTED, root);
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
