@@ -13,12 +13,13 @@ import uk.gov.ons.census.fwmt.outcomeservice.message.RmFieldRepublishProducer;
 
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_OUTCOME;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.RM_FIELD_REPUBLISH;
-
 @Slf4j
 @Component("CANCEL_FEEDBACK")
 public class CancelFeedbackProcessor implements OutcomeServiceProcessor {
+
+  public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
+
+  public static final String RM_FIELD_REPUBLISH = "RM_FIELD_REPUBLISH";
 
   @Autowired
   private RmFieldRepublishProducer rmFieldRepublishProducer;

@@ -8,24 +8,31 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.ons.census.fwmt.common.data.ce.CENewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.ce.CENewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.ce.CEOutcome;
+import uk.gov.ons.census.fwmt.common.data.household.HHNewSplitAddress;
+import uk.gov.ons.census.fwmt.common.data.household.HHNewStandaloneAddress;
+import uk.gov.ons.census.fwmt.common.data.household.HHOutcome;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGNewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGNewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.message.OutcomePreprocessingProducer;
 
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_CE_STANDALONE_OUTCOME_RECEIVED;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_CE_UNITADDRESS_OUTCOME_RECEIVED;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_SPG_STANDALONE_OUTCOME_RECEIVED;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_SPG_UNITADDRESS_OUTCOME_RECEIVED;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_SPG_OUTCOME_RECEIVED;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.COMET_CE_OUTCOME_RECEIVED;
-
 @RestController
 @Import({springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration.class})
 public class OutcomeController implements OutcomeApi {
+
+  public static final String COMET_HH_OUTCOME_RECEIVED = "COMET_HH_OUTCOME_RECEIVED";
+  public static final String COMET_HH_SPLITADDRESS_RECEIVED = "COMET_HH_SPLITADDRESS_RECEIVED";
+  public static final String COMET_HH_STANDALONE_RECEIVED = "COMET_HH_STANDALONE_RECEIVED";
+  public static final String COMET_SPG_OUTCOME_RECEIVED = "COMET_SPG_OUTCOME_RECEIVED";
+  public static final String COMET_SPG_UNITADDRESS_OUTCOME_RECEIVED = "COMET_SPG_UNITADDRESS_OUTCOME_RECEIVED";
+  public static final String COMET_SPG_STANDALONE_OUTCOME_RECEIVED = "COMET_SPG_STANDALONE_OUTCOME_RECEIVED";
+  public static final String COMET_CE_OUTCOME_RECEIVED = "COMET_CE_OUTCOME_RECEIVED";
+  public static final String COMET_CE_UNITADDRESS_OUTCOME_RECEIVED = "COMET_CE_UNITADDRESS_OUTCOME_RECEIVED";
+  public static final String COMET_CE_STANDALONE_OUTCOME_RECEIVED = "COMET_CE_STANDALONE_OUTCOME_RECEIVED";
 
   @Autowired
   private GatewayEventManager gatewayEventManager;
@@ -70,7 +77,7 @@ public class OutcomeController implements OutcomeApi {
         "Secondary Outcome", newStandaloneAddress.getSecondaryOutcomeDescription(),
         "Outcome code", newStandaloneAddress.getOutcomeCode());
 
-    outcomePreprocessingProducer.sendCeNewStandaloneAddress(newStandaloneAddress);
+    outcomePreprocessingProducer.sendCeNewStandaloneAddressToPreprocessingQueue(newStandaloneAddress);
 
     return new ResponseEntity<>(HttpStatus.OK);
   }
@@ -114,6 +121,49 @@ public class OutcomeController implements OutcomeApi {
         "Outcome code", newStandaloneAddress.getOutcomeCode());
 
     outcomePreprocessingProducer.sendSpgNewStandaloneAddress(newStandaloneAddress);
+
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @Override
+  public ResponseEntity<Void> hhOutcomeResponse(String caseID, HHOutcome hhOutcome) throws GatewayException {
+    gatewayEventManager.triggerEvent(caseID, COMET_HH_OUTCOME_RECEIVED,
+        "transactionId", hhOutcome.getTransactionId().toString(),
+        "Survey type", "HH",
+        "Primary Outcome", hhOutcome.getPrimaryOutcomeDescription(),
+        "Secondary Outcome", hhOutcome.getSecondaryOutcomeDescription(),
+        "Outcome code", hhOutcome.getOutcomeCode());
+
+    outcomePreprocessingProducer.sendHHOutcomeToPreprocessingQueue(hhOutcome);
+
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @Override
+  public ResponseEntity<Void> hhNewSplitAddress(HHNewSplitAddress hhNewSplitAddress) throws GatewayException {
+    gatewayEventManager.triggerEvent("N/A", COMET_HH_SPLITADDRESS_RECEIVED,
+        "transactionId", hhNewSplitAddress.getTransactionId().toString(),
+        "Survey type", "HH",
+        "Primary Outcome", hhNewSplitAddress.getPrimaryOutcomeDescription(),
+        "Secondary Outcome", hhNewSplitAddress.getSecondaryOutcomeDescription(),
+        "Outcome code", hhNewSplitAddress.getOutcomeCode());
+
+    outcomePreprocessingProducer.sendHHSplitAddressToPreprocessingQueue(hhNewSplitAddress);
+
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @Override
+  public ResponseEntity<Void> hhNewStandalone(HHNewStandaloneAddress hhNewStandaloneAddress)
+      throws GatewayException {
+    gatewayEventManager.triggerEvent("N/A", COMET_HH_STANDALONE_RECEIVED,
+        "transactionId", hhNewStandaloneAddress.getTransactionId().toString(),
+        "Survey type", "HH",
+        "Primary Outcome", hhNewStandaloneAddress.getPrimaryOutcomeDescription(),
+        "Secondary Outcome", hhNewStandaloneAddress.getSecondaryOutcomeDescription(),
+        "Outcome code", hhNewStandaloneAddress.getOutcomeCode());
+
+    outcomePreprocessingProducer.sendHHStandaloneAddressToPreprocessingQueue(hhNewStandaloneAddress);
 
     return new ResponseEntity<>(HttpStatus.OK);
   }

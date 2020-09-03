@@ -16,11 +16,12 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.RABBIT_QUEUE_DOWN;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.RABBIT_QUEUE_UP;
-
 @Component
 public class RabbitQueuesHealthIndicator extends AbstractHealthIndicator {
+
+  public static final String RABBIT_QUEUE_UP = "RABBIT_QUEUE_UP";
+
+  public static final String RABBIT_QUEUE_DOWN = "RABBIT_QUEUE_DOWN";
 
   private static List<String> QUEUES = Arrays.asList(
       OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_QUEUE,

@@ -88,7 +88,9 @@ dependencyManagement {
 
 dependencies {
 	compile('uk.gov.ons.census.fwmt:census-fwmt-events:1.0.33-RELEASE')
-	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.2.5-RELEASE')
+
+	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.1.84-RELEASE')
+
 	compile('uk.gov.ons.ctp.integration.common:product-reference:1.0.6')
 
 	compile("javax.activation:activation:1.1.1")
@@ -110,9 +112,6 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-actuator')
 	compile('org.springframework.boot:spring-boot-starter-security')
-	compile('org.springframework.data:spring-data-redis')
-
-	compile('redis.clients:jedis:3.2.0')
 
 	compile('io.springfox:springfox-swagger2:2.9.2')
 	compile('io.springfox:springfox-swagger-ui:2.9.2')

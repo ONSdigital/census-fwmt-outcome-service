@@ -25,6 +25,7 @@ public class OutcomeSuperSetDto {
   private String accompanyingOfficerId;
   private CeDetailsDto ceDetails;
   private UUID siteCaseId;
+  private UUID originatingCaseId;
   private Boolean dummyInfoCollected;
 
   public static String careCodesToText(List<CareCodeDto> careCodes) {

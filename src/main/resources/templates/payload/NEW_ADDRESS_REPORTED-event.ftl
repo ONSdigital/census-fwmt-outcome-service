@@ -1,6 +1,6 @@
 "newAddress" : {
-<#if sourceCase == "NEW_UNIT">
-"sourceCaseId" : "${outcome.siteCaseId}",
+<#if sourceCase != "NEW_STANDALONE">
+"sourceCaseId" : "${sourceCaseId}",
 <#else>
 </#if>
 "collectionCase" : {
@@ -40,8 +40,11 @@
       </#if>
     </#if>
       "region" : "${region}",
+    </#if>
+    <#if sourceCase != "NEW_SPLIT_ADDRESS">
       "addressType" : "${addressType}",
       "addressLevel" : "U"
+    </#if>
     }
   }
 }

@@ -13,8 +13,6 @@ import uk.gov.ons.census.fwmt.outcomeservice.message.RmFieldRepublishProducer;
 import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.common.data.tm.SurveyType.CE_SITE;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_OUTCOME;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.RM_FIELD_REPUBLISH;
 
 @Component("SWITCH_FEEDBACK_CE_SITE")
 public class SwitchFeedbackCeSiteProcessor implements OutcomeServiceProcessor {
@@ -24,6 +22,11 @@ public class SwitchFeedbackCeSiteProcessor implements OutcomeServiceProcessor {
 
   @Autowired
   private GatewayEventManager gatewayEventManager;
+
+  public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
+
+  public static final String RM_FIELD_REPUBLISH = "RM_FIELD_REPUBLISH";
+
 
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {

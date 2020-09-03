@@ -21,8 +21,8 @@ import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.NEW_ADDRESS_
 import static uk.gov.ons.census.fwmt.outcomeservice.util.SpgUtilityMethods.isDelivered;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.SpgUtilityMethods.regionLookup;
 
-@Component("NEW_UNIT_ADDRESS")
-public class NewUnitAddressLinkedProcessor implements OutcomeServiceProcessor {
+@Component("NEW_SPLIT_ADDRESS")
+public class NewSplitAddressProcessor implements OutcomeServiceProcessor {
 
   public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
 
@@ -45,25 +45,25 @@ public class NewUnitAddressLinkedProcessor implements OutcomeServiceProcessor {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
-    "survey type", type,
-    "processor", "NEW_UNIT_ADDRESS",
-    "original caseId", String.valueOf(outcome.getCaseId()),
-    "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+        "survey type", type,
+        "processor", "NEW_SPLIT_ADDRESS",
+        "original caseId", String.valueOf(outcome.getCaseId()),
+        "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
     boolean isDelivered = isDelivered(outcome);
     cacheData(outcome, outcome.getCaseId(), isDelivered);
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
-    root.put("sourceCase", "NEW_UNIT");
+    root.put("sourceCase", "NEW_SPLIT_ADDRESS");
     root.put("outcome", outcome);
     root.put("newCaseId", caseId);
-    root.put("sourceCaseId", outcome.getSiteCaseId());
+    root.put("addressType", type);
+    root.put("sourceCaseId", outcome.getOriginatingCaseId());
     root.put("region", regionLookup(outcome.getOfficerId()));
     root.put("officerId", outcome.getOfficerId());
     root.put("address", outcome.getAddress());
     root.put("eventDate", eventDateTime);
-    root.put("addressType", type);
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(NEW_ADDRESS_REPORTED, root);
 
@@ -90,7 +90,7 @@ public class NewUnitAddressLinkedProcessor implements OutcomeServiceProcessor {
         .existsInFwmt(false)
         .accessInfo(outcome.getAccessInfo())
         .careCodes(OutcomeSuperSetDto.careCodesToText(outcome.getCareCodes()))
-        .type(0)
+        .type(10)
         .build());
   }
 }

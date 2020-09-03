@@ -14,13 +14,18 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.FAILED_TO_LOOKUP_OUTCOME_CODE;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_SPG_OUTCOME;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_CE_OUTCOME;
 
 @Slf4j
 @Service
 public class OutcomeServiceImpl implements OutcomeService {
+
+  public static final String PROCESSING_HH_OUTCOME = "PROCESSING_HH_OUTCOME";
+
+  public static final String PROCESSING_SPG_OUTCOME = "PROCESSING_SPG_OUTCOME";
+
+  public static final String PROCESSING_CE_OUTCOME = "PROCESSING_CE_OUTCOME";
+
+  public static final String FAILED_TO_LOOKUP_OUTCOME_CODE = "FAILED_TO_LOOKUP_OUTCOME_CODE";
 
   @Autowired
   private Map<String, OutcomeServiceProcessor> outcomeServiceProcessors;
@@ -74,6 +79,29 @@ public class OutcomeServiceImpl implements OutcomeService {
           "Operation", operation,
           "Operation list", Arrays.toString(operationsList));
       caseIdHolder = outcomeServiceProcessors.get(operation).process(outcome, caseIdHolder, "CE");
+    }
+  }
+
+  @Override
+  public void createHhOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
+    String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
+    if (operationsList == null) {
+      gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "No outcome code found",
+          String.valueOf(outcome.getCaseId()), FAILED_TO_LOOKUP_OUTCOME_CODE,
+          "Survey type", "HH",
+          "Outcome code", outcome.getOutcomeCode(),
+          "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
+      return;
+    }
+    UUID caseIdHolder = null;
+    for (String operation : operationsList) {
+      gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_HH_OUTCOME,
+          "Survey type", "HH",
+          "Secondary Outcome", outcome.getSecondaryOutcomeDescription(),
+          "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
+          "Operation", operation,
+          "Operation list", Arrays.toString(operationsList));
+      caseIdHolder = outcomeServiceProcessors.get(operation).process(outcome, caseIdHolder, "HH");
     }
   }
 }
