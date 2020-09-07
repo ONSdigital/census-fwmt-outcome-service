@@ -61,14 +61,9 @@ public class NewUnitAddressLinkedProcessor implements OutcomeServiceProcessor {
     root.put("address", outcome.getAddress());
     root.put("eventDate", eventDateTime);
     root.put("addressType", type);
-    if (type.equals("CE")) {
-      root.put("addressLevel","E");
-    } else if (type.equals("SPG")) {
-      root.put("addressLevel", "U");
-    }
+    root.put("addressLevel", "U");
 
-
-      String outcomeEvent = TemplateCreator.createOutcomeMessage(NEW_ADDRESS_REPORTED, root);
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(NEW_ADDRESS_REPORTED, root);
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
