@@ -39,11 +39,11 @@
       "secureType": "${ceDetails.establishmentSecure}",
       </#if>
     </#if>
-      "region" : "${region}",
     <#if sourceCase != "NEW_SPLIT_ADDRESS">
       "addressLevel" : "${addressLevel}",
+      "addressType" : "${addressType}",
     </#if>
-      "addressType" : "${addressType}"
- }
+      "region" : "${region}",
+}
 }
 }
