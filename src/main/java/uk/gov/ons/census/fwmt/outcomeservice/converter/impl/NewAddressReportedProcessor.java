@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.OUTCOME_SENT;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.NEW_ADDRESS_REPORTED;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.SpgUtilityMethods.isDelivered;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.SpgUtilityMethods.regionLookup;
