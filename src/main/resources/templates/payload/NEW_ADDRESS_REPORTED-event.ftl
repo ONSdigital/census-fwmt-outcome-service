@@ -41,9 +41,9 @@
     </#if>
       "region" : "${region}",
     <#if sourceCase != "NEW_SPLIT_ADDRESS">
-      "addressType" : "${addressType}",
+      "addressLevel" : "${addressLevel}",
     </#if>
-      "addressLevel" : "${addressLevel}"
-    }
-  }
+      "addressType" : "${addressType}"
+ }
+}
 }
