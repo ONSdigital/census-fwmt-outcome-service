@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.ons.census.fwmt.common.data.ce.CENewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.ce.CENewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.ce.CEOutcome;
+import uk.gov.ons.census.fwmt.common.data.household.HHNewSplitAddress;
+import uk.gov.ons.census.fwmt.common.data.household.HHNewStandaloneAddress;
+import uk.gov.ons.census.fwmt.common.data.household.HHOutcome;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGNewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGNewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
@@ -83,4 +86,35 @@ public interface OutcomeApi {
       produces = {"application/json"},
       method = RequestMethod.POST)
   ResponseEntity<Void> spgNewStandalone(@RequestBody SPGNewStandaloneAddress spgOutcome) throws GatewayException;
+
+  @ApiOperation(value = "Post a HH survey outcome to the FWMT Gateway")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "Case Outcome received"),
+      @ApiResponse(code = 401, message = "UNAUTHORIZED"),
+      @ApiResponse(code = 403, message = "FORBIDDEN")})
+  @RequestMapping(value = "/hhOutcome/{caseID}",
+      produces = {"application/json"},
+      method = RequestMethod.POST)
+  ResponseEntity<Void> hhOutcomeResponse(
+      @PathVariable("caseID") String caseID, @RequestBody HHOutcome hhOutcome) throws GatewayException;
+
+  @ApiOperation(value = "Post a HH survey outcome to the FWMT Gateway")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "Case Outcome received"),
+      @ApiResponse(code = 401, message = "UNAUTHORIZED"),
+      @ApiResponse(code = 403, message = "FORBIDDEN")})
+  @RequestMapping(value = "/hhOutcome/splitAddress/new",
+      produces = {"application/json"},
+      method = RequestMethod.POST)
+  ResponseEntity<Void> hhNewSplitAddress(@RequestBody HHNewSplitAddress hhNewSplitAddress) throws GatewayException;
+
+  @ApiOperation(value = "Post a HH survey outcome to the FWMT Gateway")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "Case Outcome received"),
+      @ApiResponse(code = 401, message = "UNAUTHORIZED"),
+      @ApiResponse(code = 403, message = "FORBIDDEN")})
+  @RequestMapping(value = "/hhOutcome/standaloneAddress/new",
+      produces = {"application/json"},
+      method = RequestMethod.POST)
+  ResponseEntity<Void> hhNewStandalone(@RequestBody HHNewStandaloneAddress hhNewStandaloneAddress) throws GatewayException;
 }

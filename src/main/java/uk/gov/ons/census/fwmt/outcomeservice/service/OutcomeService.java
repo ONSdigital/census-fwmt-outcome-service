@@ -7,4 +7,6 @@ public interface OutcomeService {
   void createSpgOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException;
 
   void createCeOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException;
+
+  void createHhOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException;
 }

@@ -21,10 +21,13 @@ import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.O
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.NEW_ADDRESS_REPORTED;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.SpgUtilityMethods.isDelivered;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.SpgUtilityMethods.regionLookup;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_OUTCOME;
 
 @Component("NEW_ADDRESS_REPORTED")
 public class NewAddressReportedProcessor implements OutcomeServiceProcessor {
+
+  public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
+
+  public static final String OUTCOME_SENT = "OUTCOME_SENT";
 
   @Autowired
   private DateFormat dateFormat;

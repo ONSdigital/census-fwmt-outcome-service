@@ -1,8 +1,5 @@
 package uk.gov.ons.census.fwmt.outcomeservice.converter.impl;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.PROCESSING_OUTCOME;
-import static uk.gov.ons.census.fwmt.outcomeservice.config.GatewayEventsConfig.RM_FIELD_REPUBLISH;
-
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +17,10 @@ import uk.gov.ons.census.fwmt.outcomeservice.message.RmFieldRepublishProducer;
 @Slf4j
 @Component("DELIVERED_FEEDBACK")
 public class DeliveredFeedbackProcessor implements OutcomeServiceProcessor {
+
+  public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
+
+  public static final String RM_FIELD_REPUBLISH = "RM_FIELD_REPUBLISH";
 
   @Autowired
   private RmFieldRepublishProducer rmFieldRepublishProducer;
