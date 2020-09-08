@@ -64,6 +64,7 @@ public class NewUnitAddressLinkedProcessor implements OutcomeServiceProcessor {
     root.put("address", outcome.getAddress());
     root.put("eventDate", eventDateTime);
     root.put("addressType", type);
+    root.put("addressLevel", "U");
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(NEW_ADDRESS_REPORTED, root);
 
