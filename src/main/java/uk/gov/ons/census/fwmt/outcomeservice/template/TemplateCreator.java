@@ -1,23 +1,23 @@
 package uk.gov.ons.census.fwmt.outcomeservice.template;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-import uk.gov.ons.census.fwmt.outcomeservice.enums.EventType;
-import uk.gov.ons.census.fwmt.outcomeservice.service.impl.OutcomeServiceImpl;
-
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Map;
+
+import org.springframework.stereotype.Component;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateExceptionHandler;
+import lombok.extern.slf4j.Slf4j;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
+import uk.gov.ons.census.fwmt.outcomeservice.enums.EventType;
+import uk.gov.ons.census.fwmt.outcomeservice.service.impl.OutcomeServiceImpl;
 
 @Slf4j
 @Component
 public class TemplateCreator {
 
-  public static String createOutcomeMessage(EventType eventType, Map<String, Object> root) {
+  public static String createOutcomeMessage(EventType eventType, Map<String, Object> root) throws GatewayException {
     String outcomeMessage = "";
 
     try {
@@ -44,11 +44,14 @@ public class TemplateCreator {
         outcomeEventMessage.flush();
         outcomeMessage = outcomeEventMessage.toString();
 
-      } catch (TemplateException e) {
+      } catch (Exception e) {
         log.error("Error: ", e);
+
+        throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Problem creating Outcome Message", e);
       }
-    } catch (IOException e) {
+    } catch (Exception e) {
       log.error("Error: ", e);
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Problem creating Outcome Message", e);
     }
 
     return outcomeMessage;

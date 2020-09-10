@@ -39,7 +39,7 @@ public class GatewayOutcomeProducer {
       rabbitTemplate.convertAndSend(GatewayOutcomeQueueConfig.GATEWAY_OUTCOME_EXCHANGE, routingKey, message);
     } catch (IOException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e,
-          "Cannot process address update for transaction ID " + transactionId);
+          "Cannot process address update for transaction ID " + transactionId + "msg: " + outcomeEvent);
     }
   }
 }
