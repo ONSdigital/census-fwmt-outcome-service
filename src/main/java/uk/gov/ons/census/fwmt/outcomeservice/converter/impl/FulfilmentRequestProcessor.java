@@ -85,7 +85,7 @@ public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
   }
 
   private String createQuestionnaireRequiredByPostEvent(Map<String, Object> root,
-      FulfilmentRequestDto fulfilmentRequest, String caseId, String outcomeCode, String type) {
+      FulfilmentRequestDto fulfilmentRequest, String caseId, String outcomeCode, String type) throws GatewayException {
     String packcode;
     List<Product> productList = getProductFromQuestionnaireType(fulfilmentRequest);
     if (productList == null || productList.isEmpty() || productList.get(0) == null || productList.size() > 1) {

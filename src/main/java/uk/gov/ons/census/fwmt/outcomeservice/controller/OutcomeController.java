@@ -46,7 +46,8 @@ public class OutcomeController implements OutcomeApi {
         "transactionId", ceOutcome.getTransactionId().toString(),
         "Primary Outcome", ceOutcome.getPrimaryOutcomeDescription(),
         "Secondary Outcome", ceOutcome.getSecondaryOutcomeDescription(),
-        "Outcome code", ceOutcome.getOutcomeCode());
+        "Outcome code", ceOutcome.getOutcomeCode(),
+        "CEOutcome", ceOutcome.toString());
     ceOutcome.setCaseId(UUID.fromString(caseId));
 
     outcomePreprocessingProducer.sendCeOutcomeToPreprocessingQueue(ceOutcome);
@@ -61,8 +62,9 @@ public class OutcomeController implements OutcomeApi {
         "Site case id", String.valueOf(newUnitAddress.getSiteCaseId()),
         "Primary Outcome", newUnitAddress.getPrimaryOutcomeDescription(),
         "Secondary Outcome", newUnitAddress.getSecondaryOutcomeDescription(),
-        "Outcome code", newUnitAddress.getOutcomeCode());
-
+        "Outcome code", newUnitAddress.getOutcomeCode(),
+        "CENewUnitAddress", newUnitAddress.toString());
+    
     outcomePreprocessingProducer.sendCeNewUnitAddressToPreprocessingQueue(newUnitAddress);
 
     return new ResponseEntity<>(HttpStatus.OK);
@@ -75,8 +77,9 @@ public class OutcomeController implements OutcomeApi {
         "Survey type", "CE",
         "Primary Outcome", newStandaloneAddress.getPrimaryOutcomeDescription(),
         "Secondary Outcome", newStandaloneAddress.getSecondaryOutcomeDescription(),
-        "Outcome code", newStandaloneAddress.getOutcomeCode());
-
+        "Outcome code", newStandaloneAddress.getOutcomeCode(),
+        "CENewStandaloneAddress", newStandaloneAddress.toString());
+    
     outcomePreprocessingProducer.sendCeNewStandaloneAddressToPreprocessingQueue(newStandaloneAddress);
 
     return new ResponseEntity<>(HttpStatus.OK);
@@ -89,9 +92,10 @@ public class OutcomeController implements OutcomeApi {
         "Survey type", "SPG",
         "Primary Outcome", spgOutcome.getPrimaryOutcomeDescription(),
         "Secondary Outcome", spgOutcome.getSecondaryOutcomeDescription(),
-        "Outcome code", spgOutcome.getOutcomeCode());
+        "Outcome code", spgOutcome.getOutcomeCode(),
+        "SPGOutcome", spgOutcome.toString());
+    
     spgOutcome.setCaseId(UUID.fromString(caseId));
-
     outcomePreprocessingProducer.sendSpgOutcomeToPreprocessingQueue(spgOutcome);
 
     return new ResponseEntity<>(HttpStatus.OK);
@@ -104,7 +108,9 @@ public class OutcomeController implements OutcomeApi {
         "Survey type", "SPG",
         "Primary Outcome", newUnitAddress.getPrimaryOutcomeDescription(),
         "Secondary Outcome", newUnitAddress.getSecondaryOutcomeDescription(),
-        "Outcome code", newUnitAddress.getOutcomeCode());
+        "Outcome code", newUnitAddress.getOutcomeCode(),
+        "SPGNewUnitAddress", newUnitAddress.toString(),
+    "SPGNewUnitAddress", newUnitAddress.toString());
 
     outcomePreprocessingProducer.sendSpgNewUnitAddressToPreprocessingQueue(newUnitAddress);
 
@@ -118,7 +124,8 @@ public class OutcomeController implements OutcomeApi {
         "Survey type", "SPG",
         "Primary Outcome", newStandaloneAddress.getPrimaryOutcomeDescription(),
         "Secondary Outcome", newStandaloneAddress.getSecondaryOutcomeDescription(),
-        "Outcome code", newStandaloneAddress.getOutcomeCode());
+        "Outcome code", newStandaloneAddress.getOutcomeCode(),
+        "SPGNewStandaloneAddress", newStandaloneAddress.toString());
 
     outcomePreprocessingProducer.sendSpgNewStandaloneAddress(newStandaloneAddress);
 
@@ -132,7 +139,8 @@ public class OutcomeController implements OutcomeApi {
         "Survey type", "HH",
         "Primary Outcome", hhOutcome.getPrimaryOutcomeDescription(),
         "Secondary Outcome", hhOutcome.getSecondaryOutcomeDescription(),
-        "Outcome code", hhOutcome.getOutcomeCode());
+        "Outcome code", hhOutcome.getOutcomeCode(),
+        "HHOutcome", hhOutcome.toString());
 
     outcomePreprocessingProducer.sendHHOutcomeToPreprocessingQueue(hhOutcome);
 
@@ -146,7 +154,8 @@ public class OutcomeController implements OutcomeApi {
         "Survey type", "HH",
         "Primary Outcome", hhNewSplitAddress.getPrimaryOutcomeDescription(),
         "Secondary Outcome", hhNewSplitAddress.getSecondaryOutcomeDescription(),
-        "Outcome code", hhNewSplitAddress.getOutcomeCode());
+        "Outcome code", hhNewSplitAddress.getOutcomeCode(),
+        "HHNewSplitAddress", hhNewSplitAddress.toString());
 
     outcomePreprocessingProducer.sendHHSplitAddressToPreprocessingQueue(hhNewSplitAddress);
 
@@ -161,7 +170,8 @@ public class OutcomeController implements OutcomeApi {
         "Survey type", "HH",
         "Primary Outcome", hhNewStandaloneAddress.getPrimaryOutcomeDescription(),
         "Secondary Outcome", hhNewStandaloneAddress.getSecondaryOutcomeDescription(),
-        "Outcome code", hhNewStandaloneAddress.getOutcomeCode());
+        "Outcome code", hhNewStandaloneAddress.getOutcomeCode(),
+        "HHNewStandaloneAddress", hhNewStandaloneAddress.toString());
 
     outcomePreprocessingProducer.sendHHStandaloneAddressToPreprocessingQueue(hhNewStandaloneAddress);
 
