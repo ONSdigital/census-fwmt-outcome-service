@@ -70,7 +70,7 @@ public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
         root.put("caseId", caseId);
         root.put("eventDate", eventDateTime);
         String outcomeEvent = createQuestionnaireRequiredByPostEvent(root, fulfilmentRequest, String.valueOf(caseId),
-            outcome.getOutcomeCode(), type);
+            type);
 
         gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
             GatewayOutcomeQueueConfig.GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY);
@@ -85,21 +85,14 @@ public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
   }
 
   private String createQuestionnaireRequiredByPostEvent(Map<String, Object> root,
-      FulfilmentRequestDto fulfilmentRequest, String caseId, String outcomeCode, String type) {
-    String packcode;
+      FulfilmentRequestDto fulfilmentRequest, String caseId, String type) {
     List<Product> productList = getProductFromQuestionnaireType(fulfilmentRequest);
-    if (productList == null || productList.isEmpty() || productList.get(0) == null || productList.size() > 1) {
-      packcode = outcomeCode;
-    } else {
-      packcode = productList.get(0).getFulfilmentCode();
-
       if (productList.get(0).getIndividual() && type.equals("HH")) {
         String individualCaseId = String.valueOf(UUID.randomUUID());
         root.put("individualCaseId", individualCaseId);
         root.put("surveyType", type);
       }
-    }
-    root.put("packcode", packcode);
+    root.put("packcode", productList.get(0).getFulfilmentCode());
     root.put("requesterTitle", fulfilmentRequest.getRequesterTitle());
     root.put("requesterForename", fulfilmentRequest.getRequesterForename());
     root.put("requesterSurname", fulfilmentRequest.getRequesterSurname());
@@ -140,5 +133,4 @@ public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
         .type(0)
         .build());
   }
-
 }
