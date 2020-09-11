@@ -43,7 +43,7 @@
       "addressLevel" : "${addressLevel}",
       "addressType" : "${addressType}",
     </#if>
-      "region" : "${region}",
+      "region" : "${region}"
 }
 }
 }

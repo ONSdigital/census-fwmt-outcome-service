@@ -60,6 +60,8 @@ public class AddressTypeChangedHhProcessor implements OutcomeServiceProcessor {
     root.put("eventDate", eventDateTime);
     root.put("estabType", "HH");
     root.put("usualResidents", 0);
+    root.put("region", regionLookup(outcome.getOfficerId()));
+
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(ADDRESS_TYPE_CHANGED, root);
 

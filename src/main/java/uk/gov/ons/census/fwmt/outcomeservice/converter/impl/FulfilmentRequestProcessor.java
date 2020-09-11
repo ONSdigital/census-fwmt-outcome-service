@@ -85,7 +85,8 @@ public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
   }
 
   private String createQuestionnaireRequiredByPostEvent(Map<String, Object> root,
-      FulfilmentRequestDto fulfilmentRequest, String caseId, String type) {
+    FulfilmentRequestDto fulfilmentRequest, String caseId, String type) {
+
     List<Product> productList = getProductFromQuestionnaireType(fulfilmentRequest);
       if (productList.get(0).getIndividual() && type.equals("HH")) {
         String individualCaseId = String.valueOf(UUID.randomUUID());

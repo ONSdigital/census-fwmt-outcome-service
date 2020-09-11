@@ -15,6 +15,10 @@
     "estabType":"Unknown",
     </#if>
 </#if>
+<#if estabType == "HH">
+    "region":"${region}",
+</#if>
+
     "addressType":"${estabType}"
 }
 }

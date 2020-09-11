@@ -8,6 +8,7 @@ public class OutcomeLookup {
   private final Map<String, String[]> outcomeCodeMap = new HashMap<>();
 
   public String[] getLookup(String outcomeCode) {
+
     return outcomeCodeMap.get(outcomeCode);
   }
 
