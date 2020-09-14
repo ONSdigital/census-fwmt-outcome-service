@@ -177,4 +177,33 @@ public class OutcomeController implements OutcomeApi {
 
     return new ResponseEntity<>(HttpStatus.OK);
   }
+
+  @Override
+  public ResponseEntity<Void> ccsPropertyListing(HHNewStandaloneAddress hhNewStandaloneAddress)
+      throws GatewayException {
+    gatewayEventManager.triggerEvent("N/A", COMET_HH_STANDALONE_RECEIVED,
+        "transactionId", hhNewStandaloneAddress.getTransactionId().toString(),
+        "Survey type", "CCS PL",
+        "Primary Outcome", hhNewStandaloneAddress.getPrimaryOutcomeDescription(),
+        "Secondary Outcome", hhNewStandaloneAddress.getSecondaryOutcomeDescription(),
+        "Outcome code", hhNewStandaloneAddress.getOutcomeCode());
+
+    outcomePreprocessingProducer.sendCcsPropertyListingToPreprocessingQueue(hhNewStandaloneAddress);
+
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @Override
+  public ResponseEntity<Void> ccsInterview(String caseID, CEOutcome ceOutcome) throws GatewayException {
+    gatewayEventManager.triggerEvent("N/A", COMET_HH_STANDALONE_RECEIVED,
+        "transactionId", hhNewStandaloneAddress.getTransactionId().toString(),
+        "Survey type", "CCS INT",
+        "Primary Outcome", hhNewStandaloneAddress.getPrimaryOutcomeDescription(),
+        "Secondary Outcome", hhNewStandaloneAddress.getSecondaryOutcomeDescription(),
+        "Outcome code", hhNewStandaloneAddress.getOutcomeCode());
+
+    outcomePreprocessingProducer.sendCcsPropertyListingToPreprocessingQueue(hhNewStandaloneAddress);
+
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 }

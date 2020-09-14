@@ -104,4 +104,49 @@ public class OutcomeServiceImpl implements OutcomeService {
       caseIdHolder = outcomeServiceProcessors.get(operation).process(outcome, caseIdHolder, "HH");
     }
   }
+
+  @Override
+  public void createCcsPropertyListingOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
+    String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
+    if (operationsList == null) {
+      gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "No outcome code found",
+          String.valueOf(outcome.getCaseId()), FAILED_TO_LOOKUP_OUTCOME_CODE,
+          "Survey type", "CCS PL",
+          "Outcome code", outcome.getOutcomeCode(),
+          "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
+      return;
+    }
+    UUID caseIdHolder = null;
+    for (String operation : operationsList) {
+      gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_HH_OUTCOME,
+          "Survey type", "CCS PL",
+          "Secondary Outcome", outcome.getSecondaryOutcomeDescription(),
+          "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
+          "Operation", operation,
+          "Operation list", Arrays.toString(operationsList));
+      caseIdHolder = outcomeServiceProcessors.get(operation).process(outcome, caseIdHolder, "CCS PL");
+    }
+  }
+
+  public void createCcsInterviewOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
+    String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
+    if (operationsList == null) {
+      gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "No outcome code found",
+          String.valueOf(outcome.getCaseId()), FAILED_TO_LOOKUP_OUTCOME_CODE,
+          "Survey type", "CCS INT",
+          "Outcome code", outcome.getOutcomeCode(),
+          "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
+      return;
+    }
+    UUID caseIdHolder = null;
+    for (String operation : operationsList) {
+      gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_HH_OUTCOME,
+          "Survey type", "CCS INT",
+          "Secondary Outcome", outcome.getSecondaryOutcomeDescription(),
+          "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
+          "Operation", operation,
+          "Operation list", Arrays.toString(operationsList));
+      caseIdHolder = outcomeServiceProcessors.get(operation).process(outcome, caseIdHolder, "CCS INT");
+    }
+  }
 }

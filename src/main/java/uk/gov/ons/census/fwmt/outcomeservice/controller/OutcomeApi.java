@@ -117,4 +117,24 @@ public interface OutcomeApi {
       produces = {"application/json"},
       method = RequestMethod.POST)
   ResponseEntity<Void> hhNewStandalone(@RequestBody HHNewStandaloneAddress hhNewStandaloneAddress) throws GatewayException;
+
+  @ApiOperation(value = "Post a CCS property listing outcome to the FWMT Gateway")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "Case Outcome received"),
+      @ApiResponse(code = 401, message = "UNAUTHORIZED"),
+      @ApiResponse(code = 403, message = "FORBIDDEN")})
+  @RequestMapping(value = "/ccsPropertyListingOutcome/",
+      produces = {"application/json"},
+      method = RequestMethod.POST)
+  ResponseEntity<Void> ccsPropertyListing(@RequestBody HHNewStandaloneAddress hhNewStandaloneAddress) throws GatewayException;
+
+  @ApiOperation(value = "Post a CCS Interview outcome to the FWMT Gateway")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "Case Outcome received"),
+      @ApiResponse(code = 401, message = "UNAUTHORIZED"),
+      @ApiResponse(code = 403, message = "FORBIDDEN")})
+  @RequestMapping(value = "/ccsInterviewOutcome/{caseID}",
+      produces = {"application/json"},
+      method = RequestMethod.POST)
+  ResponseEntity<Void> ccsInterview(@PathVariable("caseID") String caseID, @RequestBody CEOutcome ceOutcome) throws GatewayException;
 }

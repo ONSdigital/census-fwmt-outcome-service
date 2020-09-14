@@ -129,4 +129,24 @@ public class OutcomePreprocessingReceiver {
         "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
     delegate.createHhOutcomeEvent(outcomeDTO);
   }
+
+  public void processMessage() throws GatewayException {
+    OutcomeSuperSetDto outcomeDTO = mapperFacade.map(standaloneAddress, OutcomeSuperSetDto.class);
+    outcomeDTO.setCaseId(UUID.randomUUID());
+    gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), PREPROCESSING_HH_STANDALONE_OUTCOME,
+        "Survey type", "CCS PL",
+        "Outcome code", outcomeDTO.getOutcomeCode(),
+        "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
+    delegate.createHhOutcomeEvent(outcomeDTO);
+  }
+
+  public void processMessage() throws GatewayException {
+    OutcomeSuperSetDto outcomeDTO = mapperFacade.map(standaloneAddress, OutcomeSuperSetDto.class);
+    outcomeDTO.setCaseId(UUID.randomUUID());
+    gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), PREPROCESSING_HH_STANDALONE_OUTCOME,
+        "Survey type", "CCS INT",
+        "Outcome code", outcomeDTO.getOutcomeCode(),
+        "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
+    delegate.createHhOutcomeEvent(outcomeDTO);
+  }
 }

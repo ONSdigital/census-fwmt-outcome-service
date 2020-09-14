@@ -78,4 +78,16 @@ public class OutcomePreprocessingProducer {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, hhNewStandaloneAddress);
   }
+
+  @Retryable
+  public void sendCcsPropertyListingToPreprocessingQueue(HHNewStandaloneAddress hhNewStandaloneAddress) {
+    rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
+        OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, hhNewStandaloneAddress);
+  }
+
+  @Retryable
+  public void sendCcsInterviewToPreprocessingQueue(HHNewStandaloneAddress hhNewStandaloneAddress) {
+    rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
+        OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, hhNewStandaloneAddress);
+  }
 }

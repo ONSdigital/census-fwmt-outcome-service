@@ -9,4 +9,8 @@ public interface OutcomeService {
   void createCeOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException;
 
   void createHhOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException;
+
+  void createCcsPropertyListingOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException;
+
+  void createCcsInterviewOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException;
 }
