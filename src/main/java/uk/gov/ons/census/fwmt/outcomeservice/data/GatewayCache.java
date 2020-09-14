@@ -44,6 +44,9 @@ public class GatewayCache {
   @Column(name ="type")
   public int type;
 
+  @Column(name ="oa")
+  public String oa;
+
   // TODO : Probably move this object to common so its in one location
 
 }

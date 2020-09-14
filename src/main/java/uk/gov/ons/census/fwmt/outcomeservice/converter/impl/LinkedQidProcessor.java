@@ -7,7 +7,7 @@ import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
-import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache.GatewayCacheBuilder;
+import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache .GatewayCacheBuilder;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.FulfilmentRequestDto;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.OutcomeSuperSetDto;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;

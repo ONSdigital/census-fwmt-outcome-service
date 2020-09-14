@@ -9,34 +9,31 @@
 "payload": {
   "CCSProperty": {
     "collectionCase": {
-      "id": "${generatedUuid}"
+      "id": "${caseId}"
     },
+    "interviewRequired": "${interviewRequired}",
     "sampleUnit": {
       "addressType": "${addressType}",
-<#if ccsPropertyListingOutcome.ceDetails?? && ccsPropertyListingOutcome.ceDetails.establishmentType != "">
-    "estabType": "${ccsPropertyListingOutcome.ceDetails.establishmentType}",
-<#else>
-    <#if addressType == "HH" >
-        "estabType": "Household",
-    <#elseif addressType == "NR" >
-        "estabType": "Non Residential",
-    <#elseif addressType == "CE" >
-        "estabType": "CE",
-    </#if>
-</#if>
+        <#if addressType == CE>
+          "estabType": "${outcome.ceDetails.establishmentType}",
+          "organisationName": "${outcome.ceDetails.establishmentName}",
+        </#if>
       "addressLevel": "${addressLevel}",
-      "organisationName": "${organisationName}",
-      "addressLine1": "${ccsPropertyListingOutcome.address.addressLine1}",
-      "addressLine2": "${ccsPropertyListingOutcome.address.addressLine2}",
-<#if ccsPropertyListingOutcome.address.addressLine3??>
-    "addressLine3": "${ccsPropertyListingOutcome.address.addressLine3}",
-</#if>
-      "townName": "${ccsPropertyListingOutcome.address.town}",
-      "postcode": "${ccsPropertyListingOutcome.address.postCode}",
-      "latitude": "${ccsPropertyListingOutcome.address.location.latitude?string["0.#######"]}",
-      "longitude": "${ccsPropertyListingOutcome.address.location.longitude?string["0.#######"]}",
-      "fieldcoordinatorId": "${ccsPropertyListingOutcome.coordinatorCode}",
-      "fieldofficerId": "${ccsPropertyListingOutcome.fieldOfficerCode}"
+      "addressLine1": "${address.addressLine1}",
+        <#if address.addressLine2??>
+        "addressLine2": "${address.addressLine2}",
+        </#if>
+        <#if address.addressLine3??>
+        "addressLine3": "${address.addressLine3}",
+        </#if>
+      "townName": "${address.town}",
+      "postcode": "${address.postCode}",
+      "latitude": "${address.location.latitude?string["0.#######"]}",
+      "longitude": "${address.location.longitude?string["0.#######"]}",
+      "fieldcoordinatorId": "${outcome.coordinatorCode}",
+      "fieldofficerId": "${outcome.fieldOfficerCode}",
+      "oa":"${oa}",
+      "region": "${region}"
     }
   }
 }

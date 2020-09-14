@@ -17,10 +17,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.PROPERTY_LISTED;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.INTERVIEW_REQUIRED;
 
-@Component("PROPERTY_LISTED_CE")
-public class PropertyListedCeProcessor implements OutcomeServiceProcessor {
+@Component("INTERVIEW_REQUIRED_CE")
+public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
+
   public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
 
   public static final String OUTCOME_SENT = "OUTCOME_SENT";
@@ -43,10 +44,10 @@ public class PropertyListedCeProcessor implements OutcomeServiceProcessor {
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
         "survey type", type,
-        "processor", "PROPERTY_LISTED",
+        "processor", "INTERVIEW_REQUIRED",
         "original caseId", String.valueOf(outcome.getCaseId()),
         "Site case Id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"),
-        "addressType", "HH");
+        "addressType", "CE");
 
     GatewayCache cache = gatewayCacheService.getById(String.valueOf(caseId));
 
@@ -58,18 +59,18 @@ public class PropertyListedCeProcessor implements OutcomeServiceProcessor {
     root.put("eventDate", eventDateTime);
     root.put("addressType", "CE");
     root.put("addressLevel", "E");
-    root.put("interviewRequired", "False");
+    root.put("interviewRequired", "True");
     root.put("oa", cache.getOa());
     root.put("region",cache.getOa().substring(0,2));
 
 
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(PROPERTY_LISTED, root);
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(INTERVIEW_REQUIRED, root);
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
         "survey type", type,
-        "type", PROPERTY_LISTED.toString(),
+        "type", INTERVIEW_REQUIRED.toString(),
         "transactionId", outcome.getTransactionId().toString(),
         "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
 
