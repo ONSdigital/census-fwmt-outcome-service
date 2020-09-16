@@ -28,6 +28,7 @@ public class RabbitMqConfig {
   private final int initialInterval;
   private final double multiplier;
   private final int maxInterval;
+  private final int maxRetries;
 
   private final String rmFieldQueue;
 
@@ -40,6 +41,7 @@ public class RabbitMqConfig {
       @Value("${rabbitmq.initialInterval}") Integer initialInterval,
       @Value("${rabbitmq.multiplier}") Double multiplier,
       @Value("${rabbitmq.maxInterval}") Integer maxInterval,
+      @Value("${rabbitmq.maxRetries}") Integer maxRetries,
       @Value("${rabbitmq.queues.rm.field}") String rmFieldQueue) {
     this.username = username;
     this.password = password;
@@ -49,6 +51,7 @@ public class RabbitMqConfig {
     this.initialInterval = initialInterval;
     this.multiplier = multiplier;
     this.maxInterval = maxInterval;
+    this.maxRetries = maxRetries;
     this.rmFieldQueue = rmFieldQueue;
   }
 
@@ -62,7 +65,7 @@ public class RabbitMqConfig {
     backOffPolicy.setMaxInterval(maxInterval);
     retryTemplate.setBackOffPolicy(backOffPolicy);
 
-    GatewayRetryPolicy gatewayRetryPolicy = new GatewayRetryPolicy();
+    GatewayRetryPolicy gatewayRetryPolicy = new GatewayRetryPolicy(maxRetries);
     retryTemplate.setRetryPolicy(gatewayRetryPolicy);
 
     retryTemplate.registerListener(new DefaultListenerSupport());
