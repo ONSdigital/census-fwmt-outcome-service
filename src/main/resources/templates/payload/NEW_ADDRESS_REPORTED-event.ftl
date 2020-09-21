@@ -45,5 +45,15 @@
     </#if>
       "region" : "${region}"
 }
+    <#if sourceCase == "NEW_STANDALONE" && addressType == "CE">
+        <#if ceDetails.usualResidents??>
+            ,"ceExpectedCapacity" : "${ceDetails.usualResidents}"
+        <#else>
+            ,"ceExpectedCapacity" : 0
+        </#if>
+    </#if>
+    <#if sourceCase == "NEW_UNIT" && addressType == "CE">
+        ,"ceExpectedCapacity" : 1
+    </#if>
 }
 }
