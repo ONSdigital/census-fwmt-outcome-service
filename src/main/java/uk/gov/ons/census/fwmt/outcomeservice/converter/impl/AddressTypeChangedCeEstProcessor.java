@@ -95,7 +95,6 @@ public class AddressTypeChangedCeEstProcessor implements OutcomeServiceProcessor
         .existsInFwmt(false)
         .accessInfo(outcome.getAccessInfo())
         .careCodes(OutcomeSuperSetDto.careCodesToText(outcome.getCareCodes()))
-        .type(0)
         .build());
   }
 }

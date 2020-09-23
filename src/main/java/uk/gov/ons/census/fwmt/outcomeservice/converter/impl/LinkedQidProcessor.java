@@ -89,7 +89,6 @@ public class LinkedQidProcessor implements OutcomeServiceProcessor {
     gatewayCacheService.save(builder
         .caseId(String.valueOf(caseId))
         .delivered(true)
-        .type(0)
         .build());
   }
 }
