@@ -137,7 +137,6 @@ public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
 
     gatewayCacheService.save(builder
         .caseId(caseId).delivered(true)
-        .type(0)
         .build());
   }
 
