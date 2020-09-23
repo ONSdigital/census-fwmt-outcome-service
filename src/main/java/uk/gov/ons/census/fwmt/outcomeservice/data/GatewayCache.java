@@ -42,7 +42,7 @@ public class GatewayCache {
   public String estabUprn;
 
   @Column(name ="type")
-  public int type;
+  public Integer type;
 
   // TODO : Probably move this object to common so its in one location
 
