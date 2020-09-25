@@ -59,6 +59,8 @@ public class NewAddressReportedProcessor implements OutcomeServiceProcessor {
     root.put("outcome", outcome);
     if (outcome.getCeDetails() != null) {
       root.put("ceDetails", outcome.getCeDetails());
+      root.put("usualResidents",
+          outcome.getCeDetails().getUsualResidents() != null ? outcome.getCeDetails().getUsualResidents() : "0");
     }
     root.put("newCaseId", caseId);
     root.put("address", outcome.getAddress());
@@ -66,8 +68,6 @@ public class NewAddressReportedProcessor implements OutcomeServiceProcessor {
     root.put("eventDate", eventDateTime);
     root.put("addressType", type);
     root.put("region", regionLookup(outcome.getOfficerId()));
-    root.put("usualResidents",
-        outcome.getCeDetails().getUsualResidents() != null ? outcome.getCeDetails().getUsualResidents() : "0");
     if (type.equals("CE")) {
       root.put("addressLevel","E");
     } else if (type.equals("SPG")) {
