@@ -59,6 +59,8 @@ public class NewAddressReportedProcessor implements OutcomeServiceProcessor {
     root.put("outcome", outcome);
     if (outcome.getCeDetails() != null) {
       root.put("ceDetails", outcome.getCeDetails());
+      root.put("usualResidents",
+          outcome.getCeDetails().getUsualResidents() != null ? outcome.getCeDetails().getUsualResidents() : "0");
     }
     root.put("newCaseId", caseId);
     root.put("address", outcome.getAddress());
