@@ -59,10 +59,6 @@ public class AddressTypeChangedHhProcessor implements OutcomeServiceProcessor {
     root.put("outcome", outcome);
     root.put("eventDate", eventDateTime);
     root.put("surveyType", "HH");
-    root.put("estabType", outcome.getCeDetails() != null && outcome.getCeDetails().getEstablishmentType() != null ?
-        outcome.getCeDetails().getEstablishmentType() : "UNKNOWN");
-    root.put("estabName", outcome.getCeDetails() != null && outcome.getCeDetails().getEstablishmentName() != null ?
-        outcome.getCeDetails().getEstablishmentName() : "Not Provided");
     root.put("usualResidents", 0);
     root.put("region", regionLookup(outcome.getOfficerId()));
 
