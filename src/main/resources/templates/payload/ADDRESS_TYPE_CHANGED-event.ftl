@@ -2,23 +2,17 @@
 "newCaseId":"${newCaseId}",
 "collectionCase":{
 "id":"${caseId}",
-<#if estabType != "HH">
+<#if surveyType != "HH">
     "ceExpectedCapacity":"${usualResidents}",
 </#if>
 "address" : {
-<#if estabType != "HH">
-    <#if outcome.ceDetails??>
-    "estabType":"${outcome.ceDetails.establishmentType}",
-    "organisationName":"${outcome.ceDetails.establishmentName}",
-    <#else>
-    "organisationName":"Unknown",
-    "estabType":"Unknown",
-    </#if>
+<#if surveyType != "HH">
+"estabType":"${estabType}",
+"organisationName":"${estabName}",
 </#if>
-<#if estabType == "HH">
+<#if surveyType == "HH">
     "region":"${region}",
 </#if>
-
     "addressType":"${estabType}"
 }
 }

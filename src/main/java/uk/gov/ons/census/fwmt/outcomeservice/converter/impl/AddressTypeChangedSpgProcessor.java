@@ -58,7 +58,11 @@ public class AddressTypeChangedSpgProcessor implements OutcomeServiceProcessor {
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     root.put("outcome", outcome);
     root.put("eventDate", eventDateTime);
-    root.put("estabType", "SPG");
+    root.put("surveyType", "SPG");
+    root.put("estabType", outcome.getCeDetails() != null && outcome.getCeDetails().getEstablishmentType() != null ?
+        outcome.getCeDetails().getEstablishmentType() : "UNKNOWN");
+    root.put("estabName", outcome.getCeDetails() != null && outcome.getCeDetails().getEstablishmentName() != null ?
+        outcome.getCeDetails().getEstablishmentName() : "Not Provided");
 
     if (outcome.getCeDetails() == null) {
       root.put("usualResidents", 0);

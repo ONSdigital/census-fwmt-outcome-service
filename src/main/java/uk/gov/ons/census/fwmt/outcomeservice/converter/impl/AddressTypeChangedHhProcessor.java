@@ -58,7 +58,7 @@ public class AddressTypeChangedHhProcessor implements OutcomeServiceProcessor {
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     root.put("outcome", outcome);
     root.put("eventDate", eventDateTime);
-    root.put("estabType", "HH");
+    root.put("surveyType", "HH");
     root.put("usualResidents", 0);
     root.put("region", regionLookup(outcome.getOfficerId()));
 
