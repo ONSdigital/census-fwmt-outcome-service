@@ -76,6 +76,8 @@ public class NewAddressReportedProcessor implements OutcomeServiceProcessor {
     case "HH":
       root.put("addressLevel", "U");
       break;
+    default:
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, type, "Invalid survey type");
     }
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(NEW_ADDRESS_REPORTED, root);
