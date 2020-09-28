@@ -34,16 +34,17 @@
     <#if sourceCase != "NEW_UNIT">
       "latitude" : "${address.latitude?string["0.########"]}",
       "longitude" : "${address.longitude?string["0.#########"]}",
-      <#if addressType == "CE">
+      <#if surveyType == "CE">
       "estabType": "${ceDetails.establishmentType}",
       "secureType": "${ceDetails.establishmentSecure}",
       </#if>
     </#if>
     <#if sourceCase != "NEW_SPLIT_ADDRESS">
-      "addressLevel" : "${addressLevel}",
-      "addressType" : "${addressType}",
+        "addressLevel" : "${addressLevel}",
+        "addressType" : "${surveyType}",
+    <#else>
     </#if>
-      "region" : "${region}"
+      "region" :"${region}"
 }
     <#if usualResidents??>
     ,"ceExpectedCapacity" : "${ceDetails.usualResidents}"

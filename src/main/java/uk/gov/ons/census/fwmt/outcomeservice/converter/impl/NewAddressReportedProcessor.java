@@ -66,12 +66,16 @@ public class NewAddressReportedProcessor implements OutcomeServiceProcessor {
     root.put("address", outcome.getAddress());
     root.put("officerId", outcome.getOfficerId());
     root.put("eventDate", eventDateTime);
-    root.put("addressType", type);
+    root.put("surveyType", type);
     root.put("region", regionLookup(outcome.getOfficerId()));
-    if (type.equals("CE")) {
-      root.put("addressLevel","E");
-    } else if (type.equals("SPG")) {
-      root.put("addressLevel","U");
+    switch (type) {
+    case "CE":
+      root.put("addressLevel", "E");
+      break;
+    case "SPG":
+    case "HH":
+      root.put("addressLevel", "U");
+      break;
     }
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(NEW_ADDRESS_REPORTED, root);
