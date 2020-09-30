@@ -39,9 +39,7 @@
       "secureType": "${ceDetails.establishmentSecure}",
       </#if>
     </#if>
-    <#if sourceCase != "NEW_SPLIT_ADDRESS">
-        "addressLevel" : "${addressLevel}",
-    </#if>
+    "addressLevel" : "${addressLevel}",
     "addressType" : "${surveyType}",
     "region" :"${region}"
 }
