@@ -63,7 +63,7 @@ public class NewUnitAddressLinkedProcessor implements OutcomeServiceProcessor {
     root.put("officerId", outcome.getOfficerId());
     root.put("address", outcome.getAddress());
     root.put("eventDate", eventDateTime);
-    root.put("addressType", type);
+    root.put("surveyType", type);
     root.put("addressLevel", "U");
     if (type.equals("CE") && outcome.getCeDetails() != null && outcome.getCeDetails().getUsualResidents() != null) {
       root.put("usualResidents",Math.max(outcome.getCeDetails().getUsualResidents(),1));

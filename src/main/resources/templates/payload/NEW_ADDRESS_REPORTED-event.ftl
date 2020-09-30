@@ -31,7 +31,7 @@
     <#else>
       "postcode" : null,
     </#if>
-    <#if sourceCase != "NEW_UNIT">
+    <#if sourceCase == "NEW_STANDALONE">
       "latitude" : "${address.latitude?string["0.########"]}",
       "longitude" : "${address.longitude?string["0.#########"]}",
       <#if surveyType == "CE">
