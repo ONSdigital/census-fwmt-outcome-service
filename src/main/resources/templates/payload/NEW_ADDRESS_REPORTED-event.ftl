@@ -5,7 +5,7 @@
 </#if>
 "collectionCase" : {
    "id" : "${newCaseId}",
-    "caseType" : "${addressType}",
+    "caseType" : "${surveyType}",
     "survey" : "CENSUS",
     "fieldCoordinatorId" : "${outcome.coordinatorId}",
     "fieldOfficerId" : "${officerId}",
