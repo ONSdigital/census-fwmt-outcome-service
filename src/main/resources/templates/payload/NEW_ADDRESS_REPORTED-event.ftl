@@ -41,10 +41,9 @@
     </#if>
     <#if sourceCase != "NEW_SPLIT_ADDRESS">
         "addressLevel" : "${addressLevel}",
-        "addressType" : "${surveyType}",
-    <#else>
     </#if>
-      "region" :"${region}"
+    "addressType" : "${surveyType}",
+    "region" :"${region}"
 }
     <#if usualResidents??>
     ,"ceExpectedCapacity" : "${ceDetails.usualResidents}"
