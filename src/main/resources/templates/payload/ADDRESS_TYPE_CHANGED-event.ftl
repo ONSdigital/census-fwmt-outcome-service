@@ -4,6 +4,7 @@
 "id":"${caseId}",
 <#if surveyType != "HH">
     "ceExpectedCapacity":"${usualResidents}",
+    "addressType":"${estabType}",
 </#if>
 "address" : {
 <#if surveyType != "HH">
@@ -11,9 +12,8 @@
 "organisationName":"${estabName}",
 </#if>
 <#if surveyType == "HH">
-    "region":"${region}",
+    "region":"${region}"
 </#if>
-    "addressType":"${estabType}"
 }
 }
 }
