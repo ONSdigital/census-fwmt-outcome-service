@@ -11,9 +11,6 @@
 "organisationName":"${estabName}",
 "addressType":"${estabType}"
 </#if>
-<#if surveyType == "HH">
-    "region":"${region}"
-</#if>
 }
 }
 }
