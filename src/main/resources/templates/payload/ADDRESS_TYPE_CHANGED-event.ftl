@@ -9,8 +9,8 @@
 <#if surveyType != "HH">
 "estabType":"${estabType}",
 "organisationName":"${estabName}",
-"addressType":"${estabType}"
 </#if>
+"addressType":"${surveyType}"
 }
 }
 }
