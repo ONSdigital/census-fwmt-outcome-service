@@ -10,10 +10,7 @@
 "estabType":"${estabType}",
 "organisationName":"${estabName}",
 </#if>
-<#if surveyType == "HH">
-    "region":"${region}",
-</#if>
-    "addressType":"${estabType}"
+"addressType":"${surveyType}"
 }
 }
 }
