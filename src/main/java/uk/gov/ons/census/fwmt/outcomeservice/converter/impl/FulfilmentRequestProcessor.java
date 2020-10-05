@@ -113,8 +113,10 @@ public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
     List<Product> productList = null;
     try {
       productList = productReference.searchProducts(product);
-    } catch (CTPException e) {
-      log.error("unable to find valid Products {}", e);
+      if (productList.size() != 1) throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
+          "Failed to find 1 product using Product code: " + fulfilmentRequest.getQuestionnaireType());
+    } catch (CTPException | GatewayException e) {
+      log.error("Error within Product Lookup {}", e);
     }
     return productList;
   }
