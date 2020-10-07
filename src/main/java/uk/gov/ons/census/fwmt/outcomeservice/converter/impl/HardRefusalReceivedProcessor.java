@@ -46,6 +46,7 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
     root.put("outcome", outcome);
+    root.put("type", type);
     root.put("refusalType", "HARD_REFUSAL");
     root.put("officerId", outcome.getOfficerId());
     root.put("caseId", caseId);
