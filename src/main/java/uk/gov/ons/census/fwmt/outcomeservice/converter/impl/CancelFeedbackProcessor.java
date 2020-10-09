@@ -39,9 +39,9 @@ public class CancelFeedbackProcessor implements OutcomeServiceProcessor {
 
     FwmtCancelActionInstruction fieldworkFollowup = FwmtCancelActionInstruction.builder()
         .actionInstruction(ActionInstructionType.CANCEL)
-        .surveyName("CENSUS")
-        .addressType(type)
-        .addressLevel("U")
+        .surveyName("FEEDBACK")
+        .addressType("FEEDBACK")
+        .addressLevel("F")
         .caseId(caseId.toString())
         .build();
 
@@ -50,9 +50,8 @@ public class CancelFeedbackProcessor implements OutcomeServiceProcessor {
     gatewayEventManager.triggerEvent(String.valueOf(caseId), RM_FIELD_REPUBLISH,
         "survey name", "CENSUS",
         "address type", type,
-    "action instruction", ActionInstructionType.CANCEL.toString(),
-    "transactionId", outcome.getTransactionId().toString());
-
+        "action instruction", ActionInstructionType.CANCEL.toString(),
+        "transactionId", outcome.getTransactionId().toString());
     return caseId;
   }
 }
