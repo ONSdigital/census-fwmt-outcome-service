@@ -2,7 +2,6 @@ package uk.gov.ons.census.fwmt.outcomeservice.enums;
 
 public enum EventType {
 
-  // SHARED
   QUESTIONNAIRE_LINKED,
   REFUSAL_RECEIVED,
   ADDRESS_NOT_VALID,
@@ -11,14 +10,6 @@ public enum EventType {
   FIELD_CASE_UPDATED,
   NEW_ADDRESS_REPORTED,
   INTERVIEW_REQUIRED,
-  PROPERTY_LISTED,
-
-  // CCS
-  CONTACT_NOT_NEEDED,
-  POTENTIAL_RESIDENTIAL,
-  COLLECT_CE_DETAILS,
-  CCS_CE_OUT_OF_SCOPE,
-  NON_RESIDENTIAL,
-  SOFT_REFUSAL,
+  CCS,
 
 }

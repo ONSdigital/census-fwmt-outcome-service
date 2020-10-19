@@ -25,6 +25,10 @@ public class OutcomeServiceImpl implements OutcomeService {
 
   public static final String PROCESSING_CE_OUTCOME = "PROCESSING_CE_OUTCOME";
 
+  public static final String PROCESSING_CCS_PL_OUTCOME = "PROCESSING_CCS_PL_OUTCOME";
+
+  public static final String PROCESSING_CCS_INT_OUTCOME = "PROCESSING_CCS_INT_OUTCOME";
+
   public static final String FAILED_TO_LOOKUP_OUTCOME_CODE = "FAILED_TO_LOOKUP_OUTCOME_CODE";
 
   @Autowired
@@ -118,7 +122,7 @@ public class OutcomeServiceImpl implements OutcomeService {
     }
     UUID caseIdHolder = null;
     for (String operation : operationsList) {
-      gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_HH_OUTCOME,
+      gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_CCS_PL_OUTCOME,
           "Survey type", "CCS PL",
           "Secondary Outcome", outcome.getSecondaryOutcomeDescription(),
           "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
@@ -140,7 +144,7 @@ public class OutcomeServiceImpl implements OutcomeService {
     }
     UUID caseIdHolder = null;
     for (String operation : operationsList) {
-      gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_HH_OUTCOME,
+      gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_CCS_INT_OUTCOME,
           "Survey type", "CCS INT",
           "Secondary Outcome", outcome.getSecondaryOutcomeDescription(),
           "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",

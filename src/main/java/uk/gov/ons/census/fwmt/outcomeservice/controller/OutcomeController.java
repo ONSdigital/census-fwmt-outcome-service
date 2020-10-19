@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
+import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.ce.CENewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.ce.CENewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.ce.CEOutcome;
@@ -179,30 +181,30 @@ public class OutcomeController implements OutcomeApi {
   }
 
   @Override
-  public ResponseEntity<Void> ccsPropertyListing(HHNewStandaloneAddress hhNewStandaloneAddress)
+  public ResponseEntity<Void> ccsPropertyListing(CCSPropertyListingOutcome ccsPropertyListingOutcome)
       throws GatewayException {
     gatewayEventManager.triggerEvent("N/A", COMET_HH_STANDALONE_RECEIVED,
-        "transactionId", hhNewStandaloneAddress.getTransactionId().toString(),
+        "transactionId", ccsPropertyListingOutcome.getTransactionId().toString(),
         "Survey type", "CCS PL",
-        "Primary Outcome", hhNewStandaloneAddress.getPrimaryOutcomeDescription(),
-        "Secondary Outcome", hhNewStandaloneAddress.getSecondaryOutcomeDescription(),
-        "Outcome code", hhNewStandaloneAddress.getOutcomeCode());
+        "Primary Outcome", ccsPropertyListingOutcome.getPrimaryOutcomeDescription(),
+        "Secondary Outcome", ccsPropertyListingOutcome.getSecondaryOutcomeDescription(),
+        "Outcome code", ccsPropertyListingOutcome.getOutcomeCode());
 
-    outcomePreprocessingProducer.sendCcsPropertyListingToPreprocessingQueue(hhNewStandaloneAddress);
+    outcomePreprocessingProducer.sendCcsPropertyListingToPreprocessingQueue(ccsPropertyListingOutcome);
 
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @Override
-  public ResponseEntity<Void> ccsInterview(String caseID, CEOutcome ceOutcome) throws GatewayException {
+  public ResponseEntity<Void> ccsInterview(String caseID, CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException {
     gatewayEventManager.triggerEvent("N/A", COMET_HH_STANDALONE_RECEIVED,
-        "transactionId", hhNewStandaloneAddress.getTransactionId().toString(),
+        "transactionId", ccsInterviewOutcome.getTransactionId().toString(),
         "Survey type", "CCS INT",
-        "Primary Outcome", hhNewStandaloneAddress.getPrimaryOutcomeDescription(),
-        "Secondary Outcome", hhNewStandaloneAddress.getSecondaryOutcomeDescription(),
-        "Outcome code", hhNewStandaloneAddress.getOutcomeCode());
+        "Primary Outcome", ccsInterviewOutcome.getPrimaryOutcomeDescription(),
+        "Secondary Outcome", ccsInterviewOutcome.getSecondaryOutcomeDescription(),
+        "Outcome code", ccsInterviewOutcome.getOutcomeCode());
 
-    outcomePreprocessingProducer.sendCcsPropertyListingToPreprocessingQueue(hhNewStandaloneAddress);
+    outcomePreprocessingProducer.sendCcsInterviewToPreprocessingQueue(ccsInterviewOutcome);
 
     return new ResponseEntity<>(HttpStatus.OK);
   }

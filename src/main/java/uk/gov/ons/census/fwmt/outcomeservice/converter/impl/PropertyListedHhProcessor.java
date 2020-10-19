@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.PROPERTY_LISTED;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.CCS;
 
 @Component("PROPERTY_LISTED_HH")
 public class PropertyListedHhProcessor implements OutcomeServiceProcessor {
@@ -63,13 +63,13 @@ public class PropertyListedHhProcessor implements OutcomeServiceProcessor {
     root.put("oa", cache.getOa());
     root.put("region",cache.getOa().substring(0,2));
 
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(PROPERTY_LISTED, root);
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(CCS, root);
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
         "survey type", type,
-        "type", PROPERTY_LISTED.toString(),
+        "type", CCS.toString(),
         "transactionId", outcome.getTransactionId().toString(),
         "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
 

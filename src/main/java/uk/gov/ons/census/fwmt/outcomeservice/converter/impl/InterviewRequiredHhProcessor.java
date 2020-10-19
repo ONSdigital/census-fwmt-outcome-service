@@ -6,7 +6,6 @@ import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.ReasonCodeLookup;
 import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.OutcomeSuperSetDto;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
@@ -19,7 +18,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.INTERVIEW_REQUIRED;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.PROPERTY_LISTED;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.CCS;
 
 @Component("INTERVIEW_REQUIRED_HH")
 public class InterviewRequiredHhProcessor implements OutcomeServiceProcessor {
@@ -65,7 +64,7 @@ public class InterviewRequiredHhProcessor implements OutcomeServiceProcessor {
     root.put("oa", cache.getOa());
     root.put("region",cache.getOa().substring(0,2));
 
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(PROPERTY_LISTED, root);
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(CCS, root);
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
