@@ -75,4 +75,20 @@ public class PropertyListedCeProcessor implements OutcomeServiceProcessor {
 
     return caseId;
   }
+
+  private void cacheData(String caseId, OutcomeSuperSetDto outcome) throws GatewayException {
+    GatewayCache cache = gatewayCacheService.getById(String.valueOf(caseId));
+    GatewayCache.GatewayCacheBuilder builder ;
+    if (cache == null)
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Problem creating Outcome Message");
+    else builder = cache.toBuilder();
+
+    gatewayCacheService.save(builder
+        .caseId(caseId)
+        .type(50)
+        .managerTitle(outcome.getCeDetails().getManagerTitle())
+        .managerFirstname(outcome.getCeDetails().getManagerForename())
+        .managerSurname(outcome.getCeDetails().getManagerSurname())
+        .build());
+  }
 }
