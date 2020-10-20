@@ -42,7 +42,10 @@ public class GatewayCache {
   public String estabUprn;
 
   @Column(name ="type")
-  public int type;
+  public Integer type;
+
+  @Column(name = "individual_case_id")
+  public String individualCaseId;
 
   @Column(name ="oa")
   public String oa;

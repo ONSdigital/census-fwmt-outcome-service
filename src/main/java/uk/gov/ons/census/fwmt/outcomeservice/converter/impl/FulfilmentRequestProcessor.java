@@ -70,7 +70,7 @@ public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
         root.put("caseId", caseId);
         root.put("eventDate", eventDateTime);
         String outcomeEvent = createQuestionnaireRequiredByPostEvent(root, fulfilmentRequest, String.valueOf(caseId),
-            outcome.getOutcomeCode(), type);
+            type);
 
         gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
             GatewayOutcomeQueueConfig.GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY);
@@ -85,26 +85,22 @@ public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
   }
 
   private String createQuestionnaireRequiredByPostEvent(Map<String, Object> root,
-      FulfilmentRequestDto fulfilmentRequest, String caseId, String outcomeCode, String type) throws GatewayException {
-    String packcode;
-    List<Product> productList = getProductFromQuestionnaireType(fulfilmentRequest);
-    if (productList == null || productList.isEmpty() || productList.get(0) == null || productList.size() > 1) {
-      packcode = outcomeCode;
-    } else {
-      packcode = productList.get(0).getFulfilmentCode();
+    FulfilmentRequestDto fulfilmentRequest, String caseId, String type) throws GatewayException {
+    String individualCaseId = "";
 
-      if (productList.get(0).getIndividual() && type.equals("HH")) {
-        String individualCaseId = String.valueOf(UUID.randomUUID());
-        root.put("individualCaseId", individualCaseId);
-        root.put("surveyType", type);
-      }
+    List<Product> productList = getProductFromQuestionnaireType(fulfilmentRequest);
+    if (productList.get(0).getIndividual() && type.equals("HH")) {
+      individualCaseId = String.valueOf(UUID.randomUUID());
+      root.put("individualCaseId", individualCaseId);
+      root.put("surveyType", type);
     }
-    root.put("packcode", packcode);
+    root.put("packcode", productList.get(0).getFulfilmentCode());
     root.put("requesterTitle", fulfilmentRequest.getRequesterTitle());
     root.put("requesterForename", fulfilmentRequest.getRequesterForename());
     root.put("requesterSurname", fulfilmentRequest.getRequesterSurname());
     root.put("requesterPhone", fulfilmentRequest.getRequesterPhone());
-    cacheData(caseId);
+
+    cacheData(caseId, individualCaseId);
 
     return TemplateCreator.createOutcomeMessage(FULFILMENT_REQUESTED, root);
   }
@@ -119,8 +115,10 @@ public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
     List<Product> productList = null;
     try {
       productList = productReference.searchProducts(product);
-    } catch (CTPException e) {
-      log.error("unable to find valid Products {}", e);
+      if (productList.size() != 1) throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR,
+          "Failed to find 1 product using Product code: " + fulfilmentRequest.getQuestionnaireType());
+    } catch (CTPException | GatewayException e) {
+      log.error("Error within Product Lookup {}", e);
     }
     return productList;
   }
@@ -129,16 +127,23 @@ public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
     return (fulfilmentRequest.getQuestionnaireID() != null);
   }
 
-  private void cacheData(String caseId) {
+  private void cacheData(String caseId, String individualCaseId) {
     GatewayCache cache = gatewayCacheService.getById(String.valueOf(caseId));
     GatewayCacheBuilder builder ;
     if (cache == null) builder = GatewayCache.builder();
     else builder = cache.toBuilder();
 
-    gatewayCacheService.save(builder
-        .caseId(caseId).delivered(true)
-        .type(0)
-        .build());
+    if (!individualCaseId.equals("")) {
+      gatewayCacheService.save(builder
+          .caseId(caseId)
+          .delivered(true)
+          .individualCaseId(individualCaseId)
+          .build());
+    } else {
+      gatewayCacheService.save(builder
+          .caseId(caseId)
+          .delivered(true)
+          .build());
+    }
   }
-
 }

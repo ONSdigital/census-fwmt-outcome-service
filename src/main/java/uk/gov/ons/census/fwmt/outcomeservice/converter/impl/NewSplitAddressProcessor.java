@@ -58,7 +58,8 @@ public class NewSplitAddressProcessor implements OutcomeServiceProcessor {
     root.put("sourceCase", "NEW_SPLIT_ADDRESS");
     root.put("outcome", outcome);
     root.put("newCaseId", caseId);
-    root.put("addressType", type);
+    root.put("surveyType", type);
+    root.put("addressLevel", "U");
     root.put("sourceCaseId", outcome.getOriginatingCaseId());
     root.put("region", regionLookup(outcome.getOfficerId()));
     root.put("officerId", outcome.getOfficerId());

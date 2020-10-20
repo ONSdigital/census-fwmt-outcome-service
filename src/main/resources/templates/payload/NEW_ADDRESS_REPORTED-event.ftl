@@ -5,7 +5,7 @@
 </#if>
 "collectionCase" : {
    "id" : "${newCaseId}",
-    "caseType" : "${addressType}",
+    "caseType" : "${surveyType}",
     "survey" : "CENSUS",
     "fieldCoordinatorId" : "${outcome.coordinatorId}",
     "fieldOfficerId" : "${officerId}",
@@ -31,19 +31,20 @@
     <#else>
       "postcode" : null,
     </#if>
-    <#if sourceCase != "NEW_UNIT">
+    <#if sourceCase == "NEW_STANDALONE">
       "latitude" : "${address.latitude?string["0.########"]}",
       "longitude" : "${address.longitude?string["0.#########"]}",
-      <#if addressType == "CE">
+      <#if surveyType == "CE">
       "estabType": "${ceDetails.establishmentType}",
       "secureType": "${ceDetails.establishmentSecure}",
       </#if>
     </#if>
-    <#if sourceCase != "NEW_SPLIT_ADDRESS">
-      "addressLevel" : "${addressLevel}",
-      "addressType" : "${addressType}",
-    </#if>
-      "region" : "${region}"
+    "addressLevel" : "${addressLevel}",
+    "addressType" : "${surveyType}",
+    "region" :"${region}"
 }
+    <#if usualResidents??>
+    ,"ceExpectedCapacity" : "${usualResidents}"
+    </#if>
 }
 }

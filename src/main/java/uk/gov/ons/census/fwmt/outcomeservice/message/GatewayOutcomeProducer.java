@@ -15,6 +15,8 @@ import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.util.Date;
 
 @Slf4j
 @Component
@@ -31,6 +33,8 @@ public class GatewayOutcomeProducer {
   public void sendOutcome(String outcomeEvent, String transactionId, String routingKey) throws GatewayException {
     MessageProperties messageProperties = new MessageProperties();
     messageProperties.setContentType("application/json");
+    long epochMilli = Instant.now().toEpochMilli();
+    messageProperties.setTimestamp(new Date(epochMilli));
     MessageConverter messageConverter = new Jackson2JsonMessageConverter();
 
     try {

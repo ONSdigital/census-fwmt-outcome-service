@@ -14,6 +14,8 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.transaction.Transactional;
+
 
 @Slf4j
 @Service
@@ -41,6 +43,7 @@ public class OutcomeServiceImpl implements OutcomeService {
   private GatewayEventManager gatewayEventManager;
 
   @Override
+  @Transactional
   public void createSpgOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
     String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
     if (operationsList == null) {
@@ -64,6 +67,7 @@ public class OutcomeServiceImpl implements OutcomeService {
   }
 
   @Override
+  @Transactional
   public void createCeOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
     String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
     if (operationsList == null) {
@@ -87,6 +91,7 @@ public class OutcomeServiceImpl implements OutcomeService {
   }
 
   @Override
+  @Transactional
   public void createHhOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
     String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
     if (operationsList == null) {

@@ -39,6 +39,7 @@ rabbitmq:
   multiplier: 3.0
   prefetchCount: 250
   maxInterval: 45000
+  maxRetries: 1
   queues:
     rm:
       field: "RM.Field"

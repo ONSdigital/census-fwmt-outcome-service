@@ -1,16 +1,19 @@
 package uk.gov.ons.census.fwmt.outcomeservice.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
+import javax.persistence.LockModeType;
 
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.stereotype.Repository;
+
+import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
 
 @Repository
 public interface GatewayCacheRepository extends JpaRepository<GatewayCache, Long> {
 
+  @Lock(LockModeType.PESSIMISTIC_WRITE)
   GatewayCache findByCaseId(String caseId);
 
-  List<GatewayCache> findAll();
+//  List<GatewayCache> findAll();
 
 }

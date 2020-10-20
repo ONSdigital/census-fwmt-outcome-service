@@ -59,17 +59,25 @@ public class NewAddressReportedProcessor implements OutcomeServiceProcessor {
     root.put("outcome", outcome);
     if (outcome.getCeDetails() != null) {
       root.put("ceDetails", outcome.getCeDetails());
+      root.put("usualResidents",
+          outcome.getCeDetails().getUsualResidents() != null ? outcome.getCeDetails().getUsualResidents() : "0");
     }
     root.put("newCaseId", caseId);
     root.put("address", outcome.getAddress());
     root.put("officerId", outcome.getOfficerId());
     root.put("eventDate", eventDateTime);
-    root.put("addressType", type);
+    root.put("surveyType", type);
     root.put("region", regionLookup(outcome.getOfficerId()));
-    if (type.equals("CE")) {
-      root.put("addressLevel","E");
-    } else if (type.equals("SPG")) {
-      root.put("addressLevel","U");
+    switch (type) {
+    case "CE":
+      root.put("addressLevel", "E");
+      break;
+    case "SPG":
+    case "HH":
+      root.put("addressLevel", "U");
+      break;
+    default:
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, type, "Invalid survey type");
     }
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(NEW_ADDRESS_REPORTED, root);
@@ -97,7 +105,6 @@ public class NewAddressReportedProcessor implements OutcomeServiceProcessor {
         .existsInFwmt(false)
         .accessInfo(outcome.getAccessInfo())
         .careCodes(OutcomeSuperSetDto.careCodesToText(outcome.getCareCodes()))
-        .type(0)
         .build());
   }
 }

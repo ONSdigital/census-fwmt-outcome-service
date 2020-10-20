@@ -88,8 +88,9 @@ dependencyManagement {
 
 dependencies {
 	compile('uk.gov.ons.census.fwmt:census-fwmt-events:1.0.33-RELEASE')
-	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.2.15-RELEASE')
-	compile('uk.gov.ons.ctp.integration.common:product-reference:1.0.6')
+	compile('uk.gov.ons.ctp.integration.common:product-reference:1.0.9')
+	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.2.12-RELEASE')
+
 
 	compile("javax.activation:activation:1.1.1")
 
