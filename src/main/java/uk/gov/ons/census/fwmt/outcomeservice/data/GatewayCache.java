@@ -47,6 +47,18 @@ public class GatewayCache {
   @Column(name = "individual_case_id")
   public String individualCaseId;
 
+  @Column(name ="oa")
+  public String oa;
+
+  @Column(name = "manager_title")
+  public String managerTitle;
+
+  @Column(name = "manager_firstname")
+  public String managerFirstname;
+
+  @Column(name = "manager_surname")
+  public String managerSurname;
+
   // TODO : Probably move this object to common so its in one location
 
 }

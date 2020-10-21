@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
+import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.ce.CENewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.ce.CENewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.ce.CEOutcome;
@@ -33,6 +35,8 @@ public class OutcomeController implements OutcomeApi {
   public static final String COMET_CE_OUTCOME_RECEIVED = "COMET_CE_OUTCOME_RECEIVED";
   public static final String COMET_CE_UNITADDRESS_OUTCOME_RECEIVED = "COMET_CE_UNITADDRESS_OUTCOME_RECEIVED";
   public static final String COMET_CE_STANDALONE_OUTCOME_RECEIVED = "COMET_CE_STANDALONE_OUTCOME_RECEIVED";
+  public static final String COMET_CCS_PL_RECEIVED = "COMET_CCS_PL_RECEIVED";
+  private static final String COMET_CCS_INT_RECEIVED = "COMET_CCS_INT_RECEIVED";
 
   @Autowired
   private GatewayEventManager gatewayEventManager;
@@ -174,6 +178,35 @@ public class OutcomeController implements OutcomeApi {
         "HHNewStandaloneAddress", hhNewStandaloneAddress.toString());
 
     outcomePreprocessingProducer.sendHHStandaloneAddressToPreprocessingQueue(hhNewStandaloneAddress);
+
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @Override
+  public ResponseEntity<Void> ccsPropertyListing(CCSPropertyListingOutcome ccsPropertyListingOutcome)
+      throws GatewayException {
+    gatewayEventManager.triggerEvent("N/A", COMET_CCS_PL_RECEIVED,
+        "transactionId", ccsPropertyListingOutcome.getTransactionId().toString(),
+        "Survey type", "CCS PL",
+        "Primary Outcome", ccsPropertyListingOutcome.getPrimaryOutcomeDescription(),
+        "Secondary Outcome", ccsPropertyListingOutcome.getSecondaryOutcomeDescription(),
+        "Outcome code", ccsPropertyListingOutcome.getOutcomeCode());
+
+    outcomePreprocessingProducer.sendCcsPropertyListingToPreprocessingQueue(ccsPropertyListingOutcome);
+
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @Override
+  public ResponseEntity<Void> ccsInterview(String caseID, CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException {
+    gatewayEventManager.triggerEvent("N/A", COMET_CCS_INT_RECEIVED,
+        "transactionId", ccsInterviewOutcome.getTransactionId().toString(),
+        "Survey type", "CCS INT",
+        "Primary Outcome", ccsInterviewOutcome.getPrimaryOutcomeDescription(),
+        "Secondary Outcome", ccsInterviewOutcome.getSecondaryOutcomeDescription(),
+        "Outcome code", ccsInterviewOutcome.getOutcomeCode());
+
+    outcomePreprocessingProducer.sendCcsInterviewToPreprocessingQueue(ccsInterviewOutcome);
 
     return new ResponseEntity<>(HttpStatus.OK);
   }

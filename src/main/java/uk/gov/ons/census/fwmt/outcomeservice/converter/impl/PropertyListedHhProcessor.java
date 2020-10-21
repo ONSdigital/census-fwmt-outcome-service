@@ -6,8 +6,10 @@ import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.OutcomeSuperSetDto;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
+import uk.gov.ons.census.fwmt.outcomeservice.service.impl.GatewayCacheService;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
 import java.text.DateFormat;
@@ -15,10 +17,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.REFUSAL_RECEIVED;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.CCS;
 
-@Component("HARD_REFUSAL_RECEIVED")
-public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
+@Component("PROPERTY_LISTED_HH")
+public class PropertyListedHhProcessor implements OutcomeServiceProcessor {
 
   public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
 
@@ -33,34 +35,43 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
   @Autowired
   private GatewayEventManager gatewayEventManager;
 
+  @Autowired
+  private GatewayCacheService gatewayCacheService;
+
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
-    "survey type", type,
-    "processor", "HARD_REFUSAL_RECEIVED",
-    "original caseId", String.valueOf(outcome.getCaseId()),
-    "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+        "survey type", type,
+        "processor", "PROPERTY_LISTED_HH",
+        "original caseId", String.valueOf(outcome.getCaseId()),
+        "Site case Id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"),
+        "addressType", "HH");
+
+    GatewayCache cache = gatewayCacheService.getById(String.valueOf(outcome.getSiteCaseId()));
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
     root.put("outcome", outcome);
-    root.put("type", type);
-    root.put("refusalType", "HARD_REFUSAL");
-    root.put("officerId", outcome.getOfficerId());
+    root.put("address", outcome.getAddress());
     root.put("caseId", caseId);
     root.put("eventDate", eventDateTime);
+    root.put("addressType", "HH");
+    root.put("addressLevel", "U");
+    root.put("interviewRequired", "False");
+    root.put("oa", cache.getOa());
+    root.put("region",cache.getOa().substring(0,2));
 
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root);
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(CCS, root);
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
-        GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
+        GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
         "survey type", type,
-        "type", REFUSAL_RECEIVED.toString(),
+        "type", CCS.toString(),
         "transactionId", outcome.getTransactionId().toString(),
-        "routing key", GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
+        "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
 
     return caseId;
   }

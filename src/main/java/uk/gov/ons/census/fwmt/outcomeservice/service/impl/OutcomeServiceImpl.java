@@ -27,6 +27,10 @@ public class OutcomeServiceImpl implements OutcomeService {
 
   public static final String PROCESSING_CE_OUTCOME = "PROCESSING_CE_OUTCOME";
 
+  public static final String PROCESSING_CCS_PL_OUTCOME = "PROCESSING_CCS_PL_OUTCOME";
+
+  public static final String PROCESSING_CCS_INT_OUTCOME = "PROCESSING_CCS_INT_OUTCOME";
+
   public static final String FAILED_TO_LOOKUP_OUTCOME_CODE = "FAILED_TO_LOOKUP_OUTCOME_CODE";
 
   @Autowired
@@ -107,6 +111,54 @@ public class OutcomeServiceImpl implements OutcomeService {
           "Operation", operation,
           "Operation list", Arrays.toString(operationsList));
       caseIdHolder = outcomeServiceProcessors.get(operation).process(outcome, caseIdHolder, "HH");
+    }
+  }
+
+  @Override
+  @Transactional
+  public void createCcsPropertyListingOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
+    String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
+    if (operationsList == null) {
+      gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "No outcome code found",
+          String.valueOf(outcome.getCaseId()), FAILED_TO_LOOKUP_OUTCOME_CODE,
+          "Survey type", "CCS PL",
+          "Outcome code", outcome.getOutcomeCode(),
+          "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
+      return;
+    }
+    UUID caseIdHolder = null;
+    for (String operation : operationsList) {
+      gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_CCS_PL_OUTCOME,
+          "Survey type", "CCS PL",
+          "Secondary Outcome", outcome.getSecondaryOutcomeDescription(),
+          "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
+          "Operation", operation,
+          "Operation list", Arrays.toString(operationsList));
+      caseIdHolder = outcomeServiceProcessors.get(operation).process(outcome, caseIdHolder, "CCS PL");
+    }
+  }
+
+  @Override
+  @Transactional
+  public void createCcsInterviewOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
+    String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
+    if (operationsList == null) {
+      gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "No outcome code found",
+          String.valueOf(outcome.getCaseId()), FAILED_TO_LOOKUP_OUTCOME_CODE,
+          "Survey type", "CCS INT",
+          "Outcome code", outcome.getOutcomeCode(),
+          "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
+      return;
+    }
+    UUID caseIdHolder = null;
+    for (String operation : operationsList) {
+      gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_CCS_INT_OUTCOME,
+          "Survey type", "CCS INT",
+          "Secondary Outcome", outcome.getSecondaryOutcomeDescription(),
+          "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
+          "Operation", operation,
+          "Operation list", Arrays.toString(operationsList));
+      caseIdHolder = outcomeServiceProcessors.get(operation).process(outcome, caseIdHolder, "CCS INT");
     }
   }
 }

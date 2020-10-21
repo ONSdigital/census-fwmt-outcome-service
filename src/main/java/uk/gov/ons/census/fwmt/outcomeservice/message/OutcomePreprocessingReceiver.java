@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.ons.census.fwmt.common.data.ccs.CCSInterviewOutcome;
+import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.ce.CENewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.ce.CENewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.ce.CEOutcome;
@@ -25,14 +27,26 @@ import java.util.UUID;
 public class OutcomePreprocessingReceiver {
 
   public static final String PREPROCESSING_HH_OUTCOME = "PREPROCESSING_HH_OUTCOME";
+
   public static final String PREPROCESSING_HH_SPLITADDRESS_OUTCOME = "PREPROCESSING_HH_SPLITADDRESS_OUTCOME";
+  
   public static final String PREPROCESSING_HH_STANDALONE_OUTCOME = "PREPROCESSING_HH_STANDALONE_OUTCOME";
+  
   public static final String PREPROCESSING_CE_OUTCOME = "PREPROCESSING_CE_OUTCOME";
+  
   public static final String PREPROCESSING_CE_UNITADDRESS_OUTCOME = "PREPROCESSING_CE_UNITADDRESS_OUTCOME";
+  
   public static final String PREPROCESSING_CE_STANDALONE_OUTCOME = "PREPROCESSING_CE_STANDALONE_OUTCOME";
+  
   public static final String PREPROCESSING_SPG_OUTCOME = "PREPROCESSING_SPG_OUTCOME";
+  
   public static final String PREPROCESSING_SPG_UNITADDRESS_OUTCOME = "PREPROCESSING_SPG_UNITADDRESS_OUTCOME";
+  
   public static final String PREPROCESSING_SPG_STANDALONE_OUTCOME = "PREPROCESSING_SPG_STANDALONE_OUTCOME";
+  
+  public static final String PREPROCESSING_CCS_PL_OUTCOME = "PREPROCESSING_CCS_PL_OUTCOME";
+  
+  public static final String PREPROCESSING_CCS_INT_OUTCOME = "PREPROCESSING_CCS_PL_OUTCOME";
 
   @Autowired
   private OutcomeService delegate;
@@ -128,5 +142,25 @@ public class OutcomePreprocessingReceiver {
         "Outcome code", outcomeDTO.getOutcomeCode(),
         "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
     delegate.createHhOutcomeEvent(outcomeDTO);
+  }
+
+  public void processMessage(CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException {
+    OutcomeSuperSetDto outcomeDTO = mapperFacade.map(ccsPropertyListingOutcome, OutcomeSuperSetDto.class);
+    outcomeDTO.setCaseId(UUID.randomUUID());
+    gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), PREPROCESSING_CCS_PL_OUTCOME,
+        "Survey type", "CCS PL",
+        "Outcome code", outcomeDTO.getOutcomeCode(),
+        "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
+    delegate.createCcsPropertyListingOutcomeEvent(outcomeDTO);
+  }
+
+  public void processMessage(CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException {
+    OutcomeSuperSetDto outcomeDTO = mapperFacade.map(ccsInterviewOutcome, OutcomeSuperSetDto.class);
+    outcomeDTO.setCaseId(UUID.randomUUID());
+    gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), PREPROCESSING_CCS_INT_OUTCOME,
+        "Survey type", "CCS INT",
+        "Outcome code", outcomeDTO.getOutcomeCode(),
+        "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
+    delegate.createCcsInterviewOutcomeEvent(outcomeDTO);
   }
 }

@@ -46,6 +46,7 @@ public class ExtraordinaryRefusalReceivedProcessor implements OutcomeServiceProc
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
     root.put("outcome", outcome);
+    root.put("type", type);
     root.put("refusalType", "EXTRAORDINARY_REFUSAL");
     root.put("officerId", outcome.getOfficerId());
     root.put("caseId", caseId);
