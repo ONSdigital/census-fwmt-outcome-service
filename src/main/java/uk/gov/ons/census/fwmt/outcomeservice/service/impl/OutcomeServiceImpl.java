@@ -115,6 +115,7 @@ public class OutcomeServiceImpl implements OutcomeService {
   }
 
   @Override
+  @Transactional
   public void createCcsPropertyListingOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
     String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
     if (operationsList == null) {
@@ -137,6 +138,8 @@ public class OutcomeServiceImpl implements OutcomeService {
     }
   }
 
+  @Override
+  @Transactional
   public void createCcsInterviewOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
     String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
     if (operationsList == null) {

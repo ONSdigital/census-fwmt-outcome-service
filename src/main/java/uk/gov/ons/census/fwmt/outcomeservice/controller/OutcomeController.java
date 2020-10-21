@@ -35,6 +35,8 @@ public class OutcomeController implements OutcomeApi {
   public static final String COMET_CE_OUTCOME_RECEIVED = "COMET_CE_OUTCOME_RECEIVED";
   public static final String COMET_CE_UNITADDRESS_OUTCOME_RECEIVED = "COMET_CE_UNITADDRESS_OUTCOME_RECEIVED";
   public static final String COMET_CE_STANDALONE_OUTCOME_RECEIVED = "COMET_CE_STANDALONE_OUTCOME_RECEIVED";
+  public static final String COMET_CCS_PL_RECEIVED = "COMET_CCS_PL_RECEIVED";
+  private static final String COMET_CCS_INT_RECEIVED = "COMET_CCS_INT_RECEIVED";
 
   @Autowired
   private GatewayEventManager gatewayEventManager;
@@ -183,7 +185,7 @@ public class OutcomeController implements OutcomeApi {
   @Override
   public ResponseEntity<Void> ccsPropertyListing(CCSPropertyListingOutcome ccsPropertyListingOutcome)
       throws GatewayException {
-    gatewayEventManager.triggerEvent("N/A", COMET_HH_STANDALONE_RECEIVED,
+    gatewayEventManager.triggerEvent("N/A", COMET_CCS_PL_RECEIVED,
         "transactionId", ccsPropertyListingOutcome.getTransactionId().toString(),
         "Survey type", "CCS PL",
         "Primary Outcome", ccsPropertyListingOutcome.getPrimaryOutcomeDescription(),
@@ -197,7 +199,7 @@ public class OutcomeController implements OutcomeApi {
 
   @Override
   public ResponseEntity<Void> ccsInterview(String caseID, CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException {
-    gatewayEventManager.triggerEvent("N/A", COMET_HH_STANDALONE_RECEIVED,
+    gatewayEventManager.triggerEvent("N/A", COMET_CCS_INT_RECEIVED,
         "transactionId", ccsInterviewOutcome.getTransactionId().toString(),
         "Survey type", "CCS INT",
         "Primary Outcome", ccsInterviewOutcome.getPrimaryOutcomeDescription(),

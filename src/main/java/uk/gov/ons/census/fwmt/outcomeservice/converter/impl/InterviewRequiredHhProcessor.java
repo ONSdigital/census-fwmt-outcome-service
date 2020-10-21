@@ -50,7 +50,9 @@ public class InterviewRequiredHhProcessor implements OutcomeServiceProcessor {
         "Site case Id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"),
         "addressType", "HH");
 
-    GatewayCache cache = gatewayCacheService.getById(String.valueOf(caseId));
+    GatewayCache cache = gatewayCacheService.getById(String.valueOf(outcome.getSiteCaseId()));
+
+    cacheData(outcome, outcome.getSiteCaseId(), caseId);
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
@@ -76,4 +78,30 @@ public class InterviewRequiredHhProcessor implements OutcomeServiceProcessor {
 
     return caseId;
   }
+
+  private void cacheData(OutcomeSuperSetDto outcome, UUID plCaseId, UUID newCaseId) throws GatewayException {
+    GatewayCache parentCacheJob = gatewayCacheService.getById(plCaseId.toString());
+    if (parentCacheJob == null) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Parent case does not exist in cache: {}", plCaseId);
+    }
+
+    GatewayCache newCachedJob = gatewayCacheService.getById(newCaseId.toString());
+    if (newCachedJob != null) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "New case exists in cache: {}", plCaseId);
+    }
+
+   
+    gatewayCacheService.save(GatewayCache.builder()
+        .caseId(newCaseId.toString())
+        .existsInFwmt(false)
+        .accessInfo(outcome.getAccessInfo())
+        .careCodes(OutcomeSuperSetDto.careCodesToText(outcome.getCareCodes()))
+        .type(50)
+        .managerTitle(outcome.getCeDetails().getManagerTitle())
+        .managerFirstname(outcome.getCeDetails().getManagerForename())
+        .managerSurname(outcome.getCeDetails().getManagerSurname())
+        .build());
+  }
+
+
 }

@@ -1,12 +1,3 @@
-{
-"event": {
-  "type": "CCS_ADDRESS_LISTED",
-  "source": "FIELDWORK_GATEWAY",
-  "channel": "FIELD",
-  "dateTime": "${eventDate}",
-  "transactionId": "${ccsPropertyListingOutcome.transactionId}"
-},
-"payload": {
   "CCSProperty": {
     "collectionCase": {
       "id": "${caseId}"
@@ -14,7 +5,7 @@
     "interviewRequired": "${interviewRequired}",
     "sampleUnit": {
       "addressType": "${addressType}",
-        <#if addressType == CE>
+        <#if addressType == "CE">
           "estabType": "${outcome.ceDetails.establishmentType}",
           "organisationName": "${outcome.ceDetails.establishmentName}",
         </#if>
@@ -26,15 +17,16 @@
         <#if address.addressLine3??>
         "addressLine3": "${address.addressLine3}",
         </#if>
-      "townName": "${address.town}",
-      "postcode": "${address.postCode}",
-      "latitude": "${address.location.latitude?string["0.#######"]}",
-      "longitude": "${address.location.longitude?string["0.#######"]}",
-      "fieldcoordinatorId": "${outcome.coordinatorCode}",
-      "fieldofficerId": "${outcome.fieldOfficerCode}",
+        <#if address.town??>
+          "townName": "${address.town}",
+        </#if>
+          "postcode": "${address.postcode}",
+      "latitude": "${address.latitude?string["0.#######"]}",
+      "longitude": "${address.longitude?string["0.#######"]}",
+      "fieldcoordinatorId": "${outcome.coordinatorId}",
+      "fieldofficerId": "${outcome.officerId}",
       "oa":"${oa}",
       "region": "${region}"
     }
   }
-}
 }

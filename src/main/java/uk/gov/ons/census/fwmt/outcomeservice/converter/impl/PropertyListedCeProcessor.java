@@ -43,12 +43,12 @@ public class PropertyListedCeProcessor implements OutcomeServiceProcessor {
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
         "survey type", type,
-        "processor", "PROPERTY_LISTED",
+        "processor", "PROPERTY_LISTED_CE",
         "original caseId", String.valueOf(outcome.getCaseId()),
         "Site case Id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"),
-        "addressType", "HH");
+        "addressType", "CE");
 
-    GatewayCache cache = gatewayCacheService.getById(String.valueOf(caseId));
+    GatewayCache cache = gatewayCacheService.getById(String.valueOf(outcome.getSiteCaseId()));
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
@@ -76,19 +76,4 @@ public class PropertyListedCeProcessor implements OutcomeServiceProcessor {
     return caseId;
   }
 
-  private void cacheData(String caseId, OutcomeSuperSetDto outcome) throws GatewayException {
-    GatewayCache cache = gatewayCacheService.getById(String.valueOf(caseId));
-    GatewayCache.GatewayCacheBuilder builder ;
-    if (cache == null)
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Problem creating Outcome Message");
-    else builder = cache.toBuilder();
-
-    gatewayCacheService.save(builder
-        .caseId(caseId)
-        .type(50)
-        .managerTitle(outcome.getCeDetails().getManagerTitle())
-        .managerFirstname(outcome.getCeDetails().getManagerForename())
-        .managerSurname(outcome.getCeDetails().getManagerSurname())
-        .build());
-  }
 }

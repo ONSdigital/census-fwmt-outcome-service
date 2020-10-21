@@ -44,12 +44,12 @@ public class PropertyListedHhProcessor implements OutcomeServiceProcessor {
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
         "survey type", type,
-        "processor", "PROPERTY_LISTED",
+        "processor", "PROPERTY_LISTED_HH",
         "original caseId", String.valueOf(outcome.getCaseId()),
         "Site case Id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"),
         "addressType", "HH");
 
-    GatewayCache cache = gatewayCacheService.getById(String.valueOf(caseId));
+    GatewayCache cache = gatewayCacheService.getById(String.valueOf(outcome.getSiteCaseId()));
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
