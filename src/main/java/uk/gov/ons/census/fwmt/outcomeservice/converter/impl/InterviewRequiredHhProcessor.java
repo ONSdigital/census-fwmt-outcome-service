@@ -47,10 +47,10 @@ public class InterviewRequiredHhProcessor implements OutcomeServiceProcessor {
         "survey type", type,
         "processor", "INTERVIEW_REQUIRED",
         "original caseId", String.valueOf(outcome.getCaseId()),
-        "Site case Id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"),
+        "Property Listing case Id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"),
         "addressType", "HH");
 
-    GatewayCache cache = gatewayCacheService.getById(String.valueOf(outcome.getSiteCaseId()));
+    GatewayCache plCache = gatewayCacheService.getById(String.valueOf(outcome.getSiteCaseId()));
 
     cacheData(outcome, outcome.getSiteCaseId(), caseId);
 
@@ -63,8 +63,8 @@ public class InterviewRequiredHhProcessor implements OutcomeServiceProcessor {
     root.put("addressType", "HH");
     root.put("addressLevel", "U");
     root.put("interviewRequired", "True");
-    root.put("oa", cache.getOa());
-    root.put("region",cache.getOa().substring(0,2));
+    root.put("oa", plCache.getOa());
+    root.put("region",plCache.getOa().substring(0,2));
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(CCS, root);
 
@@ -87,7 +87,7 @@ public class InterviewRequiredHhProcessor implements OutcomeServiceProcessor {
 
     GatewayCache newCachedJob = gatewayCacheService.getById(newCaseId.toString());
     if (newCachedJob != null) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "New case exists in cache: {}", plCaseId);
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "New case exists in cache: {}", newCaseId);
     }
 
    
