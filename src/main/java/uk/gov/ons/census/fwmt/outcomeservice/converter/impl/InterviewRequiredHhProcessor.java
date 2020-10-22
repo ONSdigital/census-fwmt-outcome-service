@@ -64,7 +64,7 @@ public class InterviewRequiredHhProcessor implements OutcomeServiceProcessor {
     root.put("addressLevel", "U");
     root.put("interviewRequired", "True");
     root.put("oa", plCache.getOa());
-    root.put("region",plCache.getOa().substring(0,2));
+    root.put("region",plCache.getOa().charAt(0));
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(CCS, root);
 

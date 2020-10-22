@@ -60,7 +60,7 @@ public class PropertyListedCeProcessor implements OutcomeServiceProcessor {
     root.put("addressLevel", "E");
     root.put("interviewRequired", "False");
     root.put("oa", plCache.getOa());
-    root.put("region",plCache.getOa().substring(0,2));
+    root.put("region",plCache.getOa().charAt(0));
 
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(CCS, root);
