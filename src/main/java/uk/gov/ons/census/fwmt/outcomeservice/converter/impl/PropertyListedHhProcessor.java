@@ -46,10 +46,10 @@ public class PropertyListedHhProcessor implements OutcomeServiceProcessor {
         "survey type", type,
         "processor", "PROPERTY_LISTED_HH",
         "original caseId", String.valueOf(outcome.getCaseId()),
-        "Site case Id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"),
+        "Property Listing case Id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"),
         "addressType", "HH");
 
-    GatewayCache cache = gatewayCacheService.getById(String.valueOf(outcome.getSiteCaseId()));
+    GatewayCache plCache = gatewayCacheService.getById(String.valueOf(outcome.getSiteCaseId()));
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
@@ -60,8 +60,8 @@ public class PropertyListedHhProcessor implements OutcomeServiceProcessor {
     root.put("addressType", "HH");
     root.put("addressLevel", "U");
     root.put("interviewRequired", "False");
-    root.put("oa", cache.getOa());
-    root.put("region",cache.getOa().substring(0,2));
+    root.put("oa", plCache.getOa());
+    root.put("region",plCache.getOa().charAt(0));
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(CCS, root);
 

@@ -47,10 +47,10 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
         "survey type", type,
         "processor", "INTERVIEW_REQUIRED",
         "original caseId", String.valueOf(outcome.getCaseId()),
-        "Site case Id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"),
+        "Propety Listing case Id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"),
         "addressType", "CE");
 
-    GatewayCache cache = gatewayCacheService.getById(String.valueOf(outcome.getSiteCaseId()));
+    GatewayCache plCache = gatewayCacheService.getById(String.valueOf(outcome.getSiteCaseId()));
 
     cacheData(outcome, outcome.getSiteCaseId(), caseId);
     
@@ -63,8 +63,8 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
     root.put("addressType", "CE");
     root.put("addressLevel", "E");
     root.put("interviewRequired", "True");
-    root.put("oa", cache.getOa());
-    root.put("region",cache.getOa().substring(0,2));
+    root.put("oa", plCache.getOa());
+    root.put("region",plCache.getOa().charAt(0));
 
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(CCS, root);
