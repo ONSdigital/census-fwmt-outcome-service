@@ -81,6 +81,9 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
   }
   
   private void cacheData(OutcomeSuperSetDto outcome, UUID plCaseId, UUID newCaseId) throws GatewayException {
+    String managerTitle = "";
+    String managerForename = "";
+    String managerSurname = "";
     GatewayCache parentCacheJob = gatewayCacheService.getById(plCaseId.toString());
     if (parentCacheJob == null) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Parent case does not exist in cache: {}", plCaseId);
@@ -91,6 +94,17 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "New case exists in cache: {}", plCaseId);
     }
 
+    if (outcome.getCeDetails() != null){
+      if (outcome.getCeDetails().getManagerTitle() != null) {
+        managerTitle = outcome.getCeDetails().getManagerTitle();
+      }
+      if (outcome.getCeDetails().getManagerForename() != null) {
+        managerForename = outcome.getCeDetails().getManagerForename();
+      }
+      if (outcome.getCeDetails().getManagerSurname() != null) {
+        managerSurname = outcome.getCeDetails().getManagerSurname();
+      }
+    }
    
     gatewayCacheService.save(GatewayCache.builder()
         .caseId(newCaseId.toString())
@@ -98,9 +112,9 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
         .accessInfo(outcome.getAccessInfo())
         .careCodes(OutcomeSuperSetDto.careCodesToText(outcome.getCareCodes()))
         .type(50)
-        .managerTitle(outcome.getCeDetails().getManagerTitle())
-        .managerFirstname(outcome.getCeDetails().getManagerForename())
-        .managerSurname(outcome.getCeDetails().getManagerSurname())
+        .managerTitle(managerTitle)
+        .managerFirstname(managerForename)
+        .managerSurname(managerSurname)
         .build());
   }
 
