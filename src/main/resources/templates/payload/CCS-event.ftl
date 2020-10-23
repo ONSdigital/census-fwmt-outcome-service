@@ -23,8 +23,8 @@
           "postcode": "${address.postcode}",
       "latitude": "${address.latitude?string["0.#######"]}",
       "longitude": "${address.longitude?string["0.#######"]}",
-      "fieldcoordinatorId": "${outcome.coordinatorId}",
-      "fieldofficerId": "${outcome.officerId}",
+      "fieldCoordinatorId": "${outcome.coordinatorId}",
+      "fieldOfficerId": "${outcome.officerId}",
       "oa":"${oa}",
       "region": "${region}"
     }
