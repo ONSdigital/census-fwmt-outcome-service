@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.INTERVIEW_REQUIRED;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.CCS;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.CCS_ADDRESS_LISTED;
 
 @Component("INTERVIEW_REQUIRED_CE")
 public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
@@ -67,7 +67,7 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
     root.put("region",plCache.getOa().charAt(0));
 
 
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(CCS, root);
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(CCS_ADDRESS_LISTED, root);
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
