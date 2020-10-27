@@ -101,6 +101,7 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
         .managerTitle(outcome.getCeDetails().getManagerTitle())
         .managerFirstname(outcome.getCeDetails().getManagerForename())
         .managerSurname(outcome.getCeDetails().getManagerSurname())
+        .managerContactNumber(outcome.getCeDetails().getContactPhone())
         .build());
   }
 
