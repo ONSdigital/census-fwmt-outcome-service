@@ -96,10 +96,6 @@ public class InterviewRequiredHhProcessor implements OutcomeServiceProcessor {
         .accessInfo(outcome.getAccessInfo())
         .careCodes(OutcomeSuperSetDto.careCodesToText(outcome.getCareCodes()))
         .type(50)
-        .managerTitle(outcome.getCeDetails().getManagerTitle())
-        .managerFirstname(outcome.getCeDetails().getManagerForename())
-        .managerSurname(outcome.getCeDetails().getManagerSurname())
-        .managerContactNumber(outcome.getCeDetails().getContactPhone())
         .build());
   }
 }
