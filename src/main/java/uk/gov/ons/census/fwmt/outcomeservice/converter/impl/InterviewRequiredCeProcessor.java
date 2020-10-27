@@ -84,6 +84,7 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
     String managerTitle = "";
     String managerForename = "";
     String managerSurname = "";
+    String managerPhone = "";
     GatewayCache parentCacheJob = gatewayCacheService.getById(plCaseId.toString());
     if (parentCacheJob == null) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Parent case does not exist in cache: {}", plCaseId);
@@ -104,8 +105,11 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
       if (outcome.getCeDetails().getManagerSurname() != null) {
         managerSurname = outcome.getCeDetails().getManagerSurname();
       }
+      if (outcome.getCeDetails().getContactPhone() != null) {
+        managerPhone = outcome.getCeDetails().getContactPhone();
+      }
     }
-   
+
     gatewayCacheService.save(GatewayCache.builder()
         .caseId(newCaseId.toString())
         .existsInFwmt(false)
@@ -115,7 +119,7 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
         .managerTitle(managerTitle)
         .managerFirstname(managerForename)
         .managerSurname(managerSurname)
+        .managerContactNumber(managerPhone)
         .build());
   }
-
 }
