@@ -91,7 +91,6 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "New case exists in cache: {}", plCaseId);
     }
 
-   
     gatewayCacheService.save(GatewayCache.builder()
         .caseId(newCaseId.toString())
         .existsInFwmt(false)
@@ -104,5 +103,4 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
         .managerContactNumber(outcome.getCeDetails().getContactPhone())
         .build());
   }
-
 }

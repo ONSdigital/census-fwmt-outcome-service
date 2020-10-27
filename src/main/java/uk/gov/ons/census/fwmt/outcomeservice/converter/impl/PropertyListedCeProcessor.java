@@ -62,7 +62,6 @@ public class PropertyListedCeProcessor implements OutcomeServiceProcessor {
     root.put("oa", plCache.getOa());
     root.put("region",plCache.getOa().charAt(0));
 
-
     String outcomeEvent = TemplateCreator.createOutcomeMessage(CCS, root);
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
