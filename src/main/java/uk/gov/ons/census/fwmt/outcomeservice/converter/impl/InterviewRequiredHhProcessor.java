@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.INTERVIEW_REQUIRED;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.CCS;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.CCS_ADDRESS_LISTED;
 
 @Component("INTERVIEW_REQUIRED_HH")
 public class InterviewRequiredHhProcessor implements OutcomeServiceProcessor {
@@ -66,15 +66,15 @@ public class InterviewRequiredHhProcessor implements OutcomeServiceProcessor {
     root.put("oa", plCache.getOa());
     root.put("region",plCache.getOa().charAt(0));
 
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(CCS, root);
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(CCS_ADDRESS_LISTED, root);
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
-        GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
+        GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
         "survey type", type,
         "type", INTERVIEW_REQUIRED.toString(),
         "transactionId", outcome.getTransactionId().toString(),
-        "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
+        "routing key", GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
 
     return caseId;
   }

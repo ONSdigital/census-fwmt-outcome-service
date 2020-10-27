@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.INTERVIEW_REQUIRED;
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.CCS;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.CCS_ADDRESS_LISTED;
 
 @Component("INTERVIEW_REQUIRED_CE")
 public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
@@ -67,20 +67,23 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
     root.put("region",plCache.getOa().charAt(0));
 
 
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(CCS, root);
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(CCS_ADDRESS_LISTED, root);
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
-        GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
+        GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
         "survey type", type,
         "type", INTERVIEW_REQUIRED.toString(),
         "transactionId", outcome.getTransactionId().toString(),
-        "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
+        "routing key", GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
 
     return caseId;
   }
   
   private void cacheData(OutcomeSuperSetDto outcome, UUID plCaseId, UUID newCaseId) throws GatewayException {
+    String managerTitle = "";
+    String managerForename = "";
+    String managerSurname = "";
     GatewayCache parentCacheJob = gatewayCacheService.getById(plCaseId.toString());
     if (parentCacheJob == null) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Parent case does not exist in cache: {}", plCaseId);
@@ -89,6 +92,18 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
     GatewayCache newCachedJob = gatewayCacheService.getById(newCaseId.toString());
     if (newCachedJob != null) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "New case exists in cache: {}", plCaseId);
+    }
+
+    if (outcome.getCeDetails() != null){
+      if (outcome.getCeDetails().getManagerTitle() != null) {
+        managerTitle = outcome.getCeDetails().getManagerTitle();
+      }
+      if (outcome.getCeDetails().getManagerForename() != null) {
+        managerForename = outcome.getCeDetails().getManagerForename();
+      }
+      if (outcome.getCeDetails().getManagerSurname() != null) {
+        managerSurname = outcome.getCeDetails().getManagerSurname();
+      }
     }
 
     gatewayCacheService.save(GatewayCache.builder()
