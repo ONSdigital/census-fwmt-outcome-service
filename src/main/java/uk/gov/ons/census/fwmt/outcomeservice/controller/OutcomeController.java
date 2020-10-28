@@ -199,7 +199,7 @@ public class OutcomeController implements OutcomeApi {
 
   @Override
   public ResponseEntity<Void> ccsInterview(String caseID, CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException {
-    gatewayEventManager.triggerEvent("N/A", COMET_CCS_INT_RECEIVED,
+    gatewayEventManager.triggerEvent(caseID, COMET_CCS_INT_RECEIVED,
         "transactionId", ccsInterviewOutcome.getTransactionId().toString(),
         "Survey type", "CCS INT",
         "Primary Outcome", ccsInterviewOutcome.getPrimaryOutcomeDescription(),
