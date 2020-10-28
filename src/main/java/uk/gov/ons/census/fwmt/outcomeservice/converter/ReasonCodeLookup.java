@@ -8,11 +8,7 @@ public class ReasonCodeLookup {
   private final Map<String, String> reasonCodeLookupMap = new HashMap<>();
 
   public String getLookup(String outcomeCode) {
-    if (reasonCodeLookupMap.get(outcomeCode) == null) {
-      return "NOT_FOUND";
-    } else {
-      return reasonCodeLookupMap.get(outcomeCode);
-    }
+    return reasonCodeLookupMap.get(outcomeCode) != null ? reasonCodeLookupMap.get(outcomeCode) : "NOT FOUND";
   }
 
   public void add(String productCode, String processorNames) {
