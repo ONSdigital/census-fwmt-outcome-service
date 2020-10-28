@@ -5,18 +5,18 @@ import java.util.Map;
 
 public class ReasonCodeLookup {
 
-  private final Map<String, String> spgReasonCodeMap = new HashMap<>();
+  private final Map<String, String> reasonCodeLookupMap = new HashMap<>();
 
   public String getLookup(String outcomeCode) {
-    if (spgReasonCodeMap.get(outcomeCode) == null) {
+    if (reasonCodeLookupMap.get(outcomeCode) == null) {
       return "NOT_FOUND";
     } else {
-      return spgReasonCodeMap.get(outcomeCode);
+      return reasonCodeLookupMap.get(outcomeCode);
     }
   }
 
   public void add(String productCode, String processorNames) {
-    spgReasonCodeMap.put(productCode, processorNames);
+    reasonCodeLookupMap.put(productCode, processorNames);
   }
 
 }
