@@ -114,7 +114,7 @@ public class OutcomeController implements OutcomeApi {
         "Secondary Outcome", newUnitAddress.getSecondaryOutcomeDescription(),
         "Outcome code", newUnitAddress.getOutcomeCode(),
         "SPGNewUnitAddress", newUnitAddress.toString(),
-    "SPGNewUnitAddress", newUnitAddress.toString());
+        "SPGNewUnitAddress", newUnitAddress.toString());
 
     outcomePreprocessingProducer.sendSpgNewUnitAddressToPreprocessingQueue(newUnitAddress);
 
@@ -206,6 +206,7 @@ public class OutcomeController implements OutcomeApi {
         "Secondary Outcome", ccsInterviewOutcome.getSecondaryOutcomeDescription(),
         "Outcome code", ccsInterviewOutcome.getOutcomeCode());
 
+    ccsInterviewOutcome.setCaseId(UUID.fromString(caseID));
     outcomePreprocessingProducer.sendCcsInterviewToPreprocessingQueue(ccsInterviewOutcome);
 
     return new ResponseEntity<>(HttpStatus.OK);
