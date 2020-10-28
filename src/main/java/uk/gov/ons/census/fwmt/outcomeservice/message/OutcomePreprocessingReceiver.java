@@ -46,7 +46,7 @@ public class OutcomePreprocessingReceiver {
   
   public static final String PREPROCESSING_CCS_PL_OUTCOME = "PREPROCESSING_CCS_PL_OUTCOME";
   
-  public static final String PREPROCESSING_CCS_INT_OUTCOME = "PREPROCESSING_CCS_PL_OUTCOME";
+  public static final String PREPROCESSING_CCS_INT_OUTCOME = "PREPROCESSING_CCS_INT_OUTCOME";
 
   @Autowired
   private OutcomeService delegate;
@@ -157,7 +157,6 @@ public class OutcomePreprocessingReceiver {
 
   public void processMessage(CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException {
     OutcomeSuperSetDto outcomeDTO = mapperFacade.map(ccsInterviewOutcome, OutcomeSuperSetDto.class);
-    outcomeDTO.setCaseId(UUID.randomUUID());
     gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), PREPROCESSING_CCS_INT_OUTCOME,
         "Survey type", "CCS INT",
         "Outcome code", outcomeDTO.getOutcomeCode(),

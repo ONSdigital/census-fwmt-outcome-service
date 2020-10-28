@@ -114,7 +114,7 @@ public class OutcomeController implements OutcomeApi {
         "Secondary Outcome", newUnitAddress.getSecondaryOutcomeDescription(),
         "Outcome code", newUnitAddress.getOutcomeCode(),
         "SPGNewUnitAddress", newUnitAddress.toString(),
-    "SPGNewUnitAddress", newUnitAddress.toString());
+        "SPGNewUnitAddress", newUnitAddress.toString());
 
     outcomePreprocessingProducer.sendSpgNewUnitAddressToPreprocessingQueue(newUnitAddress);
 
@@ -199,13 +199,14 @@ public class OutcomeController implements OutcomeApi {
 
   @Override
   public ResponseEntity<Void> ccsInterview(String caseID, CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException {
-    gatewayEventManager.triggerEvent("N/A", COMET_CCS_INT_RECEIVED,
+    gatewayEventManager.triggerEvent(caseID, COMET_CCS_INT_RECEIVED,
         "transactionId", ccsInterviewOutcome.getTransactionId().toString(),
         "Survey type", "CCS INT",
         "Primary Outcome", ccsInterviewOutcome.getPrimaryOutcomeDescription(),
         "Secondary Outcome", ccsInterviewOutcome.getSecondaryOutcomeDescription(),
         "Outcome code", ccsInterviewOutcome.getOutcomeCode());
 
+    ccsInterviewOutcome.setCaseId(UUID.fromString(caseID));
     outcomePreprocessingProducer.sendCcsInterviewToPreprocessingQueue(ccsInterviewOutcome);
 
     return new ResponseEntity<>(HttpStatus.OK);
