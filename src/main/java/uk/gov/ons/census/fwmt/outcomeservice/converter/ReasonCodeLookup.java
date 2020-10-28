@@ -8,7 +8,11 @@ public class ReasonCodeLookup {
   private final Map<String, String> spgReasonCodeMap = new HashMap<>();
 
   public String getLookup(String outcomeCode) {
-    return spgReasonCodeMap.get(outcomeCode);
+    if (spgReasonCodeMap.get(outcomeCode) == null) {
+      return "NOT_FOUND";
+    } else {
+      return spgReasonCodeMap.get(outcomeCode);
+    }
   }
 
   public void add(String productCode, String processorNames) {

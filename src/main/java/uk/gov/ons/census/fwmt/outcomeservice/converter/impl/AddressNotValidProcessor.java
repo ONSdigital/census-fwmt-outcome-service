@@ -25,6 +25,8 @@ public class AddressNotValidProcessor implements OutcomeServiceProcessor {
 
   public static final String OUTCOME_SENT = "OUTCOME_SENT";
 
+  public static final String FAILED_TO_LOOKUP_REASON_CODE = "FAILED_TO_LOOKUP_REASON_CODE";
+
   @Autowired
   private DateFormat dateFormat;
 
@@ -48,6 +50,14 @@ public class AddressNotValidProcessor implements OutcomeServiceProcessor {
     "Site case Id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
     String reasonCode = reasonCodeLookup.getLookup(outcome.getOutcomeCode());
+
+    if (reasonCode.equals("NOT_FOUND")) {
+      gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "No reason code found",
+          String.valueOf(outcome.getCaseId()), FAILED_TO_LOOKUP_REASON_CODE,
+          "Survey type", type,
+          "Outcome code", outcome.getOutcomeCode(),
+          "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
+    }
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
