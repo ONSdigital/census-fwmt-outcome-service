@@ -65,6 +65,8 @@ public class PropertyListedCeProcessor implements OutcomeServiceProcessor {
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(CCS_ADDRESS_LISTED, root);
 
+    cacheData(outcome, outcome.getSiteCaseId(), caseId);
+
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
@@ -74,6 +76,49 @@ public class PropertyListedCeProcessor implements OutcomeServiceProcessor {
         "routing key", GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
 
     return caseId;
+  }
+
+  private void cacheData(OutcomeSuperSetDto outcome, UUID plCaseId, UUID newCaseId) throws GatewayException {
+    String managerTitle = "";
+    String managerForename = "";
+    String managerSurname = "";
+    String managerPhone = "";
+    GatewayCache parentCacheJob = gatewayCacheService.getById(plCaseId.toString());
+    if (parentCacheJob == null) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Parent case does not exist in cache: {}", plCaseId);
+    }
+
+    GatewayCache newCachedJob = gatewayCacheService.getById(newCaseId.toString());
+    if (newCachedJob != null) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "New case exists in cache: {}", plCaseId);
+    }
+
+    if (outcome.getCeDetails() != null){
+      if (outcome.getCeDetails().getManagerTitle() != null) {
+        managerTitle = outcome.getCeDetails().getManagerTitle();
+      }
+      if (outcome.getCeDetails().getManagerForename() != null) {
+        managerForename = outcome.getCeDetails().getManagerForename();
+      }
+      if (outcome.getCeDetails().getManagerSurname() != null) {
+        managerSurname = outcome.getCeDetails().getManagerSurname();
+      }
+      if (outcome.getCeDetails().getContactPhone() != null) {
+        managerPhone = outcome.getCeDetails().getContactPhone();
+      }
+    }
+
+    gatewayCacheService.save(GatewayCache.builder()
+        .caseId(newCaseId.toString())
+        .existsInFwmt(false)
+        .accessInfo(outcome.getAccessInfo())
+        .careCodes(OutcomeSuperSetDto.careCodesToText(outcome.getCareCodes()))
+        .type(50)
+        .managerTitle(managerTitle)
+        .managerFirstname(managerForename)
+        .managerSurname(managerSurname)
+        .managerContactNumber(managerPhone)
+        .build());
   }
 
 }
