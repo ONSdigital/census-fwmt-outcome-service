@@ -3,7 +3,7 @@
 "collectionCase":{
 "id":"${caseId}",
 <#if surveyType != "HH">
-    "ceExpectedCapacity":"${usualResidents}",
+    "ceExpectedCapacity": ${usualResidents},
 </#if>
 "address" : {
 <#if surveyType != "HH">
