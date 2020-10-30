@@ -1,6 +1,7 @@
 package uk.gov.ons.census.fwmt.outcomeservice.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.models.auth.In;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -61,6 +62,12 @@ public class GatewayCache {
 
   @Column(name = "manager_number")
   public String managerContactNumber;
+
+  @Column(name = "usual_residents")
+  public Integer usualResidents;
+
+  @Column(name = "bedspaces")
+  public Integer bedspaces;
 
   // TODO : Probably move this object to common so its in one location
 
