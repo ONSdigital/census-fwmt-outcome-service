@@ -50,7 +50,7 @@ public class InterviewRequiredHhProcessor implements OutcomeServiceProcessor {
         "Property Listing case Id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"),
         "addressType", "HH");
 
-    GatewayCache plCache = gatewayCacheService.getById(String.valueOf(outcome.getSiteCaseId()));
+    GatewayCache plCache = gatewayCacheService.getById(String.valueOf(outcome.getCaseId()));
 
     cacheData(outcome, caseId);
 

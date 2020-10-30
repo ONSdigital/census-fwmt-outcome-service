@@ -50,7 +50,7 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
         "Propety Listing case Id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"),
         "addressType", "CE");
 
-    GatewayCache plCache = gatewayCacheService.getById(String.valueOf(outcome.getSiteCaseId()));
+    GatewayCache plCache = gatewayCacheService.getById(String.valueOf(caseId));
 
     cacheData(outcome, caseId);
     
