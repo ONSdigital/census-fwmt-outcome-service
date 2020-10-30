@@ -1,7 +1,6 @@
 package uk.gov.ons.census.fwmt.outcomeservice.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.models.auth.In;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
