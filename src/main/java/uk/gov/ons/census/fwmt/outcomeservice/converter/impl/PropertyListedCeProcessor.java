@@ -65,7 +65,7 @@ public class PropertyListedCeProcessor implements OutcomeServiceProcessor {
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(CCS_ADDRESS_LISTED, root);
 
-    cacheData(outcome, outcome.getSiteCaseId(), caseId);
+//    cacheData(outcome.getSiteCaseId(), caseId);
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
@@ -78,57 +78,17 @@ public class PropertyListedCeProcessor implements OutcomeServiceProcessor {
     return caseId;
   }
 
-  private void cacheData(OutcomeSuperSetDto outcome, UUID plCaseId, UUID newCaseId) throws GatewayException {
-    String managerTitle = "";
-    String managerForename = "";
-    String managerSurname = "";
-    String managerPhone = "";
-    int usualResidents = 0;
-    int bedspaces = 0;
-    GatewayCache parentCacheJob = gatewayCacheService.getById(plCaseId.toString());
-    if (parentCacheJob == null) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Parent case does not exist in cache: {}", plCaseId);
-    }
-
-    GatewayCache newCachedJob = gatewayCacheService.getById(newCaseId.toString());
-    if (newCachedJob != null) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "New case exists in cache: {}", plCaseId);
-    }
-
-    if (outcome.getCeDetails() != null){
-      if (outcome.getCeDetails().getManagerTitle() != null) {
-        managerTitle = outcome.getCeDetails().getManagerTitle();
-      }
-      if (outcome.getCeDetails().getManagerForename() != null) {
-        managerForename = outcome.getCeDetails().getManagerForename();
-      }
-      if (outcome.getCeDetails().getManagerSurname() != null) {
-        managerSurname = outcome.getCeDetails().getManagerSurname();
-      }
-      if (outcome.getCeDetails().getContactPhone() != null) {
-        managerPhone = outcome.getCeDetails().getContactPhone();
-      }
-      if (outcome.getCeDetails().getUsualResidents() != null) {
-        usualResidents = outcome.getCeDetails().getUsualResidents();
-      }
-      if (outcome.getCeDetails().getBedspaces() != null) {
-        bedspaces = outcome.getCeDetails().getBedspaces();
-      }
-    }
-
-    gatewayCacheService.save(GatewayCache.builder()
-        .caseId(newCaseId.toString())
-        .existsInFwmt(false)
-        .accessInfo(outcome.getAccessInfo())
-        .careCodes(OutcomeSuperSetDto.careCodesToText(outcome.getCareCodes()))
-        .type(50)
-        .managerTitle(managerTitle)
-        .managerFirstname(managerForename)
-        .managerSurname(managerSurname)
-        .managerContactNumber(managerPhone)
-        .usualResidents(usualResidents)
-        .bedspaces(bedspaces)
-        .build());
-  }
-
+  // This may not be needed
+//  private void cacheData(UUID plCaseId, UUID newCaseId) throws GatewayException {
+//    GatewayCache parentCacheJob = gatewayCacheService.getById(plCaseId.toString());
+//    if (parentCacheJob == null) {
+//      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Parent case does not exist in cache: {}",
+//          plCaseId);
+//    }
+//
+//    GatewayCache newCachedJob = gatewayCacheService.getById(newCaseId.toString());
+//    if (newCachedJob != null) {
+//      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "New case exists in cache: {}", plCaseId);
+//    }
+//  }
 }

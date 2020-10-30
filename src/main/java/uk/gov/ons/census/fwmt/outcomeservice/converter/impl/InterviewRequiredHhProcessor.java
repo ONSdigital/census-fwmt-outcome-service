@@ -52,7 +52,7 @@ public class InterviewRequiredHhProcessor implements OutcomeServiceProcessor {
 
     GatewayCache plCache = gatewayCacheService.getById(String.valueOf(outcome.getSiteCaseId()));
 
-    cacheData(outcome, outcome.getSiteCaseId(), caseId);
+    cacheData(outcome, caseId);
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
@@ -79,16 +79,18 @@ public class InterviewRequiredHhProcessor implements OutcomeServiceProcessor {
     return caseId;
   }
 
-  private void cacheData(OutcomeSuperSetDto outcome, UUID plCaseId, UUID newCaseId) throws GatewayException {
-    GatewayCache parentCacheJob = gatewayCacheService.getById(plCaseId.toString());
-    if (parentCacheJob == null) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Parent case does not exist in cache: {}", plCaseId);
-    }
+  private void cacheData(OutcomeSuperSetDto outcome, UUID newCaseId) throws GatewayException {
 
-    GatewayCache newCachedJob = gatewayCacheService.getById(newCaseId.toString());
-    if (newCachedJob != null) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "New case exists in cache: {}", newCaseId);
-    }
+    // This may not be needed
+//    GatewayCache parentCacheJob = gatewayCacheService.getById(plCaseId.toString());
+//    if (parentCacheJob == null) {
+//      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Parent case does not exist in cache: {}", plCaseId);
+//    }
+//
+//    GatewayCache newCachedJob = gatewayCacheService.getById(newCaseId.toString());
+//    if (newCachedJob != null) {
+//      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "New case exists in cache: {}", newCaseId);
+//    }
 
     gatewayCacheService.save(GatewayCache.builder()
         .caseId(newCaseId.toString())

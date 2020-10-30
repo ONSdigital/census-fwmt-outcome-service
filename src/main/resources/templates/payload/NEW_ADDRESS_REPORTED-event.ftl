@@ -44,7 +44,7 @@
     "region" :"${region}"
 }
     <#if usualResidents??>
-    ,"ceExpectedCapacity" : "${usualResidents}"
+    ,"ceExpectedCapacity" : "${usualResidents?c}"
     </#if>
 }
 }
