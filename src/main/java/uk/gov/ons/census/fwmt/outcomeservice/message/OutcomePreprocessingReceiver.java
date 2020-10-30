@@ -146,7 +146,6 @@ public class OutcomePreprocessingReceiver {
 
   public void processMessage(CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException {
     OutcomeSuperSetDto outcomeDTO = mapperFacade.map(ccsPropertyListingOutcome, OutcomeSuperSetDto.class);
-    outcomeDTO.setCaseId(UUID.randomUUID());
     gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), PREPROCESSING_CCS_PL_OUTCOME,
         "Survey type", "CCS PL",
         "Outcome code", outcomeDTO.getOutcomeCode(),

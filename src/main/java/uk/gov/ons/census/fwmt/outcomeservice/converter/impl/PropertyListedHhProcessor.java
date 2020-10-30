@@ -41,23 +41,22 @@ public class PropertyListedHhProcessor implements OutcomeServiceProcessor {
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
+    UUID newCaseId = UUID.randomUUID();
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
         "survey type", type,
         "processor", "PROPERTY_LISTED_HH",
         "original caseId", String.valueOf(outcome.getCaseId()),
-        "Property Listing case Id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"),
+        "Property Listing case Id", String.valueOf(newCaseId),
         "addressType", "HH");
 
-    GatewayCache plCache = gatewayCacheService.getById(String.valueOf(outcome.getSiteCaseId()));
-
-//    cacheData(outcome.getSiteCaseId(), caseId);
+    GatewayCache plCache = gatewayCacheService.getById(String.valueOf(caseId));
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
     root.put("outcome", outcome);
     root.put("address", outcome.getAddress());
-    root.put("caseId", caseId);
+    root.put("caseId", newCaseId);
     root.put("eventDate", eventDateTime);
     root.put("addressType", "HH");
     root.put("addressLevel", "U");
@@ -77,18 +76,4 @@ public class PropertyListedHhProcessor implements OutcomeServiceProcessor {
 
     return caseId;
   }
-
-  // This is possibly not required
-//  private void cacheData(UUID plCaseId, UUID newCaseId) throws GatewayException {
-//    GatewayCache parentCacheJob = gatewayCacheService.getById(plCaseId.toString());
-//    if (parentCacheJob == null) {
-//      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Parent case does not exist in cache: {}",
-//          plCaseId);
-//    }
-//
-//    GatewayCache newCachedJob = gatewayCacheService.getById(newCaseId.toString());
-//    if (newCachedJob != null) {
-//      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "New case exists in cache: {}", newCaseId);
-//    }
-//  }
 }
