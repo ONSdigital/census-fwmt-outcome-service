@@ -52,7 +52,7 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
 
     GatewayCache plCache = gatewayCacheService.getById(String.valueOf(outcome.getSiteCaseId()));
 
-    cacheData(outcome, outcome.getSiteCaseId(), caseId);
+    cacheData(outcome, caseId);
     
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
@@ -80,22 +80,24 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
     return caseId;
   }
   
-  private void cacheData(OutcomeSuperSetDto outcome, UUID plCaseId, UUID newCaseId) throws GatewayException {
+  private void cacheData(OutcomeSuperSetDto outcome, UUID newCaseId) throws GatewayException {
     String managerTitle = "";
     String managerForename = "";
     String managerSurname = "";
     String managerPhone = "";
     int usualResidents = 0;
     int bedspaces = 0;
-    GatewayCache parentCacheJob = gatewayCacheService.getById(plCaseId.toString());
-    if (parentCacheJob == null) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Parent case does not exist in cache: {}", plCaseId);
-    }
 
-    GatewayCache newCachedJob = gatewayCacheService.getById(newCaseId.toString());
-    if (newCachedJob != null) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "New case exists in cache: {}", plCaseId);
-    }
+    // This possibly not needed
+//    GatewayCache parentCacheJob = gatewayCacheService.getById(plCaseId.toString());
+//    if (parentCacheJob == null) {
+//      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Parent case does not exist in cache: {}", plCaseId);
+//    }
+//
+//    GatewayCache newCachedJob = gatewayCacheService.getById(newCaseId.toString());
+//    if (newCachedJob != null) {
+//      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "New case exists in cache: {}", plCaseId);
+//    }
 
     if (outcome.getCeDetails() != null){
       if (outcome.getCeDetails().getManagerTitle() != null) {

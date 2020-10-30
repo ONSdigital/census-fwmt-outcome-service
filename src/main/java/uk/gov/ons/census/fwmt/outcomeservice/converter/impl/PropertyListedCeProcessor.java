@@ -65,7 +65,7 @@ public class PropertyListedCeProcessor implements OutcomeServiceProcessor {
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(CCS_ADDRESS_LISTED, root);
 
-    cacheData(outcome, outcome.getSiteCaseId(), caseId);
+//    cacheData(outcome.getSiteCaseId(), caseId);
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
@@ -78,18 +78,17 @@ public class PropertyListedCeProcessor implements OutcomeServiceProcessor {
     return caseId;
   }
 
-  private void cacheData(OutcomeSuperSetDto outcome, UUID plCaseId, UUID newCaseId) throws GatewayException {
-
-    GatewayCache parentCacheJob = gatewayCacheService.getById(plCaseId.toString());
-    if (parentCacheJob == null) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Parent case does not exist in cache: {}",
-          plCaseId);
-    }
-
-    GatewayCache newCachedJob = gatewayCacheService.getById(newCaseId.toString());
-    if (newCachedJob != null) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "New case exists in cache: {}", plCaseId);
-    }
-
-  }
+  // This may not be needed
+//  private void cacheData(UUID plCaseId, UUID newCaseId) throws GatewayException {
+//    GatewayCache parentCacheJob = gatewayCacheService.getById(plCaseId.toString());
+//    if (parentCacheJob == null) {
+//      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Parent case does not exist in cache: {}",
+//          plCaseId);
+//    }
+//
+//    GatewayCache newCachedJob = gatewayCacheService.getById(newCaseId.toString());
+//    if (newCachedJob != null) {
+//      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "New case exists in cache: {}", plCaseId);
+//    }
+//  }
 }
