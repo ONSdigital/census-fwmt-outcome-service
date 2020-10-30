@@ -125,10 +125,10 @@ public interface OutcomeApi {
       @ApiResponse(code = 200, message = "Case Outcome received"),
       @ApiResponse(code = 401, message = "UNAUTHORIZED"),
       @ApiResponse(code = 403, message = "FORBIDDEN")})
-  @RequestMapping(value = "/ccsPropertyListingOutcome/{caseID}",
+  @RequestMapping(value = "/ccsPropertyListingOutcome",
       produces = {"application/json"},
       method = RequestMethod.POST)
-  ResponseEntity<Void> ccsPropertyListing(@PathVariable("caseID") String caseID, @RequestBody CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException;
+  ResponseEntity<Void> ccsPropertyListing(@RequestBody CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException;
 
   @ApiOperation(value = "Post a CCS Interview outcome to the FWMT Gateway")
   @ApiResponses(value = {
