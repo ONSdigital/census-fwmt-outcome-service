@@ -3,8 +3,6 @@
 "collectionCase":{
 "id":"${caseId}",
 <#if surveyType != "HH">
-
-cfg.setNumberFormat("0.######");
     "ceExpectedCapacity":"${usualResidents?c}",
 </#if>
 "address" : {
