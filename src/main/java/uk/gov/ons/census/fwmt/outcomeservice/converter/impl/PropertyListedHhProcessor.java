@@ -81,20 +81,13 @@ public class PropertyListedHhProcessor implements OutcomeServiceProcessor {
   private void cacheData(OutcomeSuperSetDto outcome, UUID plCaseId, UUID newCaseId) throws GatewayException {
     GatewayCache parentCacheJob = gatewayCacheService.getById(plCaseId.toString());
     if (parentCacheJob == null) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Parent case does not exist in cache: {}", plCaseId);
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Parent case does not exist in cache: {}",
+          plCaseId);
     }
 
     GatewayCache newCachedJob = gatewayCacheService.getById(newCaseId.toString());
     if (newCachedJob != null) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "New case exists in cache: {}", newCaseId);
     }
-
-    gatewayCacheService.save(GatewayCache.builder()
-        .caseId(newCaseId.toString())
-        .existsInFwmt(false)
-        .accessInfo(outcome.getAccessInfo())
-        .careCodes(OutcomeSuperSetDto.careCodesToText(outcome.getCareCodes()))
-        .type(50)
-        .build());
   }
 }
