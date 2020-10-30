@@ -19,6 +19,7 @@ public class CeDetailsDto {
   private String managerForename;
   private String managerSurname;
   private Integer usualResidents;
+  private Integer bedspaces;
   private String contactPhone;
   private String accessInfo;
   private List<CareCodeDto> careCodes;

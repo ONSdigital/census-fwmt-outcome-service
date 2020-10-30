@@ -62,6 +62,12 @@ public class GatewayCache {
   @Column(name = "manager_number")
   public String managerContactNumber;
 
+  @Column(name = "usual_residents")
+  public Integer usualResidents;
+
+  @Column(name = "bedspaces")
+  public Integer bedspaces;
+
   // TODO : Probably move this object to common so its in one location
 
 }
