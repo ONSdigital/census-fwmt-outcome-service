@@ -183,16 +183,15 @@ public class OutcomeController implements OutcomeApi {
   }
 
   @Override
-  public ResponseEntity<Void> ccsPropertyListing(String caseID, CCSPropertyListingOutcome ccsPropertyListingOutcome)
+  public ResponseEntity<Void> ccsPropertyListing(CCSPropertyListingOutcome ccsPropertyListingOutcome)
       throws GatewayException {
-    gatewayEventManager.triggerEvent(caseID, COMET_CCS_PL_RECEIVED,
+    gatewayEventManager.triggerEvent(String.valueOf(ccsPropertyListingOutcome.getCaseId()), COMET_CCS_PL_RECEIVED,
         "transactionId", ccsPropertyListingOutcome.getTransactionId().toString(),
         "Survey type", "CCS PL",
         "Primary Outcome", ccsPropertyListingOutcome.getPrimaryOutcomeDescription(),
         "Secondary Outcome", ccsPropertyListingOutcome.getSecondaryOutcomeDescription(),
         "Outcome code", ccsPropertyListingOutcome.getOutcomeCode());
 
-    ccsPropertyListingOutcome.setCaseId(UUID.fromString(caseID));
     outcomePreprocessingProducer.sendCcsPropertyListingToPreprocessingQueue(ccsPropertyListingOutcome);
 
     return new ResponseEntity<>(HttpStatus.OK);
