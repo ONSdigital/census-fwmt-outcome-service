@@ -128,7 +128,7 @@ public interface OutcomeApi {
   @RequestMapping(value = "/ccsPropertyListingOutcome",
       produces = {"application/json"},
       method = RequestMethod.POST)
-  ResponseEntity<Void> ccsPropertyListing(@RequestBody CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException;
+  ResponseEntity<Void> ccsPropertyListing(@PathVariable("caseID") String caseID, @RequestBody CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException;
 
   @ApiOperation(value = "Post a CCS Interview outcome to the FWMT Gateway")
   @ApiResponses(value = {

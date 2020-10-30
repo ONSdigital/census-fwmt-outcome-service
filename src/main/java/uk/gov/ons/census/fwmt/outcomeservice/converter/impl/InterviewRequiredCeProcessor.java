@@ -42,30 +42,29 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
+    UUID newCaseId = UUID.randomUUID();
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
         "survey type", type,
         "processor", "INTERVIEW_REQUIRED",
         "original caseId", String.valueOf(outcome.getCaseId()),
-        "Propety Listing case Id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"),
+        "Interview case Id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"),
         "addressType", "CE");
 
     GatewayCache plCache = gatewayCacheService.getById(String.valueOf(caseId));
-
-    cacheData(outcome, caseId);
+    cacheData(outcome, newCaseId);
     
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
     root.put("outcome", outcome);
     root.put("address", outcome.getAddress());
-    root.put("caseId", caseId);
+    root.put("caseId", newCaseId);
     root.put("eventDate", eventDateTime);
     root.put("addressType", "CE");
     root.put("addressLevel", "E");
     root.put("interviewRequired", "True");
     root.put("oa", plCache.getOa());
     root.put("region",plCache.getOa().charAt(0));
-
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(CCS_ADDRESS_LISTED, root);
 
@@ -87,17 +86,6 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
     String managerPhone = "";
     int usualResidents = 0;
     int bedspaces = 0;
-
-    // This possibly not needed
-//    GatewayCache parentCacheJob = gatewayCacheService.getById(plCaseId.toString());
-//    if (parentCacheJob == null) {
-//      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Parent case does not exist in cache: {}", plCaseId);
-//    }
-//
-//    GatewayCache newCachedJob = gatewayCacheService.getById(newCaseId.toString());
-//    if (newCachedJob != null) {
-//      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "New case exists in cache: {}", plCaseId);
-//    }
 
     if (outcome.getCeDetails() != null){
       if (outcome.getCeDetails().getManagerTitle() != null) {
