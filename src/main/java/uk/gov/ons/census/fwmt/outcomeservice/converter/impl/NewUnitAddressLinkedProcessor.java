@@ -68,7 +68,7 @@ public class NewUnitAddressLinkedProcessor implements OutcomeServiceProcessor {
     if (type.equals("CE") && outcome.getCeDetails() != null && outcome.getCeDetails().getUsualResidents() != null) {
       root.put("usualResidents",Math.max(outcome.getCeDetails().getUsualResidents(),1));
     } else {
-      root.put("usualResidents","1");
+      root.put("usualResidents",1);
     }
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(NEW_ADDRESS_REPORTED, root);
