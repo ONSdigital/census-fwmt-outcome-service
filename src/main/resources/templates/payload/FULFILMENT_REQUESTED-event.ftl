@@ -1,5 +1,7 @@
 "fulfilmentRequest" : {
+<#if packcode??>
   "fulfilmentCode": "${packcode}",
+</#if>
   "caseId": "${caseId}",
   "address": {
   },
