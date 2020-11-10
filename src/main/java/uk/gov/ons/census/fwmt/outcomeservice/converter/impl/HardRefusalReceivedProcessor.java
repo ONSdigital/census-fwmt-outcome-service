@@ -35,6 +35,11 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
 
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
+    boolean isHouseHolder = false;
+    String encryptedTitle = "";
+    String encryptedForename = "";
+    String encryptedSurname = "";
+
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
@@ -42,6 +47,13 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     "processor", "HARD_REFUSAL_RECEIVED",
     "original caseId", String.valueOf(outcome.getCaseId()),
     "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+
+    if (outcome.getRefusal() != null) {
+      isHouseHolder = outcome.getRefusal().isHouseholder();
+      encryptedTitle = outcome.getRefusal().getTitle();
+      encryptedForename = outcome.getRefusal().getFirstname();
+      encryptedSurname = outcome.getRefusal().getSurname();
+    }
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
@@ -51,6 +63,10 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     root.put("officerId", outcome.getOfficerId());
     root.put("caseId", caseId);
     root.put("eventDate", eventDateTime);
+    root.put("isHouseHolder", isHouseHolder);
+    root.put("encryptedTitle", encryptedTitle);
+    root.put("encryptedForename", encryptedForename);
+    root.put("encryptedSurname", encryptedSurname);
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root);
 

@@ -122,7 +122,7 @@ public class OutcomePreprocessingProducer {
   public void sendHHOutcomeToPreprocessingQueue(HHOutcome hhOutcome) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, hhOutcome, new MessagePostProcessor() {
-      
+
       @Override
       public Message postProcessMessage(Message message) throws AmqpException {
         long epochMilli = Instant.now().toEpochMilli();

@@ -128,7 +128,7 @@ public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
   }
 
   private void cacheData(String caseId, String individualCaseId) {
-    GatewayCache cache = gatewayCacheService.getById(String.valueOf(caseId));
+    GatewayCache cache = gatewayCacheService.getById(caseId);
     GatewayCacheBuilder builder ;
     if (cache == null) builder = GatewayCache.builder();
     else builder = cache.toBuilder();

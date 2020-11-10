@@ -2,6 +2,7 @@ package uk.gov.ons.census.fwmt.outcomeservice.dto;
 
 import lombok.Data;
 import uk.gov.ons.census.fwmt.common.data.shared.Address;
+import uk.gov.ons.census.fwmt.common.data.shared.Refusal;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,6 +28,7 @@ public class OutcomeSuperSetDto {
   private UUID siteCaseId;
   private UUID originatingCaseId;
   private Boolean dummyInfoCollected;
+  private Refusal refusal;
 
   public static String careCodesToText(List<CareCodeDto> careCodes) {
     if (careCodes == null) return "";
