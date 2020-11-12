@@ -15,6 +15,7 @@ import uk.gov.ons.census.fwmt.outcomeservice.util.EncryptNames;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -98,7 +99,7 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     var publicKeys = new ArrayList<Resource>();
     publicKeys.add(testPublicKey);
     formatNames = EncryptNames.receivedNames(names, publicKeys);
-    return formatNames;
+    return Base64.getEncoder().encodeToString(formatNames.getBytes());
 //    return formatNames.replace("\r", "").replace("\n", "");
   }
 }
