@@ -8,6 +8,8 @@
         <#if addressType == "CE">
           "estabType": "${outcome.ceDetails.establishmentType}",
           "organisationName": "${outcome.ceDetails.establishmentName}",
+        <#else>
+          "estabType": "HOUSEHOLD",
         </#if>
       "addressLevel": "${addressLevel}",
       "addressLine1": "${address.addressLine1}",
