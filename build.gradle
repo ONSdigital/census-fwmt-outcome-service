@@ -115,6 +115,9 @@ dependencies {
 	compile('io.springfox:springfox-swagger-ui:2.9.2')
 	compile('io.springfox:springfox-bean-validators:2.9.2')
 
+    compile 'org.bouncycastle:bcprov-jdk15on:1.61'
+    compile 'org.bouncycastle:bcpg-jdk15on:1.61'
+
 	// https://mvnrepository.com/artifact/org.freemarker/freemarker
 	compile('org.freemarker:freemarker:2.3.28')
 

@@ -2,8 +2,8 @@
 "type": "${refusalType}",
 "agentId": "${officerId}",
 
-<#if (type == "HH" || "NC") && refusalType == "HARD_REFUSAL">
-"isHouseholder": "${refusal.householder}",
+<#if (type == "HH") && refusalType == "HARD_REFUSAL">
+"isHouseholder": "${isHouseHolder?c}",
 "contact": {
 "title": "${encryptedTitle}",
 "forename": "${encryptedForename}",

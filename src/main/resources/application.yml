@@ -68,5 +68,8 @@ outcomeservice:
     path: classpath:/outcomeCodeLookup.txt
   reasonCodeLookup:
     path: classpath:/reasonCodeLookup.txt
+  pgp:
+    publicKey: classpath:testPubKey.asc
+
     
     
