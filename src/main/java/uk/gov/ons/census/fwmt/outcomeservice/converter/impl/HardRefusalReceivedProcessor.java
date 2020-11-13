@@ -41,6 +41,9 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
   @Value("${outcomeservice.pgp.publicKey}")
   private Resource testPublicKey;
 
+  @Value("${outcomeservice.pgp.secondaryPublicKey}")
+  private Resource testSecondaryPublicKey;
+
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     boolean isHouseHolder = false;
@@ -98,6 +101,7 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     String formatNames;
     var publicKeys = new ArrayList<Resource>();
     publicKeys.add(testPublicKey);
+    publicKeys.add(testSecondaryPublicKey);
     formatNames = EncryptNames.receivedNames(names, publicKeys);
     return Base64.getEncoder().encodeToString(formatNames.getBytes());
 //    return formatNames.replace("\r", "").replace("\n", "");
