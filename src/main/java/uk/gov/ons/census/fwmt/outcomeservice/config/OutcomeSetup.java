@@ -9,6 +9,7 @@ import org.springframework.core.io.ResourceLoader;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeLookup;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.ReasonCodeLookup;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.RefusalEncryptionLookup;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,6 +27,10 @@ public class OutcomeSetup {
 
   @Value(value = "${outcomeservice.reasonCodeLookup.path}")
   private String reasonCodeLookupPath;
+
+  @Value(value = "${outcomeservice.refusalEncryptionCodeLookup.path}")
+  private String refusalEncryptionCodeLookupPath;
+
 
   @Bean
   public OutcomeLookup buildOutcomeLookup() throws GatewayException {
@@ -58,5 +63,20 @@ public class OutcomeSetup {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Cannot process reason code lookup");
     }
     return reasonCodeLookup;
+  }
+
+  @Bean
+  public RefusalEncryptionLookup buildRefusalEncryptionCodeLookup() throws GatewayException {
+    String line;
+    Resource resource = resourceLoader.getResource(refusalEncryptionCodeLookupPath);
+    RefusalEncryptionLookup refusalEncryptionLookup = new RefusalEncryptionLookup();
+    try (BufferedReader in = new BufferedReader(new InputStreamReader(resource.getInputStream(), UTF_8))) {
+      while ((line = in.readLine()) != null) {
+        refusalEncryptionLookup.add(line, line);
+      }
+    }catch (IOException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Cannot process transition rule lookup");
+    }
+    return refusalEncryptionLookup;
   }
 }

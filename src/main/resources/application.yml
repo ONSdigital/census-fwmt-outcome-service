@@ -68,6 +68,8 @@ outcomeservice:
     path: classpath:/outcomeCodeLookup.txt
   reasonCodeLookup:
     path: classpath:/reasonCodeLookup.txt
+  refusalEncryptionCodeLookup:
+    path: classpath:/refusalEncryptionCodeLookup.txt
   pgp:
     publicKey: classpath:testPubKey.asc
     secondaryPublicKey: classpath:testSecondaryPubKey.asc

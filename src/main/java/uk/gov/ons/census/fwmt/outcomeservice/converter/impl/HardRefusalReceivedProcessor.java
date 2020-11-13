@@ -7,7 +7,9 @@ import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeLookup;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.RefusalEncryptionLookup;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.OutcomeSuperSetDto;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
@@ -38,6 +40,9 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
   @Autowired
   private GatewayEventManager gatewayEventManager;
 
+  @Autowired
+  private RefusalEncryptionLookup refusalEncryptionLookup;
+
   @Value("${outcomeservice.pgp.publicKey}")
   private Resource testPublicKey;
 
@@ -51,6 +56,8 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     String encryptedForename = "";
     String encryptedSurname = "";
 
+    String refusalCodes = refusalEncryptionLookup.getLookup(outcome.getOutcomeCode());
+
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
@@ -58,17 +65,20 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     "processor", "HARD_REFUSAL_RECEIVED",
     "original caseId", String.valueOf(outcome.getCaseId()),
     "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
-
-    if (outcome.getRefusal() != null) {
-      isHouseHolder = outcome.getRefusal().isHouseholder();
-      encryptedTitle = outcome.getRefusal().getTitle();
-      if (outcome.getRefusal().getMiddlename() != null || !outcome.getRefusal().getMiddlename().equals("")) {
-        String combinedNames = outcome.getRefusal().getFirstname() + " " + outcome.getRefusal().getMiddlename();
-        encryptedForename = returnEncryptedNames(combinedNames);
-      } else {
-        encryptedForename = returnEncryptedNames(outcome.getRefusal().getFirstname());
+    if (refusalCodes != null) {
+      if (outcome.getRefusal() != null && (type.equals("HH") || type.equals("NC"))) {
+        if (outcome.getRefusal().isHouseholder()) {
+          isHouseHolder = outcome.getRefusal().isHouseholder();
+          encryptedTitle = outcome.getRefusal().getTitle();
+          if (outcome.getRefusal().getMiddlename() != null || !outcome.getRefusal().getMiddlename().equals("")) {
+            String combinedNames = outcome.getRefusal().getFirstname() + " " + outcome.getRefusal().getMiddlename();
+            encryptedForename = returnEncryptedNames(combinedNames);
+          } else {
+            encryptedForename = returnEncryptedNames(outcome.getRefusal().getFirstname());
+          }
+          encryptedSurname = returnEncryptedNames(outcome.getRefusal().getSurname());
+        }
       }
-      encryptedSurname = returnEncryptedNames(outcome.getRefusal().getSurname());
     }
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
@@ -83,6 +93,7 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     root.put("encryptedTitle", encryptedTitle);
     root.put("encryptedForename", encryptedForename);
     root.put("encryptedSurname", encryptedSurname);
+    root.put("refusalCodes", refusalCodes);
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root);
 
@@ -104,6 +115,5 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     publicKeys.add(testSecondaryPublicKey);
     formatNames = EncryptNames.receivedNames(names, publicKeys);
     return Base64.getEncoder().encodeToString(formatNames.getBytes());
-//    return formatNames.replace("\r", "").replace("\n", "");
   }
 }
