@@ -24,7 +24,7 @@
         "addressLine3": "${address.addressLine3}",
         </#if>
         <#if address.town??>
-          "townName": "${address.town}",
+          "townName": "${address.locality}",
         </#if>
           "postcode": "${address.postcode}",
       "latitude": "${address.latitude?string["0.#######"]}",
