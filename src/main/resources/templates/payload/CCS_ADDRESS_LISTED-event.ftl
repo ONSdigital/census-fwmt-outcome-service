@@ -7,7 +7,11 @@
       "addressType": "${addressType}",
         <#if addressType == "CE">
           "estabType": "${outcome.ceDetails.establishmentType}",
+          <#if outcome.ceDetails.establishmentName??>
           "organisationName": "${outcome.ceDetails.establishmentName}",
+          <#else>
+          "organisationName": "",
+          </#if>
         <#else>
           "estabType": "HOUSEHOLD",
         </#if>
