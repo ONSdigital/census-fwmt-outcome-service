@@ -73,6 +73,6 @@ public class PropertyListedCeProcessor implements OutcomeServiceProcessor {
         "transactionId", outcome.getTransactionId().toString(),
         "routing key", GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
 
-    return caseId;
+    return newCaseId;
   }
 }
