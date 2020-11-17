@@ -62,6 +62,8 @@ public class PropertyListedCeProcessor implements OutcomeServiceProcessor {
     root.put("interviewRequired", "False");
     root.put("oa", plCache.getOa());
     root.put("region",plCache.getOa().charAt(0));
+    root.put("estabType", outcome.getCeDetails() != null && outcome.getCeDetails().getEstablishmentType() != null ?
+        outcome.getCeDetails().getEstablishmentType() : "OTHER");
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(CCS_ADDRESS_LISTED, root);
 
