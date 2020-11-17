@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = {"requesterTitle", "requesterForename", "requesterSurname", "requesterPhone"})
 public class FulfilmentRequestDto {
   private String questionnaireType;
   private String questionnaireID;

@@ -38,7 +38,7 @@ public class OutcomePreprocessingProducer {
   public void sendSpgOutcomeToPreprocessingQueue(SPGOutcome spgOutcome) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, spgOutcome, new MessagePostProcessor() {
-      
+
       @Override
       public Message postProcessMessage(Message message) throws AmqpException {
         long epochMilli = Instant.now().toEpochMilli();
@@ -52,7 +52,7 @@ public class OutcomePreprocessingProducer {
   public void sendSpgNewUnitAddressToPreprocessingQueue(SPGNewUnitAddress newUnitAddress) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, newUnitAddress, new MessagePostProcessor() {
-      
+
       @Override
       public Message postProcessMessage(Message message) throws AmqpException {
         long epochMilli = Instant.now().toEpochMilli();
@@ -66,7 +66,7 @@ public class OutcomePreprocessingProducer {
   public void sendSpgNewStandaloneAddress(SPGNewStandaloneAddress newStandaloneAddress) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, newStandaloneAddress, new MessagePostProcessor() {
-      
+
       @Override
       public Message postProcessMessage(Message message) throws AmqpException {
         long epochMilli = Instant.now().toEpochMilli();
@@ -80,7 +80,7 @@ public class OutcomePreprocessingProducer {
   public void sendCeOutcomeToPreprocessingQueue(CEOutcome ceOutcome) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, ceOutcome, new MessagePostProcessor() {
-      
+
       @Override
       public Message postProcessMessage(Message message) throws AmqpException {
         long epochMilli = Instant.now().toEpochMilli();
@@ -94,7 +94,7 @@ public class OutcomePreprocessingProducer {
   public void sendCeNewUnitAddressToPreprocessingQueue(CENewUnitAddress newUnitAddress) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, newUnitAddress, new MessagePostProcessor() {
-      
+
       @Override
       public Message postProcessMessage(Message message) throws AmqpException {
         long epochMilli = Instant.now().toEpochMilli();
@@ -108,7 +108,7 @@ public class OutcomePreprocessingProducer {
   public void sendCeNewStandaloneAddressToPreprocessingQueue(CENewStandaloneAddress newStandaloneAddress) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, newStandaloneAddress, new MessagePostProcessor() {
-      
+
       @Override
       public Message postProcessMessage(Message message) throws AmqpException {
         long epochMilli = Instant.now().toEpochMilli();
@@ -122,7 +122,7 @@ public class OutcomePreprocessingProducer {
   public void sendHHOutcomeToPreprocessingQueue(HHOutcome hhOutcome) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, hhOutcome, new MessagePostProcessor() {
-      
+
       @Override
       public Message postProcessMessage(Message message) throws AmqpException {
         long epochMilli = Instant.now().toEpochMilli();
@@ -136,7 +136,7 @@ public class OutcomePreprocessingProducer {
   public void sendHHSplitAddressToPreprocessingQueue(HHNewSplitAddress hhNewSplitAddress) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, hhNewSplitAddress, new MessagePostProcessor() {
-      
+
       @Override
       public Message postProcessMessage(Message message) throws AmqpException {
         long epochMilli = Instant.now().toEpochMilli();
@@ -150,7 +150,7 @@ public class OutcomePreprocessingProducer {
   public void sendHHStandaloneAddressToPreprocessingQueue(HHNewStandaloneAddress hhNewStandaloneAddress) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, hhNewStandaloneAddress, new MessagePostProcessor() {
-      
+
       @Override
       public Message postProcessMessage(Message message) throws AmqpException {
         long epochMilli = Instant.now().toEpochMilli();
@@ -163,12 +163,29 @@ public class OutcomePreprocessingProducer {
   @Retryable
   public void sendCcsPropertyListingToPreprocessingQueue(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
-        OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, ccsPropertyListingOutcome);
+        OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, ccsPropertyListingOutcome, new MessagePostProcessor() {
+
+      @Override
+      public Message postProcessMessage(Message message) throws AmqpException {
+        long epochMilli = Instant.now().toEpochMilli();
+        message.getMessageProperties().setTimestamp(new Date(epochMilli));
+        return message;
+      }
+    });
+
   }
 
   @Retryable
   public void sendCcsInterviewToPreprocessingQueue(CCSInterviewOutcome ccsInterviewOutcome) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
-        OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, ccsInterviewOutcome);
+        OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, ccsInterviewOutcome, new MessagePostProcessor() {
+
+      @Override
+      public Message postProcessMessage(Message message) throws AmqpException {
+        long epochMilli = Instant.now().toEpochMilli();
+        message.getMessageProperties().setTimestamp(new Date(epochMilli));
+        return message;
+      }
+    });
   }
 }

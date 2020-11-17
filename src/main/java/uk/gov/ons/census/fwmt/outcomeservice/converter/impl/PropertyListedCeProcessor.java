@@ -43,11 +43,11 @@ public class PropertyListedCeProcessor implements OutcomeServiceProcessor {
     UUID newCaseId = UUID.randomUUID();
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
-        "survey type", type,
-        "processor", "PROPERTY_LISTED_CE",
-        "original caseId", String.valueOf(outcome.getCaseId()),
-        "Property Listing case Id", String.valueOf(newCaseId),
-        "addressType", "CE");
+        "Survey type", type,
+        "Processor", "PROPERTY_LISTED_CE",
+        "Case ID", String.valueOf(outcome.getCaseId()),
+        "Property Listing Case ID", String.valueOf(newCaseId),
+        "AddressType", "CE");
 
     GatewayCache plCache = gatewayCacheService.getById(String.valueOf(caseId));
 
@@ -67,11 +67,12 @@ public class PropertyListedCeProcessor implements OutcomeServiceProcessor {
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
+
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
-        "survey type", type,
-        "type", CCS_ADDRESS_LISTED.toString(),
-        "transactionId", outcome.getTransactionId().toString(),
-        "routing key", GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
+        "Survey type", type,
+        "Type", CCS_ADDRESS_LISTED.toString(),
+        "Transaction ID", outcome.getTransactionId().toString(),
+        "Routing key", GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
 
     return newCaseId;
   }

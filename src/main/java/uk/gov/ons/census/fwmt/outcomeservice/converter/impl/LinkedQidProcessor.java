@@ -47,10 +47,10 @@ public class LinkedQidProcessor implements OutcomeServiceProcessor {
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_OUTCOME,
-    "survey type", type,
-    "processor", "LINKED_QID",
-    "original caseId", String.valueOf(outcome.getCaseId()),
-    "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+    "Survey type", type,
+    "Processor", "LINKED_QID",
+    "Case ID", String.valueOf(outcome.getCaseId()),
+    "Site Case ID", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
 
     if (outcome.getFulfilmentRequests() == null) return caseIdHolder;
@@ -70,11 +70,12 @@ public class LinkedQidProcessor implements OutcomeServiceProcessor {
 
         gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
             GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY);
+
         gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
-            "survey type", type,
-            "type", QUESTIONNAIRE_LINKED.toString(),
-            "transactionId", outcome.getTransactionId().toString(),
-            "routing key", GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY);
+            "Survey type", type,
+            "Type", QUESTIONNAIRE_LINKED.toString(),
+            "Transaction ID", outcome.getTransactionId().toString(),
+            "Routing key", GatewayOutcomeQueueConfig.GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY);
       }
     }
     return caseIdHolder;

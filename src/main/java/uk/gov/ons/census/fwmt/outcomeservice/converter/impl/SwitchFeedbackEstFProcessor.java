@@ -32,10 +32,10 @@ public class SwitchFeedbackEstFProcessor implements OutcomeServiceProcessor {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
-    "survey type", type,
-    "processor", "SWITCH_FEEDBACK_CE_EST_F",
-    "original caseId", String.valueOf(outcome.getCaseId()),
-    "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+    "Survey type", type,
+    "Processor", "SWITCH_FEEDBACK_CE_EST_F",
+    "Case ID", String.valueOf(outcome.getCaseId()),
+    "Site Case ID", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
     FwmtActionInstruction fieldworkFollowup = FwmtActionInstruction.builder()
         .actionInstruction(ActionInstructionType.SWITCH_CE_TYPE)
@@ -48,12 +48,11 @@ public class SwitchFeedbackEstFProcessor implements OutcomeServiceProcessor {
     rmFieldRepublishProducer.republish(fieldworkFollowup);
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), RM_FIELD_REPUBLISH,
-        "survey name", "CENSUS",
-        "address type", type,
-        "survey type", CE_EST_F.toString(),
-    "action instruction", ActionInstructionType.SWITCH_CE_TYPE.toString(),
-    "transactionId", outcome.getTransactionId().toString());
-
+        "Survey name", "CENSUS",
+        "Address type", type,
+        "Survey type", CE_EST_F.toString(),
+        "Action instruction", ActionInstructionType.SWITCH_CE_TYPE.toString(),
+        "Transaction ID", outcome.getTransactionId().toString());
 
     return caseId;
   }

@@ -55,10 +55,10 @@ public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_OUTCOME,
-    "survey type", type,
-    "processor", "FULFILMENT_REQUESTED",
-    "original caseId", String.valueOf(outcome.getCaseId()),
-    "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+    "Survey type", type,
+    "Processor", "FULFILMENT_REQUESTED",
+    "Case ID", String.valueOf(outcome.getCaseId()),
+    "Site Case ID", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
  
     if (outcome.getFulfilmentRequests() == null) return caseIdHolder;
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
@@ -74,11 +74,12 @@ public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
 
         gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
             GatewayOutcomeQueueConfig.GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY);
+
         gatewayEventManager.triggerEvent(String.valueOf(caseIdHolder), OUTCOME_SENT,
-            "survey type", type,
-            "type", FULFILMENT_REQUESTED.toString(),
-            "transactionId", outcome.getTransactionId().toString(),
-            "routing key", GatewayOutcomeQueueConfig.GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY);
+            "Survey type", type,
+            "Type", FULFILMENT_REQUESTED.toString(),
+            "TransactionId", outcome.getTransactionId().toString(),
+            "Routing key", GatewayOutcomeQueueConfig.GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY);
       }
     }
     return caseId;

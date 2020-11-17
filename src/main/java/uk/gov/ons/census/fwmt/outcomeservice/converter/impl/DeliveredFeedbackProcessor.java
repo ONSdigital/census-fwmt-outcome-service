@@ -33,10 +33,10 @@ public class DeliveredFeedbackProcessor implements OutcomeServiceProcessor {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
-    "survey type", type,
-    "processor", "DELIVERED_FEEDBACK",
-    "original caseId", String.valueOf(outcome.getCaseId()),
-    "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+    "Survey type", type,
+    "Processor", "DELIVERED_FEEDBACK",
+    "Case ID", String.valueOf(outcome.getCaseId()),
+    "Site Case ID", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
     FwmtActionInstruction fieldworkFollowup = FwmtActionInstruction.builder()
         .actionInstruction(ActionInstructionType.UPDATE)
@@ -49,10 +49,10 @@ public class DeliveredFeedbackProcessor implements OutcomeServiceProcessor {
     rmFieldRepublishProducer.republish(fieldworkFollowup);
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), RM_FIELD_REPUBLISH,
-        "survey name", "CENSUS",
-        "address type", type,
-    "action instruction", ActionInstructionType.UPDATE.toString(),
-    "transactionId", outcome.getTransactionId().toString());
+        "Survey name", "CENSUS",
+        "Address type", type,
+        "Action instruction", ActionInstructionType.UPDATE.toString(),
+        "Transaction ID", outcome.getTransactionId().toString());
 
     return caseId;
   }

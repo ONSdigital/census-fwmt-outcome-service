@@ -59,7 +59,7 @@ public class OutcomeServiceImpl implements OutcomeService {
       gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_SPG_OUTCOME,
           "Survey type", "SPG",
           "Secondary Outcome", outcome.getSecondaryOutcomeDescription(),
-          "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
+          "Held Case ID", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
           "Operation", operation,
           "Operation list", Arrays.toString(operationsList));
       caseIdHolder = outcomeServiceProcessors.get(operation).process(outcome, caseIdHolder, "SPG");
@@ -83,7 +83,7 @@ public class OutcomeServiceImpl implements OutcomeService {
       gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_CE_OUTCOME,
           "Survey type", "CE",
           "Secondary Outcome", outcome.getSecondaryOutcomeDescription(),
-          "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
+          "Held Case ID", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
           "Operation", operation,
           "Operation list", Arrays.toString(operationsList));
       caseIdHolder = outcomeServiceProcessors.get(operation).process(outcome, caseIdHolder, "CE");
@@ -107,7 +107,7 @@ public class OutcomeServiceImpl implements OutcomeService {
       gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_HH_OUTCOME,
           "Survey type", "HH",
           "Secondary Outcome", outcome.getSecondaryOutcomeDescription(),
-          "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
+          "Held Case ID", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
           "Operation", operation,
           "Operation list", Arrays.toString(operationsList));
       caseIdHolder = outcomeServiceProcessors.get(operation).process(outcome, caseIdHolder, "HH");
@@ -131,7 +131,7 @@ public class OutcomeServiceImpl implements OutcomeService {
       gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_CCS_PL_OUTCOME,
           "Survey type", "CCS PL",
           "Secondary Outcome", outcome.getSecondaryOutcomeDescription(),
-          "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
+          "Held Case ID", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
           "Operation", operation,
           "Operation list", Arrays.toString(operationsList));
       caseIdHolder = outcomeServiceProcessors.get(operation).process(outcome, caseIdHolder, "CCS PL");
@@ -155,7 +155,7 @@ public class OutcomeServiceImpl implements OutcomeService {
       gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_CCS_INT_OUTCOME,
           "Survey type", "CCS INT",
           "Secondary Outcome", outcome.getSecondaryOutcomeDescription(),
-          "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
+          "Held Case ID", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
           "Operation", operation,
           "Operation list", Arrays.toString(operationsList));
       caseIdHolder = outcomeServiceProcessors.get(operation).process(outcome, caseIdHolder, "CCS INT");

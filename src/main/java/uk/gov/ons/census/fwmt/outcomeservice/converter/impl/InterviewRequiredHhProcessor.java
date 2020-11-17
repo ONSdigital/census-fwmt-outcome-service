@@ -45,11 +45,11 @@ public class InterviewRequiredHhProcessor implements OutcomeServiceProcessor {
     UUID newCaseId = UUID.randomUUID();
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
-        "survey type", type,
-        "processor", "INTERVIEW_REQUIRED",
-        "original caseId", String.valueOf(outcome.getCaseId()),
-        "Interview case Id", String.valueOf(newCaseId),
-        "addressType", "HH");
+        "Survey type", type,
+        "Processor", "INTERVIEW_REQUIRED",
+        "Case ID", String.valueOf(outcome.getCaseId()),
+        "Interview Case ID", String.valueOf(newCaseId),
+        "AddressType", "HH");
 
     GatewayCache plCache = gatewayCacheService.getById(String.valueOf(outcome.getCaseId()));
 
@@ -71,11 +71,12 @@ public class InterviewRequiredHhProcessor implements OutcomeServiceProcessor {
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
+
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
-        "survey type", type,
-        "type", INTERVIEW_REQUIRED.toString(),
-        "transactionId", outcome.getTransactionId().toString(),
-        "routing key", GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
+        "Survey type", type,
+        "Type", INTERVIEW_REQUIRED.toString(),
+        "Transaction ID", outcome.getTransactionId().toString(),
+        "Routing key", GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
 
     return newCaseId;
   }

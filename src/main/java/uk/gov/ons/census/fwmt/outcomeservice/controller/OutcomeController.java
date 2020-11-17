@@ -47,7 +47,7 @@ public class OutcomeController implements OutcomeApi {
   @Override
   public ResponseEntity<Void> ceOutcomeResponse(String caseId, CEOutcome ceOutcome) {
     gatewayEventManager.triggerEvent(caseId, COMET_CE_OUTCOME_RECEIVED,
-        "transactionId", ceOutcome.getTransactionId().toString(),
+        "Transaction ID", ceOutcome.getTransactionId().toString(),
         "Primary Outcome", ceOutcome.getPrimaryOutcomeDescription(),
         "Secondary Outcome", ceOutcome.getSecondaryOutcomeDescription(),
         "Outcome code", ceOutcome.getOutcomeCode(),
@@ -62,8 +62,8 @@ public class OutcomeController implements OutcomeApi {
   @Override
   public ResponseEntity<Void> ceNewUnitAddress(CENewUnitAddress newUnitAddress) {
     gatewayEventManager.triggerEvent("N/A", COMET_CE_UNITADDRESS_OUTCOME_RECEIVED,
-        "transactionId", newUnitAddress.getTransactionId().toString(),
-        "Site case id", String.valueOf(newUnitAddress.getSiteCaseId()),
+        "Transaction ID", newUnitAddress.getTransactionId().toString(),
+        "Site Case ID", String.valueOf(newUnitAddress.getSiteCaseId()),
         "Primary Outcome", newUnitAddress.getPrimaryOutcomeDescription(),
         "Secondary Outcome", newUnitAddress.getSecondaryOutcomeDescription(),
         "Outcome code", newUnitAddress.getOutcomeCode(),
@@ -77,7 +77,7 @@ public class OutcomeController implements OutcomeApi {
   @Override
   public ResponseEntity<Void> ceNewStandalone(CENewStandaloneAddress newStandaloneAddress) {
     gatewayEventManager.triggerEvent("N/A", COMET_CE_STANDALONE_OUTCOME_RECEIVED,
-        "transactionId", newStandaloneAddress.getTransactionId().toString(),
+        "Transaction ID", newStandaloneAddress.getTransactionId().toString(),
         "Survey type", "CE",
         "Primary Outcome", newStandaloneAddress.getPrimaryOutcomeDescription(),
         "Secondary Outcome", newStandaloneAddress.getSecondaryOutcomeDescription(),
@@ -92,7 +92,7 @@ public class OutcomeController implements OutcomeApi {
   @Override
   public ResponseEntity<Void> spgOutcomeResponse(String caseId, SPGOutcome spgOutcome) {
     gatewayEventManager.triggerEvent(caseId, COMET_SPG_OUTCOME_RECEIVED,
-        "transactionId", spgOutcome.getTransactionId().toString(),
+        "Transaction ID", spgOutcome.getTransactionId().toString(),
         "Survey type", "SPG",
         "Primary Outcome", spgOutcome.getPrimaryOutcomeDescription(),
         "Secondary Outcome", spgOutcome.getSecondaryOutcomeDescription(),
@@ -108,7 +108,7 @@ public class OutcomeController implements OutcomeApi {
   @Override
   public ResponseEntity<Void> spgNewUnitAddress(SPGNewUnitAddress newUnitAddress) {
     gatewayEventManager.triggerEvent("N/A", COMET_SPG_UNITADDRESS_OUTCOME_RECEIVED,
-        "transactionId", newUnitAddress.getTransactionId().toString(),
+        "Transaction ID", newUnitAddress.getTransactionId().toString(),
         "Survey type", "SPG",
         "Primary Outcome", newUnitAddress.getPrimaryOutcomeDescription(),
         "Secondary Outcome", newUnitAddress.getSecondaryOutcomeDescription(),
@@ -124,7 +124,7 @@ public class OutcomeController implements OutcomeApi {
   @Override
   public ResponseEntity<Void> spgNewStandalone(SPGNewStandaloneAddress newStandaloneAddress) {
     gatewayEventManager.triggerEvent("N/A", COMET_SPG_STANDALONE_OUTCOME_RECEIVED,
-        "transactionId", newStandaloneAddress.getTransactionId().toString(),
+        "Transaction ID", newStandaloneAddress.getTransactionId().toString(),
         "Survey type", "SPG",
         "Primary Outcome", newStandaloneAddress.getPrimaryOutcomeDescription(),
         "Secondary Outcome", newStandaloneAddress.getSecondaryOutcomeDescription(),
@@ -137,9 +137,9 @@ public class OutcomeController implements OutcomeApi {
   }
 
   @Override
-  public ResponseEntity<Void> hhOutcomeResponse(String caseID, HHOutcome hhOutcome) throws GatewayException {
+  public ResponseEntity<Void> hhOutcomeResponse(String caseID, HHOutcome hhOutcome) {
     gatewayEventManager.triggerEvent(caseID, COMET_HH_OUTCOME_RECEIVED,
-        "transactionId", hhOutcome.getTransactionId().toString(),
+        "Transaction ID", hhOutcome.getTransactionId().toString(),
         "Survey type", "HH",
         "Primary Outcome", hhOutcome.getPrimaryOutcomeDescription(),
         "Secondary Outcome", hhOutcome.getSecondaryOutcomeDescription(),
@@ -152,9 +152,9 @@ public class OutcomeController implements OutcomeApi {
   }
 
   @Override
-  public ResponseEntity<Void> hhNewSplitAddress(HHNewSplitAddress hhNewSplitAddress) throws GatewayException {
+  public ResponseEntity<Void> hhNewSplitAddress(HHNewSplitAddress hhNewSplitAddress) {
     gatewayEventManager.triggerEvent("N/A", COMET_HH_SPLITADDRESS_RECEIVED,
-        "transactionId", hhNewSplitAddress.getTransactionId().toString(),
+        "Transaction ID", hhNewSplitAddress.getTransactionId().toString(),
         "Survey type", "HH",
         "Primary Outcome", hhNewSplitAddress.getPrimaryOutcomeDescription(),
         "Secondary Outcome", hhNewSplitAddress.getSecondaryOutcomeDescription(),
@@ -167,10 +167,9 @@ public class OutcomeController implements OutcomeApi {
   }
 
   @Override
-  public ResponseEntity<Void> hhNewStandalone(HHNewStandaloneAddress hhNewStandaloneAddress)
-      throws GatewayException {
+  public ResponseEntity<Void> hhNewStandalone(HHNewStandaloneAddress hhNewStandaloneAddress) {
     gatewayEventManager.triggerEvent("N/A", COMET_HH_STANDALONE_RECEIVED,
-        "transactionId", hhNewStandaloneAddress.getTransactionId().toString(),
+        "Transaction ID", hhNewStandaloneAddress.getTransactionId().toString(),
         "Survey type", "HH",
         "Primary Outcome", hhNewStandaloneAddress.getPrimaryOutcomeDescription(),
         "Secondary Outcome", hhNewStandaloneAddress.getSecondaryOutcomeDescription(),
@@ -183,10 +182,9 @@ public class OutcomeController implements OutcomeApi {
   }
 
   @Override
-  public ResponseEntity<Void> ccsPropertyListing(CCSPropertyListingOutcome ccsPropertyListingOutcome)
-      throws GatewayException {
+  public ResponseEntity<Void> ccsPropertyListing(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
     gatewayEventManager.triggerEvent(String.valueOf(ccsPropertyListingOutcome.getCaseId()), COMET_CCS_PL_RECEIVED,
-        "transactionId", ccsPropertyListingOutcome.getTransactionId().toString(),
+        "Transaction ID", ccsPropertyListingOutcome.getTransactionId().toString(),
         "Survey type", "CCS PL",
         "Primary Outcome", ccsPropertyListingOutcome.getPrimaryOutcomeDescription(),
         "Secondary Outcome", ccsPropertyListingOutcome.getSecondaryOutcomeDescription(),
@@ -198,9 +196,9 @@ public class OutcomeController implements OutcomeApi {
   }
 
   @Override
-  public ResponseEntity<Void> ccsInterview(String caseID, CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException {
+  public ResponseEntity<Void> ccsInterview(String caseID, CCSInterviewOutcome ccsInterviewOutcome) {
     gatewayEventManager.triggerEvent(caseID, COMET_CCS_INT_RECEIVED,
-        "transactionId", ccsInterviewOutcome.getTransactionId().toString(),
+        "Transaction ID", ccsInterviewOutcome.getTransactionId().toString(),
         "Survey type", "CCS INT",
         "Primary Outcome", ccsInterviewOutcome.getPrimaryOutcomeDescription(),
         "Secondary Outcome", ccsInterviewOutcome.getSecondaryOutcomeDescription(),

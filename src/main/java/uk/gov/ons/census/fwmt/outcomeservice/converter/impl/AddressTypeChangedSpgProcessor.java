@@ -44,10 +44,10 @@ public class AddressTypeChangedSpgProcessor implements OutcomeServiceProcessor {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
-        "survey type", type,
-        "processor", "ADDRESS_TYPE_CHANGED_SPG",
-        "original caseId", String.valueOf(outcome.getCaseId()),
-        "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+        "Survey type", type,
+        "Processor", "ADDRESS_TYPE_CHANGED_SPG",
+        "Case ID", String.valueOf(outcome.getCaseId()),
+        "Site Case ID", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
     Map<String, Object> root = new HashMap<>();
     root.put("caseId", caseId);
@@ -74,11 +74,12 @@ public class AddressTypeChangedSpgProcessor implements OutcomeServiceProcessor {
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
+
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
-        "survey type", type,
-        "type", ADDRESS_TYPE_CHANGED.toString(),
-        "transactionId", outcome.getTransactionId().toString(),
-        "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
+        "Survey type", type,
+        "Type", ADDRESS_TYPE_CHANGED.toString(),
+        "Transaction ID", outcome.getTransactionId().toString(),
+        "Routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
 
     return newCaseId;
   }

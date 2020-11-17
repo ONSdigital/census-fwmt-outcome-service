@@ -45,9 +45,9 @@ public class NewAddressReportedProcessor implements OutcomeServiceProcessor {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
-    "survey type", type,
-    "processor", "NEW_ADDRESS_REPORTED",
-    "original caseId", String.valueOf(outcome.getCaseId()));
+    "Survey type", type,
+    "Processor", "NEW_ADDRESS_REPORTED",
+    "Case ID", String.valueOf(outcome.getCaseId()));
 
     boolean isDelivered = isDelivered(outcome);
     cacheData(outcome, caseId, isDelivered);
@@ -84,11 +84,12 @@ public class NewAddressReportedProcessor implements OutcomeServiceProcessor {
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
+
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
-        "survey type", type,
-        "type", NEW_ADDRESS_REPORTED.toString(),
-        "transaction id", outcome.getTransactionId().toString(),
-        "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
+        "Survey type", type,
+        "Type", NEW_ADDRESS_REPORTED.toString(),
+        "Transaction ID", outcome.getTransactionId().toString(),
+        "Routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
 
     return caseId;
   }

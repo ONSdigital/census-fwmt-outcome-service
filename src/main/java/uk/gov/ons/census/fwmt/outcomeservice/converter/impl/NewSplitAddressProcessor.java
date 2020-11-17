@@ -45,10 +45,10 @@ public class NewSplitAddressProcessor implements OutcomeServiceProcessor {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
-        "survey type", type,
-        "processor", "NEW_SPLIT_ADDRESS",
-        "original caseId", String.valueOf(outcome.getCaseId()),
-        "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+        "Survey type", type,
+        "Processor", "NEW_SPLIT_ADDRESS",
+        "Case ID", String.valueOf(outcome.getCaseId()),
+        "Site Case ID", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
     boolean isDelivered = isDelivered(outcome);
     cacheData(outcome, outcome.getCaseId(), isDelivered);
@@ -70,11 +70,12 @@ public class NewSplitAddressProcessor implements OutcomeServiceProcessor {
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
+
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
-        "survey type", type,
-        "type", NEW_ADDRESS_REPORTED.toString(),
-        "transaction id", outcome.getTransactionId().toString(),
-        "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
+        "Survey type", type,
+        "Type", NEW_ADDRESS_REPORTED.toString(),
+        "Transaction ID", outcome.getTransactionId().toString(),
+        "Routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
 
     return caseId;
   }

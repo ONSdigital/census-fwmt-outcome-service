@@ -32,10 +32,10 @@ public class CancelFeedbackProcessor implements OutcomeServiceProcessor {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
-    "survey type", type,
-    "processor", "CANCEL_FEEDBACK",
-    "original caseId", String.valueOf(outcome.getCaseId()),
-    "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+    "Survey type", type,
+    "Processor", "CANCEL_FEEDBACK",
+    "Case ID", String.valueOf(outcome.getCaseId()),
+    "Site Case ID", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
     FwmtCancelActionInstruction fieldworkFollowup = FwmtCancelActionInstruction.builder()
         .actionInstruction(ActionInstructionType.CANCEL)
@@ -48,10 +48,10 @@ public class CancelFeedbackProcessor implements OutcomeServiceProcessor {
     rmFieldRepublishProducer.republish(fieldworkFollowup);
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), RM_FIELD_REPUBLISH,
-        "survey name", "CENSUS",
-        "address type", type,
-        "action instruction", ActionInstructionType.CANCEL.toString(),
-        "transactionId", outcome.getTransactionId().toString());
+        "Survey name", "CENSUS",
+        "Address type", type,
+        "Action instruction", ActionInstructionType.CANCEL.toString(),
+        "Transaction ID", outcome.getTransactionId().toString());
     return caseId;
   }
 }
