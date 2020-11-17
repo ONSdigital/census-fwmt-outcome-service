@@ -6,7 +6,7 @@
     "sampleUnit": {
       "addressType": "${addressType}",
         <#if addressType == "CE">
-          "estabType": "${outcome.ceDetails.establishmentType}",
+          "estabType": "${estabType}",
           <#if outcome.ceDetails.establishmentName??>
           "organisationName": "${outcome.ceDetails.establishmentName}",
           <#else>
