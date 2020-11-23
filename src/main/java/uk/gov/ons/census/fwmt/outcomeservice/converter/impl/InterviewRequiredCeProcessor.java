@@ -70,7 +70,7 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
         outcome.getCeDetails().getEstablishmentType() : "OTHER";
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), "Test estabType processing",
-        "estabType", estabType,
+        "outcome", outcome.toString(),
         "type", INTERVIEW_REQUIRED.toString(),
         "transactionId", outcome.getTransactionId().toString(),
         "routing key", GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
@@ -119,6 +119,18 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
         bedspaces = outcome.getCeDetails().getBedspaces();
       }
     }
+
+    gatewayEventManager.triggerEvent(String.valueOf(newCaseId.toString()), "Test outcome object processing",
+        "CaseId",newCaseId.toString(),
+        "accessInfo", outcome.getAccessInfo(),
+        "careCodes", OutcomeSuperSetDto.careCodesToText(outcome.getCareCodes()),
+        "managerDetails", managerTitle,
+        "managerForeName", managerForename,
+        "managerSurname", managerSurname,
+        "managerContact", managerPhone,
+        "usualResidents", String.valueOf(usualResidents),
+        "bedspaces", String.valueOf(bedspaces),
+        "routing key", GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
 
     gatewayCacheService.save(GatewayCache.builder()
         .caseId(newCaseId.toString())
