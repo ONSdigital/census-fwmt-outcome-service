@@ -65,6 +65,16 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
     root.put("interviewRequired", "True");
     root.put("oa", plCache.getOa());
     root.put("region",plCache.getOa().charAt(0));
+
+    String estabType = outcome.getCeDetails() != null && outcome.getCeDetails().getEstablishmentType() != null ?
+        outcome.getCeDetails().getEstablishmentType() : "OTHER";
+
+    gatewayEventManager.triggerEvent(String.valueOf(caseId), "Test estabType processing",
+        "estabType", estabType,
+        "type", INTERVIEW_REQUIRED.toString(),
+        "transactionId", outcome.getTransactionId().toString(),
+        "routing key", GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
+
     root.put("estabType", outcome.getCeDetails() != null && outcome.getCeDetails().getEstablishmentType() != null ?
         outcome.getCeDetails().getEstablishmentType() : "OTHER");
 
