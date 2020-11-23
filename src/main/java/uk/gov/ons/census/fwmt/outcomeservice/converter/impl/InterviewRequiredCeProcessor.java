@@ -65,16 +65,6 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
     root.put("interviewRequired", "True");
     root.put("oa", plCache.getOa());
     root.put("region",plCache.getOa().charAt(0));
-
-    String estabType = outcome.getCeDetails() != null && outcome.getCeDetails().getEstablishmentType() != null ?
-        outcome.getCeDetails().getEstablishmentType() : "OTHER";
-
-    gatewayEventManager.triggerEvent(String.valueOf(caseId), "Test estabType processing",
-        "outcome", outcome.toString(),
-        "type", INTERVIEW_REQUIRED.toString(),
-        "transactionId", outcome.getTransactionId().toString(),
-        "routing key", GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
-
     root.put("estabType", outcome.getCeDetails() != null && outcome.getCeDetails().getEstablishmentType() != null ?
         outcome.getCeDetails().getEstablishmentType() : "OTHER");
 
@@ -119,18 +109,6 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
         bedspaces = outcome.getCeDetails().getBedspaces();
       }
     }
-
-    gatewayEventManager.triggerEvent(String.valueOf(newCaseId.toString()), "Test outcome object processing",
-        "CaseId",newCaseId.toString(),
-        "accessInfo", outcome.getAccessInfo(),
-        "careCodes", OutcomeSuperSetDto.careCodesToText(outcome.getCareCodes()),
-        "managerDetails", managerTitle,
-        "managerForeName", managerForename,
-        "managerSurname", managerSurname,
-        "managerContact", managerPhone,
-        "usualResidents", String.valueOf(usualResidents),
-        "bedspaces", String.valueOf(bedspaces),
-        "routing key", GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
 
     gatewayCacheService.save(GatewayCache.builder()
         .caseId(newCaseId.toString())
