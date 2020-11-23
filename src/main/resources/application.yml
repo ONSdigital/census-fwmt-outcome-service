@@ -19,7 +19,7 @@ spring:
     schema: classpath:/schema.sql
     continue-on-error: false
     username: postgres
-    password: password
+    password: postgres
     initialization-mode: always      
 
 management:
