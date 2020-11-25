@@ -59,13 +59,7 @@ public class ExtraordinaryRefusalReceivedProcessor implements OutcomeServiceProc
 
     try {
       TimeUnit.MILLISECONDS.sleep(outcomeSetup.getMessageProcessorSleepTime());
-    } catch (InterruptedException ignored) {
-      gatewayEventManager.triggerErrorEvent(this.getClass(), "Error in Thread sleep",
-              String.valueOf(outcome.getCaseId()), "PROCESSOR_SLEEP",
-              "Survey type", type,
-              "Outcome code", outcome.getOutcomeCode(),
-              "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
-    }
+    } catch (InterruptedException ignored) {}
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root);
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
