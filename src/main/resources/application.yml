@@ -69,4 +69,4 @@ outcomeservice:
   reasonCodeLookup:
     path: classpath:/reasonCodeLookup.txt
   processorsleep:
-    milliseconds: 100
+    milliseconds: 200
