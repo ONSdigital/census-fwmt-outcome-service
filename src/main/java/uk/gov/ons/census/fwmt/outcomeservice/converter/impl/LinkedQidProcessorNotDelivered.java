@@ -48,7 +48,7 @@ public class LinkedQidProcessorNotDelivered implements OutcomeServiceProcessor {
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_OUTCOME,
     "survey type", type,
-    "processor", "LINKED_QID",
+    "processor", "LINKED_QID_NOT_DELIVERED",
     "original caseId", String.valueOf(outcome.getCaseId()),
     "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
