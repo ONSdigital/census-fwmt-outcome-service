@@ -23,10 +23,10 @@
         <#if address.addressLine3??>
         "addressLine3": "${address.addressLine3}",
         </#if>
-        <#if address.town??>
+        <#if address.locality??>
           "townName": "${address.locality}",
         </#if>
-          "postcode": "${address.postcode}",
+      "postcode": "${address.postcode}",
       "latitude": "${address.latitude?string["0.#######"]}",
       "longitude": "${address.longitude?string["0.#######"]}",
       "fieldCoordinatorId": "${outcome.coordinatorId}",
