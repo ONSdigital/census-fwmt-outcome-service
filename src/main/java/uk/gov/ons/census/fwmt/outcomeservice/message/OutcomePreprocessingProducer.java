@@ -21,6 +21,7 @@ import uk.gov.ons.census.fwmt.common.data.ce.CEOutcome;
 import uk.gov.ons.census.fwmt.common.data.household.HHNewSplitAddress;
 import uk.gov.ons.census.fwmt.common.data.household.HHNewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.household.HHOutcome;
+import uk.gov.ons.census.fwmt.common.data.nc.NCOutcome;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGNewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGNewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
@@ -170,5 +171,19 @@ public class OutcomePreprocessingProducer {
   public void sendCcsInterviewToPreprocessingQueue(CCSInterviewOutcome ccsInterviewOutcome) {
     rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
         OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, ccsInterviewOutcome);
+  }
+
+  @Retryable
+  public void sendHHStandaloneAddressToPreprocessingQueue(NCOutcome ncOutcome) {
+    rabbitTemplate.convertAndSend(OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_EXCHANGE,
+        OutcomePreprocessingQueueConfig.OUTCOME_PREPROCESSING_ROUTING_KEY, ncOutcome, new MessagePostProcessor() {
+
+      @Override
+      public Message postProcessMessage(Message message) throws AmqpException {
+        long epochMilli = Instant.now().toEpochMilli();
+        message.getMessageProperties().setTimestamp(new Date(epochMilli));
+        return message;
+      }
+    });
   }
 }

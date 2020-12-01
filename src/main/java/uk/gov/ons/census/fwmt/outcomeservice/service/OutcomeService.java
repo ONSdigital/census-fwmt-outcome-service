@@ -13,4 +13,6 @@ public interface OutcomeService {
   void createCcsPropertyListingOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException;
 
   void createCcsInterviewOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException;
+
+  void createNcOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException;
 }
