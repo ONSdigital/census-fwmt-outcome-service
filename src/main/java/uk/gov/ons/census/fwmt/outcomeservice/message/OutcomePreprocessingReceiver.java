@@ -51,7 +51,6 @@ public class OutcomePreprocessingReceiver {
 
   public static final String PREPROCESSING_NC_OUTCOME = "PREPROCESSING_NC_OUTCOME";
 
-
   @Autowired
   private OutcomeService delegate;
 
