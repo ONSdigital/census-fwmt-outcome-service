@@ -68,11 +68,12 @@ outcomeservice:
     path: classpath:/outcomeCodeLookup.txt
   reasonCodeLookup:
     path: classpath:/reasonCodeLookup.txt
+  processorsleep:
+    milliseconds: 200
   refusalEncryptionCodeLookup:
     path: classpath:/refusalEncryptionCodeLookup.txt
   pgp:
     publicKey: classpath:testPubKey.asc
     secondaryPublicKey: classpath:testSecondaryPubKey.asc
 
-    
-    
+

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeLookup;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.RefusalEncryptionLookup;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.OutcomeSuperSetDto;
@@ -18,9 +17,11 @@ import uk.gov.ons.census.fwmt.outcomeservice.util.EncryptNames;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.REFUSAL_RECEIVED;
 
@@ -39,6 +40,9 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
 
   @Autowired
   private GatewayEventManager gatewayEventManager;
+
+  @Autowired
+  private OutcomeSetup outcomeSetup;
 
   @Autowired
   private RefusalEncryptionLookup refusalEncryptionLookup;
@@ -95,10 +99,14 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     root.put("encryptedSurname", encryptedSurname);
     root.put("refusalCodes", refusalCodes);
 
-    String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root);
+    try {
+      TimeUnit.MILLISECONDS.sleep(outcomeSetup.getMessageProcessorSleepTime());
+    } catch (InterruptedException ignored) {}
 
+    String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root);
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
-        GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
+            GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
+
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
         "survey type", type,
         "type", REFUSAL_RECEIVED.toString(),

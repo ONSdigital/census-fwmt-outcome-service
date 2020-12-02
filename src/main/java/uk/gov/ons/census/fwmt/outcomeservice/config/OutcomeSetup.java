@@ -28,6 +28,9 @@ public class OutcomeSetup {
   @Value(value = "${outcomeservice.reasonCodeLookup.path}")
   private String reasonCodeLookupPath;
 
+  @Value(value = "${outcomeservice.processorsleep.milliseconds}")
+  private int processorSleepMilliSeconds;
+
   @Value(value = "${outcomeservice.refusalEncryptionCodeLookup.path}")
   private String refusalEncryptionCodeLookupPath;
 
@@ -63,6 +66,10 @@ public class OutcomeSetup {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Cannot process reason code lookup");
     }
     return reasonCodeLookup;
+  }
+
+  public int getMessageProcessorSleepTime(){
+    return processorSleepMilliSeconds;
   }
 
   @Bean
