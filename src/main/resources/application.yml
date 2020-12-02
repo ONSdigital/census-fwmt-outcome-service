@@ -73,7 +73,7 @@ outcomeservice:
   refusalEncryptionCodeLookup:
     path: classpath:/refusalEncryptionCodeLookup.txt
   pgp:
-    publicKey: classpath:testPubKey.asc
-    secondaryPublicKey: classpath:testSecondaryPubKey.asc
+    publicKey: classpath:testPublicKey.public
+    secondaryPublicKey: classpath:testSecondaryPublicKey.public
 
 

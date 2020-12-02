@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
+import uk.gov.ons.census.fwmt.outcomeservice.config.OutcomeSetup;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeLookup;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.RefusalEncryptionLookup;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.OutcomeSuperSetDto;
@@ -14,6 +16,7 @@ import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 import uk.gov.ons.census.fwmt.outcomeservice.util.EncryptNames;
 
+import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -122,6 +125,6 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     publicKeys.add(testPublicKey);
     publicKeys.add(testSecondaryPublicKey);
     formatNames = EncryptNames.receivedNames(names, publicKeys);
-    return Base64.getEncoder().encodeToString(formatNames.getBytes());
+    return Base64.getEncoder().encodeToString(formatNames.getBytes(Charset.defaultCharset()));
   }
 }

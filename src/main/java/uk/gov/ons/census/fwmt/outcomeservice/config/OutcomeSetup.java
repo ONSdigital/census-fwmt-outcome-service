@@ -34,7 +34,6 @@ public class OutcomeSetup {
   @Value(value = "${outcomeservice.refusalEncryptionCodeLookup.path}")
   private String refusalEncryptionCodeLookupPath;
 
-
   @Bean
   public OutcomeLookup buildOutcomeLookup() throws GatewayException {
     String line;

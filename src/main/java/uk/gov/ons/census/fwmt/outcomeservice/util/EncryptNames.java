@@ -24,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,7 +35,7 @@ public class EncryptNames {
   public static String receivedNames(String contents, Collection<Resource> publicKeyResources)
       throws GatewayException {
     Collection<PGPPublicKey> publicPgpKeys = getPublicPgpKeys(publicKeyResources);
-    return encryptNames(contents.getBytes(), publicPgpKeys);
+    return encryptNames(contents.getBytes(Charset.defaultCharset()), publicPgpKeys);
   }
 
   public static String encryptNames(byte[] contents, Collection<PGPPublicKey> publicPgpKeys)
@@ -44,19 +45,18 @@ public class EncryptNames {
     final PGPEncryptedDataGenerator generator = new PGPEncryptedDataGenerator(
         new JcePGPDataEncryptorBuilder(SymmetricKeyAlgorithmTags.AES_256).setWithIntegrityPacket(true)
             .setSecureRandom(new SecureRandom()).setProvider(new BouncyCastleProvider()));
-
     for (PGPPublicKey publicKey : publicPgpKeys) {
       generator.addMethod(new JcePublicKeyKeyEncryptionMethodGenerator(publicKey).setProvider(new BouncyCastleProvider()));
     }
     final ByteArrayOutputStream encryptedBytes = new ByteArrayOutputStream();
-    try (OutputStream armoredOutputStream = new ArmoredOutputStream(encryptedBytes);
-        OutputStream encryptedOut = generator.open(armoredOutputStream, compressedContents.length)) {
+    try {
+      OutputStream armoredOutputStream = new ArmoredOutputStream(encryptedBytes);
+      OutputStream encryptedOut = generator.open(armoredOutputStream, compressedContents.length);
       encryptedOut.write(compressedContents);
     } catch (PGPException | IOException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "failed to encrypt file");
-      //      eventManager.triggerErrorEvent(this.getClass(), e, "Failed to encryptFile file", "<N/A>", FAILED_FILE_ENCRYPTION);
     }
-    name = new String(encryptedBytes.toByteArray());
+    name = new String(encryptedBytes.toByteArray(), Charset.defaultCharset());
     return name;
   }
 
@@ -66,11 +66,8 @@ public class EncryptNames {
     for (Resource resource : publicKeyResources) {
       PGPPublicKey publicPgpKey = getPublicPgpKey(resource);
       publicKeys.add(publicPgpKey);
-
     }
-
     return publicKeys;
-
   }
 
   private static PGPPublicKey getPublicPgpKey(Resource pgpKey) throws GatewayException {
