@@ -1,5 +1,6 @@
 package uk.gov.ons.census.fwmt.outcomeservice.util;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.bouncycastle.bcpg.ArmoredOutputStream;
 import org.bouncycastle.bcpg.CompressionAlgorithmTags;
 import org.bouncycastle.bcpg.SymmetricKeyAlgorithmTags;
@@ -38,6 +39,9 @@ public class EncryptNames {
     return encryptNames(contents.getBytes(Charset.defaultCharset()), publicPgpKeys);
   }
 
+  //  A strange error that shouldn't occur due to a library we have no control over doing a @NotNull check.
+  //  Annotation added to ignore the linked error
+  @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
   public static String encryptNames(byte[] contents, Collection<PGPPublicKey> publicPgpKeys)
       throws GatewayException {
     String name;
@@ -49,9 +53,9 @@ public class EncryptNames {
       generator.addMethod(new JcePublicKeyKeyEncryptionMethodGenerator(publicKey).setProvider(new BouncyCastleProvider()));
     }
     final ByteArrayOutputStream encryptedBytes = new ByteArrayOutputStream();
-    try {
-      OutputStream armoredOutputStream = new ArmoredOutputStream(encryptedBytes);
-      OutputStream encryptedOut = generator.open(armoredOutputStream, compressedContents.length);
+    try (OutputStream armoredOutputStream = new ArmoredOutputStream(encryptedBytes);
+        OutputStream encryptedOut = generator.open(armoredOutputStream, compressedContents.length)) {
+
       encryptedOut.write(compressedContents);
     } catch (PGPException | IOException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "failed to encrypt file");

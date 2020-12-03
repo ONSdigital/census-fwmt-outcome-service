@@ -19,7 +19,7 @@ spring:
     schema: classpath:/schema.sql
     continue-on-error: false
     username: postgres
-    password: password
+    password: postgres
     initialization-mode: always      
 
 management:
@@ -73,7 +73,7 @@ outcomeservice:
   refusalEncryptionCodeLookup:
     path: classpath:/refusalEncryptionCodeLookup.txt
   pgp:
-    publicKey: classpath:testPublicKey.public
-    secondaryPublicKey: classpath:testSecondaryPublicKey.public
+    publicKey: classpath:testPublicKey.asc
+    secondaryPublicKey: classpath:testSecondaryPublicKey.asc
 
 
