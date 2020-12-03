@@ -16,7 +16,6 @@ import uk.gov.ons.census.fwmt.common.data.household.HHOutcome;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGNewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGNewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
-import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.message.OutcomePreprocessingProducer;
 
@@ -37,6 +36,11 @@ public class OutcomeController implements OutcomeApi {
   public static final String COMET_CE_STANDALONE_OUTCOME_RECEIVED = "COMET_CE_STANDALONE_OUTCOME_RECEIVED";
   public static final String COMET_CCS_PL_RECEIVED = "COMET_CCS_PL_RECEIVED";
   private static final String COMET_CCS_INT_RECEIVED = "COMET_CCS_INT_RECEIVED";
+  private static final String TRANSACTION_ID = "Transaction ID";
+  private static final String SURVEY_TYPE = "Survey Type";
+  private static final String PRIMARY_OUTCOME = "Primary Outcome";
+  private static final String SECONDARY_OUTCOME = "Secondary Outcome";
+  private static final String OUTCOME_CODE = "Outcome Code";
 
   @Autowired
   private GatewayEventManager gatewayEventManager;
@@ -47,10 +51,11 @@ public class OutcomeController implements OutcomeApi {
   @Override
   public ResponseEntity<Void> ceOutcomeResponse(String caseId, CEOutcome ceOutcome) {
     gatewayEventManager.triggerEvent(caseId, COMET_CE_OUTCOME_RECEIVED,
-        "Transaction ID", ceOutcome.getTransactionId().toString(),
-        "Primary Outcome", ceOutcome.getPrimaryOutcomeDescription(),
-        "Secondary Outcome", ceOutcome.getSecondaryOutcomeDescription(),
-        "Outcome code", ceOutcome.getOutcomeCode(),
+        TRANSACTION_ID, ceOutcome.getTransactionId().toString(),
+        SURVEY_TYPE, "CE",
+        PRIMARY_OUTCOME, ceOutcome.getPrimaryOutcomeDescription(),
+        SECONDARY_OUTCOME, ceOutcome.getSecondaryOutcomeDescription(),
+        OUTCOME_CODE, ceOutcome.getOutcomeCode(),
         "CEOutcome", ceOutcome.toString());
     ceOutcome.setCaseId(UUID.fromString(caseId));
 
@@ -62,11 +67,12 @@ public class OutcomeController implements OutcomeApi {
   @Override
   public ResponseEntity<Void> ceNewUnitAddress(CENewUnitAddress newUnitAddress) {
     gatewayEventManager.triggerEvent("N/A", COMET_CE_UNITADDRESS_OUTCOME_RECEIVED,
-        "Transaction ID", newUnitAddress.getTransactionId().toString(),
+        TRANSACTION_ID, newUnitAddress.getTransactionId().toString(),
+        SURVEY_TYPE, "CE",
         "Site Case ID", String.valueOf(newUnitAddress.getSiteCaseId()),
-        "Primary Outcome", newUnitAddress.getPrimaryOutcomeDescription(),
-        "Secondary Outcome", newUnitAddress.getSecondaryOutcomeDescription(),
-        "Outcome code", newUnitAddress.getOutcomeCode(),
+        PRIMARY_OUTCOME, newUnitAddress.getPrimaryOutcomeDescription(),
+        SECONDARY_OUTCOME, newUnitAddress.getSecondaryOutcomeDescription(),
+        OUTCOME_CODE, newUnitAddress.getOutcomeCode(),
         "CENewUnitAddress", newUnitAddress.toString());
     
     outcomePreprocessingProducer.sendCeNewUnitAddressToPreprocessingQueue(newUnitAddress);
@@ -77,11 +83,11 @@ public class OutcomeController implements OutcomeApi {
   @Override
   public ResponseEntity<Void> ceNewStandalone(CENewStandaloneAddress newStandaloneAddress) {
     gatewayEventManager.triggerEvent("N/A", COMET_CE_STANDALONE_OUTCOME_RECEIVED,
-        "Transaction ID", newStandaloneAddress.getTransactionId().toString(),
-        "Survey type", "CE",
-        "Primary Outcome", newStandaloneAddress.getPrimaryOutcomeDescription(),
-        "Secondary Outcome", newStandaloneAddress.getSecondaryOutcomeDescription(),
-        "Outcome code", newStandaloneAddress.getOutcomeCode(),
+        TRANSACTION_ID, newStandaloneAddress.getTransactionId().toString(),
+        SURVEY_TYPE, "CE",
+        PRIMARY_OUTCOME, newStandaloneAddress.getPrimaryOutcomeDescription(),
+        SECONDARY_OUTCOME, newStandaloneAddress.getSecondaryOutcomeDescription(),
+        OUTCOME_CODE, newStandaloneAddress.getOutcomeCode(),
         "CENewStandaloneAddress", newStandaloneAddress.toString());
     
     outcomePreprocessingProducer.sendCeNewStandaloneAddressToPreprocessingQueue(newStandaloneAddress);
@@ -92,11 +98,11 @@ public class OutcomeController implements OutcomeApi {
   @Override
   public ResponseEntity<Void> spgOutcomeResponse(String caseId, SPGOutcome spgOutcome) {
     gatewayEventManager.triggerEvent(caseId, COMET_SPG_OUTCOME_RECEIVED,
-        "Transaction ID", spgOutcome.getTransactionId().toString(),
-        "Survey type", "SPG",
-        "Primary Outcome", spgOutcome.getPrimaryOutcomeDescription(),
-        "Secondary Outcome", spgOutcome.getSecondaryOutcomeDescription(),
-        "Outcome code", spgOutcome.getOutcomeCode(),
+        TRANSACTION_ID, spgOutcome.getTransactionId().toString(),
+        SURVEY_TYPE, "SPG",
+        PRIMARY_OUTCOME, spgOutcome.getPrimaryOutcomeDescription(),
+        SECONDARY_OUTCOME, spgOutcome.getSecondaryOutcomeDescription(),
+        OUTCOME_CODE, spgOutcome.getOutcomeCode(),
         "SPGOutcome", spgOutcome.toString());
     
     spgOutcome.setCaseId(UUID.fromString(caseId));
@@ -108,12 +114,11 @@ public class OutcomeController implements OutcomeApi {
   @Override
   public ResponseEntity<Void> spgNewUnitAddress(SPGNewUnitAddress newUnitAddress) {
     gatewayEventManager.triggerEvent("N/A", COMET_SPG_UNITADDRESS_OUTCOME_RECEIVED,
-        "Transaction ID", newUnitAddress.getTransactionId().toString(),
-        "Survey type", "SPG",
-        "Primary Outcome", newUnitAddress.getPrimaryOutcomeDescription(),
-        "Secondary Outcome", newUnitAddress.getSecondaryOutcomeDescription(),
-        "Outcome code", newUnitAddress.getOutcomeCode(),
-        "SPGNewUnitAddress", newUnitAddress.toString(),
+        TRANSACTION_ID, newUnitAddress.getTransactionId().toString(),
+        SURVEY_TYPE, "SPG",
+        PRIMARY_OUTCOME, newUnitAddress.getPrimaryOutcomeDescription(),
+        SECONDARY_OUTCOME, newUnitAddress.getSecondaryOutcomeDescription(),
+        OUTCOME_CODE, newUnitAddress.getOutcomeCode(),
         "SPGNewUnitAddress", newUnitAddress.toString());
 
     outcomePreprocessingProducer.sendSpgNewUnitAddressToPreprocessingQueue(newUnitAddress);
@@ -124,11 +129,11 @@ public class OutcomeController implements OutcomeApi {
   @Override
   public ResponseEntity<Void> spgNewStandalone(SPGNewStandaloneAddress newStandaloneAddress) {
     gatewayEventManager.triggerEvent("N/A", COMET_SPG_STANDALONE_OUTCOME_RECEIVED,
-        "Transaction ID", newStandaloneAddress.getTransactionId().toString(),
-        "Survey type", "SPG",
-        "Primary Outcome", newStandaloneAddress.getPrimaryOutcomeDescription(),
-        "Secondary Outcome", newStandaloneAddress.getSecondaryOutcomeDescription(),
-        "Outcome code", newStandaloneAddress.getOutcomeCode(),
+        TRANSACTION_ID, newStandaloneAddress.getTransactionId().toString(),
+        SURVEY_TYPE, "SPG",
+        PRIMARY_OUTCOME, newStandaloneAddress.getPrimaryOutcomeDescription(),
+        SECONDARY_OUTCOME, newStandaloneAddress.getSecondaryOutcomeDescription(),
+        OUTCOME_CODE, newStandaloneAddress.getOutcomeCode(),
         "SPGNewStandaloneAddress", newStandaloneAddress.toString());
 
     outcomePreprocessingProducer.sendSpgNewStandaloneAddress(newStandaloneAddress);
@@ -139,11 +144,11 @@ public class OutcomeController implements OutcomeApi {
   @Override
   public ResponseEntity<Void> hhOutcomeResponse(String caseID, HHOutcome hhOutcome) {
     gatewayEventManager.triggerEvent(caseID, COMET_HH_OUTCOME_RECEIVED,
-        "Transaction ID", hhOutcome.getTransactionId().toString(),
-        "Survey type", "HH",
-        "Primary Outcome", hhOutcome.getPrimaryOutcomeDescription(),
-        "Secondary Outcome", hhOutcome.getSecondaryOutcomeDescription(),
-        "Outcome code", hhOutcome.getOutcomeCode(),
+        TRANSACTION_ID, hhOutcome.getTransactionId().toString(),
+        SURVEY_TYPE, "HH",
+        PRIMARY_OUTCOME, hhOutcome.getPrimaryOutcomeDescription(),
+        SECONDARY_OUTCOME, hhOutcome.getSecondaryOutcomeDescription(),
+        OUTCOME_CODE, hhOutcome.getOutcomeCode(),
         "HHOutcome", hhOutcome.toString());
 
     outcomePreprocessingProducer.sendHHOutcomeToPreprocessingQueue(hhOutcome);
@@ -154,11 +159,11 @@ public class OutcomeController implements OutcomeApi {
   @Override
   public ResponseEntity<Void> hhNewSplitAddress(HHNewSplitAddress hhNewSplitAddress) {
     gatewayEventManager.triggerEvent("N/A", COMET_HH_SPLITADDRESS_RECEIVED,
-        "Transaction ID", hhNewSplitAddress.getTransactionId().toString(),
-        "Survey type", "HH",
-        "Primary Outcome", hhNewSplitAddress.getPrimaryOutcomeDescription(),
-        "Secondary Outcome", hhNewSplitAddress.getSecondaryOutcomeDescription(),
-        "Outcome code", hhNewSplitAddress.getOutcomeCode(),
+        TRANSACTION_ID, hhNewSplitAddress.getTransactionId().toString(),
+        SURVEY_TYPE, "HH",
+        PRIMARY_OUTCOME, hhNewSplitAddress.getPrimaryOutcomeDescription(),
+        SECONDARY_OUTCOME, hhNewSplitAddress.getSecondaryOutcomeDescription(),
+        OUTCOME_CODE, hhNewSplitAddress.getOutcomeCode(),
         "HHNewSplitAddress", hhNewSplitAddress.toString());
 
     outcomePreprocessingProducer.sendHHSplitAddressToPreprocessingQueue(hhNewSplitAddress);
@@ -169,11 +174,11 @@ public class OutcomeController implements OutcomeApi {
   @Override
   public ResponseEntity<Void> hhNewStandalone(HHNewStandaloneAddress hhNewStandaloneAddress) {
     gatewayEventManager.triggerEvent("N/A", COMET_HH_STANDALONE_RECEIVED,
-        "Transaction ID", hhNewStandaloneAddress.getTransactionId().toString(),
-        "Survey type", "HH",
-        "Primary Outcome", hhNewStandaloneAddress.getPrimaryOutcomeDescription(),
-        "Secondary Outcome", hhNewStandaloneAddress.getSecondaryOutcomeDescription(),
-        "Outcome code", hhNewStandaloneAddress.getOutcomeCode(),
+        TRANSACTION_ID, hhNewStandaloneAddress.getTransactionId().toString(),
+        SURVEY_TYPE, "HH",
+        PRIMARY_OUTCOME, hhNewStandaloneAddress.getPrimaryOutcomeDescription(),
+        SECONDARY_OUTCOME, hhNewStandaloneAddress.getSecondaryOutcomeDescription(),
+        OUTCOME_CODE, hhNewStandaloneAddress.getOutcomeCode(),
         "HHNewStandaloneAddress", hhNewStandaloneAddress.toString());
 
     outcomePreprocessingProducer.sendHHStandaloneAddressToPreprocessingQueue(hhNewStandaloneAddress);
@@ -184,11 +189,11 @@ public class OutcomeController implements OutcomeApi {
   @Override
   public ResponseEntity<Void> ccsPropertyListing(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
     gatewayEventManager.triggerEvent(String.valueOf(ccsPropertyListingOutcome.getCaseId()), COMET_CCS_PL_RECEIVED,
-        "Transaction ID", ccsPropertyListingOutcome.getTransactionId().toString(),
-        "Survey type", "CCS PL",
-        "Primary Outcome", ccsPropertyListingOutcome.getPrimaryOutcomeDescription(),
-        "Secondary Outcome", ccsPropertyListingOutcome.getSecondaryOutcomeDescription(),
-        "Outcome code", ccsPropertyListingOutcome.getOutcomeCode());
+        TRANSACTION_ID, ccsPropertyListingOutcome.getTransactionId().toString(),
+        SURVEY_TYPE, "CCS PL",
+        PRIMARY_OUTCOME, ccsPropertyListingOutcome.getPrimaryOutcomeDescription(),
+        SECONDARY_OUTCOME, ccsPropertyListingOutcome.getSecondaryOutcomeDescription(),
+        OUTCOME_CODE, ccsPropertyListingOutcome.getOutcomeCode());
 
     outcomePreprocessingProducer.sendCcsPropertyListingToPreprocessingQueue(ccsPropertyListingOutcome);
 
@@ -198,11 +203,11 @@ public class OutcomeController implements OutcomeApi {
   @Override
   public ResponseEntity<Void> ccsInterview(String caseID, CCSInterviewOutcome ccsInterviewOutcome) {
     gatewayEventManager.triggerEvent(caseID, COMET_CCS_INT_RECEIVED,
-        "Transaction ID", ccsInterviewOutcome.getTransactionId().toString(),
-        "Survey type", "CCS INT",
-        "Primary Outcome", ccsInterviewOutcome.getPrimaryOutcomeDescription(),
-        "Secondary Outcome", ccsInterviewOutcome.getSecondaryOutcomeDescription(),
-        "Outcome code", ccsInterviewOutcome.getOutcomeCode());
+        TRANSACTION_ID, ccsInterviewOutcome.getTransactionId().toString(),
+        SURVEY_TYPE, "CCS INT",
+        PRIMARY_OUTCOME, ccsInterviewOutcome.getPrimaryOutcomeDescription(),
+        SECONDARY_OUTCOME, ccsInterviewOutcome.getSecondaryOutcomeDescription(),
+        OUTCOME_CODE, ccsInterviewOutcome.getOutcomeCode());
 
     ccsInterviewOutcome.setCaseId(UUID.fromString(caseID));
     outcomePreprocessingProducer.sendCcsInterviewToPreprocessingQueue(ccsInterviewOutcome);

@@ -48,6 +48,12 @@ public class OutcomePreprocessingReceiver {
   
   public static final String PREPROCESSING_CCS_INT_OUTCOME = "PREPROCESSING_CCS_INT_OUTCOME";
 
+  private static final String SURVEY_TYPE = "Survey Type";
+
+  private static final String SECONDARY_OUTCOME = "Secondary Outcome";
+
+  private static final String OUTCOME_CODE = "Outcome Code";
+
   @Autowired
   private OutcomeService delegate;
 
@@ -60,9 +66,9 @@ public class OutcomePreprocessingReceiver {
   public void processMessage(SPGOutcome spgOutcome) throws GatewayException {
     OutcomeSuperSetDto outcomeDTO = mapperFacade.map(spgOutcome, OutcomeSuperSetDto.class);
     gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), PREPROCESSING_SPG_OUTCOME,
-        "Survey type", "SPG",
-        "Outcome code", outcomeDTO.getOutcomeCode(),
-        "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
+        SURVEY_TYPE, "SPG",
+        OUTCOME_CODE, outcomeDTO.getOutcomeCode(),
+        SECONDARY_OUTCOME, outcomeDTO.getSecondaryOutcomeDescription());
     delegate.createSpgOutcomeEvent(outcomeDTO);
   }
 
@@ -70,9 +76,9 @@ public class OutcomePreprocessingReceiver {
     OutcomeSuperSetDto outcomeDTO = mapperFacade.map(newUnitAddress, OutcomeSuperSetDto.class);
     outcomeDTO.setCaseId(UUID.randomUUID());
     gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), PREPROCESSING_SPG_UNITADDRESS_OUTCOME,
-        "Survey type", "SPG",
-        "Outcome code", outcomeDTO.getOutcomeCode(),
-        "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
+        SURVEY_TYPE, "SPG",
+        OUTCOME_CODE, outcomeDTO.getOutcomeCode(),
+        SECONDARY_OUTCOME, outcomeDTO.getSecondaryOutcomeDescription());
     delegate.createSpgOutcomeEvent(outcomeDTO);
   }
 
@@ -80,18 +86,18 @@ public class OutcomePreprocessingReceiver {
     OutcomeSuperSetDto outcomeDTO = mapperFacade.map(standaloneAddress, OutcomeSuperSetDto.class);
     outcomeDTO.setCaseId(UUID.randomUUID());
     gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), PREPROCESSING_SPG_STANDALONE_OUTCOME,
-        "Survey type", "SPG",
-        "Outcome code", outcomeDTO.getOutcomeCode(),
-        "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
+        SURVEY_TYPE, "SPG",
+        OUTCOME_CODE, outcomeDTO.getOutcomeCode(),
+        SECONDARY_OUTCOME, outcomeDTO.getSecondaryOutcomeDescription());
     delegate.createSpgOutcomeEvent(outcomeDTO);
   }
 
-  public void processMessage(CEOutcome CeOutcome) throws GatewayException {
-    OutcomeSuperSetDto outcomeDTO = mapperFacade.map(CeOutcome, OutcomeSuperSetDto.class);
+  public void processMessage(CEOutcome ceOutcome) throws GatewayException {
+    OutcomeSuperSetDto outcomeDTO = mapperFacade.map(ceOutcome, OutcomeSuperSetDto.class);
     gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), PREPROCESSING_CE_OUTCOME,
-        "Survey type", "CE",
-        "Outcome code", outcomeDTO.getOutcomeCode(),
-        "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
+        SURVEY_TYPE, "CE",
+        OUTCOME_CODE, outcomeDTO.getOutcomeCode(),
+        SECONDARY_OUTCOME, outcomeDTO.getSecondaryOutcomeDescription());
     delegate.createCeOutcomeEvent(outcomeDTO);
   }
 
@@ -99,9 +105,9 @@ public class OutcomePreprocessingReceiver {
     OutcomeSuperSetDto outcomeDTO = mapperFacade.map(newUnitAddress, OutcomeSuperSetDto.class);
     outcomeDTO.setCaseId(UUID.randomUUID());
     gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), PREPROCESSING_CE_UNITADDRESS_OUTCOME,
-        "Survey type", "CE",
-        "Outcome code", outcomeDTO.getOutcomeCode(),
-        "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
+        SURVEY_TYPE, "CE",
+        OUTCOME_CODE, outcomeDTO.getOutcomeCode(),
+        SECONDARY_OUTCOME, outcomeDTO.getSecondaryOutcomeDescription());
     delegate.createCeOutcomeEvent(outcomeDTO);
   }
 
@@ -109,18 +115,18 @@ public class OutcomePreprocessingReceiver {
     OutcomeSuperSetDto outcomeDTO = mapperFacade.map(standaloneAddress, OutcomeSuperSetDto.class);
     outcomeDTO.setCaseId(UUID.randomUUID());
     gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), PREPROCESSING_CE_STANDALONE_OUTCOME,
-        "Survey type", "CE",
-        "Outcome code", outcomeDTO.getOutcomeCode(),
-        "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
+        SURVEY_TYPE, "CE",
+        OUTCOME_CODE, outcomeDTO.getOutcomeCode(),
+        SECONDARY_OUTCOME, outcomeDTO.getSecondaryOutcomeDescription());
     delegate.createCeOutcomeEvent(outcomeDTO);
   }
 
   public void processMessage(HHOutcome hhOutcome) throws GatewayException {
     OutcomeSuperSetDto outcomeDTO = mapperFacade.map(hhOutcome, OutcomeSuperSetDto.class);
     gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), PREPROCESSING_HH_OUTCOME,
-        "Survey type", "HH",
-        "Outcome code", outcomeDTO.getOutcomeCode(),
-        "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
+        SURVEY_TYPE, "HH",
+        OUTCOME_CODE, outcomeDTO.getOutcomeCode(),
+        SECONDARY_OUTCOME, outcomeDTO.getSecondaryOutcomeDescription());
     delegate.createHhOutcomeEvent(outcomeDTO);
   }
 
@@ -128,9 +134,9 @@ public class OutcomePreprocessingReceiver {
     OutcomeSuperSetDto outcomeDTO = mapperFacade.map(splitAddress, OutcomeSuperSetDto.class);
     outcomeDTO.setCaseId(UUID.randomUUID());
     gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), PREPROCESSING_HH_SPLITADDRESS_OUTCOME,
-        "Survey type", "HH",
-        "Outcome code", outcomeDTO.getOutcomeCode(),
-        "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
+        SURVEY_TYPE, "HH",
+        OUTCOME_CODE, outcomeDTO.getOutcomeCode(),
+        SECONDARY_OUTCOME, outcomeDTO.getSecondaryOutcomeDescription());
     delegate.createHhOutcomeEvent(outcomeDTO);
   }
 
@@ -138,27 +144,27 @@ public class OutcomePreprocessingReceiver {
     OutcomeSuperSetDto outcomeDTO = mapperFacade.map(standaloneAddress, OutcomeSuperSetDto.class);
     outcomeDTO.setCaseId(UUID.randomUUID());
     gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), PREPROCESSING_HH_STANDALONE_OUTCOME,
-        "Survey type", "HH",
-        "Outcome code", outcomeDTO.getOutcomeCode(),
-        "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
+        SURVEY_TYPE, "HH",
+        OUTCOME_CODE, outcomeDTO.getOutcomeCode(),
+        SECONDARY_OUTCOME, outcomeDTO.getSecondaryOutcomeDescription());
     delegate.createHhOutcomeEvent(outcomeDTO);
   }
 
   public void processMessage(CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException {
     OutcomeSuperSetDto outcomeDTO = mapperFacade.map(ccsPropertyListingOutcome, OutcomeSuperSetDto.class);
     gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), PREPROCESSING_CCS_PL_OUTCOME,
-        "Survey type", "CCS PL",
-        "Outcome code", outcomeDTO.getOutcomeCode(),
-        "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
+        SURVEY_TYPE, "CCS PL",
+        OUTCOME_CODE, outcomeDTO.getOutcomeCode(),
+        SECONDARY_OUTCOME, outcomeDTO.getSecondaryOutcomeDescription());
     delegate.createCcsPropertyListingOutcomeEvent(outcomeDTO);
   }
 
   public void processMessage(CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException {
     OutcomeSuperSetDto outcomeDTO = mapperFacade.map(ccsInterviewOutcome, OutcomeSuperSetDto.class);
     gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), PREPROCESSING_CCS_INT_OUTCOME,
-        "Survey type", "CCS INT",
-        "Outcome code", outcomeDTO.getOutcomeCode(),
-        "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
+        SURVEY_TYPE, "CCS INT",
+        OUTCOME_CODE, outcomeDTO.getOutcomeCode(),
+        SECONDARY_OUTCOME, outcomeDTO.getSecondaryOutcomeDescription());
     delegate.createCcsInterviewOutcomeEvent(outcomeDTO);
   }
 }

@@ -7,6 +7,8 @@ import java.util.List;
 
 public final class SpgUtilityMethods {
 
+    private SpgUtilityMethods() {}
+
   public static boolean isDelivered(OutcomeSuperSetDto outcome) {
     List<FulfilmentRequestDto> fulfilmentRequestList = outcome.getFulfilmentRequests();
     if (fulfilmentRequestList == null) return false;

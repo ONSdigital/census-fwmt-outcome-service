@@ -80,7 +80,7 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
     return newCaseId;
   }
   
-  private void cacheData(OutcomeSuperSetDto outcome, UUID newCaseId) throws GatewayException {
+  private void cacheData(OutcomeSuperSetDto outcome, UUID newCaseId) {
     String managerTitle = "";
     String managerForename = "";
     String managerSurname = "";

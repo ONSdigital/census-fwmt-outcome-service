@@ -17,6 +17,8 @@ import uk.gov.ons.census.fwmt.outcomeservice.service.impl.OutcomeServiceImpl;
 @Component
 public class TemplateCreator {
 
+  private TemplateCreator() {}
+
   public static String createOutcomeMessage(EventType eventType, Map<String, Object> root) throws GatewayException {
     String outcomeMessage = "";
 
@@ -29,31 +31,38 @@ public class TemplateCreator {
       configuration.setWrapUncheckedExceptions(true);
 
       Template temp = configuration.getTemplate("payload/" + eventType.name() + "-event.ftl");
-      try (StringWriter out = new StringWriter(); StringWriter outcomeEventMessage = new StringWriter()) {
-
-        temp.process(root, out);
-
-        out.flush();
-        String outcomePayload = out.toString();
-
-        root.put("payload", outcomePayload);
-        root.put("eventType", eventType);
-        Template outcomeMessageTemplate = configuration.getTemplate("rm-outcome-event.ftl");
-        outcomeMessageTemplate.process(root, outcomeEventMessage);
-
-        outcomeEventMessage.flush();
-        outcomeMessage = outcomeEventMessage.toString();
-
-      } catch (Exception e) {
-        log.error("Error: ", e);
-
-        throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Problem creating Outcome Message", e);
-      }
+      outcomeMessage = buildOutcomeMessage(eventType, root, configuration, temp);
     } catch (Exception e) {
       log.error("Error: ", e);
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Problem creating Outcome Message", e);
     }
 
+    return outcomeMessage;
+  }
+
+  private static String buildOutcomeMessage(EventType eventType, Map<String, Object> root, Configuration configuration,
+      Template temp) throws GatewayException {
+    String outcomeMessage;
+    try (StringWriter out = new StringWriter(); StringWriter outcomeEventMessage = new StringWriter()) {
+
+      temp.process(root, out);
+
+      out.flush();
+      String outcomePayload = out.toString();
+
+      root.put("payload", outcomePayload);
+      root.put("eventType", eventType);
+      Template outcomeMessageTemplate = configuration.getTemplate("rm-outcome-event.ftl");
+      outcomeMessageTemplate.process(root, outcomeEventMessage);
+
+      outcomeEventMessage.flush();
+      outcomeMessage = outcomeEventMessage.toString();
+
+    } catch (Exception e) {
+      log.error("Error: ", e);
+
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Problem creating Outcome Message", e);
+    }
     return outcomeMessage;
   }
 }

@@ -30,8 +30,6 @@ public class RabbitMqConfig {
   private final int maxInterval;
   private final int maxRetries;
 
-  private final String rmFieldQueue;
-
   public RabbitMqConfig(
       @Value("${rabbitmq.username}") String username,
       @Value("${rabbitmq.password}") String password,
@@ -41,8 +39,7 @@ public class RabbitMqConfig {
       @Value("${rabbitmq.initialInterval}") Integer initialInterval,
       @Value("${rabbitmq.multiplier}") Double multiplier,
       @Value("${rabbitmq.maxInterval}") Integer maxInterval,
-      @Value("${rabbitmq.maxRetries}") Integer maxRetries,
-      @Value("${rabbitmq.queues.rm.field}") String rmFieldQueue) {
+      @Value("${rabbitmq.maxRetries}") Integer maxRetries) {
     this.username = username;
     this.password = password;
     this.hostname = hostname;
@@ -52,7 +49,6 @@ public class RabbitMqConfig {
     this.multiplier = multiplier;
     this.maxInterval = maxInterval;
     this.maxRetries = maxRetries;
-    this.rmFieldQueue = rmFieldQueue;
   }
 
   @Bean

@@ -37,6 +37,8 @@ public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
 
   public static final String OUTCOME_SENT = "OUTCOME_SENT";
 
+  private static final String SURVEY_TYPE = "Survey type";
+
   @Autowired
   private DateFormat dateFormat;
 
@@ -55,7 +57,7 @@ public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_OUTCOME,
-    "Survey type", type,
+    SURVEY_TYPE, type,
     "Processor", "FULFILMENT_REQUESTED",
     "Case ID", String.valueOf(outcome.getCaseId()),
     "Site Case ID", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
@@ -76,7 +78,7 @@ public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
             GatewayOutcomeQueueConfig.GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY);
 
         gatewayEventManager.triggerEvent(String.valueOf(caseIdHolder), OUTCOME_SENT,
-            "Survey type", type,
+            SURVEY_TYPE, type,
             "Type", FULFILMENT_REQUESTED.toString(),
             "TransactionId", outcome.getTransactionId().toString(),
             "Routing key", GatewayOutcomeQueueConfig.GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY);

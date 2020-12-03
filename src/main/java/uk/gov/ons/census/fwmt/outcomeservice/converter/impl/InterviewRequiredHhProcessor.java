@@ -81,7 +81,7 @@ public class InterviewRequiredHhProcessor implements OutcomeServiceProcessor {
     return newCaseId;
   }
 
-  private void cacheData(OutcomeSuperSetDto outcome, UUID newCaseId) throws GatewayException {
+  private void cacheData(OutcomeSuperSetDto outcome, UUID newCaseId) {
     gatewayCacheService.save(GatewayCache.builder()
         .caseId(newCaseId.toString())
         .existsInFwmt(false)
