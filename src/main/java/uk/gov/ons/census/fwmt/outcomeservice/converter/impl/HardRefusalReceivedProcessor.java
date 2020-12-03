@@ -50,10 +50,10 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
   @Autowired
   private RefusalEncryptionLookup refusalEncryptionLookup;
 
-  @Value("${outcomeservice.pgp.publicKey}")
+  @Value("${outcomeservice.pgp.fwmtPublicKey}")
   private Resource testPublicKey;
 
-  @Value("${outcomeservice.pgp.secondaryPublicKey}")
+  @Value("${outcomeservice.pgp.midlPublicKey}")
   private Resource testSecondaryPublicKey;
 
   @Override
