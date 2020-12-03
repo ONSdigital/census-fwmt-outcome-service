@@ -66,7 +66,9 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
     root.put("oa", plCache.getOa());
     root.put("region",plCache.getOa().charAt(0));
     root.put("estabType", outcome.getCeDetails() != null && outcome.getCeDetails().getEstablishmentType() != null ?
-        outcome.getCeDetails().getEstablishmentType() : "OTHER");
+        outcome.getCeDetails().getEstablishmentType() : "CE");
+    root.put("organisationName", outcome.getCeDetails() != null && outcome.getCeDetails().getEstablishmentName() != null ?
+        outcome.getCeDetails().getEstablishmentName() : "");
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(CCS_ADDRESS_LISTED, root);
 
