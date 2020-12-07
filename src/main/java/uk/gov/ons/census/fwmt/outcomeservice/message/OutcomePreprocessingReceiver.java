@@ -12,6 +12,7 @@ import uk.gov.ons.census.fwmt.common.data.ce.CEOutcome;
 import uk.gov.ons.census.fwmt.common.data.household.HHNewSplitAddress;
 import uk.gov.ons.census.fwmt.common.data.household.HHNewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.household.HHOutcome;
+import uk.gov.ons.census.fwmt.common.data.nc.NCOutcome;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGNewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGNewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
@@ -47,6 +48,8 @@ public class OutcomePreprocessingReceiver {
   public static final String PREPROCESSING_CCS_PL_OUTCOME = "PREPROCESSING_CCS_PL_OUTCOME";
   
   public static final String PREPROCESSING_CCS_INT_OUTCOME = "PREPROCESSING_CCS_INT_OUTCOME";
+
+  public static final String PREPROCESSING_NC_OUTCOME = "PREPROCESSING_NC_OUTCOME";
 
   @Autowired
   private OutcomeService delegate;
@@ -160,5 +163,14 @@ public class OutcomePreprocessingReceiver {
         "Outcome code", outcomeDTO.getOutcomeCode(),
         "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
     delegate.createCcsInterviewOutcomeEvent(outcomeDTO);
+  }
+
+  public void processMessage(NCOutcome ncOutcome) throws GatewayException {
+    OutcomeSuperSetDto outcomeDTO = mapperFacade.map(ncOutcome, OutcomeSuperSetDto.class);
+    gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), PREPROCESSING_NC_OUTCOME,
+        "Survey type", "NC",
+        "Outcome code", outcomeDTO.getOutcomeCode(),
+        "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
+    delegate.createNcOutcomeEvent(outcomeDTO);
   }
 }

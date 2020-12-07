@@ -13,6 +13,7 @@ import uk.gov.ons.census.fwmt.common.data.ce.CEOutcome;
 import uk.gov.ons.census.fwmt.common.data.household.HHNewSplitAddress;
 import uk.gov.ons.census.fwmt.common.data.household.HHNewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.household.HHOutcome;
+import uk.gov.ons.census.fwmt.common.data.nc.NCOutcome;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGNewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGNewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
@@ -37,6 +38,7 @@ public class OutcomeController implements OutcomeApi {
   public static final String COMET_CE_STANDALONE_OUTCOME_RECEIVED = "COMET_CE_STANDALONE_OUTCOME_RECEIVED";
   public static final String COMET_CCS_PL_RECEIVED = "COMET_CCS_PL_RECEIVED";
   private static final String COMET_CCS_INT_RECEIVED = "COMET_CCS_INT_RECEIVED";
+  private static final String COMET_NC_OUTCOME_RECEIVED = "COMET_NC_OUTCOME_RECEIVED";
 
   @Autowired
   private GatewayEventManager gatewayEventManager;
@@ -208,6 +210,20 @@ public class OutcomeController implements OutcomeApi {
 
     ccsInterviewOutcome.setCaseId(UUID.fromString(caseID));
     outcomePreprocessingProducer.sendCcsInterviewToPreprocessingQueue(ccsInterviewOutcome);
+
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @Override
+  public ResponseEntity<Void> ncOutcome(String caseID, NCOutcome ncOutcome) throws GatewayException {
+    gatewayEventManager.triggerEvent(caseID, COMET_NC_OUTCOME_RECEIVED,
+        "transactionId", ncOutcome.getTransactionId().toString(),
+        "Survey type", "NC",
+        "Primary Outcome", ncOutcome.getPrimaryOutcomeDescription(),
+        "Secondary Outcome", ncOutcome.getSecondaryOutcomeDescription(),
+        "Outcome code", ncOutcome.getOutcomeCode());
+
+    outcomePreprocessingProducer.sendHHStandaloneAddressToPreprocessingQueue(ncOutcome);
 
     return new ResponseEntity<>(HttpStatus.OK);
   }

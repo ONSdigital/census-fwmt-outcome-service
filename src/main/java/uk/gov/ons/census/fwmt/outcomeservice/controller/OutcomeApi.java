@@ -18,6 +18,7 @@ import uk.gov.ons.census.fwmt.common.data.ce.CEOutcome;
 import uk.gov.ons.census.fwmt.common.data.household.HHNewSplitAddress;
 import uk.gov.ons.census.fwmt.common.data.household.HHNewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.household.HHOutcome;
+import uk.gov.ons.census.fwmt.common.data.nc.NCOutcome;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGNewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGNewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
@@ -139,4 +140,15 @@ public interface OutcomeApi {
       produces = {"application/json"},
       method = RequestMethod.POST)
   ResponseEntity<Void> ccsInterview(@PathVariable("caseID") String caseID, @RequestBody CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException;
+
+  @ApiOperation(value = "Post a Non-Compliance outcome to the FWMT Gateway")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "Case Outcome received"),
+      @ApiResponse(code = 401, message = "UNAUTHORIZED"),
+      @ApiResponse(code = 403, message = "FORBIDDEN")})
+  @RequestMapping(value = "/ncOutcome/{caseID}",
+      produces = {"application/json"},
+      method = RequestMethod.POST)
+  ResponseEntity<Void> ncOutcome(@PathVariable("caseID") String caseID, @RequestBody NCOutcome ncOutcome) throws GatewayException;
+
 }

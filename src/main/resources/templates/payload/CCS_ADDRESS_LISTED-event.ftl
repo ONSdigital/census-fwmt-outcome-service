@@ -6,17 +6,13 @@
     "sampleUnit": {
       "addressType": "${addressType}",
         <#if addressType == "CE">
-          "estabType": "${estabType}",
-          <#if outcome.ceDetails.establishmentName??>
-          "organisationName": "${outcome.ceDetails.establishmentName}",
-          <#else>
-          "organisationName": "",
-          </#if>
+        "estabType": "${estabType}",
+        "organisationName": "${organisationName}",
         <#else>
-          "estabType": "HOUSEHOLD",
+        "estabType": "HOUSEHOLD",
         </#if>
-      "addressLevel": "${addressLevel}",
-      "addressLine1": "${address.addressLine1}",
+        "addressLevel": "${addressLevel}",
+        "addressLine1": "${address.addressLine1}",
         <#if address.addressLine2??>
         "addressLine2": "${address.addressLine2}",
         </#if>
@@ -24,7 +20,7 @@
         "addressLine3": "${address.addressLine3}",
         </#if>
         <#if address.locality??>
-          "townName": "${address.locality}",
+        "townName": "${address.locality}",
         </#if>
       "postcode": "${address.postcode}",
       "latitude": "${address.latitude?string["0.#######"]}",
