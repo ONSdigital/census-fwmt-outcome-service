@@ -1,17 +1,25 @@
 package uk.gov.ons.census.fwmt.outcomeservice.converter.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
 import uk.gov.ons.census.fwmt.outcomeservice.config.OutcomeSetup;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeLookup;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.RefusalEncryptionLookup;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.OutcomeSuperSetDto;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
+import uk.gov.ons.census.fwmt.outcomeservice.util.EncryptNames;
 
+import java.nio.charset.Charset;
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,8 +47,24 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
   @Autowired
   private OutcomeSetup outcomeSetup;
 
+  @Autowired
+  private RefusalEncryptionLookup refusalEncryptionLookup;
+
+  @Value("${outcomeservice.pgp.fwmtPublicKey}")
+  private Resource testPublicKey;
+
+  @Value("${outcomeservice.pgp.midlPublicKey}")
+  private Resource testSecondaryPublicKey;
+
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
+    boolean isHouseHolder = false;
+    String encryptedTitle = "";
+    String encryptedForename = "";
+    String encryptedSurname = "";
+
+    String refusalCodes = refusalEncryptionLookup.getLookup(outcome.getOutcomeCode());
+
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
@@ -48,6 +72,21 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     "processor", "HARD_REFUSAL_RECEIVED",
     "original caseId", String.valueOf(outcome.getCaseId()),
     "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+    if (refusalCodes != null) {
+      if (outcome.getRefusal() != null && (type.equals("HH") || type.equals("NC"))) {
+        if (outcome.getRefusal().isHouseholder()) {
+          isHouseHolder = outcome.getRefusal().isHouseholder();
+          encryptedTitle = outcome.getRefusal().getTitle();
+          if (outcome.getRefusal().getMiddlename() != null || !outcome.getRefusal().getMiddlename().equals("")) {
+            String combinedNames = outcome.getRefusal().getFirstname() + " " + outcome.getRefusal().getMiddlename();
+            encryptedForename = returnEncryptedNames(combinedNames);
+          } else {
+            encryptedForename = returnEncryptedNames(outcome.getRefusal().getFirstname());
+          }
+          encryptedSurname = returnEncryptedNames(outcome.getRefusal().getSurname());
+        }
+      }
+    }
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
@@ -57,6 +96,11 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     root.put("officerId", outcome.getOfficerId());
     root.put("caseId", caseId);
     root.put("eventDate", eventDateTime);
+    root.put("isHouseHolder", isHouseHolder);
+    root.put("encryptedTitle", encryptedTitle);
+    root.put("encryptedForename", encryptedForename);
+    root.put("encryptedSurname", encryptedSurname);
+    root.put("refusalCodes", refusalCodes);
 
     try {
       TimeUnit.MILLISECONDS.sleep(outcomeSetup.getMessageProcessorSleepTime());
@@ -73,5 +117,14 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
         "routing key", GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
 
     return caseId;
+  }
+
+  protected String returnEncryptedNames(String names) throws GatewayException {
+    String formatNames;
+    var publicKeys = new ArrayList<Resource>();
+    publicKeys.add(testPublicKey);
+    publicKeys.add(testSecondaryPublicKey);
+    formatNames = EncryptNames.receivedNames(names, publicKeys);
+    return Base64.getEncoder().encodeToString(formatNames.getBytes(Charset.defaultCharset()));
   }
 }

@@ -2,14 +2,14 @@
 "type": "${refusalType}",
 "agentId": "${officerId}",
 
-<#--<#if (type == "HH" || "NC") && refusalType == "HARD_REFUSAL">-->
-<#--"isHouseholder": "${refusal.householder}",-->
-<#--"contact": {-->
-<#--"title": "${encryptedTitle}",-->
-<#--"forename": "${encryptedForename}",-->
-<#--"surname": "${encryptedSurname}"-->
-<#--},-->
-<#--</#if>-->
+<#if (type == "HH") && refusalType == "HARD_REFUSAL" && refusalCodes??>
+"isHouseholder": "${isHouseHolder?c}",
+"contact": {
+"title": "${encryptedTitle}",
+"forename": "${encryptedForename}",
+"surname": "${encryptedSurname}"
+},
+</#if>
 
 "collectionCase": {
 "id": "${caseId}"

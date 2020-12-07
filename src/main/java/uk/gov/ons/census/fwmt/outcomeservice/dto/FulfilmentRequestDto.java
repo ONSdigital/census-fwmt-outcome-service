@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FulfilmentRequestDto {
+public class  FulfilmentRequestDto {
   private String questionnaireType;
   private String questionnaireID;
   private String requesterTitle;

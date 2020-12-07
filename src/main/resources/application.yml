@@ -70,3 +70,10 @@ outcomeservice:
     path: classpath:/reasonCodeLookup.txt
   processorsleep:
     milliseconds: 200
+  refusalEncryptionCodeLookup:
+    path: classpath:/refusalEncryptionCodeLookup.txt
+  pgp:
+    fwmtPublicKey: classpath:testPublicKey.asc
+    midlPublicKey: classpath:testSecondaryPublicKey.asc
+
+
