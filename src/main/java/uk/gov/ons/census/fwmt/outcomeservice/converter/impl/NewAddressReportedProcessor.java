@@ -7,6 +7,7 @@ import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
+import uk.gov.ons.census.fwmt.outcomeservice.dto.CeDetailsDto;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.OutcomeSuperSetDto;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.service.impl.GatewayCacheService;
@@ -57,11 +58,19 @@ public class NewAddressReportedProcessor implements OutcomeServiceProcessor {
     Map<String, Object> root = new HashMap<>();
     root.put("sourceCase", "NEW_STANDALONE");
     root.put("outcome", outcome);
+
     if (outcome.getCeDetails() != null) {
+      if (outcome.getCeDetails().getEstablishmentType() == null){
+        outcome.getCeDetails().setEstablishmentType("OTHER");
+      }
+      if (outcome.getCeDetails().getEstablishmentName() == null){
+        outcome.getCeDetails().setEstablishmentName("");
+      }
       root.put("ceDetails", outcome.getCeDetails());
       root.put("usualResidents",
           outcome.getCeDetails().getUsualResidents() != null ? outcome.getCeDetails().getUsualResidents() : 0);
     }
+
     root.put("newCaseId", caseId);
     root.put("address", outcome.getAddress());
     root.put("officerId", outcome.getOfficerId());
@@ -69,15 +78,15 @@ public class NewAddressReportedProcessor implements OutcomeServiceProcessor {
     root.put("surveyType", type);
     root.put("region", regionLookup(outcome.getOfficerId()));
     switch (type) {
-    case "CE":
-      root.put("addressLevel", "E");
-      break;
-    case "SPG":
-    case "HH":
-      root.put("addressLevel", "U");
-      break;
-    default:
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, type, "Invalid survey type");
+      case "CE":
+        root.put("addressLevel", "E");
+        break;
+      case "SPG":
+      case "HH":
+        root.put("addressLevel", "U");
+        break;
+      default:
+        throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, type, "Invalid survey type");
     }
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(NEW_ADDRESS_REPORTED, root);
