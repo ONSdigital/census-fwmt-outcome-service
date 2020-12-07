@@ -14,6 +14,7 @@ import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.service.impl.GatewayCacheService;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
+import javax.transaction.Transactional;
 import java.text.DateFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +23,8 @@ import java.util.UUID;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.QUESTIONNAIRE_LINKED;
 
 @Component("LINKED_QID_NOT_DELIVERED")
+@Transactional
+
 public class LinkedQidProcessorNotDelivered implements OutcomeServiceProcessor {
 
   public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
