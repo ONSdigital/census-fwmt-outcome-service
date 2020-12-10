@@ -77,7 +77,7 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
         if (outcome.getRefusal().isHouseholder()) {
           isHouseHolder = outcome.getRefusal().isHouseholder();
           encryptedTitle = outcome.getRefusal().getTitle();
-          if (outcome.getRefusal().getMiddlename() != null || !outcome.getRefusal().getMiddlename().equals("")) {
+          if (outcome.getRefusal().getMiddlename() != null && !outcome.getRefusal().getMiddlename().equals("")) {
             String combinedNames = outcome.getRefusal().getFirstname() + " " + outcome.getRefusal().getMiddlename();
             encryptedForename = returnEncryptedNames(combinedNames);
           } else {
