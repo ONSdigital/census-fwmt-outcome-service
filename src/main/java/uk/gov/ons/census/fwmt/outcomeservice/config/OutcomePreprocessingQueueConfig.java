@@ -48,7 +48,7 @@ public class OutcomePreprocessingQueueConfig {
 
   @Autowired
   private AmqpAdmin amqpAdmin;
-  @Value("${rabbitmq.prefetchCount}")
+  @Value("${app.rabbitmq.rm.prefetchCount}")
   private int prefetchCount;
 
   // Queues
