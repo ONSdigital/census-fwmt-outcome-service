@@ -149,7 +149,7 @@ public class OutcomePreprocessingQueueConfig {
   @Bean(name = "preprocessingRabbitTemplate")
   @Qualifier("OS_RT")
   public RabbitTemplate rabbitTemplate(@Qualifier("OS_MC") MessageConverter mc,
-      ConnectionFactory connectionFactory) {
+      @Qualifier("gatewayConnectionFactory") ConnectionFactory connectionFactory) {
     RabbitTemplate template = new RabbitTemplate(connectionFactory);
     template.setMessageConverter(mc);
     return template;
