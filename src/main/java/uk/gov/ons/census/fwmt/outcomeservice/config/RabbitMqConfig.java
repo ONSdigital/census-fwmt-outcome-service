@@ -84,11 +84,6 @@ public class RabbitMqConfig {
     interceptor.setRetryOperations(retryOperations);
     return interceptor;
   }
-//
-//  @Bean
-//  public AmqpAdmin amqpAdmin() {
-//    return new RabbitAdmin(connectionFactory());
-//  }
 
   @Bean
   public ConnectionFactory connectionFactory() {
