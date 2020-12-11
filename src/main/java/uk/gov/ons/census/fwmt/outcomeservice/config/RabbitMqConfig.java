@@ -84,14 +84,13 @@ public class RabbitMqConfig {
     interceptor.setRetryOperations(retryOperations);
     return interceptor;
   }
+//
+//  @Bean
+//  public AmqpAdmin amqpAdmin() {
+//    return new RabbitAdmin(connectionFactory());
+//  }
 
   @Bean
-  public AmqpAdmin amqpAdmin() {
-    return new RabbitAdmin(connectionFactory());
-  }
-
-  @Bean
-  @Primary
   public ConnectionFactory connectionFactory() {
     CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(hostname, port);
 

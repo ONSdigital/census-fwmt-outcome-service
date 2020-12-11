@@ -3,12 +3,7 @@ package uk.gov.ons.census.fwmt.outcomeservice.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.aopalliance.aop.Advice;
-import org.springframework.amqp.core.AmqpAdmin;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.FanoutExchange;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.QueueBuilder;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
@@ -74,21 +69,13 @@ public class OutcomePreprocessingQueueConfig {
   // Exchange
   @Bean
   @Qualifier("OS_E")
-  public FanoutExchange outcomePreprocessingExchange() {
-    FanoutExchange fanoutExchange = new FanoutExchange(OUTCOME_PREPROCESSING_EXCHANGE);
-    fanoutExchange.setAdminsThatShouldDeclare(amqpAdmin);
-    return fanoutExchange;
+  public DirectExchange outcomePreprocessingExchange() {
+    DirectExchange directExchange = new DirectExchange(OUTCOME_PREPROCESSING_EXCHANGE);
+    directExchange.setAdminsThatShouldDeclare(amqpAdmin);
+    return directExchange ;
   }
 
-  // Bindings
-  @Bean
-  @Qualifier("OS_B")
-  public Binding outcomePreprocessorBinding(@Qualifier("OS_Q") Queue outcomePreprocessingQueue,
-      @Qualifier("OS_E") FanoutExchange outcomePreprocessingExchange) {
-    Binding binding = BindingBuilder.bind(outcomePreprocessingQueue).to(outcomePreprocessingExchange);
-    binding.setAdminsThatShouldDeclare(amqpAdmin);
-    return binding;
-  }
+
 
   // Listener Adapter
   @Bean
@@ -104,7 +91,7 @@ public class OutcomePreprocessingQueueConfig {
   // Message Listener
   @Bean
   @Qualifier("OS_LC")
-  public SimpleMessageListenerContainer outcomePreprocessingMessageListener(ConnectionFactory connectionFactory,
+  public SimpleMessageListenerContainer outcomePreprocessingMessageListener(@Qualifier("gatewayConnectionFactory") ConnectionFactory connectionFactory,
       @Qualifier("OS_L") MessageListenerAdapter messageListenerAdapter,
       RetryOperationsInterceptor retryOperationsInterceptor) {
     SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
