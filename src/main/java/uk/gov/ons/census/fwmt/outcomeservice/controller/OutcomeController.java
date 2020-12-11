@@ -192,7 +192,8 @@ public class OutcomeController implements OutcomeApi {
         "Survey type", "CCS PL",
         "Primary Outcome", ccsPropertyListingOutcome.getPrimaryOutcomeDescription(),
         "Secondary Outcome", ccsPropertyListingOutcome.getSecondaryOutcomeDescription(),
-        "Outcome code", ccsPropertyListingOutcome.getOutcomeCode());
+        "Outcome code", ccsPropertyListingOutcome.getOutcomeCode(),
+        "CCSPropertyListing", ccsPropertyListingOutcome.toString());
 
     outcomePreprocessingProducer.sendCcsPropertyListingToPreprocessingQueue(ccsPropertyListingOutcome);
 
@@ -206,7 +207,8 @@ public class OutcomeController implements OutcomeApi {
         "Survey type", "CCS INT",
         "Primary Outcome", ccsInterviewOutcome.getPrimaryOutcomeDescription(),
         "Secondary Outcome", ccsInterviewOutcome.getSecondaryOutcomeDescription(),
-        "Outcome code", ccsInterviewOutcome.getOutcomeCode());
+        "Outcome code", ccsInterviewOutcome.getOutcomeCode(),
+        "CCSInterview", ccsInterviewOutcome.toString());
 
     ccsInterviewOutcome.setCaseId(UUID.fromString(caseID));
     outcomePreprocessingProducer.sendCcsInterviewToPreprocessingQueue(ccsInterviewOutcome);
@@ -221,7 +223,8 @@ public class OutcomeController implements OutcomeApi {
         "Survey type", "NC",
         "Primary Outcome", ncOutcome.getPrimaryOutcomeDescription(),
         "Secondary Outcome", ncOutcome.getSecondaryOutcomeDescription(),
-        "Outcome code", ncOutcome.getOutcomeCode());
+        "Outcome code", ncOutcome.getOutcomeCode(),
+        "NCOutcome", ncOutcome.toString());
 
     outcomePreprocessingProducer.sendHHStandaloneAddressToPreprocessingQueue(ncOutcome);
 
