@@ -87,7 +87,7 @@ dependencyManagement {
 }
 
 dependencies {
-	compile('uk.gov.ons.census.fwmt:census-fwmt-events:beta.0.45-SNAPSHOT')
+	compile('uk.gov.ons.census.fwmt:census-fwmt-events:beta.0.46-SNAPSHOT')
 	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.2.19-RELEASE')
 	compile('uk.gov.ons.ctp.integration.common:product-reference:1.0.11')
 

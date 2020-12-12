@@ -71,7 +71,7 @@ app:
       username: "guest"
       password: "guest"
       host: "localhost"
-      port: 5673
+      port: 5672
       virtualHost: "/"
       initialInterval: 5000
       multiplier: 3.0
