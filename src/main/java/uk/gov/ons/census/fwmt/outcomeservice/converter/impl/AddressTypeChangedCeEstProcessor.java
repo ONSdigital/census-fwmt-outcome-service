@@ -60,7 +60,7 @@ public class AddressTypeChangedCeEstProcessor implements OutcomeServiceProcessor
     root.put("eventDate", eventDateTime);
     root.put("surveyType", "CE");
     root.put("estabType", outcome.getCeDetails() != null && outcome.getCeDetails().getEstablishmentType() != null ?
-        outcome.getCeDetails().getEstablishmentType() : "UNKNOWN");
+        outcome.getCeDetails().getEstablishmentType() : "OTHER");
     root.put("estabName", outcome.getCeDetails() != null && outcome.getCeDetails().getEstablishmentName() != null ?
         outcome.getCeDetails().getEstablishmentName() : "Not Provided");
 
