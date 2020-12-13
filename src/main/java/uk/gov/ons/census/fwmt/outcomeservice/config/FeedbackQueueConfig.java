@@ -22,7 +22,7 @@ public class FeedbackQueueConfig {
   @Bean(name = "feedbackRabbitTemplate")
   @Qualifier("FB_RT")
   public RabbitTemplate rabbitTemplate(@Qualifier("FB_MC") MessageConverter mc,
-      ConnectionFactory connectionFactory) {
+      @Qualifier("rmConnectionFactory") ConnectionFactory connectionFactory) {
     RabbitTemplate template = new RabbitTemplate(connectionFactory);
     template.setMessageConverter(mc);
     return template;

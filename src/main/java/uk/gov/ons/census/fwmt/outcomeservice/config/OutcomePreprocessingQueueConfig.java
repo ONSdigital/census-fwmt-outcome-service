@@ -133,10 +133,19 @@ public class OutcomePreprocessingQueueConfig {
     return jsonMessageConverter;
   }
 
-  @Bean(name = "preprocessingRabbitTemplate")
-  @Qualifier("OS_RT")
-  public RabbitTemplate rabbitTemplate(@Qualifier("OS_MC") MessageConverter mc,
+  @Bean
+  @Qualifier("OS_RT_GW")
+  public RabbitTemplate preprocessingRabbitTemplate(@Qualifier("OS_MC") MessageConverter mc,
       @Qualifier("gatewayConnectionFactory") ConnectionFactory connectionFactory) {
+    RabbitTemplate template = new RabbitTemplate(connectionFactory);
+    template.setMessageConverter(mc);
+    return template;
+  }
+
+  @Bean
+  @Qualifier("OS_RT_RM")
+  public RabbitTemplate rmPreprocessingRabbitTemplate(@Qualifier("OS_MC") MessageConverter mc,
+      @Qualifier("rmConnectionFactory") ConnectionFactory connectionFactory) {
     RabbitTemplate template = new RabbitTemplate(connectionFactory);
     template.setMessageConverter(mc);
     return template;

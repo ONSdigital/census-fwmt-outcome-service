@@ -1,14 +1,11 @@
 package uk.gov.ons.census.fwmt.outcomeservice.config;
 
-import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.retry.RetryOperations;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.interceptor.RetryOperationsInterceptor;
@@ -85,14 +82,12 @@ public class RabbitMqConfig {
     return interceptor;
   }
 
-  @Bean
+  @Bean("rmConnectionFactory")
   public ConnectionFactory connectionFactory() {
     CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(hostname, port);
-
     cachingConnectionFactory.setVirtualHost(virtualHost);
     cachingConnectionFactory.setPassword(password);
     cachingConnectionFactory.setUsername(username);
-
     return cachingConnectionFactory;
   }
 }
