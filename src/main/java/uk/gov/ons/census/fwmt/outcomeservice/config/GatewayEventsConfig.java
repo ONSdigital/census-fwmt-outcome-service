@@ -35,7 +35,7 @@ public class GatewayEventsConfig {
       gatewayEventManager = new GatewayEventManager(Arrays.asList(gatewayLoggingEventProducer, testProducer));
     } else {
       log.warn("\n\n \t IMPORTANT - Test Mode: OFF   \n\n");
-      gatewayEventManager = new GatewayEventManager(Arrays.asList(gatewayLoggingEventProducer, testProducer));
+      gatewayEventManager = new GatewayEventManager(Arrays.asList(gatewayLoggingEventProducer));
     }
 
     gatewayEventManager.setSource(Application.APPLICATION_NAME);
