@@ -14,10 +14,10 @@ import uk.gov.ons.census.fwmt.common.data.household.HHNewSplitAddress;
 import uk.gov.ons.census.fwmt.common.data.household.HHNewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.household.HHOutcome;
 import uk.gov.ons.census.fwmt.common.data.nc.NCOutcome;
+import uk.gov.ons.census.fwmt.common.data.shared.Refusal;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGNewStandaloneAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGNewUnitAddress;
 import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
-import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.message.OutcomePreprocessingProducer;
 
@@ -139,14 +139,18 @@ public class OutcomeController implements OutcomeApi {
   }
 
   @Override
-  public ResponseEntity<Void> hhOutcomeResponse(String caseID, HHOutcome hhOutcome) throws GatewayException {
+  public ResponseEntity<Void> hhOutcomeResponse(String caseID, HHOutcome hhOutcome) {
+    HHOutcome hhOutcomeNoNames = hhOutcome;
+    if (hhOutcome.getRefusal() != null) {
+      hhOutcomeNoNames.setRefusal(removeHHNames(hhOutcome.getRefusal()));
+    }
     gatewayEventManager.triggerEvent(caseID, COMET_HH_OUTCOME_RECEIVED,
         "transactionId", hhOutcome.getTransactionId().toString(),
         "Survey type", "HH",
         "Primary Outcome", hhOutcome.getPrimaryOutcomeDescription(),
         "Secondary Outcome", hhOutcome.getSecondaryOutcomeDescription(),
         "Outcome code", hhOutcome.getOutcomeCode(),
-        "HHOutcome", hhOutcome.toString());
+        "HHOutcome", hhOutcomeNoNames.toString());
 
     outcomePreprocessingProducer.sendHHOutcomeToPreprocessingQueue(hhOutcome);
 
@@ -154,14 +158,18 @@ public class OutcomeController implements OutcomeApi {
   }
 
   @Override
-  public ResponseEntity<Void> hhNewSplitAddress(HHNewSplitAddress hhNewSplitAddress) throws GatewayException {
+  public ResponseEntity<Void> hhNewSplitAddress(HHNewSplitAddress hhNewSplitAddress) {
+    HHNewSplitAddress hhNewSplitAddressNoNames = hhNewSplitAddress;
+    if (hhNewSplitAddressNoNames.getRefusal() != null) {
+      hhNewSplitAddressNoNames.setRefusal(removeHHNames(hhNewSplitAddressNoNames.getRefusal()));
+    }
     gatewayEventManager.triggerEvent("N/A", COMET_HH_SPLITADDRESS_RECEIVED,
         "transactionId", hhNewSplitAddress.getTransactionId().toString(),
         "Survey type", "HH",
         "Primary Outcome", hhNewSplitAddress.getPrimaryOutcomeDescription(),
         "Secondary Outcome", hhNewSplitAddress.getSecondaryOutcomeDescription(),
         "Outcome code", hhNewSplitAddress.getOutcomeCode(),
-        "HHNewSplitAddress", hhNewSplitAddress.toString());
+        "HHNewSplitAddress", hhNewSplitAddressNoNames.toString());
 
     outcomePreprocessingProducer.sendHHSplitAddressToPreprocessingQueue(hhNewSplitAddress);
 
@@ -169,15 +177,18 @@ public class OutcomeController implements OutcomeApi {
   }
 
   @Override
-  public ResponseEntity<Void> hhNewStandalone(HHNewStandaloneAddress hhNewStandaloneAddress)
-      throws GatewayException {
+  public ResponseEntity<Void> hhNewStandalone(HHNewStandaloneAddress hhNewStandaloneAddress) {
+    HHNewStandaloneAddress hhNewStandaloneAddressNoNames = hhNewStandaloneAddress;
+    if (hhNewStandaloneAddressNoNames.getRefusal() != null) {
+      hhNewStandaloneAddressNoNames.setRefusal(removeHHNames(hhNewStandaloneAddressNoNames.getRefusal()));
+    }
     gatewayEventManager.triggerEvent("N/A", COMET_HH_STANDALONE_RECEIVED,
         "transactionId", hhNewStandaloneAddress.getTransactionId().toString(),
         "Survey type", "HH",
         "Primary Outcome", hhNewStandaloneAddress.getPrimaryOutcomeDescription(),
         "Secondary Outcome", hhNewStandaloneAddress.getSecondaryOutcomeDescription(),
         "Outcome code", hhNewStandaloneAddress.getOutcomeCode(),
-        "HHNewStandaloneAddress", hhNewStandaloneAddress.toString());
+        "HHNewStandaloneAddress", hhNewStandaloneAddressNoNames.toString());
 
     outcomePreprocessingProducer.sendHHStandaloneAddressToPreprocessingQueue(hhNewStandaloneAddress);
 
@@ -185,8 +196,7 @@ public class OutcomeController implements OutcomeApi {
   }
 
   @Override
-  public ResponseEntity<Void> ccsPropertyListing(CCSPropertyListingOutcome ccsPropertyListingOutcome)
-      throws GatewayException {
+  public ResponseEntity<Void> ccsPropertyListing(CCSPropertyListingOutcome ccsPropertyListingOutcome) {
     gatewayEventManager.triggerEvent(String.valueOf(ccsPropertyListingOutcome.getCaseId()), COMET_CCS_PL_RECEIVED,
         "transactionId", ccsPropertyListingOutcome.getTransactionId().toString(),
         "Survey type", "CCS PL",
@@ -201,7 +211,7 @@ public class OutcomeController implements OutcomeApi {
   }
 
   @Override
-  public ResponseEntity<Void> ccsInterview(String caseID, CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException {
+  public ResponseEntity<Void> ccsInterview(String caseID, CCSInterviewOutcome ccsInterviewOutcome) {
     gatewayEventManager.triggerEvent(caseID, COMET_CCS_INT_RECEIVED,
         "transactionId", ccsInterviewOutcome.getTransactionId().toString(),
         "Survey type", "CCS INT",
@@ -217,17 +227,29 @@ public class OutcomeController implements OutcomeApi {
   }
 
   @Override
-  public ResponseEntity<Void> ncOutcome(String caseID, NCOutcome ncOutcome) throws GatewayException {
+  public ResponseEntity<Void> ncOutcome(String caseID, NCOutcome ncOutcome) {
+    NCOutcome ncOutcomeNoNames = ncOutcome;
+    if (ncOutcomeNoNames.getRefusal() != null) {
+      ncOutcomeNoNames.setRefusal(removeHHNames(ncOutcomeNoNames.getRefusal()));
+    }
     gatewayEventManager.triggerEvent(caseID, COMET_NC_OUTCOME_RECEIVED,
         "transactionId", ncOutcome.getTransactionId().toString(),
         "Survey type", "NC",
         "Primary Outcome", ncOutcome.getPrimaryOutcomeDescription(),
         "Secondary Outcome", ncOutcome.getSecondaryOutcomeDescription(),
         "Outcome code", ncOutcome.getOutcomeCode(),
-        "NCOutcome", ncOutcome.toString());
+        "NCOutcome", ncOutcomeNoNames.toString());
 
     outcomePreprocessingProducer.sendHHStandaloneAddressToPreprocessingQueue(ncOutcome);
 
     return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  private Refusal removeHHNames(Refusal refusal){
+    refusal.setTitle("");
+    refusal.setFirstname("");
+    refusal.setMiddlenames("");
+    refusal.setSurname("");
+    return refusal;
   }
 }
