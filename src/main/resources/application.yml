@@ -29,21 +29,7 @@ management:
     health:
       show-details: always
 
-rabbitmq:
-  username: "guest"
-  password: "guest"
-  hostname: "localhost"
-  port: 5672
-  virtualHost: "/"
-  initialInterval: 5000
-  multiplier: 3.0
-  prefetchCount: 250
-  maxInterval: 45000
-  maxRetries: 1
-  queues:
-    rm:
-      field: "RM.Field"
-      exchange: "adapter-outbound-exchange"
+
 
 logging:
   profile: DEV
@@ -76,4 +62,43 @@ outcomeservice:
     fwmtPublicKey: classpath:testPublicKey.asc
     midlPublicKey: classpath:testSecondaryPublicKey.asc
 
+
+
+app:
+  testing: false
+  rabbitmq:
+    gw:
+      username: "guest"
+      password: "guest"
+      host: "localhost"
+      port: 5673
+      virtualHost: "/"
+      initialInterval: 5000
+      multiplier: 3.0
+      maxInterval: 45000
+      maxRetries: 1
+      prefetchCount: 500
+      concurrentConsumers: 10
+      exchanges:
+        error: "GW.Error.Exchange"
+      queues:
+        error: "GW.ErrorQ"
+    rm:
+      username: "guest"
+      password: "guest"
+      host: "localhost"
+      port: 5672
+      virtualHost: "/"
+      initialInterval: 5000
+      multiplier: 3.0
+      maxInterval: 45000
+      maxRetries: 1
+      prefetchCount: 500
+      concurrentConsumers: 10
+      queues:
+        rm:
+          input: "RM.Field"
+          dlq: "RM.FieldDLQ"
+          exchange: "adapter-outbound-exchange"
+          field: "RM.Field"
 

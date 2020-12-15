@@ -1,14 +1,11 @@
 package uk.gov.ons.census.fwmt.outcomeservice.config;
 
-import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.retry.RetryOperations;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.interceptor.RetryOperationsInterceptor;
@@ -33,16 +30,19 @@ public class RabbitMqConfig {
   private final String rmFieldQueue;
 
   public RabbitMqConfig(
-      @Value("${rabbitmq.username}") String username,
-      @Value("${rabbitmq.password}") String password,
-      @Value("${rabbitmq.hostname}") String hostname,
-      @Value("${rabbitmq.port}") Integer port,
-      @Value("${rabbitmq.virtualHost}") String virtualHost,
-      @Value("${rabbitmq.initialInterval}") Integer initialInterval,
-      @Value("${rabbitmq.multiplier}") Double multiplier,
-      @Value("${rabbitmq.maxInterval}") Integer maxInterval,
-      @Value("${rabbitmq.maxRetries}") Integer maxRetries,
-      @Value("${rabbitmq.queues.rm.field}") String rmFieldQueue) {
+      @Value("${app.rabbitmq.rm.username}") String username,
+      @Value("${app.rabbitmq.rm.password}") String password,
+      @Value("${app.rabbitmq.rm.host}") String hostname,
+      @Value("${app.rabbitmq.rm.port}") int port,
+      @Value("${app.rabbitmq.rm.virtualHost}") String virtualHost,
+      @Value("${app.rabbitmq.rm.initialInterval}") int initialInterval,
+      @Value("${app.rabbitmq.rm.multiplier}") double multiplier,
+      @Value("${app.rabbitmq.rm.maxInterval}") int maxInterval,
+      @Value("${app.rabbitmq.rm.maxRetries:1}") int maxRetries,
+      @Value("${app.rabbitmq.rm.prefetchCount}") int prefetchCount,
+      @Value("${app.rabbitmq.rm.queues.rm.input}") String inputQueue,
+      @Value("${app.rabbitmq.rm.queues.rm.dlq}") String inputDlq,
+      @Value("${app.rabbitmq.rm.queues.rm.field}") String rmFieldQueue) {
     this.username = username;
     this.password = password;
     this.hostname = hostname;
@@ -82,20 +82,12 @@ public class RabbitMqConfig {
     return interceptor;
   }
 
-  @Bean
-  public AmqpAdmin amqpAdmin() {
-    return new RabbitAdmin(connectionFactory());
-  }
-
-  @Bean
-  @Primary
+  @Bean("rmConnectionFactory")
   public ConnectionFactory connectionFactory() {
     CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(hostname, port);
-
     cachingConnectionFactory.setVirtualHost(virtualHost);
     cachingConnectionFactory.setPassword(password);
     cachingConnectionFactory.setUsername(username);
-
     return cachingConnectionFactory;
   }
 }

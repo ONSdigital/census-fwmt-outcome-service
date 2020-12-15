@@ -17,7 +17,7 @@ import static uk.gov.ons.census.fwmt.outcomeservice.config.OutcomePreprocessingQ
 public class OutcomeProcessPreprocessingDlq {
 
   @Autowired
-  @Qualifier("OS_RT")
+  @Qualifier("OS_RT_GW")
   private RabbitTemplate rabbitTemplate;
 
   @Autowired
