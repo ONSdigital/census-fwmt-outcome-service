@@ -11,8 +11,10 @@ import uk.gov.ons.census.fwmt.outcomeservice.config.OutcomeSetup;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeLookup;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.RefusalEncryptionLookup;
+import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.OutcomeSuperSetDto;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
+import uk.gov.ons.census.fwmt.outcomeservice.service.impl.GatewayCacheService;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 import uk.gov.ons.census.fwmt.outcomeservice.util.EncryptNames;
 
@@ -48,6 +50,9 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
   private OutcomeSetup outcomeSetup;
 
   @Autowired
+  private GatewayCacheService gatewayCacheService;
+
+  @Autowired
   private RefusalEncryptionLookup refusalEncryptionLookup;
 
   @Value("${outcomeservice.pgp.fwmtPublicKey}")
@@ -67,6 +72,12 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
 
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
 
+    GatewayCache cache = gatewayCacheService.getById(String.valueOf(caseId));
+
+    if (cache == null) {
+      cacheData(outcome,caseId, type);
+    }
+
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
     "survey type", type,
     "processor", "HARD_REFUSAL_RECEIVED",
@@ -74,14 +85,16 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
     if (refusalCodes != null) {
       if (outcome.getRefusal() != null && (type.equals("HH") || type.equals("NC"))) {
-        if (outcome.getRefusal().isHouseholder()) {
+        if (outcome.getRefusal().isHouseholder() && (outcome.getRefusal().getSurname() != null
+            && outcome.getRefusal().getSurname().equals(""))) {
           isHouseHolder = outcome.getRefusal().isHouseholder();
-          encryptedTitle = outcome.getRefusal().getTitle();
+          encryptedTitle = returnEncryptedNames(outcome.getRefusal().getTitle());
           if (outcome.getRefusal().getMiddlenames() != null && !outcome.getRefusal().getMiddlenames().equals("")) {
             String combinedNames = outcome.getRefusal().getFirstname() + " " + outcome.getRefusal().getMiddlenames();
             encryptedForename = returnEncryptedNames(combinedNames);
           } else {
-            encryptedForename = returnEncryptedNames(outcome.getRefusal().getFirstname());
+            encryptedForename = outcome.getRefusal().getFirstname() != null ?
+                returnEncryptedNames(outcome.getRefusal().getFirstname()) :"";
           }
           encryptedSurname = returnEncryptedNames(outcome.getRefusal().getSurname());
         }
@@ -126,5 +139,20 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     publicKeys.add(testSecondaryPublicKey);
     formatNames = EncryptNames.receivedNames(names, publicKeys);
     return Base64.getEncoder().encodeToString(formatNames.getBytes(Charset.defaultCharset()));
+  }
+
+  private void cacheData(OutcomeSuperSetDto outcome, UUID newCaseId, String type) throws GatewayException {
+    int typeCache = type.equals("CE") ? 1 : 10;
+    String dangerousCareCode = outcome.getRefusal().isDangerous() ? "Dangerous address" : "No safety issues";
+    String updateCareCodes = outcome.getCareCodes() != null ? OutcomeSuperSetDto.careCodesToText(outcome.getCareCodes()) + ", " + dangerousCareCode :
+        dangerousCareCode;
+
+    gatewayCacheService.save(GatewayCache.builder()
+        .caseId(newCaseId.toString())
+        .existsInFwmt(false)
+        .accessInfo(outcome.getAccessInfo())
+        .careCodes(updateCareCodes)
+        .type(typeCache)
+        .build());
   }
 }
