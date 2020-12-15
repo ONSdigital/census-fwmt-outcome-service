@@ -3,12 +3,7 @@ package uk.gov.ons.census.fwmt.outcomeservice.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.aopalliance.aop.Advice;
-import org.springframework.amqp.core.AmqpAdmin;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.FanoutExchange;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.QueueBuilder;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
@@ -48,47 +43,12 @@ public class OutcomePreprocessingQueueConfig {
 
   @Autowired
   private AmqpAdmin amqpAdmin;
-  @Value("${rabbitmq.prefetchCount}")
+  @Value("${app.rabbitmq.rm.prefetchCount}")
   private int prefetchCount;
 
-  // Queues
-  @Bean
-  @Qualifier("OS_Q")
-  public Queue outcomePreprocessingQueue() {
-    Queue queue = QueueBuilder.durable(OUTCOME_PREPROCESSING_QUEUE).withArgument("x-dead-letter-exchange", "")
-        .withArgument("x-dead-letter-routing-key", OUTCOME_PREPROCESSING_DLQ).withArgument("x-death", "")
-        .build();
-    queue.setAdminsThatShouldDeclare(amqpAdmin);
-    return queue;
-  }
 
-  // Dead Letter Queue
-  @Bean
-  @Qualifier("OS_DLQ")
-  public Queue outcomePreprocessingDeadLetterQueue() {
-    Queue queue = QueueBuilder.durable(OUTCOME_PREPROCESSING_DLQ).build();
-    queue.setAdminsThatShouldDeclare(amqpAdmin);
-    return queue;
-  }
 
-  // Exchange
-  @Bean
-  @Qualifier("OS_E")
-  public FanoutExchange outcomePreprocessingExchange() {
-    FanoutExchange fanoutExchange = new FanoutExchange(OUTCOME_PREPROCESSING_EXCHANGE);
-    fanoutExchange.setAdminsThatShouldDeclare(amqpAdmin);
-    return fanoutExchange;
-  }
 
-  // Bindings
-  @Bean
-  @Qualifier("OS_B")
-  public Binding outcomePreprocessorBinding(@Qualifier("OS_Q") Queue outcomePreprocessingQueue,
-      @Qualifier("OS_E") FanoutExchange outcomePreprocessingExchange) {
-    Binding binding = BindingBuilder.bind(outcomePreprocessingQueue).to(outcomePreprocessingExchange);
-    binding.setAdminsThatShouldDeclare(amqpAdmin);
-    return binding;
-  }
 
   // Listener Adapter
   @Bean
@@ -104,7 +64,7 @@ public class OutcomePreprocessingQueueConfig {
   // Message Listener
   @Bean
   @Qualifier("OS_LC")
-  public SimpleMessageListenerContainer outcomePreprocessingMessageListener(ConnectionFactory connectionFactory,
+  public SimpleMessageListenerContainer outcomePreprocessingMessageListener(@Qualifier("gatewayConnectionFactory") ConnectionFactory connectionFactory,
       @Qualifier("OS_L") MessageListenerAdapter messageListenerAdapter,
       RetryOperationsInterceptor retryOperationsInterceptor) {
     SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
@@ -146,10 +106,19 @@ public class OutcomePreprocessingQueueConfig {
     return jsonMessageConverter;
   }
 
-  @Bean(name = "preprocessingRabbitTemplate")
-  @Qualifier("OS_RT")
-  public RabbitTemplate rabbitTemplate(@Qualifier("OS_MC") MessageConverter mc,
-      ConnectionFactory connectionFactory) {
+  @Bean
+  @Qualifier("OS_RT_GW")
+  public RabbitTemplate preprocessingRabbitTemplate(@Qualifier("OS_MC") MessageConverter mc,
+      @Qualifier("gatewayConnectionFactory") ConnectionFactory connectionFactory) {
+    RabbitTemplate template = new RabbitTemplate(connectionFactory);
+    template.setMessageConverter(mc);
+    return template;
+  }
+
+  @Bean
+  @Qualifier("OS_RT_RM")
+  public RabbitTemplate rmPreprocessingRabbitTemplate(@Qualifier("OS_MC") MessageConverter mc,
+      @Qualifier("rmConnectionFactory") ConnectionFactory connectionFactory) {
     RabbitTemplate template = new RabbitTemplate(connectionFactory);
     template.setMessageConverter(mc);
     return template;

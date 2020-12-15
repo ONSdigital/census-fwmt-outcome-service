@@ -23,7 +23,7 @@ import java.util.Date;
 public class GatewayOutcomeProducer {
 
   @Autowired
-  @Qualifier("OS_RT")
+  @Qualifier("OS_RT_RM")
   private RabbitTemplate rabbitTemplate;
 
   @Autowired

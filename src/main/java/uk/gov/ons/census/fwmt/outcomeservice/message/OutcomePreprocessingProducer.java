@@ -32,7 +32,7 @@ import uk.gov.ons.census.fwmt.outcomeservice.config.OutcomePreprocessingQueueCon
 public class OutcomePreprocessingProducer {
 
   @Autowired
-  @Qualifier("OS_RT")
+  @Qualifier("OS_RT_GW")
   private RabbitTemplate rabbitTemplate;
 
   @Retryable
