@@ -30,7 +30,7 @@ public class RabbitQueuesHealthIndicator extends AbstractHealthIndicator {
   @Autowired
   GatewayEventManager gatewayEventManager;
   @Autowired
-  @Qualifier("connectionFactory")
+  @Qualifier("gatewayConnectionFactory")
   private ConnectionFactory connectionFactory;
   private RabbitAdmin rabbitAdmin;
 

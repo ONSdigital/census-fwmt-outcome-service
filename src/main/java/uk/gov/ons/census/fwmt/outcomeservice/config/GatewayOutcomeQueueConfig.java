@@ -17,10 +17,4 @@ public class GatewayOutcomeQueueConfig {
   public static final String GATEWAY_QUESTIONNAIRE_UPDATE_ROUTING_KEY = "event.questionnaire.update";
   public static final String GATEWAY_FIELD_CASE_UPDATE_ROUTING_KEY = "event.fieldcase.update";
   public static final String GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY = "event.ccs.propertylisting";
-
-  //Exchange
-  @Bean
-  public TopicExchange gatewayOutcomeExchange() {
-    return new TopicExchange(GATEWAY_OUTCOME_EXCHANGE);
-  }
 }
