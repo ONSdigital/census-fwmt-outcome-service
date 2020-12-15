@@ -23,8 +23,16 @@ services:
       - '5432:5432'
     environment:
       POSTGRES_PASSWORD: 'password'
-  rabbitmq:
-    image: 'rabbitmq:management-alpine'
+  rabbitRM:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitRM
     ports:
-      - '5672:5672'
-      - '15672:15672'
+      - 5672:5672
+      - 15672:15672
+  rabbitGW:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitGW
+    environment:
+    ports:
+      - 5673:5672
+      - 15673:15672
