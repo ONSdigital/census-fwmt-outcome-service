@@ -18,6 +18,7 @@ import uk.gov.ons.census.fwmt.outcomeservice.service.impl.GatewayCacheService;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 import uk.gov.ons.census.fwmt.outcomeservice.util.EncryptNames;
 
+import javax.transaction.Transactional;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import java.util.concurrent.TimeUnit;
 
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.REFUSAL_RECEIVED;
 
+@Transactional
 @Component("HARD_REFUSAL_RECEIVED")
 public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
 

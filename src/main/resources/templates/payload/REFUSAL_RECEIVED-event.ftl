@@ -2,7 +2,7 @@
 "type": "${refusalType}",
 "agentId": "${officerId}",
 
-<#if (type == "HH") && refusalType == "HARD_REFUSAL" && refusalCodes??>
+<#if (type == "HH" || type == "NC") && refusalType == "HARD_REFUSAL" && refusalCodes??>
 "isHouseholder": "${isHouseHolder?c}",
 "contact": {
 "title": "${encryptedTitle}",
