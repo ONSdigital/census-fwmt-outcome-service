@@ -18,7 +18,6 @@ import org.bouncycastle.openpgp.operator.jcajce.JcePGPDataEncryptorBuilder;
 import org.bouncycastle.openpgp.operator.jcajce.JcePublicKeyKeyEncryptionMethodGenerator;
 import org.bouncycastle.util.io.Streams;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import uk.gov.census.ffa.storage.utils.StorageUtils;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 
@@ -27,7 +26,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
 import java.nio.charset.Charset;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -110,7 +108,7 @@ public class EncryptNames {
       }
       return key;
     } catch (IOException | PGPException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "test", e);
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Unable to get public keys", e);
     }
   }
   private static byte[] compressFile(byte[] inputFile) throws GatewayException {

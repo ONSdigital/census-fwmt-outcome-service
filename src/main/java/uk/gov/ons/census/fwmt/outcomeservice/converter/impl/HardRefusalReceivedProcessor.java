@@ -2,14 +2,12 @@ package uk.gov.ons.census.fwmt.outcomeservice.converter.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import uk.gov.census.ffa.storage.utils.StorageUtils;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
 import uk.gov.ons.census.fwmt.outcomeservice.config.OutcomeSetup;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeLookup;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.RefusalEncryptionLookup;
 import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
@@ -21,15 +19,12 @@ import uk.gov.ons.census.fwmt.outcomeservice.util.EncryptNames;
 import java.net.URI;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -66,10 +61,10 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
   private StorageUtils storageUtils;
 
   @Value("${outcomeservice.pgp.fwmtPublicKey}")
-  private String testPublicKey;
+  private String fwmtPgpPublicKey;
 
   @Value("${outcomeservice.pgp.midlPublicKey}")
-  private String testSecondaryPublicKey;
+  private String midlPgpPublicKey;
 
   @Value("${outcomeservice.pgp.fwmtPublicKey}")
   private String directory;
@@ -149,8 +144,8 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
   protected String returnEncryptedNames(String names) throws GatewayException {
     String formatNames;
     var publicKeys = new ArrayList<InputStream>();
-    publicKeys.add(storageUtils.getFileInputStream(URI.create(testPublicKey)));
-    publicKeys.add(storageUtils.getFileInputStream(URI.create(testSecondaryPublicKey)));
+    publicKeys.add(storageUtils.getFileInputStream(URI.create(fwmtPgpPublicKey)));
+    publicKeys.add(storageUtils.getFileInputStream(URI.create(midlPgpPublicKey)));
     formatNames = EncryptNames.receivedNames(names, publicKeys);
     return Base64.getEncoder().encodeToString(formatNames.getBytes(Charset.defaultCharset()));
   }
