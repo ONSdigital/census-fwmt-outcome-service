@@ -14,7 +14,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @EnableRetry
 @ComponentScan({"uk.gov.ons.census.fwmt.outcomeservice", "uk.gov.ons.census.fwmt.events",
-    "uk.gov.ons.ctp.integration.common.product"})
+    "uk.gov.ons.ctp.integration.common.product", "uk.gov.census.ffa.storage.utils"})
 public class Application {
 
   public static final String APPLICATION_NAME = "FWMT Gateway - Outcome Service";

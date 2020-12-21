@@ -17,7 +17,8 @@ import org.bouncycastle.openpgp.jcajce.JcaPGPPublicKeyRingCollection;
 import org.bouncycastle.openpgp.operator.jcajce.JcePGPDataEncryptorBuilder;
 import org.bouncycastle.openpgp.operator.jcajce.JcePublicKeyKeyEncryptionMethodGenerator;
 import org.bouncycastle.util.io.Streams;
-import org.springframework.core.io.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
+import uk.gov.census.ffa.storage.utils.StorageUtils;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 
 import java.io.ByteArrayInputStream;
@@ -33,7 +34,10 @@ import java.util.Date;
 import java.util.Iterator;
 
 public class EncryptNames {
-  public static String receivedNames(String contents, Collection<Resource> publicKeyResources)
+  @Autowired
+  private StorageUtils storageUtils;
+
+  public static String receivedNames(String contents, Collection<InputStream> publicKeyResources)
       throws GatewayException {
     Collection<PGPPublicKey> publicPgpKeys = getPublicPgpKeys(publicKeyResources);
     return encryptNames(contents.getBytes(Charset.defaultCharset()), publicPgpKeys);
@@ -64,19 +68,19 @@ public class EncryptNames {
     return name;
   }
 
-  private static Collection<PGPPublicKey> getPublicPgpKeys(Collection<Resource> publicKeyResources)
+  private static Collection<PGPPublicKey> getPublicPgpKeys(Collection<InputStream> publicKeyResources)
       throws GatewayException {
     var publicKeys = new ArrayList<PGPPublicKey>();
-    for (Resource resource : publicKeyResources) {
+    for (InputStream resource : publicKeyResources) {
       PGPPublicKey publicPgpKey = getPublicPgpKey(resource);
       publicKeys.add(publicPgpKey);
     }
     return publicKeys;
   }
 
-  private static PGPPublicKey getPublicPgpKey(Resource pgpKey) throws GatewayException {
+  private static PGPPublicKey getPublicPgpKey(InputStream pgpKey) throws GatewayException {
     try {
-      InputStream input = PGPUtil.getDecoderStream(pgpKey.getInputStream());
+      InputStream input = PGPUtil.getDecoderStream(pgpKey);
 
       JcaPGPPublicKeyRingCollection pgpPublicKeyRingCollection = new JcaPGPPublicKeyRingCollection(input);
       input.close();
@@ -104,7 +108,7 @@ public class EncryptNames {
       }
       return key;
     } catch (IOException | PGPException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "test");
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Unable to get public keys", e);
     }
   }
   private static byte[] compressFile(byte[] inputFile) throws GatewayException {

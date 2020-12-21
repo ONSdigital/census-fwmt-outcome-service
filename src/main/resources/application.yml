@@ -59,13 +59,14 @@ outcomeservice:
   refusalEncryptionCodeLookup:
     path: classpath:/refusalEncryptionCodeLookup.txt
   pgp:
-    fwmtPublicKey: classpath:testPublicKey.asc
-    midlPublicKey: classpath:testSecondaryPublicKey.asc
+    fwmtPublicKey: "file://${home}/Documents/Dev/census-fwmt-outcome-service/src/main/resources/testPublicKey.public"
+    midlPublicKey: "file://${home}/Documents/Dev/census-fwmt-outcome-service/src/main/resources/testSecondaryPublicKey.public"
+    directory: "file://${home}/acceptance/data/"
 
 
 
 app:
-  testing: false
+  testing: true
   rabbitmq:
     gw:
       username: "guest"
