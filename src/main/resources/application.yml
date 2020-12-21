@@ -66,7 +66,7 @@ outcomeservice:
 
 
 app:
-  testing: true
+  testing: false
   rabbitmq:
     gw:
       username: "guest"
