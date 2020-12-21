@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+import uk.gov.census.ffa.storage.utils.StorageUtils;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
@@ -17,14 +18,18 @@ import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.service.impl.GatewayCacheService;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 import uk.gov.ons.census.fwmt.outcomeservice.util.EncryptNames;
+import java.net.URI;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -57,11 +62,17 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
   @Autowired
   private RefusalEncryptionLookup refusalEncryptionLookup;
 
+  @Autowired
+  private StorageUtils storageUtils;
+
   @Value("${outcomeservice.pgp.fwmtPublicKey}")
-  private Resource testPublicKey;
+  private String testPublicKey;
 
   @Value("${outcomeservice.pgp.midlPublicKey}")
-  private Resource testSecondaryPublicKey;
+  private String testSecondaryPublicKey;
+
+  @Value("${outcomeservice.pgp.fwmtPublicKey}")
+  private String directory;
 
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
@@ -137,9 +148,9 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
 
   protected String returnEncryptedNames(String names) throws GatewayException {
     String formatNames;
-    var publicKeys = new ArrayList<Resource>();
-    publicKeys.add(testPublicKey);
-    publicKeys.add(testSecondaryPublicKey);
+    var publicKeys = new ArrayList<InputStream>();
+    publicKeys.add(storageUtils.getFileInputStream(URI.create(testPublicKey)));
+    publicKeys.add(storageUtils.getFileInputStream(URI.create(testSecondaryPublicKey)));
     formatNames = EncryptNames.receivedNames(names, publicKeys);
     return Base64.getEncoder().encodeToString(formatNames.getBytes(Charset.defaultCharset()));
   }
