@@ -147,6 +147,7 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     publicKeys.add(storageUtils.getFileInputStream(URI.create(fwmtPgpPublicKey)));
     publicKeys.add(storageUtils.getFileInputStream(URI.create(midlPgpPublicKey)));
     formatNames = EncryptNames.receivedNames(names, publicKeys);
+
     return Base64.getEncoder().encodeToString(formatNames.getBytes(Charset.defaultCharset()));
   }
 
