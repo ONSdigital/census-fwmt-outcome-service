@@ -19,8 +19,8 @@ public class GatewayOutcomeQueueConfig {
   public static final String GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY = "event.ccs.propertylisting";
 
   //Exchange
-  @Bean
-  public TopicExchange gatewayOutcomeExchange() {
-    return new TopicExchange(GATEWAY_OUTCOME_EXCHANGE);
-  }
+//  @Bean
+//  public TopicExchange gatewayOutcomeExchange() {
+//    return new TopicExchange(GATEWAY_OUTCOME_EXCHANGE);
+//  }
 }

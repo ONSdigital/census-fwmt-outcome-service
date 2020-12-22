@@ -46,34 +46,34 @@ public class OutcomePreprocessingQueueConfig {
   @Value("${app.rabbitmq.rm.prefetchCount}")
   private int prefetchCount;
 
-  // Queues
-  @Bean
-  @Qualifier("OS_Q")
-  public Queue outcomePreprocessingQueue() {
-    Queue queue = QueueBuilder.durable(OUTCOME_PREPROCESSING_QUEUE).withArgument("x-dead-letter-exchange", "")
-        .withArgument("x-dead-letter-routing-key", OUTCOME_PREPROCESSING_DLQ).withArgument("x-death", "")
-        .build();
-    queue.setAdminsThatShouldDeclare(amqpAdmin);
-    return queue;
-  }
-
-  // Dead Letter Queue
-  @Bean
-  @Qualifier("OS_DLQ")
-  public Queue outcomePreprocessingDeadLetterQueue() {
-    Queue queue = QueueBuilder.durable(OUTCOME_PREPROCESSING_DLQ).build();
-    queue.setAdminsThatShouldDeclare(amqpAdmin);
-    return queue;
-  }
+//  // Queues
+//  @Bean
+//  @Qualifier("OS_Q")
+//  public Queue outcomePreprocessingQueue() {
+//    Queue queue = QueueBuilder.durable(OUTCOME_PREPROCESSING_QUEUE).withArgument("x-dead-letter-exchange", "")
+//        .withArgument("x-dead-letter-routing-key", OUTCOME_PREPROCESSING_DLQ).withArgument("x-death", "")
+//        .build();
+//    queue.setAdminsThatShouldDeclare(amqpAdmin);
+//    return queue;
+//  }
+//
+//  // Dead Letter Queue
+//  @Bean
+//  @Qualifier("OS_DLQ")
+//  public Queue outcomePreprocessingDeadLetterQueue() {
+//    Queue queue = QueueBuilder.durable(OUTCOME_PREPROCESSING_DLQ).build();
+//    queue.setAdminsThatShouldDeclare(amqpAdmin);
+//    return queue;
+//  }
 
   // Exchange
-  @Bean
-  @Qualifier("OS_E")
-  public DirectExchange outcomePreprocessingExchange() {
-    DirectExchange directExchange = new DirectExchange(OUTCOME_PREPROCESSING_EXCHANGE);
-    directExchange.setAdminsThatShouldDeclare(amqpAdmin);
-    return directExchange ;
-  }
+//  @Bean
+//  @Qualifier("OS_E")
+//  public DirectExchange outcomePreprocessingExchange() {
+//    DirectExchange directExchange = new DirectExchange(OUTCOME_PREPROCESSING_EXCHANGE);
+//    directExchange.setAdminsThatShouldDeclare(amqpAdmin);
+//    return directExchange ;
+//  }
 
 
 
