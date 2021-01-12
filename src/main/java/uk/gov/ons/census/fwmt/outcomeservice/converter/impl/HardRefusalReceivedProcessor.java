@@ -82,9 +82,7 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
 
     GatewayCache cache = gatewayCacheService.getById(String.valueOf(caseId));
 
-    if (cache == null) {
-      cacheData(outcome,caseId, type);
-    }
+    cacheData(outcome,caseId, type, cache);
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
     "survey type", type,
@@ -151,18 +149,31 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     return Base64.getEncoder().encodeToString(formatNames.getBytes(Charset.defaultCharset()));
   }
 
-  private void cacheData(OutcomeSuperSetDto outcome, UUID newCaseId, String type) throws GatewayException {
+  private void cacheData(OutcomeSuperSetDto outcome, UUID caseId, String type, GatewayCache cache) {
     int typeCache = type.equals("CE") ? 1 : 10;
     String dangerousCareCode = outcome.getRefusal().isDangerous() ? "Dangerous address" : "No safety issues";
     String updateCareCodes = outcome.getCareCodes() != null ? OutcomeSuperSetDto.careCodesToText(outcome.getCareCodes()) + ", " + dangerousCareCode :
         dangerousCareCode;
 
-    gatewayCacheService.save(GatewayCache.builder()
-        .caseId(newCaseId.toString())
-        .existsInFwmt(false)
-        .accessInfo(outcome.getAccessInfo())
-        .careCodes(updateCareCodes)
-        .type(typeCache)
-        .build());
+    if (cache == null) {
+      gatewayCacheService.save(GatewayCache.builder()
+          .caseId(caseId.toString())
+          .existsInFwmt(false)
+          .accessInfo(outcome.getAccessInfo())
+          .careCodes(updateCareCodes)
+          .type(typeCache)
+          .build());
+
+      gatewayEventManager.triggerErrorEvent(HardRefusalReceivedProcessor.class,
+          "Hard refusal has been received without a previous cache record",
+          caseId.toString(), "Unrecorded Hard refusal");
+    } else {
+      gatewayCacheService.save(cache.toBuilder()
+          .accessInfo(outcome.getAccessInfo())
+          .careCodes(updateCareCodes)
+          .type(typeCache)
+          .build());
+    }
+
   }
 }
