@@ -2,12 +2,13 @@ package uk.gov.ons.census.fwmt.outcomeservice.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import uk.gov.ons.census.fwmt.common.data.nc.NCOutcome;
 import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
 
 import java.util.UUID;
 
-@Component
+@Service
 public class NCTMCaseIdOverride {
 
     @Autowired
