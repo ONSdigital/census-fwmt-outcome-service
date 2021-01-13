@@ -66,7 +66,7 @@ public class HardRefusalReceivedProcessorTest {
 
   @Test
   @DisplayName("Should update the cache")
-  public void shouldUpdateHareRefusalCache() {
+  public void shouldUpdateHareRefusalCache() throws GatewayException {
     final OutcomeSuperSetDto outcome = new HardRefusalHelper().createHardRefusalOutcomne();
     GatewayCache mockEntry = new GatewayCache();
     mockEntry.setCaseId(outcome.getCaseId().toString());
