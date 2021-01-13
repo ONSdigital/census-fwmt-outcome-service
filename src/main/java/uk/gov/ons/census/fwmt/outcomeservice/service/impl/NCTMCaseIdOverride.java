@@ -11,7 +11,7 @@ import java.util.UUID;
 public class NCTMCaseIdOverride {
 
     @Autowired
-    GatewayCacheService gatewayCacheService;
+    private GatewayCacheService gatewayCacheService;
 
     public void overrideTMCaseIdWithRMOriginalCaseId(String caseID, NCOutcome ncOutcome) {
         GatewayCache gatewayCache = gatewayCacheService.getById(caseID);
