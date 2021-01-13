@@ -165,6 +165,7 @@ public class OutcomeServiceImpl implements OutcomeService {
   }
 
   @Override
+  @Transactional
   public void createNcOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
     String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
     if (operationsList == null) {
