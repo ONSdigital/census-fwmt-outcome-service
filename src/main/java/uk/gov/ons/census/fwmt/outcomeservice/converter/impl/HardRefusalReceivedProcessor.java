@@ -151,9 +151,15 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
 
   private void cacheData(OutcomeSuperSetDto outcome, UUID caseId, String type, GatewayCache cache) {
     int typeCache = type.equals("CE") ? 1 : 10;
-    String dangerousCareCode = outcome.getRefusal().isDangerous() ? "Dangerous address" : "No safety issues";
-    String updateCareCodes = outcome.getCareCodes() != null ? OutcomeSuperSetDto.careCodesToText(outcome.getCareCodes()) + ", " + dangerousCareCode :
-        dangerousCareCode;
+    String dangerousCareCode = "";
+    String updateCareCodes = "";
+    if (type.equals("HH")) {
+      dangerousCareCode = outcome.getRefusal().isDangerous()  ? "Dangerous address" : "No safety issues";
+      updateCareCodes = outcome.getCareCodes() != null ? OutcomeSuperSetDto.careCodesToText(outcome.getCareCodes()) + ", " + dangerousCareCode :
+          dangerousCareCode;
+    } else {
+      updateCareCodes = OutcomeSuperSetDto.careCodesToText(outcome.getCareCodes());
+    }
 
     if (cache == null) {
       gatewayCacheService.save(GatewayCache.builder()

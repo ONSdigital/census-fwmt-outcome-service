@@ -30,4 +30,23 @@ public class HardRefusalHelper {
     outcomeSuperSetDto.setTransactionId(UUID.randomUUID());
     return outcomeSuperSetDto;
   }
+
+  public OutcomeSuperSetDto createHardRefusalOutcomneWithNullDangerous() {
+    OutcomeSuperSetDto outcomeSuperSetDto = new OutcomeSuperSetDto();
+    outcomeSuperSetDto.setCaseId(UUID.randomUUID());
+    outcomeSuperSetDto.setOutcomeCode("Test");
+    List<CareCodeDto> careCodeDto = new ArrayList<>();
+    careCodeDto.add(CareCodeDto.builder().careCode("Test123").build());
+    outcomeSuperSetDto.setCareCodes(careCodeDto);
+    outcomeSuperSetDto.setAccessInfo("12345");
+    Refusal refusal = new Refusal();
+    refusal.setTitle("Mr");
+    refusal.setFirstname("John");
+    refusal.setSurname("Smith");
+    refusal.setHouseholder(true);
+    outcomeSuperSetDto.setRefusal(refusal);
+    outcomeSuperSetDto.setOfficerId("Test");
+    outcomeSuperSetDto.setTransactionId(UUID.randomUUID());
+    return outcomeSuperSetDto;
+  }
 }
