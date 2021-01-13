@@ -72,7 +72,7 @@ public class HardRefusalReceivedProcessorTest {
     mockEntry.setCaseId(outcome.getCaseId().toString());
     when(cacheService.getById(outcome.getCaseId().toString())).thenReturn(mockEntry);
     when(dateFormat.format(any())).thenReturn("2020-04-17T11:53:11.000+0000");
-    hardRefusalReceivedProcessor.process(outcome, outcome.getCaseId(), "NC");
+    hardRefusalReceivedProcessor.process(outcome, outcome.getCaseId(), "HH");
     verify(cacheService).save(spiedCache.capture());
     String caseId = spiedCache.getValue().caseId;
     String careCodes = spiedCache.getValue().careCodes;
@@ -80,5 +80,12 @@ public class HardRefusalReceivedProcessorTest {
     Assertions.assertEquals(outcome.getCaseId().toString(), caseId);
     Assertions.assertEquals("Test123, Dangerous address", careCodes);
     Assertions.assertEquals(outcome.getAccessInfo(), accessInfo);
+  }
+
+  @Test
+  @DisplayName("IsDangerous field should return false is null")
+  public void shouldReturnIsDangerousAsFalseIfNull() {
+    final OutcomeSuperSetDto outcome = new HardRefusalHelper().createHardRefusalOutcomneWithNullDangerous();
+    Assertions.assertEquals(false, outcome.getRefusal().isDangerous());
   }
 }
