@@ -222,17 +222,17 @@ public class OutcomeController implements OutcomeApi {
 
     @Override
     public ResponseEntity<Void> ncOutcome(String caseID, NCOutcome ncOutcome) throws GatewayException {
+        String hhCaseId = nctmCaseIdOverride.overrideTMCaseIdWithRMOriginalCaseId(caseID);
+        ncOutcome.setCaseId(UUID.fromString(hhCaseId));
         gatewayEventManager.triggerEvent(caseID, COMET_NC_OUTCOME_RECEIVED,
-                "transactionId", ncOutcome.getTransactionId().toString(),
-                "Survey type", "NC",
-                "Primary Outcome", ncOutcome.getPrimaryOutcomeDescription(),
-                "Secondary Outcome", ncOutcome.getSecondaryOutcomeDescription(),
-                "Outcome code", ncOutcome.getOutcomeCode(),
-                "NCOutcome", ncOutcome.toString());
-
-        nctmCaseIdOverride.overrideTMCaseIdWithRMOriginalCaseId(caseID, ncOutcome);
+            "transactionId", ncOutcome.getTransactionId().toString(),
+            "Original HH CaseId", hhCaseId,
+            "Survey type", "NC",
+            "Primary Outcome", ncOutcome.getPrimaryOutcomeDescription(),
+            "Secondary Outcome", ncOutcome.getSecondaryOutcomeDescription(),
+            "Outcome code", ncOutcome.getOutcomeCode(),
+            "NCOutcome", ncOutcome.toString());
         outcomePreprocessingProducer.sendHHStandaloneAddressToPreprocessingQueue(ncOutcome);
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
