@@ -1,5 +1,6 @@
 package uk.gov.ons.census.fwmt.outcomeservice.helpers;
 
+import uk.gov.ons.census.fwmt.common.data.nc.NCOutcome;
 import uk.gov.ons.census.fwmt.common.data.shared.Refusal;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.CareCodeDto;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.OutcomeSuperSetDto;

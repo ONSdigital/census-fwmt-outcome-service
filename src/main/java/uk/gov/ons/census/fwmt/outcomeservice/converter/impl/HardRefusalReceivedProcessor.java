@@ -149,7 +149,8 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     return Base64.getEncoder().encodeToString(formatNames.getBytes(Charset.defaultCharset()));
   }
 
-  private void cacheData(OutcomeSuperSetDto outcome, UUID caseId, String type, GatewayCache cache) {
+  private void cacheData(OutcomeSuperSetDto outcome, UUID caseId, String type, GatewayCache cache)
+      throws GatewayException {
     int typeCache = type.equals("CE") ? 1 : 10;
     String dangerousCareCode = "";
     String updateCareCodes = "";
@@ -162,17 +163,12 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     }
 
     if (cache == null) {
-      gatewayCacheService.save(GatewayCache.builder()
-          .caseId(caseId.toString())
-          .existsInFwmt(false)
-          .accessInfo(outcome.getAccessInfo())
-          .careCodes(updateCareCodes)
-          .type(typeCache)
-          .build());
-
       gatewayEventManager.triggerErrorEvent(HardRefusalReceivedProcessor.class,
-          "Hard refusal has been received without a previous cache record",
-          caseId.toString(), "Unrecorded Hard refusal");
+          "Cache lookup for hard refusal has not returned a case within cache.",
+          caseId.toString(), "Case never received by Job Service",
+          "type", type,
+          "outcome", outcome.toString());
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Case did not exist in cache");
     } else {
       gatewayCacheService.save(cache.toBuilder()
           .accessInfo(outcome.getAccessInfo())

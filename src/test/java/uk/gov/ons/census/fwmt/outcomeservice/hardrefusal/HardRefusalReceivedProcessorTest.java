@@ -22,6 +22,7 @@ import uk.gov.ons.census.fwmt.outcomeservice.service.impl.GatewayCacheService;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
 import java.text.DateFormat;
+import java.time.Instant;
 import java.util.Date;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -80,6 +81,15 @@ public class HardRefusalReceivedProcessorTest {
     Assertions.assertEquals(outcome.getCaseId().toString(), caseId);
     Assertions.assertEquals("Test123, Dangerous address", careCodes);
     Assertions.assertEquals(outcome.getAccessInfo(), accessInfo);
+  }
+
+  @Test
+  @DisplayName("Should throw an error if the cache does not exist")
+  public void shouldThrowErrorIfCacheDoesNotExistForHardRefusal() throws GatewayException {
+    final OutcomeSuperSetDto outcome = new HardRefusalHelper().createHardRefusalOutcomne();
+    Assertions.assertThrows(GatewayException.class, () -> {
+      hardRefusalReceivedProcessor.process(outcome, outcome.getCaseId(), "HH");
+    });
   }
 
   @Test
