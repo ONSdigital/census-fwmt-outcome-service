@@ -34,7 +34,7 @@
     <#if sourceCase == "NEW_STANDALONE">
       "latitude" : "${address.latitude?string["0.########"]}",
       "longitude" : "${address.longitude?string["0.#########"]}",
-      <#if surveyType == "CE">
+      <#if surveyType != "HH">
       "estabType": "${ceDetails.establishmentType}",
       "organisationName": "${ceDetails.establishmentName}",
       "secureType": "${ceDetails.establishmentSecure}",
