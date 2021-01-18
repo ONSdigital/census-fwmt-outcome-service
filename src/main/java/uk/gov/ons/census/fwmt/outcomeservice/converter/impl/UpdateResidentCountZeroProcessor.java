@@ -21,10 +21,13 @@ import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.FIELD_CASE_U
 public class UpdateResidentCountZeroProcessor implements OutcomeServiceProcessor {
     public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
     public static final String OUTCOME_SENT = "OUTCOME_SENT";
+
     @Autowired
     private DateFormat dateFormat;
+
     @Autowired
     private GatewayOutcomeProducer gatewayOutcomeProducer;
+
     @Autowired
     private GatewayEventManager gatewayEventManager;
 
@@ -42,13 +45,14 @@ public class UpdateResidentCountZeroProcessor implements OutcomeServiceProcessor
         Map<String, Object> root = new HashMap<>();
         root.put("outcome", outcome);
         root.put("eventDate", eventDateTime);
-        root.put("caseId", caseId);
+        root.put("caseId", outcome.getSiteCaseId());
         root.put("usualResidents", 0);
         String outcomeEvent = TemplateCreator.createOutcomeMessage(FIELD_CASE_UPDATED, root);
         gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
                 GatewayOutcomeQueueConfig.GATEWAY_FIELD_CASE_UPDATE_ROUTING_KEY);
         gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
                 "survey type", type,
+                "Site Case id", outcome.getSiteCaseId().toString(),
                 "type", FIELD_CASE_UPDATED.toString(),
                 "transactionId", outcome.getTransactionId().toString(),
                 "routing key", GatewayOutcomeQueueConfig.GATEWAY_FIELD_CASE_UPDATE_ROUTING_KEY);
