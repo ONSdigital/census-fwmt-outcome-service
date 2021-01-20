@@ -23,6 +23,10 @@ public class GatewayCacheService {
     return repository.findByCaseId(caseId);
   }
 
+  public GatewayCache getByOriginalId(String caseId) {
+    return repository.findByOriginalCaseId(caseId);
+  }
+
   public void save(GatewayCache cache) {
     repository.save(cache);
   }

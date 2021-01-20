@@ -20,7 +20,7 @@ import uk.gov.ons.census.fwmt.common.data.spg.SPGOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.message.OutcomePreprocessingProducer;
-import uk.gov.ons.census.fwmt.outcomeservice.service.impl.NCTMCaseIdOverride;
+import uk.gov.ons.census.fwmt.outcomeservice.service.impl.SwitchCaseIdService;
 
 import java.util.UUID;
 
@@ -48,7 +48,7 @@ public class OutcomeController implements OutcomeApi {
     private OutcomePreprocessingProducer outcomePreprocessingProducer;
 
     @Autowired
-    private NCTMCaseIdOverride nctmCaseIdOverride;
+    private SwitchCaseIdService switchCaseIdService;
 
     @Override
     public ResponseEntity<Void> ceOutcomeResponse(String caseId, CEOutcome ceOutcome) {
@@ -222,7 +222,7 @@ public class OutcomeController implements OutcomeApi {
 
     @Override
     public ResponseEntity<Void> ncOutcome(String caseID, NCOutcome ncOutcome) throws GatewayException {
-        String hhCaseId = nctmCaseIdOverride.overrideTMCaseIdWithRMOriginalCaseId(caseID);
+        String hhCaseId = switchCaseIdService.fromNcToOriginal(caseID);
         ncOutcome.setCaseId(UUID.fromString(hhCaseId));
         gatewayEventManager.triggerEvent(caseID, COMET_NC_OUTCOME_RECEIVED,
             "transactionId", ncOutcome.getTransactionId().toString(),
