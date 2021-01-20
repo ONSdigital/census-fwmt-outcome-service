@@ -12,10 +12,10 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class NCTMCaseIdOverrideTest {
+public class SwitchCaseIdServiceTest {
 
     @InjectMocks
-    private NCTMCaseIdOverride nctmCaseIdOverride;
+    private SwitchCaseIdService switchCaseIdService;
 
     @Mock
     private GatewayCacheService gatewayCacheService;
@@ -26,7 +26,7 @@ public class NCTMCaseIdOverrideTest {
         gatewayCache.setOriginalCaseId("a48bf28e-e7f4-4467-a9fb-e000b6a55676");
 
         when(gatewayCacheService.getById(anyString())).thenReturn(gatewayCache);
-        String caseId = nctmCaseIdOverride.overrideTMCaseIdWithRMOriginalCaseId("b48bf28e-e7f4-4467-a9fb-e000b6a33543");
+        String caseId = switchCaseIdService.fromNcToOriginal("b48bf28e-e7f4-4467-a9fb-e000b6a33543");
         Assertions.assertEquals("a48bf28e-e7f4-4467-a9fb-e000b6a55676", caseId);
         verify(gatewayCacheService, times(1)).getById(anyString());
     }

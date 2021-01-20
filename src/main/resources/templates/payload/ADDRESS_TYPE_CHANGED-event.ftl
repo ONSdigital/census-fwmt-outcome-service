@@ -7,8 +7,12 @@
 </#if>
 "address" : {
 <#if surveyType != "HH">
+<#if estabType??>
 "estabType":"${estabType}",
+</#if>
+<#if estabName??>
 "organisationName":"${estabName}",
+</#if>
 </#if>
 "addressType":"${surveyType}"
 }

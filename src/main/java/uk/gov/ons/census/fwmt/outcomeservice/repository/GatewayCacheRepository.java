@@ -14,6 +14,9 @@ public interface GatewayCacheRepository extends JpaRepository<GatewayCache, Long
   @Lock(LockModeType.PESSIMISTIC_WRITE)
   GatewayCache findByCaseId(String caseId);
 
+  @Lock(LockModeType.PESSIMISTIC_WRITE)
+  GatewayCache findByOriginalCaseId(String caseId);
+
 //  List<GatewayCache> findAll();
 
 }
