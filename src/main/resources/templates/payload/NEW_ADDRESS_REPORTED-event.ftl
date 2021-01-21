@@ -35,10 +35,10 @@
       "latitude" : "${address.latitude?string["0.########"]}",
       "longitude" : "${address.longitude?string["0.#########"]}",
       <#if surveyType != "HH">
-      <#if ceDetails.establishmentType??>
-      "estabType": "${ceDetails.establishmentType}",
-      </#if>
+      <#if ceDetails.establishmentName??>
       "organisationName": "${ceDetails.establishmentName}",
+      </#if>
+      "estabType": "${ceDetails.establishmentType}",
       "secureType": "${ceDetails.establishmentSecure}",
       </#if>
     </#if>
