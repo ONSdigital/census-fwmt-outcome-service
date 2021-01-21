@@ -63,7 +63,7 @@ public class NewAddressReportedProcessor implements OutcomeServiceProcessor {
         outcome.getCeDetails().setEstablishmentType("OTHER");
       }
       if (outcome.getCeDetails().getEstablishmentName() == null){
-        outcome.getCeDetails().setEstablishmentName("Not Provided");
+        outcome.getCeDetails().setEstablishmentName(null);
       }
       if (outcome.getCeDetails().getEstablishmentSecure() == null ) {
         outcome.getCeDetails().setEstablishmentSecure("false");
