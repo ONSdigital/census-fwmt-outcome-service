@@ -46,7 +46,7 @@
     "addressType" : "${surveyType}",
     "region" :"${region}"
 }
-    <#if usualResidents??>
+    <#if surveyType == "CE">
     ,"ceExpectedCapacity" : "${usualResidents?c}"
     </#if>
 }
