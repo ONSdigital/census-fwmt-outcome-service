@@ -18,6 +18,10 @@ public class OutcomeServiceLogConfig {
 
   public static final String SURVEY_TYPE = "survey type";
 
+  public static final String OUTCOME_CODE = "Outcome Code";
+
+  public static final String SECONDARY_OUTCOME = "Secondary Outcome";
+
   public static final String OUTCOME = "Outcome";
 
   public static final String ACTION_INSTRUCTION_TYPE = "Action Instructions";

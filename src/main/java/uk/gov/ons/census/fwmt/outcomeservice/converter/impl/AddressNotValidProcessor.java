@@ -49,9 +49,9 @@ public class AddressNotValidProcessor implements OutcomeServiceProcessor {
     if (reasonCode.equals("NOT_FOUND")) {
       gatewayEventManager.triggerErrorEvent(this.getClass(), "No reason code found",
           String.valueOf(outcome.getCaseId()), FAILED_TO_LOOKUP_REASON_CODE,
-          "Survey type", type,
-          "Outcome code", outcome.getOutcomeCode(),
-          "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
+          SURVEY_TYPE, type,
+          OUTCOME_CODE, outcome.getOutcomeCode(),
+          SECONDARY_OUTCOME, outcome.getSecondaryOutcomeDescription());
     }
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
