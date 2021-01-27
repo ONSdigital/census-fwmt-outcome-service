@@ -15,12 +15,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceLogConfig.*;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.FIELD_CASE_UPDATED;
 
 @Component("UPDATE_RESIDENT_COUNT_0")
 public class UpdateResidentCountZeroProcessor implements OutcomeServiceProcessor {
-    public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
-    public static final String OUTCOME_SENT = "OUTCOME_SENT";
 
     @Autowired
     private DateFormat dateFormat;
@@ -34,11 +33,13 @@ public class UpdateResidentCountZeroProcessor implements OutcomeServiceProcessor
     @Override
     public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
         UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
+
         gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
-                "survey type", type,
-                "processor", "UPDATE_RESIDENT_COUNT_0",
-                "original caseId", String.valueOf(outcome.getCaseId()),
-                "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+                SURVEY_TYPE, type,
+                PROCESSOR, "UPDATE_RESIDENT_COUNT_0",
+                ORIGINAL_CASE_ID, String.valueOf(outcome.getCaseId()),
+                SITE_CASE_ID, (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+
         if (outcome.getCeDetails() == null) return caseId;
         if (outcome.getCeDetails().getUsualResidents() == null) return caseId;
         String eventDateTime = dateFormat.format(outcome.getEventDate());
@@ -47,15 +48,18 @@ public class UpdateResidentCountZeroProcessor implements OutcomeServiceProcessor
         root.put("eventDate", eventDateTime);
         root.put("caseId", outcome.getSiteCaseId());
         root.put("usualResidents", 0);
+
         String outcomeEvent = TemplateCreator.createOutcomeMessage(FIELD_CASE_UPDATED, root);
+
         gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
                 GatewayOutcomeQueueConfig.GATEWAY_FIELD_CASE_UPDATE_ROUTING_KEY);
+
         gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
-                "survey type", type,
-                "Site Case id", outcome.getSiteCaseId().toString(),
-                "type", FIELD_CASE_UPDATED.toString(),
-                "transactionId", outcome.getTransactionId().toString(),
-                "routing key", GatewayOutcomeQueueConfig.GATEWAY_FIELD_CASE_UPDATE_ROUTING_KEY);
+                SURVEY_TYPE, type,
+                SITE_CASE_ID, outcome.getSiteCaseId().toString(),
+                TEMPLATE_TYPE, FIELD_CASE_UPDATED.toString(),
+                TRANSACTION_ID, outcome.getTransactionId().toString(),
+                ROUTING_KEY, GatewayOutcomeQueueConfig.GATEWAY_FIELD_CASE_UPDATE_ROUTING_KEY);
         return caseId;
     }
 }

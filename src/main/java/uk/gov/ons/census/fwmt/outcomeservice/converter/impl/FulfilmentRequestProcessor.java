@@ -18,24 +18,16 @@ import uk.gov.ons.ctp.common.error.CTPException;
 import uk.gov.ons.ctp.integration.common.product.ProductReference;
 import uk.gov.ons.ctp.integration.common.product.model.Product;
 
-
 import java.text.DateFormat;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
+import static uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceLogConfig.*;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.FULFILMENT_REQUESTED;
 import static uk.gov.ons.ctp.integration.common.product.model.Product.RequestChannel.FIELD;
 
 @Slf4j
 @Component("FULFILMENT_REQUESTED")
 public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
-
-  public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
-
-  public static final String OUTCOME_SENT = "OUTCOME_SENT";
 
   @Autowired
   private DateFormat dateFormat;
@@ -55,10 +47,10 @@ public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_OUTCOME,
-    "survey type", type,
-    "processor", "FULFILMENT_REQUESTED",
-    "original caseId", String.valueOf(outcome.getCaseId()),
-    "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+        SURVEY_TYPE, type,
+        PROCESSOR, "FULFILMENT_REQUESTED",
+        ORIGINAL_CASE_ID, String.valueOf(outcome.getCaseId()),
+        SITE_CASE_ID, (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
  
     if (outcome.getFulfilmentRequests() == null) return caseIdHolder;
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
@@ -74,11 +66,12 @@ public class FulfilmentRequestProcessor implements OutcomeServiceProcessor {
 
         gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
             GatewayOutcomeQueueConfig.GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY);
+
         gatewayEventManager.triggerEvent(String.valueOf(caseIdHolder), OUTCOME_SENT,
-            "survey type", type,
-            "type", FULFILMENT_REQUESTED.toString(),
-            "transactionId", outcome.getTransactionId().toString(),
-            "routing key", GatewayOutcomeQueueConfig.GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY);
+            SURVEY_TYPE, type,
+            TEMPLATE_TYPE, FULFILMENT_REQUESTED.toString(),
+            TRANSACTION_ID, outcome.getTransactionId().toString(),
+            ROUTING_KEY, GatewayOutcomeQueueConfig.GATEWAY_FULFILMENT_REQUEST_ROUTING_KEY);
       }
     }
     return caseId;

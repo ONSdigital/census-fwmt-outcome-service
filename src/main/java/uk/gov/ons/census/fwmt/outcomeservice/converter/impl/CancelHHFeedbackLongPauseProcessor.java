@@ -12,6 +12,8 @@ import uk.gov.ons.census.fwmt.outcomeservice.message.RmFieldRepublishProducer;
 
 import java.util.UUID;
 
+import static uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceLogConfig.*;
+
 @Component("FEEDBACK_LONG_PAUSE")
 public class CancelHHFeedbackLongPauseProcessor implements OutcomeServiceProcessor {
 
@@ -21,19 +23,15 @@ public class CancelHHFeedbackLongPauseProcessor implements OutcomeServiceProcess
     @Autowired
     private GatewayEventManager gatewayEventManager;
 
-    public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
-
-    public static final String RM_FIELD_REPUBLISH = "RM_FIELD_REPUBLISH";
-
     @Override
     public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
         UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
 
         gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
-                "survey type", type,
-                "processor", "FEEDBACK_LONG_PAUSE",
-                "original caseId", String.valueOf(outcome.getCaseId()),
-                "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+            SURVEY_TYPE, type,
+            PROCESSOR, "FEEDBACK_LONG_PAUSE",
+            ORIGINAL_CASE_ID, String.valueOf(outcome.getCaseId()),
+            SITE_CASE_ID, (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
         FwmtActionInstruction fieldworkCancel = FwmtActionInstruction.builder()
                 .actionInstruction(ActionInstructionType.CANCEL)
@@ -46,10 +44,10 @@ public class CancelHHFeedbackLongPauseProcessor implements OutcomeServiceProcess
         rmFieldRepublishProducer.republish(fieldworkCancel);
 
         gatewayEventManager.triggerEvent(String.valueOf(caseId), RM_FIELD_REPUBLISH,
-                "survey name", "CENSUS",
-                "address type", "HH",
-                "action instruction", ActionInstructionType.CANCEL.toString(),
-                "transactionId", outcome.getTransactionId().toString());
+            SURVEY_NAME, "CENSUS",
+            ADDRESS_TYPE, "HH",
+            ACTION_INSTRUCTION_TYPE, ActionInstructionType.CANCEL.toString(),
+            TRANSACTION_ID, outcome.getTransactionId().toString());
 
         return caseId;
     }
