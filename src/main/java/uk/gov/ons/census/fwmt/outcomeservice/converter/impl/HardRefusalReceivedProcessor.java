@@ -75,6 +75,10 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     String encryptedTitle = "";
     String encryptedForename = "";
     String encryptedSurname = "";
+    String foreName;
+    String middleName;
+    String combinedNames = "";
+    boolean correctType;
 
     String refusalCodes = refusalEncryptionLookup.getLookup(outcome.getOutcomeCode());
 
@@ -89,23 +93,32 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     "processor", "HARD_REFUSAL_RECEIVED",
     "original caseId", String.valueOf(outcome.getCaseId()),
     "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
-    if (refusalCodes != null) {
-      if (outcome.getRefusal() != null && (type.equals("HH") || type.equals("NC"))) {
-        if (outcome.getRefusal().isHouseholder() && (outcome.getRefusal().getSurname() != null
-            && !outcome.getRefusal().getSurname().equals(""))) {
-          isHouseHolder = outcome.getRefusal().isHouseholder();
-          encryptedTitle = outcome.getRefusal().getTitle() != null ?
-              returnEncryptedNames(outcome.getRefusal().getTitle()) : "";
-          if (outcome.getRefusal().getMiddlenames() != null && !outcome.getRefusal().getMiddlenames().equals("")) {
-            String combinedNames = outcome.getRefusal().getFirstname() + " " + outcome.getRefusal().getMiddlenames();
-            encryptedForename = returnEncryptedNames(combinedNames);
-          } else {
-            encryptedForename = outcome.getRefusal().getFirstname() != null ?
-                returnEncryptedNames(outcome.getRefusal().getFirstname()) :"";
-          }
-          encryptedSurname = returnEncryptedNames(outcome.getRefusal().getSurname());
-        }
+
+    correctType = type.equals("HH") || type.equals("NC");
+
+    if (refusalCodes != null && correctType && outcome.getRefusal() != null) {
+      isHouseHolder = outcome.getRefusal().isHouseholder();
+      encryptedTitle = outcome.getRefusal().getTitle() != null && !outcome.getRefusal().getTitle().isBlank() ?
+          returnEncryptedNames(outcome.getRefusal().getTitle()) : "";
+
+      foreName = outcome.getRefusal().getFirstname() != null && !outcome.getRefusal().getFirstname().isBlank() ?
+          outcome.getRefusal().getFirstname() : "";
+
+      middleName = outcome.getRefusal().getMiddlenames() != null && !outcome.getRefusal().getMiddlenames().isBlank() ?
+          outcome.getRefusal().getMiddlenames() : "";
+
+      if (!foreName.isBlank() && !middleName.isBlank()) {
+        combinedNames = foreName + " " + middleName;
+      } else if (!foreName.isBlank()) {
+        combinedNames = foreName;
+      } else if (!middleName.isBlank()) {
+        combinedNames = middleName;
       }
+
+      encryptedForename = !combinedNames.isBlank() ? returnEncryptedNames(combinedNames) : "";
+
+      encryptedSurname = outcome.getRefusal().getSurname() != null && !outcome.getRefusal().getSurname().isBlank() ?
+          returnEncryptedNames(outcome.getRefusal().getSurname()) : "";
     }
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
@@ -152,8 +165,8 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
   private void cacheData(OutcomeSuperSetDto outcome, UUID caseId, String type, GatewayCache cache)
       throws GatewayException {
     int typeCache = type.equals("CE") ? 1 : 10;
-    String dangerousCareCode = "";
-    String updateCareCodes = "";
+    String dangerousCareCode;
+    String updateCareCodes;
     if (type.equals("HH")) {
       dangerousCareCode = outcome.getRefusal().isDangerous()  ? "Dangerous address" : "No safety issues";
       updateCareCodes = outcome.getCareCodes() != null ? OutcomeSuperSetDto.careCodesToText(outcome.getCareCodes()) + ", " + dangerousCareCode :
