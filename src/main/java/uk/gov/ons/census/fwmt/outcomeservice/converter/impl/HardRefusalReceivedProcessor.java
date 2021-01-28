@@ -75,10 +75,10 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     String encryptedTitle = "";
     String encryptedForename = "";
     String encryptedSurname = "";
-    String foreName = "";
-    String middleName = "";
+    String foreName;
+    String middleName;
     String combinedNames = "";
-    boolean correctType = false;
+    boolean correctType;
 
     String refusalCodes = refusalEncryptionLookup.getLookup(outcome.getOutcomeCode());
 
