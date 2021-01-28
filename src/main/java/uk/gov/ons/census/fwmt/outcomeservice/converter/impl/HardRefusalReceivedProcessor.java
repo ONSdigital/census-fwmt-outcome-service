@@ -75,6 +75,10 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     String encryptedTitle = "";
     String encryptedForename = "";
     String encryptedSurname = "";
+    String foreName = "";
+    String middleName = "";
+    String combinedNames = "";
+    boolean correctType = false;
 
     String refusalCodes = refusalEncryptionLookup.getLookup(outcome.getOutcomeCode());
 
@@ -89,23 +93,32 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     "processor", "HARD_REFUSAL_RECEIVED",
     "original caseId", String.valueOf(outcome.getCaseId()),
     "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
-    if (refusalCodes != null) {
-      if (outcome.getRefusal() != null && (type.equals("HH") || type.equals("NC"))) {
-        if (outcome.getRefusal().isHouseholder() && (outcome.getRefusal().getSurname() != null
-            && !outcome.getRefusal().getSurname().equals(""))) {
-          isHouseHolder = outcome.getRefusal().isHouseholder();
-          encryptedTitle = outcome.getRefusal().getTitle() != null ?
-              returnEncryptedNames(outcome.getRefusal().getTitle()) : "";
-          if (outcome.getRefusal().getMiddlenames() != null && !outcome.getRefusal().getMiddlenames().equals("")) {
-            String combinedNames = outcome.getRefusal().getFirstname() + " " + outcome.getRefusal().getMiddlenames();
-            encryptedForename = returnEncryptedNames(combinedNames);
-          } else {
-            encryptedForename = outcome.getRefusal().getFirstname() != null ?
-                returnEncryptedNames(outcome.getRefusal().getFirstname()) :"";
-          }
-          encryptedSurname = returnEncryptedNames(outcome.getRefusal().getSurname());
-        }
+
+    correctType = type.equals("HH") || type.equals("NC");
+
+    if (refusalCodes != null && correctType && outcome.getRefusal() != null) {
+      isHouseHolder = outcome.getRefusal().isHouseholder();
+      encryptedTitle = outcome.getRefusal().getTitle() != null && !outcome.getRefusal().getTitle().equals("") ?
+          returnEncryptedNames(outcome.getRefusal().getTitle()) : "";
+
+      foreName = outcome.getRefusal().getFirstname() != null && !outcome.getRefusal().getFirstname().equals("") ?
+          outcome.getRefusal().getFirstname() : "";
+
+      middleName = outcome.getRefusal().getMiddlenames() != null && !outcome.getRefusal().getMiddlenames().equals("") ?
+          outcome.getRefusal().getMiddlenames() : "";
+
+      if (!foreName.equals("") && !middleName.equals("")) {
+        combinedNames = foreName + " " + middleName;
+      } else if (!foreName.equals("")) {
+        combinedNames = foreName;
+      } else if (!middleName.equals("")) {
+        combinedNames = middleName;
       }
+
+      encryptedForename = !combinedNames.equals("") ? returnEncryptedNames(combinedNames) : "";
+
+      encryptedSurname = outcome.getRefusal().getSurname() != null && !outcome.getRefusal().getSurname().equals("") ?
+          returnEncryptedNames(outcome.getRefusal().getSurname()) : "";
     }
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
