@@ -15,14 +15,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceLogConfig.*;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.FIELD_CASE_UPDATED;
 
 @Component("UPDATE_RESIDENT_COUNT")
 public class UpdateResidentCountProcessor implements OutcomeServiceProcessor {
-
-  public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
-
-  public static final String OUTCOME_SENT = "OUTCOME_SENT";
 
   @Autowired
   private DateFormat dateFormat;
@@ -38,10 +35,10 @@ public class UpdateResidentCountProcessor implements OutcomeServiceProcessor {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
-    "survey type", type,
-    "processor", "UPDATE_RESIDENT_COUNT",
-    "original caseId", String.valueOf(outcome.getCaseId()),
-    "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+    SURVEY_TYPE, type,
+    PROCESSOR, "UPDATE_RESIDENT_COUNT",
+    ORIGINAL_CASE_ID, String.valueOf(outcome.getCaseId()),
+    SITE_CASE_ID, (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
     if (outcome.getCeDetails() == null) return caseId;
     if (outcome.getCeDetails().getUsualResidents() == null) return caseId;
@@ -57,11 +54,12 @@ public class UpdateResidentCountProcessor implements OutcomeServiceProcessor {
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_FIELD_CASE_UPDATE_ROUTING_KEY);
+
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
-        "survey type", type,
-        "type", FIELD_CASE_UPDATED.toString(),
-        "transactionId", outcome.getTransactionId().toString(),
-        "routing key", GatewayOutcomeQueueConfig.GATEWAY_FIELD_CASE_UPDATE_ROUTING_KEY);
+        SURVEY_TYPE, type,
+        TEMPLATE_TYPE, FIELD_CASE_UPDATED.toString(),
+        TRANSACTION_ID, outcome.getTransactionId().toString(),
+        ROUTING_KEY, GatewayOutcomeQueueConfig.GATEWAY_FIELD_CASE_UPDATE_ROUTING_KEY);
     return caseId;
   }
 }

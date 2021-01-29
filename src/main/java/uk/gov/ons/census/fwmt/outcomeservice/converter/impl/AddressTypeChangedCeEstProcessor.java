@@ -17,15 +17,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceLogConfig.*;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.ADDRESS_TYPE_CHANGED;
-import static uk.gov.ons.census.fwmt.outcomeservice.util.SpgUtilityMethods.regionLookup;
 
 @Component("ADDRESS_TYPE_CHANGED_CE_EST")
 public class AddressTypeChangedCeEstProcessor implements OutcomeServiceProcessor {
-
-  public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
-
-  public static final String OUTCOME_SENT = "OUTCOME_SENT";
 
   @Autowired
   private DateFormat dateFormat;
@@ -44,10 +40,10 @@ public class AddressTypeChangedCeEstProcessor implements OutcomeServiceProcessor
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
-    "survey type", type,
-    "processor", "ADDRESS_TYPE_CHANGED_CE_EST",
-    "original caseId", String.valueOf(outcome.getCaseId()),
-    "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+        SURVEY_TYPE, type,
+        PROCESSOR, "ADDRESS_TYPE_CHANGED_CE_EST",
+        ORIGINAL_CASE_ID, String.valueOf(outcome.getCaseId()),
+        SITE_CASE_ID, (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
     Map<String, Object> root = new HashMap<>();
     root.put("caseId", caseId);
@@ -74,11 +70,12 @@ public class AddressTypeChangedCeEstProcessor implements OutcomeServiceProcessor
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
+
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
-        "survey type", type,
-        "type", ADDRESS_TYPE_CHANGED.toString(),
-        "transactionId", outcome.getTransactionId().toString(),
-        "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
+        SURVEY_TYPE, type,
+        TEMPLATE_TYPE, ADDRESS_TYPE_CHANGED.toString(),
+        TRANSACTION_ID, outcome.getTransactionId().toString(),
+        ROUTING_KEY, GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
 
     return newCaseId;
   }

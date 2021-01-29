@@ -16,28 +16,21 @@ import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.service.impl.GatewayCacheService;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 import uk.gov.ons.census.fwmt.outcomeservice.util.EncryptNames;
-import java.net.URI;
 
 import javax.transaction.Transactional;
 import java.io.InputStream;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import static uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceLogConfig.*;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.REFUSAL_RECEIVED;
 
 @Transactional
 @Component("HARD_REFUSAL_RECEIVED")
 public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
-
-  public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
-
-  public static final String OUTCOME_SENT = "OUTCOME_SENT";
 
   @Autowired
   private DateFormat dateFormat;
@@ -66,9 +59,6 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
   @Value("${outcomeservice.pgp.midlPublicKey}")
   private String midlPgpPublicKey;
 
-  @Value("${outcomeservice.pgp.fwmtPublicKey}")
-  private String directory;
-
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     boolean isHouseHolder = false;
@@ -86,14 +76,14 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
 
     GatewayCache cache = gatewayCacheService.getById(String.valueOf(caseId));
 
-    cacheData(outcome,caseId, type, cache);
+    cacheData(outcome, caseId, type, cache);
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
-    "survey type", type,
-    "processor", "HARD_REFUSAL_RECEIVED",
-    "original caseId", String.valueOf(outcome.getCaseId()),
-    "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
-
+        SURVEY_TYPE, type,
+        PROCESSOR, "HARD_REFUSAL_RECEIVED",
+        ORIGINAL_CASE_ID, String.valueOf(outcome.getCaseId()),
+        SITE_CASE_ID, (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+    
     correctType = type.equals("HH") || type.equals("NC");
 
     if (refusalCodes != null && correctType && outcome.getRefusal() != null) {
@@ -144,10 +134,10 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
             GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
-        "survey type", type,
-        "type", REFUSAL_RECEIVED.toString(),
-        "transactionId", outcome.getTransactionId().toString(),
-        "routing key", GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
+        SURVEY_TYPE, type,
+        TEMPLATE_TYPE, REFUSAL_RECEIVED.toString(),
+        TRANSACTION_ID, outcome.getTransactionId().toString(),
+        ROUTING_KEY, GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
 
     return caseId;
   }
@@ -179,8 +169,8 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
       gatewayEventManager.triggerErrorEvent(HardRefusalReceivedProcessor.class,
           "Cache lookup for hard refusal has not returned a case within cache.",
           caseId.toString(), "Case never received by Job Service",
-          "type", type,
-          "outcome", outcome.toString());
+          SURVEY_TYPE, type,
+          OUTCOME, outcome.toString());
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Case did not exist in cache");
     } else {
       gatewayCacheService.save(cache.toBuilder()
@@ -189,6 +179,5 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
           .type(typeCache)
           .build());
     }
-
   }
 }

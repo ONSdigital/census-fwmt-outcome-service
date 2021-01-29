@@ -14,16 +14,14 @@ import uk.gov.ons.census.fwmt.outcomeservice.service.impl.SwitchCaseIdService;
 
 import java.util.UUID;
 
+import static uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceLogConfig.*;
+
 @Slf4j
 @Component("CANCEL_FEEDBACK")
 public class CancelFeedbackProcessor implements OutcomeServiceProcessor {
 
   @Autowired
   private SwitchCaseIdService switchCaseIdService;
-
-  public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
-
-  public static final String RM_FIELD_REPUBLISH = "RM_FIELD_REPUBLISH";
 
   @Autowired
   private RmFieldRepublishProducer rmFieldRepublishProducer;
@@ -41,10 +39,10 @@ public class CancelFeedbackProcessor implements OutcomeServiceProcessor {
 
     String loggedCaseId = ncCaseId != null ? ncCaseId : String.valueOf(caseId);
     gatewayEventManager.triggerEvent(loggedCaseId, PROCESSING_OUTCOME,
-        "survey type", type,
-        "processor", "CANCEL_FEEDBACK",
-        "original caseId", String.valueOf(outcome.getCaseId()),
-        "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+        SURVEY_TYPE, type,
+        PROCESSOR, "CANCEL_FEEDBACK",
+        ORIGINAL_CASE_ID, String.valueOf(outcome.getCaseId()),
+        SITE_CASE_ID, (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
     FwmtCancelActionInstruction fieldworkFollowup = FwmtCancelActionInstruction
         .builder()
@@ -58,11 +56,11 @@ public class CancelFeedbackProcessor implements OutcomeServiceProcessor {
     rmFieldRepublishProducer.republish(fieldworkFollowup);
 
     gatewayEventManager.triggerEvent(loggedCaseId, RM_FIELD_REPUBLISH,
-        "survey name", "CENSUS",
-        "address type", type,
-        "original caseId", String.valueOf(outcome.getCaseId()),
-        "action instruction", ActionInstructionType.CANCEL.toString(),
-        "transactionId", outcome.getTransactionId().toString());
+        SURVEY_NAME, "CENSUS",
+        ADDRESS_TYPE, type,
+        ORIGINAL_CASE_ID, String.valueOf(outcome.getCaseId()),
+        ACTION_INSTRUCTION_TYPE, ActionInstructionType.CANCEL.toString(),
+        TRANSACTION_ID, outcome.getTransactionId().toString());
     return caseId;
   }
 }

@@ -13,6 +13,7 @@ import uk.gov.ons.census.fwmt.outcomeservice.message.RmFieldRepublishProducer;
 import java.util.UUID;
 
 import static uk.gov.ons.census.fwmt.common.data.tm.SurveyType.CE_SITE;
+import static uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceLogConfig.*;
 
 @Component("SWITCH_FEEDBACK_CE_SITE")
 public class SwitchFeedbackCeSiteProcessor implements OutcomeServiceProcessor {
@@ -23,20 +24,15 @@ public class SwitchFeedbackCeSiteProcessor implements OutcomeServiceProcessor {
   @Autowired
   private GatewayEventManager gatewayEventManager;
 
-  public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
-
-  public static final String RM_FIELD_REPUBLISH = "RM_FIELD_REPUBLISH";
-
-
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
-        "survey type", type,
-        "processor", "SWITCH_FEEDBACK_CE_SITE",
-        "original caseId", String.valueOf(outcome.getCaseId()),
-        "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+        SURVEY_TYPE, type,
+        PROCESSOR, "SWITCH_FEEDBACK_CE_SITE",
+        ORIGINAL_CASE_ID, String.valueOf(outcome.getCaseId()),
+        SITE_CASE_ID, (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
     FwmtActionInstruction fieldworkFollowup = FwmtActionInstruction.builder()
         .actionInstruction(ActionInstructionType.SWITCH_CE_TYPE)
@@ -49,11 +45,11 @@ public class SwitchFeedbackCeSiteProcessor implements OutcomeServiceProcessor {
     rmFieldRepublishProducer.republish(fieldworkFollowup);
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), RM_FIELD_REPUBLISH,
-        "survey name", "CENSUS",
-        "address type", type,
-        "survey type", CE_SITE.toString(),
-        "action instruction", ActionInstructionType.SWITCH_CE_TYPE.toString(),
-        "transactionId", outcome.getTransactionId().toString());
+        SURVEY_NAME, "CENSUS",
+        ADDRESS_TYPE, type,
+        SWITCH_TYPE, CE_SITE.toString(),
+        ACTION_INSTRUCTION_TYPE, ActionInstructionType.SWITCH_CE_TYPE.toString(),
+        TRANSACTION_ID, outcome.getTransactionId().toString());
 
     return caseId;
   }

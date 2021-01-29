@@ -16,16 +16,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceLogConfig.*;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.ADDRESS_NOT_VALID;
 
 @Component("ADDRESS_NOT_VALID")
 public class AddressNotValidProcessor implements OutcomeServiceProcessor {
-
-  public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
-
-  public static final String OUTCOME_SENT = "OUTCOME_SENT";
-
-  public static final String FAILED_TO_LOOKUP_REASON_CODE = "FAILED_TO_LOOKUP_REASON_CODE";
 
   @Autowired
   private DateFormat dateFormat;
@@ -42,21 +37,21 @@ public class AddressNotValidProcessor implements OutcomeServiceProcessor {
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
-    
+
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
-    "survey type", type,
-    "processor", "ADDRESS_NOT_VALID",
-    "original caseId", String.valueOf(outcome.getCaseId()),
-    "Site case Id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+        SURVEY_TYPE, type,
+        PROCESSOR, "ADDRESS_NOT_VALID",
+        ORIGINAL_CASE_ID, String.valueOf(outcome.getCaseId()),
+        SITE_CASE_ID, (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
     String reasonCode = reasonCodeLookup.getLookup(outcome.getOutcomeCode());
 
     if (reasonCode.equals("NOT_FOUND")) {
       gatewayEventManager.triggerErrorEvent(this.getClass(), "No reason code found",
           String.valueOf(outcome.getCaseId()), FAILED_TO_LOOKUP_REASON_CODE,
-          "Survey type", type,
-          "Outcome code", outcome.getOutcomeCode(),
-          "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
+          SURVEY_TYPE, type,
+          OUTCOME_CODE, outcome.getOutcomeCode(),
+          SECONDARY_OUTCOME, outcome.getSecondaryOutcomeDescription());
     }
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
@@ -70,11 +65,12 @@ public class AddressNotValidProcessor implements OutcomeServiceProcessor {
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
+
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
-            "survey type", type,
-            "type", ADDRESS_NOT_VALID.toString(),
-            "transactionId", outcome.getTransactionId().toString(),
-            "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
+        SURVEY_TYPE, type,
+        TEMPLATE_TYPE, ADDRESS_NOT_VALID.toString(),
+        TRANSACTION_ID, outcome.getTransactionId().toString(),
+        ROUTING_KEY, GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
     return caseId;
   }
 }

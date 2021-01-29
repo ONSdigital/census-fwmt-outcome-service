@@ -17,14 +17,11 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import static uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceLogConfig.*;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.REFUSAL_RECEIVED;
 
 @Component("EXTRAORDINARY_REFUSAL_RECEIVED")
 public class ExtraordinaryRefusalReceivedProcessor implements OutcomeServiceProcessor {
-
-  public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
-
-  public static final String OUTCOME_SENT = "OUTCOME_SENT";
 
   @Autowired
   private DateFormat dateFormat;
@@ -43,10 +40,10 @@ public class ExtraordinaryRefusalReceivedProcessor implements OutcomeServiceProc
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
-    "survey type", type,
-    "processor", "EXTRAORDINARY_REFUSAL_RECEIVED",
-    "original caseId", String.valueOf(outcome.getCaseId()),
-    "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+        SURVEY_TYPE, type,
+        PROCESSOR, "EXTRAORDINARY_REFUSAL_RECEIVED",
+        ORIGINAL_CASE_ID, String.valueOf(outcome.getCaseId()),
+        SITE_CASE_ID, (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
@@ -62,14 +59,15 @@ public class ExtraordinaryRefusalReceivedProcessor implements OutcomeServiceProc
     } catch (InterruptedException ignored) {}
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(REFUSAL_RECEIVED, root);
+
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
-        "survey type", type,
-        "type", REFUSAL_RECEIVED.toString(),
-        "transactionId", outcome.getTransactionId().toString(),
-        "routing key", GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
+        SURVEY_TYPE, type,
+        TEMPLATE_TYPE, REFUSAL_RECEIVED.toString(),
+        TRANSACTION_ID, outcome.getTransactionId().toString(),
+        ROUTING_KEY, GatewayOutcomeQueueConfig.GATEWAY_RESPONDENT_REFUSAL_ROUTING_KEY);
 
     return caseId;
   }

@@ -17,16 +17,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceLogConfig.*;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.NEW_ADDRESS_REPORTED;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.SpgUtilityMethods.isDelivered;
 import static uk.gov.ons.census.fwmt.outcomeservice.util.SpgUtilityMethods.regionLookup;
 
 @Component("NEW_ADDRESS_REPORTED")
 public class NewAddressReportedProcessor implements OutcomeServiceProcessor {
-
-  public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
-
-  public static final String OUTCOME_SENT = "OUTCOME_SENT";
 
   @Autowired
   private DateFormat dateFormat;
@@ -45,9 +42,9 @@ public class NewAddressReportedProcessor implements OutcomeServiceProcessor {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
-    "survey type", type,
-    "processor", "NEW_ADDRESS_REPORTED",
-    "original caseId", String.valueOf(outcome.getCaseId()));
+        SURVEY_TYPE, type,
+        PROCESSOR, "NEW_ADDRESS_REPORTED",
+        ORIGINAL_CASE_ID, String.valueOf(outcome.getCaseId()));
 
     boolean isDelivered = isDelivered(outcome);
     cacheData(outcome, caseId, isDelivered);
@@ -95,11 +92,12 @@ public class NewAddressReportedProcessor implements OutcomeServiceProcessor {
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
+
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
-        "survey type", type,
-        "type", NEW_ADDRESS_REPORTED.toString(),
-        "transaction id", outcome.getTransactionId().toString(),
-        "routing key", GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
+        SURVEY_TYPE, type,
+        TEMPLATE_TYPE, NEW_ADDRESS_REPORTED.toString(),
+        TRANSACTION_ID, outcome.getTransactionId().toString(),
+        ROUTING_KEY, GatewayOutcomeQueueConfig.GATEWAY_ADDRESS_UPDATE_ROUTING_KEY);
 
     return caseId;
   }

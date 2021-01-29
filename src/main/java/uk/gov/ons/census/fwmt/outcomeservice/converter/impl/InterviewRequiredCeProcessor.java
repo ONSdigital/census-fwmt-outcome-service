@@ -17,15 +17,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.INTERVIEW_REQUIRED;
+import static uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceLogConfig.*;
 import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.CCS_ADDRESS_LISTED;
+import static uk.gov.ons.census.fwmt.outcomeservice.enums.EventType.INTERVIEW_REQUIRED;
 
 @Component("INTERVIEW_REQUIRED_CE")
 public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
-
-  public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
-
-  public static final String OUTCOME_SENT = "OUTCOME_SENT";
 
   @Autowired
   private DateFormat dateFormat;
@@ -45,11 +42,11 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
     UUID newCaseId = UUID.randomUUID();
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
-        "survey type", type,
-        "processor", "INTERVIEW_REQUIRED",
-        "original caseId", String.valueOf(outcome.getCaseId()),
-        "Interview case Id", String.valueOf(newCaseId),
-        "addressType", "CE");
+        SURVEY_TYPE, type,
+        PROCESSOR, "INTERVIEW_REQUIRED",
+        ORIGINAL_CASE_ID, String.valueOf(outcome.getCaseId()),
+        INTERVIEW_CASE_ID, String.valueOf(newCaseId),
+        ADDRESS_TYPE, "CE");
 
     GatewayCache plCache = gatewayCacheService.getById(String.valueOf(caseId));
     cacheData(outcome, newCaseId);
@@ -74,16 +71,17 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
+
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
-        "survey type", type,
-        "type", INTERVIEW_REQUIRED.toString(),
-        "transactionId", outcome.getTransactionId().toString(),
-        "routing key", GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
+        SURVEY_TYPE, type,
+        TEMPLATE_TYPE, INTERVIEW_REQUIRED.toString(),
+        TRANSACTION_ID, outcome.getTransactionId().toString(),
+        ROUTING_KEY, GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
 
     return newCaseId;
   }
-  
-  private void cacheData(OutcomeSuperSetDto outcome, UUID newCaseId) throws GatewayException {
+
+  private void cacheData(OutcomeSuperSetDto outcome, UUID newCaseId) {
     String managerTitle = "";
     String managerForename = "";
     String managerSurname = "";
@@ -91,7 +89,7 @@ public class InterviewRequiredCeProcessor implements OutcomeServiceProcessor {
     int usualResidents = 0;
     int bedspaces = 0;
 
-    if (outcome.getCeDetails() != null){
+    if (outcome.getCeDetails() != null) {
       if (outcome.getCeDetails().getManagerTitle() != null) {
         managerTitle = outcome.getCeDetails().getManagerTitle();
       }

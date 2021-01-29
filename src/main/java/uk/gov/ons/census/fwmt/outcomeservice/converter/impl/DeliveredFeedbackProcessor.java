@@ -1,11 +1,8 @@
 package uk.gov.ons.census.fwmt.outcomeservice.converter.impl;
 
-import java.util.UUID;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import lombok.extern.slf4j.Slf4j;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.common.rm.dto.ActionInstructionType;
 import uk.gov.ons.census.fwmt.common.rm.dto.FwmtActionInstruction;
@@ -14,13 +11,13 @@ import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.OutcomeSuperSetDto;
 import uk.gov.ons.census.fwmt.outcomeservice.message.RmFieldRepublishProducer;
 
+import java.util.UUID;
+
+import static uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceLogConfig.*;
+
 @Slf4j
 @Component("DELIVERED_FEEDBACK")
 public class DeliveredFeedbackProcessor implements OutcomeServiceProcessor {
-
-  public static final String PROCESSING_OUTCOME = "PROCESSING_OUTCOME";
-
-  public static final String RM_FIELD_REPUBLISH = "RM_FIELD_REPUBLISH";
 
   @Autowired
   private RmFieldRepublishProducer rmFieldRepublishProducer;
@@ -33,10 +30,10 @@ public class DeliveredFeedbackProcessor implements OutcomeServiceProcessor {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
-    "survey type", type,
-    "processor", "DELIVERED_FEEDBACK",
-    "original caseId", String.valueOf(outcome.getCaseId()),
-    "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+        SURVEY_TYPE, type,
+        PROCESSOR, "DELIVERED_FEEDBACK",
+        ORIGINAL_CASE_ID, String.valueOf(outcome.getCaseId()),
+        SITE_CASE_ID, (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
     FwmtActionInstruction fieldworkFollowup = FwmtActionInstruction.builder()
         .actionInstruction(ActionInstructionType.UPDATE)
@@ -49,10 +46,10 @@ public class DeliveredFeedbackProcessor implements OutcomeServiceProcessor {
     rmFieldRepublishProducer.republish(fieldworkFollowup);
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), RM_FIELD_REPUBLISH,
-        "survey name", "CENSUS",
-        "address type", type,
-    "action instruction", ActionInstructionType.UPDATE.toString(),
-    "transactionId", outcome.getTransactionId().toString());
+        SURVEY_NAME, "CENSUS",
+        ADDRESS_TYPE, type,
+        ACTION_INSTRUCTION_TYPE, ActionInstructionType.UPDATE.toString(),
+        TRANSACTION_ID, outcome.getTransactionId().toString());
 
     return caseId;
   }
