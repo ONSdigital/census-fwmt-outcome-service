@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.common.rm.dto.ActionInstructionType;
-import uk.gov.ons.census.fwmt.common.rm.dto.FwmtActionInstruction;
+import uk.gov.ons.census.fwmt.common.rm.dto.FwmtCancelActionInstruction;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.OutcomeSuperSetDto;
@@ -35,7 +35,7 @@ public class CancelHHFeedbackLongPauseProcessor implements OutcomeServiceProcess
                 "original caseId", String.valueOf(outcome.getCaseId()),
                 "Site Case id", (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
 
-        FwmtActionInstruction fieldworkCancel = FwmtActionInstruction.builder()
+        FwmtCancelActionInstruction fieldworkCancel = FwmtCancelActionInstruction.builder()
                 .actionInstruction(ActionInstructionType.CANCEL)
                 .surveyName("CENSUS")
                 .addressType("HH")
