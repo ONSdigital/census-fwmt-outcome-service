@@ -30,15 +30,14 @@ public class CancelHHFeedbackLongPauseProcessor implements OutcomeServiceProcess
         gatewayEventManager.triggerEvent(String.valueOf(caseId), PROCESSING_OUTCOME,
             SURVEY_TYPE, type,
             PROCESSOR, "FEEDBACK_LONG_PAUSE",
-            ORIGINAL_CASE_ID, String.valueOf(outcome.getCaseId()),
-            SITE_CASE_ID, (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+            ORIGINAL_CASE_ID, String.valueOf(outcome.getCaseId()));
 
         FwmtCancelActionInstruction fieldworkCancel = FwmtCancelActionInstruction.builder()
                 .actionInstruction(ActionInstructionType.CANCEL)
                 .surveyName("CENSUS")
                 .addressType("HH")
                 .addressLevel("U")
-                .caseId(String.valueOf(outcome.getSiteCaseId()))
+                .caseId(String.valueOf(outcome.getCaseId()))
                 .build();
 
         rmFieldRepublishProducer.republish(fieldworkCancel);
