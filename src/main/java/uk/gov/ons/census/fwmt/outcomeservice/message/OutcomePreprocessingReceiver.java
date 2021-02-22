@@ -64,8 +64,8 @@ public class OutcomePreprocessingReceiver {
     OutcomeSuperSetDto outcomeDTO = mapperFacade.map(spgOutcome, OutcomeSuperSetDto.class);
     gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), PREPROCESSING_SPG_OUTCOME,
         "Survey type", "SPG",
-        "Outcome code", outcomeDTO.getOutcomeCode(),
-        "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription());
+        "Outcome code", spgOutcome.getOutcomeCode(),
+        "Secondary Outcome", spgOutcome.getSecondaryOutcomeDescription());
     delegate.createSpgOutcomeEvent(outcomeDTO);
   }
 
