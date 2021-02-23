@@ -44,19 +44,14 @@ public class OutcomeServiceImpl implements OutcomeService {
   @Override
   @Transactional
   public void createSpgOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
-    String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
     final String surveyType = "SPG";
     executeOperations(outcome, surveyType, PROCESSING_SPG_OUTCOME);
   }
 
-
-
   @Override
   @Transactional
   public void createCeOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
-    String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
     final String surveyType = "CE";
-
     executeOperations(outcome, surveyType, PROCESSING_CE_OUTCOME);
   }
 
@@ -66,15 +61,12 @@ public class OutcomeServiceImpl implements OutcomeService {
     String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
     final String surveyType = "HH";
     executeOperations(outcome, surveyType, PROCESSING_HH_OUTCOME);
-
   }
 
   @Override
   @Transactional
   public void createCcsPropertyListingOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
-    String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
     final String surveyType = "CCS PL";
-
     executeOperations(outcome, surveyType, PROCESSING_CCS_PL_OUTCOME);
   }
 
