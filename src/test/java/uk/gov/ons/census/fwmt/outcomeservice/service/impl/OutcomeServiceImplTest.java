@@ -1,10 +1,12 @@
 package uk.gov.ons.census.fwmt.outcomeservice.service.impl;
 
+import ma.glasnost.orika.MapperFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.ons.census.fwmt.common.data.shared.CommonOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeLookup;
@@ -31,11 +33,21 @@ class OutcomeServiceImplTest {
   @Mock
   private OutcomeServiceProcessor processor;
 
-  private OutcomeSuperSetDto createOutcome() {
+  @Mock
+  private MapperFacade mapperFacade;
+
+  private OutcomeSuperSetDto createOutcomeDTO() {
     final OutcomeSuperSetDto outcome = new OutcomeSuperSetDto();
     outcome.setCaseId(UUID.randomUUID());
     outcome.setOutcomeCode("TEST_OUTCOMECODE");
     return outcome;
+  }
+
+  private CommonOutcome createCommonOutcome() {
+    CommonOutcome commonOutcome = new CommonOutcome();
+    commonOutcome.setCaseId(UUID.randomUUID());
+    commonOutcome.setOutcomeCode("TEST_OUTCOMECODE");
+    return commonOutcome;
   }
 
   @BeforeEach
@@ -43,28 +55,28 @@ class OutcomeServiceImplTest {
     final Map<String, OutcomeServiceProcessor> outcomeServiceProcessors = new HashMap();
     outcomeServiceProcessors.put("processor1", processor);
     outcomeServiceProcessors.put("processor2", processor);
-    outcomeService = new OutcomeServiceImpl(outcomeServiceProcessors, outcomeLookupMock, gwEventManagerMock);
+    outcomeService = new OutcomeServiceImpl(outcomeServiceProcessors, outcomeLookupMock, gwEventManagerMock, mapperFacade);
   }
 
   @Test
   void shouldCreateSpgOutcomeEvent() throws GatewayException {
-
     UUID myUUID = UUID.randomUUID();
     String type = "SPG";
-    OutcomeSuperSetDto outcome = createOutcome();
-    createTest(myUUID, type, outcome);
-    outcomeService.createSpgOutcomeEvent(outcome);
+    OutcomeSuperSetDto outcome = createOutcomeDTO();
+    CommonOutcome commonOutcome = createCommonOutcome();
+    createTest(myUUID, type, commonOutcome,outcome);
+    outcomeService.createSpgOutcomeEvent(commonOutcome);
     createVerifyRules(myUUID, type, outcome);
-
   }
 
   @Test
   void shouldCreateCeOutcomeEvent() throws GatewayException {
     UUID myUUID = UUID.randomUUID();
     String type = "CE";
-    OutcomeSuperSetDto outcome = createOutcome();
-    createTest(myUUID, type, outcome);
-    outcomeService.createCeOutcomeEvent(outcome);
+    OutcomeSuperSetDto outcome = createOutcomeDTO();
+    CommonOutcome commonOutcome = createCommonOutcome();
+    createTest(myUUID, type, commonOutcome,outcome);
+    outcomeService.createCeOutcomeEvent(commonOutcome);
     createVerifyRules(myUUID, type, outcome);
   }
 
@@ -72,9 +84,10 @@ class OutcomeServiceImplTest {
   void shouldCreateHhOutcomeEvent() throws GatewayException {
     UUID myUUID = UUID.randomUUID();
     String type = "HH";
-    OutcomeSuperSetDto outcome = createOutcome();
-    createTest(myUUID, type, outcome);
-    outcomeService.createHhOutcomeEvent(outcome);
+    OutcomeSuperSetDto outcome = createOutcomeDTO();
+    CommonOutcome commonOutcome = createCommonOutcome();
+    createTest(myUUID, type, commonOutcome, outcome);
+    outcomeService.createHhOutcomeEvent(commonOutcome);
     createVerifyRules(myUUID, type, outcome);
   }
 
@@ -82,9 +95,10 @@ class OutcomeServiceImplTest {
   void shouldCreateCcsPropertyListingOutcomeEvent() throws GatewayException {
     UUID myUUID = UUID.randomUUID();
     String type = "CCS PL";
-    OutcomeSuperSetDto outcome = createOutcome();
-    createTest(myUUID, type, outcome);
-    outcomeService.createCcsPropertyListingOutcomeEvent(outcome);
+    OutcomeSuperSetDto outcome = createOutcomeDTO();
+    CommonOutcome commonOutcome = createCommonOutcome();
+    createTest(myUUID, type, commonOutcome,outcome);
+    outcomeService.createCcsPropertyListingOutcomeEvent(commonOutcome);
     createVerifyRules(myUUID, type, outcome);
   }
 
@@ -92,9 +106,10 @@ class OutcomeServiceImplTest {
   void shouldCreateCcsInterviewOutcomeEvent() throws GatewayException {
     UUID myUUID = UUID.randomUUID();
     String type = "CCS INT";
-    OutcomeSuperSetDto outcome = createOutcome();
-    createTest(myUUID, type, outcome);
-    outcomeService.createCcsInterviewOutcomeEvent(outcome);
+    OutcomeSuperSetDto outcome = createOutcomeDTO();
+    CommonOutcome commonOutcome = createCommonOutcome();
+    createTest(myUUID, type, commonOutcome,outcome);
+    outcomeService.createCcsInterviewOutcomeEvent(commonOutcome);
     createVerifyRules(myUUID, type, outcome);
   }
 
@@ -102,9 +117,11 @@ class OutcomeServiceImplTest {
   void createNcOutcomeEvent() throws GatewayException {
     UUID myUUID = UUID.randomUUID();
     String type = "NC";
-    OutcomeSuperSetDto outcome = createOutcome();
-    createTest(myUUID, type, outcome);
-    outcomeService.createNcOutcomeEvent(outcome);
+    OutcomeSuperSetDto outcome = createOutcomeDTO();
+    CommonOutcome commonOutcome = createCommonOutcome();
+
+    createTest(myUUID, type, commonOutcome,outcome);
+    outcomeService.createNcOutcomeEvent(commonOutcome);
     createVerifyRules(myUUID, type, outcome);
   }
 
@@ -113,9 +130,11 @@ class OutcomeServiceImplTest {
     verify(processor).process(eq(outcome), eq(myUUID), eq(type));
   }
 
-  private void createTest(UUID myUUID, String type, OutcomeSuperSetDto outcome) throws GatewayException {
+  private void createTest(UUID myUUID, String type, CommonOutcome outcome, OutcomeSuperSetDto outcomeSuperSetDto) throws GatewayException {
     final String[] lookups = {"processor1", "processor2"};
+
+    when(mapperFacade.map(eq(outcome), eq(OutcomeSuperSetDto.class))).thenReturn(outcomeSuperSetDto);
     when(outcomeLookupMock.getLookup(eq("TEST_OUTCOMECODE"))).thenReturn(lookups);
-    when(processor.process(eq(outcome), eq(null), eq(type))).thenReturn(myUUID);
+    when(processor.process(eq(outcomeSuperSetDto), eq(null), eq(type))).thenReturn(myUUID);
   }
 }

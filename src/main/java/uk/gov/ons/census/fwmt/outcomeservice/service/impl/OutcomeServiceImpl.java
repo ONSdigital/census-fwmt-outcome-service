@@ -2,7 +2,10 @@ package uk.gov.ons.census.fwmt.outcomeservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import ma.glasnost.orika.MapperFacade;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.ons.census.fwmt.common.data.shared.CommonOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
@@ -41,62 +44,66 @@ public class OutcomeServiceImpl implements OutcomeService {
 
   private final GatewayEventManager gatewayEventManager;
 
+  private final MapperFacade mapperFacade;
+
   @Override
   @Transactional
-  public void createSpgOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
+  public void createSpgOutcomeEvent(CommonOutcome outcome) throws GatewayException {
     final String surveyType = "SPG";
     executeOperations(outcome, surveyType, PROCESSING_SPG_OUTCOME);
   }
 
   @Override
   @Transactional
-  public void createCeOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
+  public void createCeOutcomeEvent(CommonOutcome outcome) throws GatewayException {
     final String surveyType = "CE";
     executeOperations(outcome, surveyType, PROCESSING_CE_OUTCOME);
   }
 
   @Override
   @Transactional
-  public void createHhOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
+  public void createHhOutcomeEvent(CommonOutcome outcome) throws GatewayException {
     final String surveyType = "HH";
     executeOperations(outcome, surveyType, PROCESSING_HH_OUTCOME);
   }
 
   @Override
   @Transactional
-  public void createCcsPropertyListingOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
+  public void createCcsPropertyListingOutcomeEvent(CommonOutcome outcome) throws GatewayException {
     final String surveyType = "CCS PL";
     executeOperations(outcome, surveyType, PROCESSING_CCS_PL_OUTCOME);
   }
 
   @Override
   @Transactional
-  public void createCcsInterviewOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
+  public void createCcsInterviewOutcomeEvent(CommonOutcome outcome) throws GatewayException {
     final String surveyType = "CCS INT";
     executeOperations(outcome, surveyType, PROCESSING_CCS_INT_OUTCOME);
   }
 
   @Override
   @Transactional
-  public void createNcOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
+  public void createNcOutcomeEvent(CommonOutcome outcome) throws GatewayException {
     final String surveyType = "NC";
     executeOperations(outcome, surveyType, PROCESSING_NC_OUTCOME);
   }
 
-  private void executeOperations(OutcomeSuperSetDto outcome, String surveyType, String eventType) throws GatewayException {
-    String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
+  private void executeOperations(CommonOutcome outcome, String surveyType, String eventType) throws GatewayException {
+    final OutcomeSuperSetDto outcomeDTO = mapperFacade.map(outcome, OutcomeSuperSetDto.class);
+
+    final String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
     if (operationsList == null) {
-      triggerError(outcome, surveyType);
+      triggerError(outcomeDTO, surveyType);
     } else {
       UUID caseIdHolder = null;
       for (String operation : operationsList) {
-        gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), eventType,
+        gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), eventType,
             "Survey type", surveyType,
-            "Secondary Outcome", outcome.getSecondaryOutcomeDescription(),
+            "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription(),
             "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
             "Operation", operation,
             "Operation list", Arrays.toString(operationsList));
-        caseIdHolder = outcomeServiceProcessors.get(operation).process(outcome, caseIdHolder, surveyType);
+        caseIdHolder = outcomeServiceProcessors.get(operation).process(outcomeDTO, caseIdHolder, surveyType);
       }
     }
   }

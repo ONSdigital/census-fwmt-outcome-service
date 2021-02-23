@@ -62,81 +62,76 @@ public class OutcomePreprocessingReceiver {
   private GatewayEventManager gatewayEventManager;
 
   public void processMessage(SPGOutcome spgOutcome) throws GatewayException {
-    OutcomeSuperSetDto outcomeDTO = mapperFacade.map(spgOutcome, OutcomeSuperSetDto.class);
     triggerEvent(spgOutcome, PREPROCESSING_SPG_OUTCOME, "SPG");
-    delegate.createSpgOutcomeEvent(outcomeDTO);
+    delegate.createSpgOutcomeEvent(spgOutcome);
   }
 
   public void processMessage(SPGNewUnitAddress newUnitAddress) throws GatewayException {
-    OutcomeSuperSetDto outcomeDTO = mapperFacade.map(newUnitAddress, OutcomeSuperSetDto.class);
-    outcomeDTO.setCaseId(UUID.randomUUID());
+    newUnitAddress.setCaseId(UUID.randomUUID());
     triggerEvent(newUnitAddress, PREPROCESSING_SPG_UNITADDRESS_OUTCOME, "SPG");
-    delegate.createSpgOutcomeEvent(outcomeDTO);
+    delegate.createSpgOutcomeEvent(newUnitAddress);
   }
 
   public void processMessage(SPGNewStandaloneAddress standaloneAddress) throws GatewayException {
-    OutcomeSuperSetDto outcomeDTO = mapperFacade.map(standaloneAddress, OutcomeSuperSetDto.class);
-    outcomeDTO.setCaseId(UUID.randomUUID());
+    //TODO CONFIRM THE CASEID IS BEING MAPPED IN THE NEXT LEVEL
+    standaloneAddress.setCaseId(UUID.randomUUID());
     triggerEvent(standaloneAddress, PREPROCESSING_SPG_STANDALONE_OUTCOME, "SPG");
-    delegate.createSpgOutcomeEvent(outcomeDTO);
+    delegate.createSpgOutcomeEvent(standaloneAddress);
   }
 
   public void processMessage(CEOutcome ceOutcome) throws GatewayException {
     OutcomeSuperSetDto outcomeDTO = mapperFacade.map(ceOutcome, OutcomeSuperSetDto.class);
     triggerEvent(ceOutcome, PREPROCESSING_CE_OUTCOME, "CE");
-    delegate.createCeOutcomeEvent(outcomeDTO);
+    delegate.createCeOutcomeEvent(ceOutcome);
   }
 
   public void processMessage(CENewUnitAddress newUnitAddress) throws GatewayException {
     OutcomeSuperSetDto outcomeDTO = mapperFacade.map(newUnitAddress, OutcomeSuperSetDto.class);
     outcomeDTO.setCaseId(UUID.randomUUID());
     triggerEvent(newUnitAddress, PREPROCESSING_CE_UNITADDRESS_OUTCOME, "CE");
-    delegate.createCeOutcomeEvent(outcomeDTO);
+    delegate.createCeOutcomeEvent(newUnitAddress);
   }
 
   public void processMessage(CENewStandaloneAddress standaloneAddress) throws GatewayException {
     OutcomeSuperSetDto outcomeDTO = mapperFacade.map(standaloneAddress, OutcomeSuperSetDto.class);
     outcomeDTO.setCaseId(UUID.randomUUID());
     triggerEvent(standaloneAddress, PREPROCESSING_CE_STANDALONE_OUTCOME, "CE");
-    delegate.createCeOutcomeEvent(outcomeDTO);
+    delegate.createCeOutcomeEvent(standaloneAddress);
   }
 
   public void processMessage(HHOutcome hhOutcome) throws GatewayException {
     OutcomeSuperSetDto outcomeDTO = mapperFacade.map(hhOutcome, OutcomeSuperSetDto.class);
     triggerEvent(hhOutcome, PREPROCESSING_HH_OUTCOME, "HH");
-    delegate.createHhOutcomeEvent(outcomeDTO);
+    delegate.createHhOutcomeEvent(hhOutcome);
   }
 
   public void processMessage(HHNewSplitAddress splitAddress) throws GatewayException {
     OutcomeSuperSetDto outcomeDTO = mapperFacade.map(splitAddress, OutcomeSuperSetDto.class);
     outcomeDTO.setCaseId(UUID.randomUUID());
     triggerEvent(splitAddress, PREPROCESSING_HH_SPLITADDRESS_OUTCOME, "HH");
-    delegate.createHhOutcomeEvent(outcomeDTO);
+    delegate.createHhOutcomeEvent(splitAddress);
   }
 
   public void processMessage(HHNewStandaloneAddress standaloneAddress) throws GatewayException {
     OutcomeSuperSetDto outcomeDTO = mapperFacade.map(standaloneAddress, OutcomeSuperSetDto.class);
     outcomeDTO.setCaseId(UUID.randomUUID());
     triggerEvent(standaloneAddress, PREPROCESSING_HH_STANDALONE_OUTCOME, "HH");
-    delegate.createHhOutcomeEvent(outcomeDTO);
+    delegate.createHhOutcomeEvent(standaloneAddress);
   }
 
   public void processMessage(CCSPropertyListingOutcome ccsPropertyListingOutcome) throws GatewayException {
-    OutcomeSuperSetDto outcomeDTO = mapperFacade.map(ccsPropertyListingOutcome, OutcomeSuperSetDto.class);
     triggerEvent(ccsPropertyListingOutcome, PREPROCESSING_CCS_PL_OUTCOME, "CCS PL");
-    delegate.createCcsPropertyListingOutcomeEvent(outcomeDTO);
+    delegate.createCcsPropertyListingOutcomeEvent(ccsPropertyListingOutcome);
   }
 
   public void processMessage(CCSInterviewOutcome ccsInterviewOutcome) throws GatewayException {
-    OutcomeSuperSetDto outcomeDTO = mapperFacade.map(ccsInterviewOutcome, OutcomeSuperSetDto.class);
     triggerEvent(ccsInterviewOutcome, PREPROCESSING_CCS_INT_OUTCOME, "CCS INT");
-    delegate.createCcsInterviewOutcomeEvent(outcomeDTO);
+    delegate.createCcsInterviewOutcomeEvent(ccsInterviewOutcome);
   }
 
   public void processMessage(NCOutcome ncOutcome) throws GatewayException {
-    OutcomeSuperSetDto outcomeDTO = mapperFacade.map(ncOutcome, OutcomeSuperSetDto.class);
     triggerEvent(ncOutcome, PREPROCESSING_NC_OUTCOME, "NC");
-    delegate.createNcOutcomeEvent(outcomeDTO);
+    delegate.createNcOutcomeEvent(ncOutcome);
   }
 
   private void triggerEvent(CommonOutcome commonOutcome, String eventType, String surveyType) {
