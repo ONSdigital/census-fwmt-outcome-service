@@ -58,7 +58,6 @@ public class OutcomeServiceImpl implements OutcomeService {
   @Override
   @Transactional
   public void createHhOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
-    String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
     final String surveyType = "HH";
     executeOperations(outcome, surveyType, PROCESSING_HH_OUTCOME);
   }
@@ -86,7 +85,6 @@ public class OutcomeServiceImpl implements OutcomeService {
 
   private void executeOperations(OutcomeSuperSetDto outcome, String surveyType, String eventType) throws GatewayException {
     String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
-
     if (operationsList == null) {
       triggerError(outcome, surveyType);
     } else {
