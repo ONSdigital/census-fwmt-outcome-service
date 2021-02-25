@@ -119,7 +119,7 @@ public class OutcomeServiceImpl implements OutcomeService {
 
   private void dispatchToAppropriateQueue(OutcomeSuperSetDto outcomeDTO, String operation) {
     log.error("Error processing case {} for operation {}", outcomeDTO.getCaseId(), operation);
-    if (operation.startsWith("_NEW")) {
+    if (operation.startsWith("NEW_")) {
       log.error("Send Message to Transient Queue");
     } else {
       log.error("Send Message to Perm Queue");
