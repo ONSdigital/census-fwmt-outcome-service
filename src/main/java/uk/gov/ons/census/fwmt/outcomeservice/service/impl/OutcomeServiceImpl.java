@@ -112,13 +112,14 @@ public class OutcomeServiceImpl implements OutcomeService {
       try {
         caseIdHolder = outcomeServiceProcessors.get(operation).process(outcomeDTO, caseIdHolder, surveyType);
       } catch (Exception e) {
+        log.error("Error processing case {} for operation {}", outcomeDTO.getCaseId(), operation, e);
+
         dispatchToAppropriateQueue(outcomeDTO, operation);
       }
     }
   }
 
   private void dispatchToAppropriateQueue(OutcomeSuperSetDto outcomeDTO, String operation) {
-    log.error("Error processing case {} for operation {}", outcomeDTO.getCaseId(), operation);
     if (operation.startsWith("NEW_")) {
       log.error("Send Message to Transient Queue");
     } else {
