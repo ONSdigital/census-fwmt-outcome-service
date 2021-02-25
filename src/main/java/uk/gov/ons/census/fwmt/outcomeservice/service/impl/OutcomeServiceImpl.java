@@ -89,26 +89,44 @@ public class OutcomeServiceImpl implements OutcomeService {
   }
 
   private void executeOperations(CommonOutcome outcome, String surveyType, String eventType) throws GatewayException {
-    final OutcomeSuperSetDto outcomeDTO = mapperFacade.map(outcome, OutcomeSuperSetDto.class);
 
     final String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
     if (operationsList == null) {
-      triggerError(outcomeDTO, surveyType);
+      triggerError(outcome, surveyType);
     } else {
-      UUID caseIdHolder = null;
-      for (String operation : operationsList) {
-        gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), eventType,
-            "Survey type", surveyType,
-            "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription(),
-            "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
-            "Operation", operation,
-            "Operation list", Arrays.toString(operationsList));
+      final OutcomeSuperSetDto outcomeDTO = mapperFacade.map(outcome, OutcomeSuperSetDto.class);
+      processOperations(surveyType, eventType, operationsList, outcomeDTO);
+    }
+  }
+
+  private void processOperations(String surveyType, String eventType, String[] operationsList, OutcomeSuperSetDto outcomeDTO) throws GatewayException {
+    UUID caseIdHolder = null;
+    for (String operation : operationsList) {
+      gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), eventType,
+          "Survey type", surveyType,
+          "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription(),
+          "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
+          "Operation", operation,
+          "Operation list", Arrays.toString(operationsList));
+
+      try {
         caseIdHolder = outcomeServiceProcessors.get(operation).process(outcomeDTO, caseIdHolder, surveyType);
+      } catch (Exception e) {
+        dispatchToAppropriateQueue(outcomeDTO, operation);
       }
     }
   }
 
-  private void triggerError(OutcomeSuperSetDto outcome, String surveyType) {
+  private void dispatchToAppropriateQueue(OutcomeSuperSetDto outcomeDTO, String operation) {
+    log.error("Error processing case {} for operation {}", outcomeDTO.getCaseId(), operation);
+    if (operation.startsWith("_NEW")) {
+      log.error("Send Message to Transient Queue");
+    } else {
+      log.error("Send Message to Perm Queue");
+    }
+  }
+
+  private void triggerError(CommonOutcome outcome, String surveyType) {
     gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "No outcome code found",
         String.valueOf(outcome.getCaseId()), FAILED_TO_LOOKUP_OUTCOME_CODE,
         "Survey type", surveyType,
