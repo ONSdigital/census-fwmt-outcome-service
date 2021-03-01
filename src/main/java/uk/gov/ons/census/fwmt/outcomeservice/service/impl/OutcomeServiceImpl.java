@@ -3,6 +3,8 @@ package uk.gov.ons.census.fwmt.outcomeservice.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ma.glasnost.orika.MapperFacade;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.ons.census.fwmt.common.data.shared.CommonOutcome;
@@ -45,6 +47,12 @@ public class OutcomeServiceImpl implements OutcomeService {
   private final GatewayEventManager gatewayEventManager;
 
   private final MapperFacade mapperFacade;
+
+  private final RabbitTemplate rabbitTemplate;
+
+  public static final String errorExchange = "GW.Error.Exchange";
+  public static final String outcomeTransRoute = "outcome.transient.route";
+  public static final String outcomePermRoute = "outcome.perm.route";
 
   @Override
   @Transactional
@@ -94,12 +102,13 @@ public class OutcomeServiceImpl implements OutcomeService {
     if (operationsList == null) {
       triggerError(outcome, surveyType);
     } else {
-      final OutcomeSuperSetDto outcomeDTO = mapperFacade.map(outcome, OutcomeSuperSetDto.class);
-      processOperations(surveyType, eventType, operationsList, outcomeDTO);
+      processOperations(surveyType, eventType, operationsList, outcome);
     }
   }
 
-  private void processOperations(String surveyType, String eventType, String[] operationsList, OutcomeSuperSetDto outcomeDTO) throws GatewayException {
+  private void processOperations(String surveyType, String eventType, String[] operationsList, CommonOutcome commonOutcome) throws GatewayException {
+    final OutcomeSuperSetDto outcomeDTO = mapperFacade.map(commonOutcome, OutcomeSuperSetDto.class);
+
     UUID caseIdHolder = null;
     for (String operation : operationsList) {
       gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), eventType,
@@ -114,16 +123,19 @@ public class OutcomeServiceImpl implements OutcomeService {
       } catch (Exception e) {
         log.error("Error processing case {} for operation {}", outcomeDTO.getCaseId(), operation, e);
 
-        dispatchToAppropriateQueue(outcomeDTO, operation);
+        dispatchToAppropriateQueue(commonOutcome, operation);
       }
     }
   }
 
-  private void dispatchToAppropriateQueue(OutcomeSuperSetDto outcomeDTO, String operation) {
+  private void dispatchToAppropriateQueue(CommonOutcome outcome, String operation) {
     if (operation.startsWith("NEW_")) {
       log.error("Send Message to Transient Queue");
+      rabbitTemplate.convertAndSend(errorExchange, outcomeTransRoute, outcome);
     } else {
       log.error("Send Message to Perm Queue");
+      rabbitTemplate.convertAndSend(errorExchange, outcomePermRoute, outcome);
+
     }
   }
 
