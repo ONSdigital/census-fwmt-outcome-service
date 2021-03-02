@@ -1,11 +1,13 @@
 package uk.gov.ons.census.fwmt.outcomeservice.service.impl;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import uk.gov.ons.census.fwmt.common.data.shared.CommonOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
@@ -48,7 +50,9 @@ public class OutcomeServiceImpl implements OutcomeService {
 
   private final MapperFacade mapperFacade;
 
-  private final RabbitTemplate rabbitTemplate;
+  //need to name it the same as the quaifier
+  @NonNull @Qualifier("GW_EVENT_RT")
+  private final RabbitTemplate GW_EVENT_RT;
 
   public static final String errorExchange = "GW.Error.Exchange";
   public static final String outcomeTransRoute = "outcome.transient.route";
@@ -131,10 +135,10 @@ public class OutcomeServiceImpl implements OutcomeService {
   private void dispatchToAppropriateQueue(CommonOutcome outcome, String operation) {
     if (operation.startsWith("NEW_")) {
       log.error("Send Message to Transient Queue");
-      rabbitTemplate.convertAndSend(errorExchange, outcomeTransRoute, outcome);
+      GW_EVENT_RT.convertAndSend(errorExchange, outcomeTransRoute, outcome);
     } else {
       log.error("Send Message to Perm Queue");
-      rabbitTemplate.convertAndSend(errorExchange, outcomePermRoute, outcome);
+      GW_EVENT_RT.convertAndSend(errorExchange, outcomePermRoute, outcome);
 
     }
   }
