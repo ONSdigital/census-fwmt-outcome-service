@@ -1,24 +1,18 @@
 package uk.gov.ons.census.fwmt.outcomeservice.config;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Base64;
-
-import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import uk.gov.census.ffa.storage.utils.StorageUtils;
-import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.outcomeservice.util.EncryptNames;
 
+@SuppressFBWarnings(value="DM_EXIT", justification="App shouldnt start up")
 @Configuration
 public class GpgConfig {
 
