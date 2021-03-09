@@ -17,7 +17,11 @@ import uk.gov.ons.census.fwmt.outcomeservice.service.impl.GatewayCacheService;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 import uk.gov.ons.census.fwmt.outcomeservice.util.EncryptNames;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.Charset;
@@ -51,14 +55,11 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
   private RefusalEncryptionLookup refusalEncryptionLookup;
 
   @Autowired
-  private StorageUtils storageUtils;
+  public byte[] fwmtPgpPublicKeyByteArray;
 
-  @Value("${outcomeservice.pgp.fwmtPublicKey}")
-  private String fwmtPgpPublicKey;
-
-  @Value("${outcomeservice.pgp.midlPublicKey}")
-  private String midlPgpPublicKey;
-
+  @Autowired
+  public byte[] midlPgpPublicKeyByteArray; 
+  
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     boolean isHouseHolder = false;
@@ -145,8 +146,8 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
   protected String returnEncryptedNames(String names) throws GatewayException {
     String formatNames;
     var publicKeys = new ArrayList<InputStream>();
-    publicKeys.add(storageUtils.getFileInputStream(URI.create(fwmtPgpPublicKey)));
-    publicKeys.add(storageUtils.getFileInputStream(URI.create(midlPgpPublicKey)));
+    publicKeys.add(new ByteArrayInputStream(fwmtPgpPublicKeyByteArray));
+    publicKeys.add(new ByteArrayInputStream(midlPgpPublicKeyByteArray));
     formatNames = EncryptNames.receivedNames(names, publicKeys);
 
     return Base64.getEncoder().encodeToString(formatNames.getBytes(Charset.defaultCharset()));
