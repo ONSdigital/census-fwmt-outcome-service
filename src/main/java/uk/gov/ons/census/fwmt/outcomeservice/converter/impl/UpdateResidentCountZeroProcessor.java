@@ -59,7 +59,7 @@ public class UpdateResidentCountZeroProcessor implements OutcomeServiceProcessor
 
         GatewayCache cache = gatewayCacheService.getById(String.valueOf(caseId));
 
-        if (cache != null && ActionInstructionType.CANCEL.toString().equals(cache.lastActionInstruction)) {
+        if (cache != null && ("CANCEL".equals(cache.lastActionInstruction) || "CANCEL(HELD)".equals(cache.lastActionInstruction))) {
             gatewayCacheService.save(cache.toBuilder()
                 .lastActionInstruction(ActionInstructionType.UPDATE.toString())
                 .build());
