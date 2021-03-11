@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.time.Instant;
 
 @Data
 @Builder(toBuilder = true)
@@ -70,6 +71,9 @@ public class GatewayCache {
 
   @Column(name = "original_case_id")
   public String originalCaseId;
+
+  @Column(name = "last_action_instruction")
+  public String lastActionInstruction;
 
   // TODO : Probably move this object to common so its in one location
 

@@ -3,11 +3,14 @@ package uk.gov.ons.census.fwmt.outcomeservice.converter.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
+import uk.gov.ons.census.fwmt.common.rm.dto.ActionInstructionType;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.config.GatewayOutcomeQueueConfig;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.OutcomeSuperSetDto;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
+import uk.gov.ons.census.fwmt.outcomeservice.service.impl.GatewayCacheService;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
 import java.text.DateFormat;
@@ -30,6 +33,9 @@ public class UpdateResidentCountProcessor implements OutcomeServiceProcessor {
   @Autowired
   private GatewayEventManager gatewayEventManager;
 
+  @Autowired
+  private GatewayCacheService gatewayCacheService;
+
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
@@ -51,6 +57,14 @@ public class UpdateResidentCountProcessor implements OutcomeServiceProcessor {
     root.put("usualResidents", outcome.getCeDetails().getUsualResidents());
 
     String outcomeEvent = TemplateCreator.createOutcomeMessage(FIELD_CASE_UPDATED, root);
+
+    GatewayCache cache = gatewayCacheService.getById(String.valueOf(caseId));
+
+    if (cache != null && ("CANCEL".equals(cache.lastActionInstruction) || "CANCEL(HELD)".equals(cache.lastActionInstruction))) {
+      gatewayCacheService.save(cache.toBuilder()
+          .lastActionInstruction(ActionInstructionType.UPDATE.toString())
+          .build());
+    }
 
     gatewayOutcomeProducer.sendOutcome(outcomeEvent, String.valueOf(outcome.getTransactionId()),
         GatewayOutcomeQueueConfig.GATEWAY_FIELD_CASE_UPDATE_ROUTING_KEY);

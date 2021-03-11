@@ -1,8 +1,7 @@
-package uk.gov.ons.census.fwmt.outcomeservice.updateresidentcount;
+package uk.gov.ons.census.fwmt.outcomeservice.deliveredfeedback;
 
 import org.apache.tomcat.util.json.ParseException;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,13 +12,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
+import uk.gov.ons.census.fwmt.common.rm.dto.ActionInstructionType;
+import uk.gov.ons.census.fwmt.common.rm.dto.FwmtActionInstruction;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.config.OutcomeSetup;
-import uk.gov.ons.census.fwmt.outcomeservice.converter.impl.UpdateResidentCountZeroProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.converter.impl.DeliveredFeedbackProcessor;
 import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.OutcomeSuperSetDto;
 import uk.gov.ons.census.fwmt.outcomeservice.helpers.OutcomeHelper;
 import uk.gov.ons.census.fwmt.outcomeservice.message.GatewayOutcomeProducer;
+import uk.gov.ons.census.fwmt.outcomeservice.message.RmFieldRepublishProducer;
 import uk.gov.ons.census.fwmt.outcomeservice.service.impl.GatewayCacheService;
 import uk.gov.ons.census.fwmt.outcomeservice.template.TemplateCreator;
 
@@ -28,15 +30,14 @@ import java.util.Date;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class UpdateRessidentCountZeroProcessorTest {
+public class DeliveredFeedbackProcessorTest {
 
   @InjectMocks
-  private UpdateResidentCountZeroProcessor updateResidentCountZeroProcessor;
+  private DeliveredFeedbackProcessor deliveredFeedbackProcessor;
 
   @Mock
   private GatewayCache gatewayCache;
@@ -62,39 +63,21 @@ public class UpdateRessidentCountZeroProcessorTest {
   @Mock
   private GatewayCacheService gatewayCacheService;
 
+  @Mock
+  private RmFieldRepublishProducer rmFieldRepublishProducer;
+
   @Captor
   private ArgumentCaptor<GatewayCache> spiedCache;
-
-  @Captor
-  private ArgumentCaptor<String> outcomeEventCaptor;
-
-  @Test
-  @DisplayName("Should update the site resident count to zero")
-  public void shouldUpdateSiteResidentCountToZero() throws GatewayException, ParseException, JSONException {
-    final OutcomeSuperSetDto outcome = new OutcomeHelper().createUpdateResidentCountZero();
-    when(dateFormat.format(any())).thenReturn("2020-04-17T11:53:11.000+0000");
-    updateResidentCountZeroProcessor.process(outcome, outcome.getCaseId(), "CE");
-    verify(gatewayOutcomeProducer).sendOutcome(outcomeEventCaptor.capture(), any(), any());
-    String outcomeEvent = outcomeEventCaptor.getValue();
-    JSONObject jsonObject = new JSONObject(outcomeEvent);
-
-    JSONObject collectionCase = jsonObject.getJSONObject("payload").getJSONObject("collectionCase");
-    String siteId = collectionCase.get("id").toString();
-    String ceExpectedCapacity = collectionCase.get("ceExpectedCapacity").toString();
-    Assertions.assertEquals(outcome.getSiteCaseId().toString(), siteId);
-    Assertions.assertEquals("0", ceExpectedCapacity);
-  }
 
   @Test
   @DisplayName("Should update the closed cache state to update")
   public void shouldUpdateTheClosedCacheStateToUpdate() throws GatewayException, ParseException, JSONException {
-    final OutcomeSuperSetDto outcome = new OutcomeHelper().createUpdateResidentCountZero();
-    when(dateFormat.format(any())).thenReturn("2020-04-17T11:53:11.000+0000");
+    final OutcomeSuperSetDto outcome = new OutcomeHelper().createFeedbackOutcome();
     GatewayCache gatewayCache = new GatewayCache();
-    gatewayCache.setOriginalCaseId(outcome.getCaseId().toString());
     gatewayCache.setLastActionInstruction("CANCEL");
+    gatewayCache.setCaseId("e04cbf10-597b-11eb-ae93-0242ac130002");
     when(gatewayCacheService.getById(anyString())).thenReturn(gatewayCache);
-    updateResidentCountZeroProcessor.process(outcome, outcome.getCaseId(), "CE");
+    deliveredFeedbackProcessor.process(outcome, outcome.getCaseId(), "CE");
     verify(gatewayCacheService).save(spiedCache.capture());
     String lastActionInstruction = spiedCache.getValue().lastActionInstruction;
     Assertions.assertEquals("UPDATE", lastActionInstruction);
