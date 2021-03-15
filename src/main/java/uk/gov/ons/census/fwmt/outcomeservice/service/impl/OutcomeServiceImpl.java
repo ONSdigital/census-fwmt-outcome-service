@@ -54,7 +54,7 @@ public class OutcomeServiceImpl implements OutcomeService {
           "Survey type", "SPG",
           "Outcome code", outcome.getOutcomeCode(),
           "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
-      return;
+      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Failed to  process SpgOutcome");
     }
     UUID caseIdHolder = null;
     for (String operation : operationsList) {
@@ -78,7 +78,7 @@ public class OutcomeServiceImpl implements OutcomeService {
           "Survey type", "CE",
           "Outcome code", outcome.getOutcomeCode(),
           "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
-      return;
+      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Failed to  process CeOutcome");
     }
     UUID caseIdHolder = null;
     for (String operation : operationsList) {
@@ -102,7 +102,7 @@ public class OutcomeServiceImpl implements OutcomeService {
           "Survey type", "HH",
           "Outcome code", outcome.getOutcomeCode(),
           "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
-      return;
+      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Failed to  process HhOutcome");
     }
     UUID caseIdHolder = null;
     for (String operation : operationsList) {
@@ -126,7 +126,7 @@ public class OutcomeServiceImpl implements OutcomeService {
           "Survey type", "CCS PL",
           "Outcome code", outcome.getOutcomeCode(),
           "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
-      return;
+      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Failed to  process CcsPlOutcome");
     }
     UUID caseIdHolder = null;
     for (String operation : operationsList) {
@@ -150,7 +150,7 @@ public class OutcomeServiceImpl implements OutcomeService {
           "Survey type", "CCS INT",
           "Outcome code", outcome.getOutcomeCode(),
           "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
-      return;
+      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Failed to  process CcsIntOutcome");
     }
     UUID caseIdHolder = null;
     for (String operation : operationsList) {
@@ -174,7 +174,7 @@ public class OutcomeServiceImpl implements OutcomeService {
           "Survey type", "NC",
           "Outcome code", outcome.getOutcomeCode(),
           "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
-      return;
+      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Failed to  process NcOutcome");
     }
     UUID caseIdHolder = null;
     for (String operation : operationsList) {
