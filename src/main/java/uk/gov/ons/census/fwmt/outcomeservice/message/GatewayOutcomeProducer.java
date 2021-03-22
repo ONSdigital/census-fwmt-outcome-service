@@ -1,5 +1,6 @@
 package uk.gov.ons.census.fwmt.outcomeservice.message;
 
+import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
@@ -36,6 +37,9 @@ public class GatewayOutcomeProducer {
     long epochMilli = Instant.now().toEpochMilli();
     messageProperties.setTimestamp(new Date(epochMilli));
     MessageConverter messageConverter = new Jackson2JsonMessageConverter();
+
+    objectMapper.configure(JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS.mappedFeature(),
+        true);
 
     try {
       Message message = messageConverter.toMessage(objectMapper.readTree(outcomeEvent), messageProperties);

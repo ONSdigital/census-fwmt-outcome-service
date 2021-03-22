@@ -30,6 +30,56 @@ public class OutcomeHelper {
     return outcomeSuperSetDto;
   }
 
+  public OutcomeSuperSetDto createUpdateResidentCount() {
+    OutcomeSuperSetDto outcomeSuperSetDto = new OutcomeSuperSetDto();
+    CeDetailsDto ceDetailsDto = new CeDetailsDto();
+    outcomeSuperSetDto.setCaseId(UUID.randomUUID());
+    outcomeSuperSetDto.setOutcomeCode("Test");
+    List<CareCodeDto> careCodeDto = new ArrayList<>();
+    careCodeDto.add(CareCodeDto.builder().careCode("Test123").build());
+    outcomeSuperSetDto.setCareCodes(careCodeDto);
+    outcomeSuperSetDto.setAccessInfo("12345");
+    outcomeSuperSetDto.setSiteCaseId(UUID.fromString("e04cbf10-597b-11eb-ae93-0242ac130002"));
+    outcomeSuperSetDto.setOfficerId("Test");
+    outcomeSuperSetDto.setTransactionId(UUID.randomUUID());
+    ceDetailsDto.setUsualResidents(5);
+    outcomeSuperSetDto.setCeDetails(ceDetailsDto);
+    return outcomeSuperSetDto;
+  }
+  public OutcomeSuperSetDto createUpdateResidentOneCount() {
+    OutcomeSuperSetDto outcomeSuperSetDto = new OutcomeSuperSetDto();
+    CeDetailsDto ceDetailsDto = new CeDetailsDto();
+    outcomeSuperSetDto.setCaseId(UUID.randomUUID());
+    outcomeSuperSetDto.setOutcomeCode("Test");
+    List<CareCodeDto> careCodeDto = new ArrayList<>();
+    careCodeDto.add(CareCodeDto.builder().careCode("Test123").build());
+    outcomeSuperSetDto.setCareCodes(careCodeDto);
+    outcomeSuperSetDto.setAccessInfo("12345");
+    outcomeSuperSetDto.setSiteCaseId(UUID.fromString("e04cbf10-597b-11eb-ae93-0242ac130002"));
+    outcomeSuperSetDto.setOfficerId("Test");
+    outcomeSuperSetDto.setTransactionId(UUID.randomUUID());
+    ceDetailsDto.setUsualResidents(2);
+    outcomeSuperSetDto.setCeDetails(ceDetailsDto);
+    return outcomeSuperSetDto;
+  }
+
+  public OutcomeSuperSetDto createFeedbackOutcome() {
+    OutcomeSuperSetDto outcomeSuperSetDto = new OutcomeSuperSetDto();
+    CeDetailsDto ceDetailsDto = new CeDetailsDto();
+    outcomeSuperSetDto.setCaseId(UUID.fromString("e04cbf10-597b-11eb-ae93-0242ac130002"));
+    outcomeSuperSetDto.setOutcomeCode("Test");
+    List<CareCodeDto> careCodeDto = new ArrayList<>();
+    careCodeDto.add(CareCodeDto.builder().careCode("Test123").build());
+    outcomeSuperSetDto.setCareCodes(careCodeDto);
+    outcomeSuperSetDto.setAccessInfo("12345");
+    outcomeSuperSetDto.setSiteCaseId(UUID.fromString("e04cbf10-597b-11eb-ae93-0242ac130002"));
+    outcomeSuperSetDto.setOfficerId("Test");
+    outcomeSuperSetDto.setTransactionId(UUID.randomUUID());
+    ceDetailsDto.setUsualResidents(2);
+    outcomeSuperSetDto.setCeDetails(ceDetailsDto);
+    return outcomeSuperSetDto;
+  }
+
   private Address createAddress(){
     Address address = new Address();
     address.setAddressLine1("Unit name");

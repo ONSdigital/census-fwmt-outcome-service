@@ -8,8 +8,10 @@ import uk.gov.ons.census.fwmt.common.rm.dto.ActionInstructionType;
 import uk.gov.ons.census.fwmt.common.rm.dto.FwmtActionInstruction;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
+import uk.gov.ons.census.fwmt.outcomeservice.data.GatewayCache;
 import uk.gov.ons.census.fwmt.outcomeservice.dto.OutcomeSuperSetDto;
 import uk.gov.ons.census.fwmt.outcomeservice.message.RmFieldRepublishProducer;
+import uk.gov.ons.census.fwmt.outcomeservice.service.impl.GatewayCacheService;
 
 import java.util.UUID;
 
@@ -25,6 +27,9 @@ public class DeliveredFeedbackProcessor implements OutcomeServiceProcessor {
   @Autowired
   private GatewayEventManager gatewayEventManager;
 
+  @Autowired
+  private GatewayCacheService gatewayCacheService;
+
   @Override
   public UUID process(OutcomeSuperSetDto outcome, UUID caseIdHolder, String type) throws GatewayException {
     UUID caseId = (caseIdHolder != null) ? caseIdHolder : outcome.getCaseId();
@@ -34,6 +39,14 @@ public class DeliveredFeedbackProcessor implements OutcomeServiceProcessor {
         PROCESSOR, "DELIVERED_FEEDBACK",
         ORIGINAL_CASE_ID, String.valueOf(outcome.getCaseId()),
         SITE_CASE_ID, (outcome.getSiteCaseId() != null ? String.valueOf(outcome.getSiteCaseId()) : "N/A"));
+
+    GatewayCache cache = gatewayCacheService.getById(String.valueOf(caseId));
+
+    if (cache != null && ("CANCEL".equals(cache.lastActionInstruction) || "CANCEL(HELD)".equals(cache.lastActionInstruction))) {
+      gatewayCacheService.save(cache.toBuilder()
+          .lastActionInstruction(ActionInstructionType.UPDATE.toString())
+          .build());
+    }
 
     FwmtActionInstruction fieldworkFollowup = FwmtActionInstruction.builder()
         .actionInstruction(ActionInstructionType.UPDATE)
