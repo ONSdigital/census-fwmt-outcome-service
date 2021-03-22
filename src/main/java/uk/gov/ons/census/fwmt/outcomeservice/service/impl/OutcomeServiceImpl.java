@@ -143,11 +143,13 @@ public class OutcomeServiceImpl implements OutcomeService {
     }
   }
 
-  private void triggerError(CommonOutcome outcome, String surveyType) {
+  private void triggerError(CommonOutcome outcome, String surveyType) throws GatewayException {
     gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "No outcome code found",
         String.valueOf(outcome.getCaseId()), FAILED_TO_LOOKUP_OUTCOME_CODE,
         "Survey type", surveyType,
         "Outcome code", outcome.getOutcomeCode(),
         "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
+    throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Failed to  process".concat(surveyType.concat("Outcome")));
+
   }
 }
