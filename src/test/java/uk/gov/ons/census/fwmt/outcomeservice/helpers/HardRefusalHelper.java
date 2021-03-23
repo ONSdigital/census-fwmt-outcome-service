@@ -71,4 +71,17 @@ public class HardRefusalHelper {
     outcomeSuperSetDto.setSiteCaseId(UUID.fromString("bd6345af-d706-43d3-a13b-8c549e081a76"));
     return outcomeSuperSetDto;
   }
+
+  public OutcomeSuperSetDto createHardRefusalWithOutcomeCode010307() {
+    OutcomeSuperSetDto outcomeSuperSetDto = new OutcomeSuperSetDto();
+    outcomeSuperSetDto.setCaseId(UUID.randomUUID());
+    outcomeSuperSetDto.setOutcomeCode("01-03-07");
+    List<CareCodeDto> careCodeDto = new ArrayList<>();
+    careCodeDto.add(CareCodeDto.builder().careCode("Test123").build());
+    outcomeSuperSetDto.setCareCodes(careCodeDto);
+    outcomeSuperSetDto.setAccessInfo("12345");
+    outcomeSuperSetDto.setOfficerId("Test");
+    outcomeSuperSetDto.setTransactionId(UUID.randomUUID());
+    return outcomeSuperSetDto;
+  }
 }
