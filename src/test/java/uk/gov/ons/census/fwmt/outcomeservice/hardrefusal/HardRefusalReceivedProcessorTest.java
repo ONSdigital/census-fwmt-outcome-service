@@ -93,7 +93,7 @@ public class HardRefusalReceivedProcessorTest {
   }
 
   @Test
-  @DisplayName("IsDangerous field should return false is null")
+  @DisplayName("IsDangerous field should return false if null")
   public void shouldReturnIsDangerousAsFalseIfNull() {
     final OutcomeSuperSetDto outcome = new HardRefusalHelper().createHardRefusalOutcomneWithNullDangerous();
     Assertions.assertEquals(false, outcome.getRefusal().isDangerous());
@@ -103,6 +103,20 @@ public class HardRefusalReceivedProcessorTest {
   @DisplayName("Should not throw an error when receiving outcomecode 01-03-07")
   public void shouldNotThrowAnErrorWhenReceivingOutcomeCode010307() throws GatewayException {
     final OutcomeSuperSetDto outcome = new HardRefusalHelper().createHardRefusalWithOutcomeCode010307();
+    GatewayCache mockEntry = new GatewayCache();
+    mockEntry.setCaseId(outcome.getCaseId().toString());
+    when(cacheService.getById(outcome.getCaseId().toString())).thenReturn(mockEntry);
+    when(dateFormat.format(any())).thenReturn("2020-04-17T11:53:11.000+0000");
+    hardRefusalReceivedProcessor.process(outcome, outcome.getCaseId(), "HH");
+    verify(cacheService).save(spiedCache.capture());
+    String caseId = spiedCache.getValue().caseId;
+    Assertions.assertEquals(outcome.getCaseId().toString(), caseId);
+  }
+
+  @Test
+  @DisplayName("Should not throw an error when receiving a refusal without a refusal object")
+  public void shouldNotThrowAnErrorWhenReceivingARefusalWithoutARefusalObject() throws GatewayException {
+    final OutcomeSuperSetDto outcome = new HardRefusalHelper().createHardRefusalWithoutRefusalObject();
     GatewayCache mockEntry = new GatewayCache();
     mockEntry.setCaseId(outcome.getCaseId().toString());
     when(cacheService.getById(outcome.getCaseId().toString())).thenReturn(mockEntry);

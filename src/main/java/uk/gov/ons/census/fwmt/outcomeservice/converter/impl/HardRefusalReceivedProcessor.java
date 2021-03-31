@@ -158,7 +158,7 @@ public class HardRefusalReceivedProcessor implements OutcomeServiceProcessor {
     int typeCache = type.equals("CE") ? 1 : 10;
     String dangerousCareCode;
     String updateCareCodes;
-    if (type.equals("HH") && !outcome.getOutcomeCode().equals("01-03-07")) {
+    if (outcome.getRefusal() != null && type.equals("HH") && !outcome.getOutcomeCode().equals("01-03-07")) {
       dangerousCareCode = outcome.getRefusal().isDangerous()  ? "Dangerous address" : "No safety issues";
       updateCareCodes = outcome.getCareCodes() != null ? OutcomeSuperSetDto.careCodesToText(outcome.getCareCodes()) + ", " + dangerousCareCode :
           dangerousCareCode;
