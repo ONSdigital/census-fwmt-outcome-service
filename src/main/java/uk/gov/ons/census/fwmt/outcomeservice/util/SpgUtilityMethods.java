@@ -23,7 +23,7 @@ public final class SpgUtilityMethods {
   public static String regionLookup(String officerId) {
     if (officerId.substring(1,2).equals("W")) {
       return "W";
-    } else if (officerId.substring(1,2).equals("Y")) {
+    } else if (officerId.substring(0,1).equals("Y")) {
       return "N";
     } else {
       return "E";
