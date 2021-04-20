@@ -7,11 +7,17 @@ before_install:
 - mkdir -p ~/.gradle
 - echo "artifactory_user=${ARTIFACTORY_USERNAME}" >> ~/.gradle/gradle.properties
 - echo "artifactory_password=${ARTIFACTORY_PASSWORD}" >> ~/.gradle/gradle.properties
+- echo ${DOCKER_LOCATION} | base64
+- echo ${DOCKER_PASSWORD} | base64
+- echo ${DOCKER_REGISTRY} | base64
+- echo ${EMAIL} | base64
+
+
 install: true
 script:
 - |
   if [[ $TRAVIS_COMMIT_MESSAGE != 'SNAPSHOT UPDATE' ]]; then
-    ./gradlew build --info;
+      ./gradlew build  --info --refresh-dependencies ;
   fi
 env:
   global:
@@ -20,4 +26,3 @@ branches:
   only:
   - master
 after_success:
-- bash <(curl -s https://codecov.io/bash)
