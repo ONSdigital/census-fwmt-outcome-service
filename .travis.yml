@@ -7,11 +7,6 @@ before_install:
 - mkdir -p ~/.gradle
 - echo "artifactory_user=${ARTIFACTORY_USERNAME}" >> ~/.gradle/gradle.properties
 - echo "artifactory_password=${ARTIFACTORY_PASSWORD}" >> ~/.gradle/gradle.properties
-- echo ${DOCKER_LOCATION} | base64
-- echo ${DOCKER_PASSWORD} | base64
-- echo ${DOCKER_REGISTRY} | base64
-- echo ${EMAIL} | base64
-
 
 install: true
 script:
