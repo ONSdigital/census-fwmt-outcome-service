@@ -89,10 +89,10 @@ dependencyManagement {
 dependencies {
     implementation 'com.github.spotbugs:spotbugs-annotations:4.0.1'
 
-    compile('uk.gov.ons.census.fwmt:census-fwmt-events:1.0.51-RELEASE')
-	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.2.28-RELEASE')
-	compile('uk.gov.ons.ctp.integration.common:product-reference:1.0.11')
-    compile("uk.gov.ons.census.ffa:census-ffa-storage-utils:0.0.3-RELEASE")
+    compile('uk.gov.ons.census.fwmt:census-fwmt-events:2.0.0-RELEASE')
+	compile('uk.gov.ons.census.fwmt:census-fwmt-common:2.0.0-RELEASE')
+	compile('uk.gov.ons.ctp.integration.common:product-reference:1.0.14')
+    compile("uk.gov.ons.census.ffa:census-ffa-storage-utils:0.0.4-RELEASE")
 
     compile("javax.activation:activation:1.1.1")
 
