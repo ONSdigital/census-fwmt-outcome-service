@@ -89,7 +89,8 @@ dependencyManagement {
 dependencies {
     implementation 'com.github.spotbugs:spotbugs-annotations:4.0.1'
 
-    compile('uk.gov.ons.census.fwmt:census-fwmt-events:2.0.0-RELEASE')
+	// This events library is specifically for this release. Branch of this release for code changes
+    compile('uk.gov.ons.census.fwmt:census-fwmt-events:3.0.51-RELEASE')
 	compile('uk.gov.ons.census.fwmt:census-fwmt-common:2.0.0-RELEASE')
 	compile('uk.gov.ons.ctp.integration.common:product-reference:1.0.14')
     compile("uk.gov.ons.census.ffa:census-ffa-storage-utils:0.0.4-RELEASE")
