@@ -73,6 +73,7 @@ public class PropertyListedCeProcessor implements OutcomeServiceProcessor {
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
         SURVEY_TYPE, type,
+        PROPERTY_LISTED_CASE_ID, String.valueOf(newCaseId),
         TEMPLATE_TYPE, CCS_ADDRESS_LISTED.toString(),
         TRANSACTION_ID, outcome.getTransactionId().toString(),
         ROUTING_KEY, GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
