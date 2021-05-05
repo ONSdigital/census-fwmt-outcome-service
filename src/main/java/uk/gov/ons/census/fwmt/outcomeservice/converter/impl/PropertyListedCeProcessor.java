@@ -48,6 +48,7 @@ public class PropertyListedCeProcessor implements OutcomeServiceProcessor {
         ADDRESS_TYPE, "CE");
 
     GatewayCache plCache = gatewayCacheService.getById(String.valueOf(caseId));
+    cacheData(outcome, newCaseId);
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
@@ -72,10 +73,54 @@ public class PropertyListedCeProcessor implements OutcomeServiceProcessor {
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
         SURVEY_TYPE, type,
+        PROPERTY_LISTED_CASE_ID, String.valueOf(newCaseId),
         TEMPLATE_TYPE, CCS_ADDRESS_LISTED.toString(),
         TRANSACTION_ID, outcome.getTransactionId().toString(),
         ROUTING_KEY, GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
 
     return newCaseId;
+  }
+  private void cacheData(OutcomeSuperSetDto outcome, UUID newCaseId) {
+    String managerTitle = "";
+    String managerForename = "";
+    String managerSurname = "";
+    String managerPhone = "";
+    int usualResidents = 0;
+    int bedspaces = 0;
+
+    if (outcome.getCeDetails() != null) {
+      if (outcome.getCeDetails().getManagerTitle() != null) {
+        managerTitle = outcome.getCeDetails().getManagerTitle();
+      }
+      if (outcome.getCeDetails().getManagerForename() != null) {
+        managerForename = outcome.getCeDetails().getManagerForename();
+      }
+      if (outcome.getCeDetails().getManagerSurname() != null) {
+        managerSurname = outcome.getCeDetails().getManagerSurname();
+      }
+      if (outcome.getCeDetails().getContactPhone() != null) {
+        managerPhone = outcome.getCeDetails().getContactPhone();
+      }
+      if (outcome.getCeDetails().getUsualResidents() != null) {
+        usualResidents = outcome.getCeDetails().getUsualResidents();
+      }
+      if (outcome.getCeDetails().getBedspaces() != null) {
+        bedspaces = outcome.getCeDetails().getBedspaces();
+      }
+    }
+
+    gatewayCacheService.save(GatewayCache.builder()
+        .caseId(newCaseId.toString())
+        .existsInFwmt(false)
+        .accessInfo(outcome.getAccessInfo())
+        .careCodes(OutcomeSuperSetDto.careCodesToText(outcome.getCareCodes()))
+        .type(50)
+        .managerTitle(managerTitle)
+        .managerFirstname(managerForename)
+        .managerSurname(managerSurname)
+        .managerContactNumber(managerPhone)
+        .usualResidents(usualResidents)
+        .bedspaces(bedspaces)
+        .build());
   }
 }

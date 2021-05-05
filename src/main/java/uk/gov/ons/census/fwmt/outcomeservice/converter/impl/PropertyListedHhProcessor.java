@@ -48,6 +48,7 @@ public class PropertyListedHhProcessor implements OutcomeServiceProcessor {
         ADDRESS_TYPE, "HH");
 
     GatewayCache plCache = gatewayCacheService.getById(String.valueOf(caseId));
+    cacheData(outcome, newCaseId);
 
     String eventDateTime = dateFormat.format(outcome.getEventDate());
     Map<String, Object> root = new HashMap<>();
@@ -68,10 +69,21 @@ public class PropertyListedHhProcessor implements OutcomeServiceProcessor {
 
     gatewayEventManager.triggerEvent(String.valueOf(caseId), OUTCOME_SENT,
         SURVEY_TYPE, type,
+        PROPERTY_LISTED_CASE_ID, String.valueOf(newCaseId),
         TEMPLATE_TYPE, CCS_ADDRESS_LISTED.toString(),
         TRANSACTION_ID, outcome.getTransactionId().toString(),
         ROUTING_KEY, GatewayOutcomeQueueConfig.GATEWAY_CCS_PROPERTY_LISTING_ROUTING_KEY);
 
     return newCaseId;
+  }
+
+  private void cacheData(OutcomeSuperSetDto outcome, UUID newCaseId) {
+    gatewayCacheService.save(GatewayCache.builder()
+        .caseId(newCaseId.toString())
+        .existsInFwmt(false)
+        .accessInfo(outcome.getAccessInfo())
+        .careCodes(OutcomeSuperSetDto.careCodesToText(outcome.getCareCodes()))
+        .type(50)
+        .build());
   }
 }
