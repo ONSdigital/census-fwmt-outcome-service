@@ -1,8 +1,13 @@
 package uk.gov.ons.census.fwmt.outcomeservice.service.impl;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import ma.glasnost.orika.MapperFacade;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import uk.gov.ons.census.fwmt.common.data.shared.CommonOutcome;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.outcomeservice.converter.OutcomeServiceProcessor;
@@ -16,9 +21,9 @@ import java.util.UUID;
 
 import javax.transaction.Transactional;
 
-
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class OutcomeServiceImpl implements OutcomeService {
 
   public static final String PROCESSING_HH_OUTCOME = "PROCESSING_HH_OUTCOME";
@@ -35,156 +40,114 @@ public class OutcomeServiceImpl implements OutcomeService {
 
   public static final String FAILED_TO_LOOKUP_OUTCOME_CODE = "FAILED_TO_LOOKUP_OUTCOME_CODE";
 
-  @Autowired
-  private Map<String, OutcomeServiceProcessor> outcomeServiceProcessors;
+  private final Map<String, OutcomeServiceProcessor> outcomeServiceProcessors;
 
-  @Autowired
-  private OutcomeLookup outcomeLookup;
+  private final OutcomeLookup outcomeLookup;
 
-  @Autowired
-  private GatewayEventManager gatewayEventManager;
+  private final GatewayEventManager gatewayEventManager;
+
+  private final MapperFacade mapperFacade;
+
+  //need to name it the same as the quaifier
+  @NonNull @Qualifier("GW_EVENT_RT")
+  private final RabbitTemplate GW_EVENT_RT;
+
+  public static final String errorExchange = "GW.Error.Exchange";
+  public static final String outcomeTransRoute = "outcome.transient.route";
+  public static final String outcomePermRoute = "outcome.perm.route";
 
   @Override
   @Transactional
-  public void createSpgOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
-    String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
-    if (operationsList == null) {
-      gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "No outcome code found",
-          String.valueOf(outcome.getCaseId()), FAILED_TO_LOOKUP_OUTCOME_CODE,
-          "Survey type", "SPG",
-          "Outcome code", outcome.getOutcomeCode(),
-          "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
-      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Failed to  process SpgOutcome");
-    }
-    UUID caseIdHolder = null;
-    for (String operation : operationsList) {
-      gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_SPG_OUTCOME,
-          "Survey type", "SPG",
-          "Secondary Outcome", outcome.getSecondaryOutcomeDescription(),
-          "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
-          "Operation", operation,
-          "Operation list", Arrays.toString(operationsList));
-      caseIdHolder = outcomeServiceProcessors.get(operation).process(outcome, caseIdHolder, "SPG");
-    }
+  public void createSpgOutcomeEvent(CommonOutcome outcome) throws GatewayException {
+    final String surveyType = "SPG";
+    executeOperations(outcome, surveyType, PROCESSING_SPG_OUTCOME);
   }
 
   @Override
   @Transactional
-  public void createCeOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
-    String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
-    if (operationsList == null) {
-      gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "No outcome code found",
-          String.valueOf(outcome.getCaseId()), FAILED_TO_LOOKUP_OUTCOME_CODE,
-          "Survey type", "CE",
-          "Outcome code", outcome.getOutcomeCode(),
-          "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
-      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Failed to  process CeOutcome");
-    }
-    UUID caseIdHolder = null;
-    for (String operation : operationsList) {
-      gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_CE_OUTCOME,
-          "Survey type", "CE",
-          "Secondary Outcome", outcome.getSecondaryOutcomeDescription(),
-          "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
-          "Operation", operation,
-          "Operation list", Arrays.toString(operationsList));
-      caseIdHolder = outcomeServiceProcessors.get(operation).process(outcome, caseIdHolder, "CE");
-    }
+  public void createCeOutcomeEvent(CommonOutcome outcome) throws GatewayException {
+    final String surveyType = "CE";
+    executeOperations(outcome, surveyType, PROCESSING_CE_OUTCOME);
   }
 
   @Override
   @Transactional
-  public void createHhOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
-    String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
-    if (operationsList == null) {
-      gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "No outcome code found",
-          String.valueOf(outcome.getCaseId()), FAILED_TO_LOOKUP_OUTCOME_CODE,
-          "Survey type", "HH",
-          "Outcome code", outcome.getOutcomeCode(),
-          "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
-      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Failed to  process HhOutcome");
-    }
-    UUID caseIdHolder = null;
-    for (String operation : operationsList) {
-      gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_HH_OUTCOME,
-          "Survey type", "HH",
-          "Secondary Outcome", outcome.getSecondaryOutcomeDescription(),
-          "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
-          "Operation", operation,
-          "Operation list", Arrays.toString(operationsList));
-      caseIdHolder = outcomeServiceProcessors.get(operation).process(outcome, caseIdHolder, "HH");
-    }
+  public void createHhOutcomeEvent(CommonOutcome outcome) throws GatewayException {
+    final String surveyType = "HH";
+    executeOperations(outcome, surveyType, PROCESSING_HH_OUTCOME);
   }
 
   @Override
   @Transactional
-  public void createCcsPropertyListingOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
-    String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
-    if (operationsList == null) {
-      gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "No outcome code found",
-          String.valueOf(outcome.getCaseId()), FAILED_TO_LOOKUP_OUTCOME_CODE,
-          "Survey type", "CCS PL",
-          "Outcome code", outcome.getOutcomeCode(),
-          "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
-      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Failed to  process CcsPlOutcome");
-    }
-    UUID caseIdHolder = null;
-    for (String operation : operationsList) {
-      gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_CCS_PL_OUTCOME,
-          "Survey type", "CCS PL",
-          "Secondary Outcome", outcome.getSecondaryOutcomeDescription(),
-          "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
-          "Operation", operation,
-          "Operation list", Arrays.toString(operationsList));
-      caseIdHolder = outcomeServiceProcessors.get(operation).process(outcome, caseIdHolder, "CCS PL");
-    }
+  public void createCcsPropertyListingOutcomeEvent(CommonOutcome outcome) throws GatewayException {
+    final String surveyType = "CCS PL";
+    executeOperations(outcome, surveyType, PROCESSING_CCS_PL_OUTCOME);
   }
 
   @Override
   @Transactional
-  public void createCcsInterviewOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
-    String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
-    if (operationsList == null) {
-      gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "No outcome code found",
-          String.valueOf(outcome.getCaseId()), FAILED_TO_LOOKUP_OUTCOME_CODE,
-          "Survey type", "CCS INT",
-          "Outcome code", outcome.getOutcomeCode(),
-          "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
-      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Failed to  process CcsIntOutcome");
-    }
-    UUID caseIdHolder = null;
-    for (String operation : operationsList) {
-      gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_CCS_INT_OUTCOME,
-          "Survey type", "CCS INT",
-          "Secondary Outcome", outcome.getSecondaryOutcomeDescription(),
-          "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
-          "Operation", operation,
-          "Operation list", Arrays.toString(operationsList));
-      caseIdHolder = outcomeServiceProcessors.get(operation).process(outcome, caseIdHolder, "CCS INT");
-    }
+  public void createCcsInterviewOutcomeEvent(CommonOutcome outcome) throws GatewayException {
+    final String surveyType = "CCS INT";
+    executeOperations(outcome, surveyType, PROCESSING_CCS_INT_OUTCOME);
   }
 
   @Override
   @Transactional
-  public void createNcOutcomeEvent(OutcomeSuperSetDto outcome) throws GatewayException {
-    String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
+  public void createNcOutcomeEvent(CommonOutcome outcome) throws GatewayException {
+    final String surveyType = "NC";
+    executeOperations(outcome, surveyType, PROCESSING_NC_OUTCOME);
+  }
+
+  private void executeOperations(CommonOutcome outcome, String surveyType, String eventType) throws GatewayException {
+
+    final String[] operationsList = outcomeLookup.getLookup(outcome.getOutcomeCode());
     if (operationsList == null) {
-      gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "No outcome code found",
-          String.valueOf(outcome.getCaseId()), FAILED_TO_LOOKUP_OUTCOME_CODE,
-          "Survey type", "NC",
-          "Outcome code", outcome.getOutcomeCode(),
-          "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
-      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Failed to  process NcOutcome");
+      triggerError(outcome, surveyType);
+    } else {
+      processOperations(surveyType, eventType, operationsList, outcome);
     }
+  }
+
+  private void processOperations(String surveyType, String eventType, String[] operationsList, CommonOutcome commonOutcome) throws GatewayException {
+    final OutcomeSuperSetDto outcomeDTO = mapperFacade.map(commonOutcome, OutcomeSuperSetDto.class);
+
     UUID caseIdHolder = null;
     for (String operation : operationsList) {
-      gatewayEventManager.triggerEvent(String.valueOf(outcome.getCaseId()), PROCESSING_NC_OUTCOME,
-          "Survey type", "NC",
-          "Secondary Outcome", outcome.getSecondaryOutcomeDescription(),
+      gatewayEventManager.triggerEvent(String.valueOf(outcomeDTO.getCaseId()), eventType,
+          "Survey type", surveyType,
+          "Secondary Outcome", outcomeDTO.getSecondaryOutcomeDescription(),
           "Held case id", (caseIdHolder != null) ? String.valueOf(caseIdHolder) : "N/A",
           "Operation", operation,
           "Operation list", Arrays.toString(operationsList));
-      caseIdHolder = outcomeServiceProcessors.get(operation).process(outcome, caseIdHolder, "NC");
+
+      try {
+        caseIdHolder = outcomeServiceProcessors.get(operation).process(outcomeDTO, caseIdHolder, surveyType);
+      } catch (Exception e) {
+        log.error("Error processing case {} for operation {}", outcomeDTO.getCaseId(), operation, e);
+
+        dispatchToAppropriateQueue(commonOutcome, operation);
+      }
     }
+  }
+
+  private void dispatchToAppropriateQueue(CommonOutcome outcome, String operation) {
+    if (operation.startsWith("NEW_")) {
+      log.error("Send Message to Transient Queue");
+      GW_EVENT_RT.convertAndSend(errorExchange, outcomeTransRoute, outcome);
+    } else {
+      log.error("Send Message to Perm Queue");
+      GW_EVENT_RT.convertAndSend(errorExchange, outcomePermRoute, outcome);
+
+    }
+  }
+
+  private void triggerError(CommonOutcome outcome, String surveyType) throws GatewayException {
+    gatewayEventManager.triggerErrorEvent(this.getClass(), (Exception) null, "No outcome code found",
+        String.valueOf(outcome.getCaseId()), FAILED_TO_LOOKUP_OUTCOME_CODE,
+        "Survey type", surveyType,
+        "Outcome code", outcome.getOutcomeCode(),
+        "Secondary Outcome", outcome.getSecondaryOutcomeDescription());
+    throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Failed to  process".concat(surveyType.concat("Outcome")));
+
   }
 }
